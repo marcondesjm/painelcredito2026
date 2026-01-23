@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, forwardRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -15,14 +15,14 @@ interface ImageUploadProps {
   placeholder?: string;
 }
 
-export const ImageUpload = ({
+export const ImageUpload = forwardRef<HTMLDivElement, ImageUploadProps>(({
   label,
   value,
   onChange,
   folder = 'images',
   aspectRatio = 'aspect-video',
   placeholder = 'Cole a URL ou faça upload de uma imagem'
-}: ImageUploadProps) => {
+}, ref) => {
   const [uploading, setUploading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -75,7 +75,7 @@ export const ImageUpload = ({
   };
 
   return (
-    <div className="space-y-2">
+    <div ref={ref} className="space-y-2">
       <Label>{label}</Label>
       
       {value ? (
@@ -146,4 +146,6 @@ export const ImageUpload = ({
       </div>
     </div>
   );
-};
+});
+
+ImageUpload.displayName = 'ImageUpload';

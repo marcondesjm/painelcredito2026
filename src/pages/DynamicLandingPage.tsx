@@ -102,15 +102,48 @@ const DynamicLandingPage = () => {
 
   const fetchPage = async () => {
     try {
-      const query = supabase.from('landing_pages').select('*');
+      let data = null;
+      let fetchError = null;
 
-      // No editor (preview=true), permitimos carregar por ID mesmo não publicado.
-      // As regras de acesso ficam protegidas pelas políticas do backend (usuário precisa ter permissão).
-      const { data, error } = await (isPreview && draftId
-        ? query.eq('id', draftId).single()
-        : query.eq('slug', slug).eq('is_published', true).single());
+      // No modo preview com draftId, tentamos primeiro pelo ID (para o dono da página)
+      if (isPreview && draftId) {
+        const result = await supabase
+          .from('landing_pages')
+          .select('*')
+          .eq('id', draftId)
+          .single();
+        
+        data = result.data;
+        fetchError = result.error;
+        
+        // Se falhou (ex: não autenticado), tenta pelo slug + publicado como fallback
+        if (fetchError && slug) {
+          const fallbackResult = await supabase
+            .from('landing_pages')
+            .select('*')
+            .eq('slug', slug)
+            .eq('is_published', true)
+            .single();
+          
+          data = fallbackResult.data;
+          fetchError = fallbackResult.error;
+        }
+      } else if (slug) {
+        // Modo normal: busca apenas páginas publicadas pelo slug
+        const result = await supabase
+          .from('landing_pages')
+          .select('*')
+          .eq('slug', slug)
+          .eq('is_published', true)
+          .single();
+        
+        data = result.data;
+        fetchError = result.error;
+      }
 
-      if (error) throw error;
+      if (fetchError || !data) {
+        throw fetchError || new Error('Page not found');
+      }
       
       setPage({
         ...data,
@@ -136,18 +169,18 @@ const DynamicLandingPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
       </div>
     );
   }
 
   if (error || !page) {
     return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
-        <h1 className="text-2xl font-bold mb-4">Página não encontrada</h1>
-        <p className="text-muted-foreground mb-6">Esta página não existe ou não está publicada.</p>
-        <Button onClick={() => navigate('/')}>Voltar ao início</Button>
+      <div className="min-h-screen bg-[#0a0a0f] flex flex-col items-center justify-center p-4">
+        <h1 className="text-2xl font-bold mb-4 text-white">Página não encontrada</h1>
+        <p className="text-gray-400 mb-6">Esta página não existe ou não está publicada.</p>
+        <Button onClick={() => navigate('/')} className="bg-purple-600 hover:bg-purple-700 text-white">Voltar ao início</Button>
       </div>
     );
   }
