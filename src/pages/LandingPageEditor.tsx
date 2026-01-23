@@ -45,6 +45,10 @@ interface LandingPageData {
   color_background: string;
   font_heading: string;
   font_body: string;
+  video_enabled: boolean;
+  video_title: string;
+  video_url: string;
+  video_thumbnail: string;
   donation_enabled: boolean;
   donation_title: string;
   donation_description: string;
@@ -117,6 +121,10 @@ const defaultData: LandingPageData = {
   color_background: '#0a0a0f',
   font_heading: 'Inter',
   font_body: 'Inter',
+  video_enabled: false,
+  video_title: '🎬 Como Funciona',
+  video_url: '',
+  video_thumbnail: '',
   donation_enabled: true,
   donation_title: '💚 Apoie o Desenvolvedor',
   donation_description: 'Gostou do sistema? Considere fazer uma doação via PIX para ajudar no desenvolvimento!',
@@ -260,6 +268,10 @@ const LandingPageEditor = () => {
     color_background: draft.color_background || '#0a0a0f',
     font_heading: draft.font_heading || 'Inter',
     font_body: draft.font_body || 'Inter',
+    video_enabled: draft.video_enabled,
+    video_title: draft.video_title || null,
+    video_url: draft.video_url || null,
+    video_thumbnail: draft.video_thumbnail || null,
     donation_enabled: draft.donation_enabled,
     donation_title: draft.donation_title || null,
     donation_description: draft.donation_description || null,
@@ -792,6 +804,7 @@ const LandingPageEditor = () => {
                   <TabsTrigger value="basico" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Básico</TabsTrigger>
                   <TabsTrigger value="layout" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Layout</TabsTrigger>
                   <TabsTrigger value="imagens" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Imagens</TabsTrigger>
+                  <TabsTrigger value="video" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Vídeo</TabsTrigger>
                   <TabsTrigger value="precos" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Preços</TabsTrigger>
                   <TabsTrigger value="sobre" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Sobre</TabsTrigger>
                   <TabsTrigger value="doacao" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Doação</TabsTrigger>
@@ -1229,6 +1242,86 @@ const LandingPageEditor = () => {
                         rows={4}
                       />
                     </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              {/* Tab Vídeo */}
+              <TabsContent value="video">
+                <Card className="bg-card/50">
+                  <CardHeader className="pb-4">
+                    <CardTitle className="text-lg">Seção de Vídeo</CardTitle>
+                    <CardDescription>Configure o vídeo de demonstração</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="flex items-center justify-between p-3 rounded-lg bg-background/50 border border-border/50">
+                      <div className="flex items-center gap-3">
+                        <Switch
+                          checked={data.video_enabled}
+                          onCheckedChange={(checked) => setData({ ...data, video_enabled: checked })}
+                        />
+                        <div>
+                          <p className="font-medium text-sm">Exibir Seção</p>
+                          <p className="text-xs text-muted-foreground">
+                            {data.video_enabled ? 'Visível na página' : 'Oculta'}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label className="text-sm">Título da Seção</Label>
+                      <Input
+                        value={data.video_title}
+                        onChange={(e) => setData({ ...data, video_title: e.target.value })}
+                        placeholder="🎬 Como Funciona"
+                        className="bg-background/50"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label className="text-sm">URL do Vídeo (YouTube ou direto)</Label>
+                      <Input
+                        value={data.video_url}
+                        onChange={(e) => setData({ ...data, video_url: e.target.value })}
+                        placeholder="https://www.youtube.com/watch?v=... ou URL do vídeo"
+                        className="bg-background/50"
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        Cole o link do YouTube ou a URL direta do vídeo (.mp4)
+                      </p>
+                    </div>
+
+                    <ImageUpload
+                      label="Thumbnail (Imagem de Capa)"
+                      value={data.video_thumbnail}
+                      onChange={(url) => setData({ ...data, video_thumbnail: url })}
+                      folder="videos"
+                      aspectRatio="aspect-video"
+                      placeholder="Imagem exibida antes do play"
+                    />
+
+                    {data.video_url && (
+                      <div className="border-t border-border/30 pt-4 mt-4">
+                        <Label className="text-sm mb-2 block">Preview</Label>
+                        <div className="aspect-video bg-background rounded-lg overflow-hidden">
+                          {data.video_url.includes('youtube.com') || data.video_url.includes('youtu.be') ? (
+                            <iframe
+                              src={`https://www.youtube.com/embed/${
+                                data.video_url.includes('youtu.be') 
+                                  ? data.video_url.split('/').pop()?.split('?')[0]
+                                  : new URLSearchParams(data.video_url.split('?')[1]).get('v')
+                              }`}
+                              className="w-full h-full"
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                              allowFullScreen
+                            />
+                          ) : (
+                            <video src={data.video_url} controls className="w-full h-full" />
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               </TabsContent>

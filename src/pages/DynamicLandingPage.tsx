@@ -11,10 +11,11 @@ import { TrustBadge } from '@/components/TrustBadge';
 import backgroundHero from '@/assets/background-hero.png';
 import dashboardMockup from '@/assets/dashboard-mockup.png';
 
-type SectionId = 'hero' | 'features' | 'about' | 'how-it-works' | 'testimonials' | 'faq' | 'cta' | 'donation';
+type SectionId = 'hero' | 'video' | 'features' | 'about' | 'how-it-works' | 'testimonials' | 'faq' | 'cta' | 'donation';
 
 const defaultSectionOrder: SectionId[] = [
   'hero',
+  'video',
   'features',
   'about',
   'how-it-works',
@@ -48,6 +49,10 @@ interface LandingPageData {
   color_background: string | null;
   font_heading: string | null;
   font_body: string | null;
+  video_enabled: boolean | null;
+  video_title: string | null;
+  video_url: string | null;
+  video_thumbnail: string | null;
   donation_enabled: boolean | null;
   donation_title: string | null;
   donation_description: string | null;
@@ -605,6 +610,65 @@ const DynamicLandingPageInner = () => {
     </section>
   );
 
+  const getYouTubeEmbedUrl = (url: string) => {
+    if (url.includes('youtu.be')) {
+      return `https://www.youtube.com/embed/${url.split('/').pop()?.split('?')[0]}`;
+    }
+    if (url.includes('youtube.com/watch')) {
+      const videoId = new URLSearchParams(url.split('?')[1]).get('v');
+      return `https://www.youtube.com/embed/${videoId}`;
+    }
+    return null;
+  };
+
+  const renderVideoSection = () => {
+    if (!page.video_enabled || !page.video_url) return null;
+    
+    const youtubeEmbedUrl = getYouTubeEmbedUrl(page.video_url);
+    const isYouTube = !!youtubeEmbedUrl;
+
+    return (
+      <section 
+        key="video"
+        className={`py-20 px-4 transition-all ${isPreview ? 'cursor-pointer' : ''} ${hoveredSection === 'video' ? 'ring-2 ring-primary ring-inset' : ''}`}
+        onMouseEnter={() => handleSectionHover('video')}
+        onClick={() => handleSectionClick('video')}
+      >
+        <div className="max-w-4xl mx-auto">
+          {page.video_title && (
+            <h2 
+              className="text-3xl md:text-4xl font-bold text-center mb-8"
+              style={{ fontFamily: fontHeading }}
+            >
+              {page.video_title}
+            </h2>
+          )}
+          
+          <div className="relative aspect-video rounded-2xl overflow-hidden bg-card/50 backdrop-blur-sm border border-border/50 shadow-2xl">
+            {isYouTube ? (
+              <iframe
+                src={youtubeEmbedUrl}
+                className="w-full h-full"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                title={page.video_title || 'Video'}
+              />
+            ) : (
+              <video 
+                src={page.video_url}
+                poster={page.video_thumbnail || undefined}
+                controls
+                className="w-full h-full object-cover"
+              >
+                Seu navegador não suporta vídeos.
+              </video>
+            )}
+          </div>
+        </div>
+      </section>
+    );
+  };
+
   const renderFeaturesSection = () => {
     if (page.features.length === 0) return null;
     return (
@@ -912,6 +976,7 @@ const DynamicLandingPageInner = () => {
   // Map section IDs to render functions
   const sectionRenderers: Record<SectionId, () => React.ReactNode> = {
     'hero': renderHeroSection,
+    'video': renderVideoSection,
     'features': renderFeaturesSection,
     'about': renderAboutSection,
     'how-it-works': renderHowItWorksSection,
