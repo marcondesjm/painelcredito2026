@@ -1316,7 +1316,24 @@ const LandingPageEditor = () => {
                       <div className="flex items-center gap-3">
                         <Switch
                           checked={data.video_enabled}
-                          onCheckedChange={(checked) => setData({ ...data, video_enabled: checked })}
+                          onCheckedChange={(checked) => {
+                            let newSectionOrder = [...data.section_order];
+                            if (checked) {
+                              // Add 'video' after 'hero' if not present
+                              if (!newSectionOrder.includes('video')) {
+                                const heroIndex = newSectionOrder.indexOf('hero');
+                                if (heroIndex !== -1) {
+                                  newSectionOrder.splice(heroIndex + 1, 0, 'video');
+                                } else {
+                                  newSectionOrder.unshift('video');
+                                }
+                              }
+                            } else {
+                              // Remove 'video' from order when disabled
+                              newSectionOrder = newSectionOrder.filter(s => s !== 'video');
+                            }
+                            setData({ ...data, video_enabled: checked, section_order: newSectionOrder });
+                          }}
                         />
                         <div>
                           <p className="font-medium text-sm">Exibir Seção</p>
