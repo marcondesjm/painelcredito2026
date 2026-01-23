@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Loader2, Star, Check, Shield, Clock, ArrowRight, MessageCircle, Zap, Headphones } from 'lucide-react';
+import { Loader2, Star, Check, Shield, Clock, ArrowRight, MessageCircle, Zap, Headphones, LogOut } from 'lucide-react';
 import { CountdownTimer } from '@/components/CountdownTimer';
 import backgroundHero from '@/assets/background-hero.png';
 import dashboardMockup from '@/assets/dashboard-mockup.png';
@@ -1028,17 +1028,63 @@ const DynamicLandingPageInner = () => {
         style={{ backgroundColor: `${page.color_background || '#0a0a0f'}e6` }}
       />
 
-      {/* Header with Logo */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/30 h-16">
+      {/* Header with Logo and Navigation */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/30 h-16 md:h-20">
         <div className="max-w-7xl mx-auto px-4 h-full flex items-center justify-between">
           {page.logo_image ? (
-            <img src={page.logo_image} alt="Logo" className="h-12 object-contain" />
+            <img src={page.logo_image} alt="Logo" className="h-10 md:h-14 object-contain" />
           ) : (
             <h1 className="font-bold text-lg" style={{ color: `hsl(${primaryHsl})` }}>{page.title}</h1>
           )}
+          
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center gap-2">
+            <Button 
+              size="sm" 
+              className="text-white"
+              style={{ backgroundColor: `hsl(${primaryHsl})` }}
+              onClick={() => page.hero_cta_link && navigate(page.hero_cta_link)}
+            >
+              {page.hero_cta_text || 'Comprar Agora'}
+            </Button>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="border-primary/50 text-primary hover:bg-primary hover:text-primary-foreground"
+              style={{ borderColor: `hsl(${primaryHsl} / 0.5)`, color: `hsl(${primaryHsl})` }}
+              onClick={() => navigate('/auth')}
+            >
+              <LogOut className="w-4 h-4 mr-2" />
+              Sair
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="text-muted-foreground hover:text-foreground"
+              onClick={() => {
+                const el = document.getElementById('how-it-works');
+                el?.scrollIntoView({ behavior: 'smooth' });
+              }}
+            >
+              Como Funciona
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="text-muted-foreground hover:text-foreground"
+              onClick={() => {
+                const el = document.getElementById('faq');
+                el?.scrollIntoView({ behavior: 'smooth' });
+              }}
+            >
+              FAQ
+            </Button>
+          </nav>
+
+          {/* Mobile - just the CTA button */}
           <Button 
             size="sm" 
-            className="text-white"
+            className="md:hidden text-white"
             style={{ backgroundColor: `hsl(${primaryHsl})` }}
             onClick={() => page.hero_cta_link && navigate(page.hero_cta_link)}
           >
