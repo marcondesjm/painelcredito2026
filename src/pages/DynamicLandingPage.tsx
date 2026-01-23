@@ -7,7 +7,6 @@ import { Badge } from '@/components/ui/badge';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Loader2, Star, Check, Shield, Clock, ArrowRight, MessageCircle, Zap, Headphones } from 'lucide-react';
 import { CountdownTimer } from '@/components/CountdownTimer';
-import { TrustBadge } from '@/components/TrustBadge';
 import backgroundHero from '@/assets/background-hero.png';
 import dashboardMockup from '@/assets/dashboard-mockup.png';
 
@@ -178,7 +177,6 @@ const DynamicLandingPageInner = () => {
       AccordionTrigger: typeof AccordionTrigger,
       AccordionContent: typeof AccordionContent,
       CountdownTimer: typeof CountdownTimer,
-      TrustBadge: typeof TrustBadge,
     });
   }, [debug, slug, isPreview, draftId]);
 
@@ -603,9 +601,18 @@ const DynamicLandingPageInner = () => {
 
             {/* Trust badges */}
             <div className="flex flex-wrap justify-center lg:justify-start gap-3">
-              <TrustBadge icon={Zap} text="Entrega Automática" />
-              <TrustBadge icon={Shield} text="Pagamento Seguro" />
-              <TrustBadge icon={Headphones} text="Suporte Disponível" />
+              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-card/50 backdrop-blur-sm border border-border/50">
+                <Zap className="w-4 h-4" style={{ color: page.color_icons || '#8B5CF6' }} />
+                <span className="text-sm text-muted-foreground">Entrega Automática</span>
+              </div>
+              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-card/50 backdrop-blur-sm border border-border/50">
+                <Shield className="w-4 h-4" style={{ color: page.color_icons || '#8B5CF6' }} />
+                <span className="text-sm text-muted-foreground">Pagamento Seguro</span>
+              </div>
+              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-card/50 backdrop-blur-sm border border-border/50">
+                <Headphones className="w-4 h-4" style={{ color: page.color_icons || '#8B5CF6' }} />
+                <span className="text-sm text-muted-foreground">Suporte Disponível</span>
+              </div>
             </div>
           </div>
         </div>
@@ -773,8 +780,8 @@ const DynamicLandingPageInner = () => {
                 </div>
                 <p className="text-foreground/90 mb-6">"{testimonial.text}"</p>
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
-                    <MessageCircle className="w-5 h-5 text-primary" />
+                  <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: `${page.color_icons || '#8B5CF6'}20` }}>
+                    <MessageCircle className="w-5 h-5" style={{ color: page.color_icons || '#8B5CF6' }} />
                   </div>
                   <div>
                     <p className="font-semibold">{testimonial.name}</p>
@@ -874,11 +881,11 @@ const DynamicLandingPageInner = () => {
 
           <div className="flex items-center justify-center gap-6 mt-8 text-sm text-muted-foreground">
             <div className="flex items-center gap-2">
-              <Shield className="w-4 h-4" />
+              <Shield className="w-4 h-4" style={{ color: page.color_icons || '#8B5CF6' }} />
               <span>Compra segura</span>
             </div>
             <div className="flex items-center gap-2">
-              <Clock className="w-4 h-4" />
+              <Clock className="w-4 h-4" style={{ color: page.color_icons || '#8B5CF6' }} />
               <span>Acesso imediato</span>
             </div>
           </div>
