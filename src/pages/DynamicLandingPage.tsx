@@ -502,7 +502,22 @@ const DynamicLandingPageInner = () => {
   // Get the section order (use default if not set)
   const sectionOrder = page.section_order || defaultSectionOrder;
 
-  // Section render functions
+  // Generate PIX link for banking apps
+  const generatePixLink = (pixKey: string) => {
+    const cleanKey = pixKey.replace(/\D/g, '');
+    return `pix:${cleanKey}`;
+  };
+
+  // Copy to clipboard function
+  const copyToClipboard = async (text: string, e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch {
+      return false;
+    }
+  };
   const renderHeroSection = () => (
     <section 
       key="hero"
@@ -929,7 +944,7 @@ const DynamicLandingPageInner = () => {
               {/* QR Code */}
               {page.donation_qr_code && (
                 <a 
-                  href={generatePixLink(page.donation_pix_key || '', page.donation_pix_name || '')}
+                  href={generatePixLink(page.donation_pix_key || '')}
                   className="bg-white p-3 rounded-lg cursor-pointer hover:shadow-lg hover:scale-105 transition-all group"
                   title="Clique para abrir no app do banco"
                 >
@@ -948,18 +963,8 @@ const DynamicLandingPageInner = () => {
               <div className="bg-background/50 rounded-lg p-4 space-y-3">
                 <p className="text-sm font-medium">Chave PIX:</p>
                 <p 
-                  className="text-lg font-bold font-mono cursor-pointer hover:opacity-80 transition-opacity"
+                  className="text-lg font-bold font-mono"
                   style={{ color: `hsl(${accentHsl})` }}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    navigator.clipboard.writeText(page.donation_pix_key || '48996029392');
-                    // Show feedback
-                    const target = e.currentTarget;
-                    const originalText = target.textContent;
-                    target.textContent = '✓ Copiado!';
-                    setTimeout(() => { target.textContent = originalText; }, 1500);
-                  }}
-                  title="Clique para copiar"
                 >
                   {page.donation_pix_key || '48996029392'}
                 </p>
@@ -969,14 +974,30 @@ const DynamicLandingPageInner = () => {
                 
                 {/* Button to open in bank app */}
                 <a
-                  href={generatePixLink(page.donation_pix_key || '', page.donation_pix_name || '')}
+                  href={generatePixLink(page.donation_pix_key || '')}
                   className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white transition-all hover:opacity-90 hover:scale-105"
                   style={{ backgroundColor: `hsl(${accentHsl})` }}
+                  onClick={(e) => e.stopPropagation()}
                 >
                   <span>📱</span> Abrir no App do Banco
                 </a>
-                
-                <p className="text-xs text-muted-foreground">Clique na chave para copiar</p>
+
+                {/* Copy button */}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full"
+                  onClick={async (e) => {
+                    e.stopPropagation();
+                    const success = await copyToClipboard(page.donation_pix_key || '48996029392', e);
+                    const btn = e.currentTarget;
+                    const originalText = btn.textContent;
+                    btn.textContent = success ? '✓ Copiado!' : 'Erro ao copiar';
+                    setTimeout(() => { btn.textContent = originalText; }, 1500);
+                  }}
+                >
+                  📋 Copiar Chave PIX
+                </Button>
               </div>
             </div>
           </div>
@@ -997,16 +1018,6 @@ const DynamicLandingPageInner = () => {
     'cta': renderCtaSection,
     'donation': renderDonationSection,
   };
-  const generatePixLink = (pixKey: string, name: string, amount?: number) => {
-    // Format for PIX copia-e-cola / QR Code
-    // This creates a link that opens in banking apps
-    const cleanKey = pixKey.replace(/\D/g, '');
-    
-    // Use the pix: URI scheme for mobile apps
-    // Also provide a fallback copy functionality
-    return `pix:${cleanKey}`;
-  };
-
   return (
     <div 
       className="min-h-screen relative"
