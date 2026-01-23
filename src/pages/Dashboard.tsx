@@ -16,7 +16,8 @@ import {
   Shield,
   Heart,
   Copy,
-  Check
+  Check,
+  HelpCircle
 } from 'lucide-react';
 import {
   Dialog,
@@ -36,6 +37,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import logoPainel from '@/assets/logo-dashboard.png';
+import { DashboardTour, triggerDashboardTour } from '@/components/DashboardTour';
 
 interface LandingPage {
   id: string;
@@ -147,6 +149,9 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Dashboard Tour */}
+      <DashboardTour />
+      
       {/* Header */}
       <header className="border-b border-border/30 bg-card/50 backdrop-blur-sm sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 py-3 sm:py-6 flex items-center justify-between gap-2">
@@ -160,6 +165,7 @@ const Dashboard = () => {
           
           <div className="flex items-center gap-1 sm:gap-2 flex-wrap justify-end">
             <Button 
+              id="tour-dashboard-donate"
               variant="outline" 
               size="sm" 
               onClick={() => setShowDonationModal(true)}
@@ -174,9 +180,25 @@ const Dashboard = () => {
                 <span className="hidden sm:inline">Painel Admin</span>
               </Button>
             )}
-            <Button variant="outline" size="sm" onClick={() => navigate('/')} className="text-xs sm:text-sm px-2 sm:px-3">
+            <Button 
+              id="tour-dashboard-site"
+              variant="outline" 
+              size="sm" 
+              onClick={() => navigate('/')} 
+              className="text-xs sm:text-sm px-2 sm:px-3"
+            >
               <LayoutDashboard className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-2" />
               <span className="hidden sm:inline">Ver Site</span>
+            </Button>
+            {/* Help button to restart tour */}
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => user && triggerDashboardTour(user.id)}
+              title="Ver tutorial"
+              className="h-8 w-8"
+            >
+              <HelpCircle className="w-4 h-4" />
             </Button>
             <Button variant="ghost" size="sm" onClick={handleLogout} className="text-xs sm:text-sm px-2 sm:px-3">
               <LogOut className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-2" />
@@ -193,77 +215,79 @@ const Dashboard = () => {
             <h2 className="text-2xl font-bold">Suas Landing Pages</h2>
             <p className="text-muted-foreground">Crie e gerencie suas páginas de vendas</p>
           </div>
-          <Button onClick={() => navigate('/dashboard/new')}>
+          <Button id="tour-dashboard-new-btn" onClick={() => navigate('/dashboard/new')}>
             <Plus className="w-4 h-4 mr-2" />
             Nova Página
           </Button>
         </div>
 
-        {pages.length === 0 ? (
-          <Card className="bg-card/50 border-dashed">
-            <CardContent className="py-16 text-center">
-              <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                <Plus className="w-8 h-8 text-primary" />
-              </div>
-              <h3 className="text-lg font-semibold mb-2">Nenhuma página criada</h3>
-              <p className="text-muted-foreground mb-4">
-                Crie sua primeira landing page para começar a vender
-              </p>
-              <Button onClick={() => navigate('/dashboard/new')}>
-                <Plus className="w-4 h-4 mr-2" />
-                Criar Landing Page
-              </Button>
-            </CardContent>
-          </Card>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {pages.map((page) => (
-              <Card key={page.id} className="bg-card/50 hover:border-primary/50 transition-colors">
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1 min-w-0">
-                      <CardTitle className="text-lg truncate">{page.title}</CardTitle>
-                      <CardDescription className="truncate">/{page.slug}</CardDescription>
+        <div id="tour-dashboard-pages">
+          {pages.length === 0 ? (
+            <Card className="bg-card/50 border-dashed">
+              <CardContent className="py-16 text-center">
+                <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                  <Plus className="w-8 h-8 text-primary" />
+                </div>
+                <h3 className="text-lg font-semibold mb-2">Nenhuma página criada</h3>
+                <p className="text-muted-foreground mb-4">
+                  Crie sua primeira landing page para começar a vender
+                </p>
+                <Button onClick={() => navigate('/dashboard/new')}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  Criar Landing Page
+                </Button>
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {pages.map((page) => (
+                <Card key={page.id} className="bg-card/50 hover:border-primary/50 transition-colors">
+                  <CardHeader>
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1 min-w-0">
+                        <CardTitle className="text-lg truncate">{page.title}</CardTitle>
+                        <CardDescription className="truncate">/{page.slug}</CardDescription>
+                      </div>
+                      <Badge variant={page.is_published ? "default" : "secondary"}>
+                        {page.is_published ? 'Publicada' : 'Rascunho'}
+                      </Badge>
                     </div>
-                    <Badge variant={page.is_published ? "default" : "secondary"}>
-                      {page.is_published ? 'Publicada' : 'Rascunho'}
-                    </Badge>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center gap-2">
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      className="flex-1"
-                      onClick={() => navigate(`/dashboard/edit/${page.id}`)}
-                    >
-                      <Edit className="w-4 h-4 mr-2" />
-                      Editar
-                    </Button>
-                    {page.is_published && (
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex items-center gap-2">
                       <Button 
                         variant="outline" 
-                        size="sm"
-                        onClick={() => window.open(`/p/${page.slug}`, '_blank')}
+                        size="sm" 
+                        className="flex-1"
+                        onClick={() => navigate(`/dashboard/edit/${page.id}`)}
                       >
-                        <ExternalLink className="w-4 h-4" />
+                        <Edit className="w-4 h-4 mr-2" />
+                        Editar
                       </Button>
-                    )}
-                    <Button 
-                      variant="ghost" 
-                      size="sm"
-                      onClick={() => setDeleteId(page.id)}
-                      className="text-destructive hover:text-destructive"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        )}
+                      {page.is_published && (
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => window.open(`/p/${page.slug}`, '_blank')}
+                        >
+                          <ExternalLink className="w-4 h-4" />
+                        </Button>
+                      )}
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        onClick={() => setDeleteId(page.id)}
+                        className="text-destructive hover:text-destructive"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
+        </div>
       </main>
 
       {/* Delete Dialog */}
