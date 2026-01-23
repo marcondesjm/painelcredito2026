@@ -9,12 +9,16 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, Save, Loader2, ExternalLink, Sparkles, Plus, Trash2, Eye, EyeOff, GripVertical, Check, RefreshCw, HelpCircle } from 'lucide-react';
+import { ArrowLeft, Save, Loader2, ExternalLink, Sparkles, Plus, Trash2, Eye, EyeOff, GripVertical, Check, RefreshCw, HelpCircle, Menu } from 'lucide-react';
 import { toast } from 'sonner';
 import { ImageUpload } from '@/components/ImageUpload';
 import { EditorTour, triggerEditorTour } from '@/components/EditorTour';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 import { SectionOrderManager, SectionId, defaultSectionOrder } from '@/components/SectionOrderManager';
+import { Link } from 'react-router-dom';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import backgroundHero from '@/assets/background-hero.png';
+import logoPainel from '@/assets/logo-dashboard.png';
 
 interface LandingPageData {
   id?: string;
@@ -575,9 +579,23 @@ const LandingPageEditor = () => {
     });
   };
 
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   if (authLoading || loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-screen relative flex items-center justify-center">
+        {/* Fixed background */}
+        <div 
+          className="fixed inset-0 -z-20"
+          style={{ 
+            backgroundImage: `url(${backgroundHero})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat'
+          }}
+        />
+        {/* Dark overlay */}
+        <div className="fixed inset-0 bg-[hsl(240,10%,4%)]/70 -z-10" />
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
       </div>
     );
@@ -586,24 +604,42 @@ const LandingPageEditor = () => {
   const previewUrl = `${window.location.origin}/p/${data.slug}`;
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen relative flex flex-col">
+      {/* Fixed background for entire page - identical to Index */}
+      <div 
+        className="fixed inset-0 -z-20"
+        style={{ 
+          backgroundImage: `url(${backgroundHero})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat'
+        }}
+      />
+      {/* Dark overlay - identical to Index */}
+      <div className="fixed inset-0 bg-[hsl(240,10%,4%)]/70 -z-10" />
+      
       {/* Tour for new users */}
       <EditorTour isNewPage={!isEditing} />
       
-      {/* Header */}
-      <header id="tour-header" className="border-b border-border/30 bg-card/50 backdrop-blur-sm sticky top-0 z-50">
-        <div className="max-w-[1800px] mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" onClick={() => navigate('/dashboard')}>
+      {/* Header - identical to Index Header style */}
+      <header id="tour-header" className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/30 h-16 sm:h-20">
+        <div className="max-w-[1800px] mx-auto px-4 h-full flex items-center justify-between">
+          {/* Left side - Logo and Title */}
+          <div className="flex items-center gap-3">
+            <Button variant="ghost" size="icon" onClick={() => navigate('/dashboard')} className="shrink-0">
               <ArrowLeft className="w-5 h-5" />
             </Button>
-            <div>
-              <h1 className="font-semibold">{isEditing ? 'Editar' : 'Nova'} Landing Page</h1>
+            <Link to="/" className="hidden sm:flex items-center h-full py-2">
+              <img src={logoPainel} alt="Logo" className="h-10 sm:h-12 object-contain" />
+            </Link>
+            <div className="hidden md:block">
+              <h1 className="font-semibold text-sm">{isEditing ? 'Editar' : 'Nova'} Landing Page</h1>
               <p className="text-xs text-muted-foreground">{data.slug ? `/p/${data.slug}` : 'Configure a URL'}</p>
             </div>
           </div>
           
-          <div className="flex items-center gap-2">
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center gap-2">
             {/* Auto-save indicator */}
             {autoSaving && (
               <span className="text-xs text-muted-foreground flex items-center gap-1">
@@ -612,13 +648,12 @@ const LandingPageEditor = () => {
               </span>
             )}
             {!autoSaving && lastSaved && (
-              <span className="text-xs text-muted-foreground flex items-center gap-1">
-                <Check className="w-3 h-3 text-green-500" />
+              <span className="text-xs text-green-500 flex items-center gap-1">
+                <Check className="w-3 h-3" />
                 Salvo
               </span>
             )}
             
-            {/* Help button to restart tour */}
             <Button
               variant="ghost"
               size="icon"
@@ -634,44 +669,113 @@ const LandingPageEditor = () => {
               variant="outline" 
               size="sm"
               onClick={() => setShowPreview(!showPreview)}
+              className="border-primary/50 hover:bg-primary/10"
             >
               {showPreview ? <EyeOff className="w-4 h-4 mr-2" /> : <Eye className="w-4 h-4 mr-2" />}
               {showPreview ? 'Ocultar' : 'Mostrar'} Preview
             </Button>
-            <Button id="tour-save" onClick={handleSave} disabled={saving || autoSaving}>
+            <Button 
+              id="tour-save" 
+              variant="hero"
+              size="sm"
+              onClick={handleSave} 
+              disabled={saving || autoSaving}
+            >
               {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
               Salvar
             </Button>
-          </div>
+          </nav>
+
+          {/* Mobile Menu */}
+          <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+            <SheetTrigger asChild className="md:hidden">
+              <Button variant="ghost" size="icon" className="text-foreground">
+                <Menu className="w-6 h-6" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="bg-background border-border w-[280px]">
+              <nav className="flex flex-col gap-4 mt-8">
+                <div className="text-center mb-4">
+                  <h2 className="font-semibold">{isEditing ? 'Editar' : 'Nova'} Landing Page</h2>
+                  <p className="text-xs text-muted-foreground">{data.slug ? `/p/${data.slug}` : 'Configure a URL'}</p>
+                </div>
+                <Button 
+                  variant="hero" 
+                  className="w-full"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    handleSave();
+                  }}
+                  disabled={saving || autoSaving}
+                >
+                  <Save className="w-4 h-4 mr-2" />
+                  {saving ? 'Salvando...' : 'Salvar'}
+                </Button>
+                <Button 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    setShowPreview(!showPreview);
+                  }}
+                >
+                  {showPreview ? <EyeOff className="w-4 h-4 mr-2" /> : <Eye className="w-4 h-4 mr-2" />}
+                  {showPreview ? 'Ocultar' : 'Mostrar'} Preview
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  className="w-full justify-start"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    if (user) triggerEditorTour(user.id);
+                  }}
+                >
+                  <HelpCircle className="w-4 h-4 mr-2" />
+                  Ver Tutorial
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  className="w-full justify-start text-muted-foreground"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    navigate('/dashboard');
+                  }}
+                >
+                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  Voltar ao Dashboard
+                </Button>
+              </nav>
+            </SheetContent>
+          </Sheet>
         </div>
       </header>
 
-      {/* Content */}
+      {/* Content - with padding for fixed header */}
       {showPreview ? (
-        <ResizablePanelGroup direction="horizontal" className="flex-1" onLayout={handlePanelResize}>
+        <ResizablePanelGroup direction="horizontal" className="flex-1 pt-16 sm:pt-20" onLayout={handlePanelResize}>
           {/* Editor Panel */}
           <ResizablePanel defaultSize={defaultEditorSize} minSize={25} maxSize={75}>
             <div className="h-full overflow-auto">
           <main className="max-w-3xl mx-auto px-3 sm:px-4 py-4 sm:py-6">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
               <div id="tour-tabs" className="overflow-x-auto -mx-3 sm:mx-0 px-3 sm:px-0 pb-2">
-              <TabsList className="inline-flex flex-wrap gap-1 w-full h-auto p-1 bg-muted/50">
-                  <TabsTrigger value="basico" className="text-xs whitespace-nowrap px-3 py-1.5">Básico</TabsTrigger>
-                  <TabsTrigger value="layout" className="text-xs whitespace-nowrap px-3 py-1.5">Layout</TabsTrigger>
-                  <TabsTrigger value="imagens" className="text-xs whitespace-nowrap px-3 py-1.5">Imagens</TabsTrigger>
-                  <TabsTrigger value="precos" className="text-xs whitespace-nowrap px-3 py-1.5">Preços</TabsTrigger>
-                  <TabsTrigger value="sobre" className="text-xs whitespace-nowrap px-3 py-1.5">Sobre</TabsTrigger>
-                  <TabsTrigger value="doacao" className="text-xs whitespace-nowrap px-3 py-1.5">Doação</TabsTrigger>
-                  <TabsTrigger value="conteudo" className="text-xs whitespace-nowrap px-3 py-1.5">Conteúdo</TabsTrigger>
-                  <TabsTrigger value="depoimentos" className="text-xs whitespace-nowrap px-3 py-1.5">Depoimentos</TabsTrigger>
-                  <TabsTrigger value="faq" className="text-xs whitespace-nowrap px-3 py-1.5">FAQ</TabsTrigger>
-                  <TabsTrigger value="seo" className="text-xs whitespace-nowrap px-3 py-1.5">SEO</TabsTrigger>
+              <TabsList className="inline-flex flex-wrap gap-1 w-full h-auto p-1.5 bg-card/60 backdrop-blur-sm border border-border/30 rounded-xl">
+                  <TabsTrigger value="basico" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Básico</TabsTrigger>
+                  <TabsTrigger value="layout" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Layout</TabsTrigger>
+                  <TabsTrigger value="imagens" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Imagens</TabsTrigger>
+                  <TabsTrigger value="precos" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Preços</TabsTrigger>
+                  <TabsTrigger value="sobre" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Sobre</TabsTrigger>
+                  <TabsTrigger value="doacao" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Doação</TabsTrigger>
+                  <TabsTrigger value="conteudo" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Conteúdo</TabsTrigger>
+                  <TabsTrigger value="depoimentos" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Depoimentos</TabsTrigger>
+                  <TabsTrigger value="faq" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">FAQ</TabsTrigger>
+                  <TabsTrigger value="seo" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">SEO</TabsTrigger>
                 </TabsList>
               </div>
 
               {/* Tab Básico */}
               <TabsContent value="basico">
-                <Card className="bg-card/50">
+                <Card className="bg-card/50 backdrop-blur-sm border-border/30">
                   <CardHeader className="pb-4">
                     <CardTitle className="text-lg">Informações Básicas</CardTitle>
                     <CardDescription>Configure os dados principais</CardDescription>
@@ -1560,24 +1664,36 @@ const LandingPageEditor = () => {
           </ResizablePanel>
         </ResizablePanelGroup>
       ) : (
-        <div className="flex-1 overflow-auto">
+        <div className="flex-1 overflow-auto pt-16 sm:pt-20">
           <main className="max-w-3xl mx-auto px-3 sm:px-4 py-4 sm:py-6">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
               <div id="tour-tabs" className="overflow-x-auto -mx-3 sm:mx-0 px-3 sm:px-0">
-                <TabsList className="inline-flex w-auto min-w-full sm:grid sm:grid-cols-9 gap-1">
-                  <TabsTrigger value="basico" className="text-xs whitespace-nowrap px-3 sm:px-2">Básico</TabsTrigger>
-                  <TabsTrigger value="layout" className="text-xs whitespace-nowrap px-3 sm:px-2">Layout</TabsTrigger>
-                  <TabsTrigger value="imagens" className="text-xs whitespace-nowrap px-3 sm:px-2">Imagens</TabsTrigger>
-                  <TabsTrigger value="precos" className="text-xs whitespace-nowrap px-3 sm:px-2">Preços</TabsTrigger>
-                  <TabsTrigger value="sobre" className="text-xs whitespace-nowrap px-3 sm:px-2">Sobre</TabsTrigger>
-                  <TabsTrigger value="doacao" className="text-xs whitespace-nowrap px-3 sm:px-2">Doação</TabsTrigger>
-                  <TabsTrigger value="conteudo" className="text-xs whitespace-nowrap px-3 sm:px-2">Conteúdo</TabsTrigger>
-                  <TabsTrigger value="depoimentos" className="text-xs whitespace-nowrap px-3 sm:px-2">Depoimentos</TabsTrigger>
-                  <TabsTrigger value="seo" className="text-xs whitespace-nowrap px-3 sm:px-2">SEO</TabsTrigger>
+                <TabsList className="inline-flex w-auto min-w-full gap-1 p-1.5 bg-card/60 backdrop-blur-sm border border-border/30 rounded-xl">
+                  <TabsTrigger value="basico" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Básico</TabsTrigger>
+                  <TabsTrigger value="layout" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Layout</TabsTrigger>
+                  <TabsTrigger value="imagens" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Imagens</TabsTrigger>
+                  <TabsTrigger value="precos" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Preços</TabsTrigger>
+                  <TabsTrigger value="sobre" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Sobre</TabsTrigger>
+                  <TabsTrigger value="doacao" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Doação</TabsTrigger>
+                  <TabsTrigger value="conteudo" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Conteúdo</TabsTrigger>
+                  <TabsTrigger value="depoimentos" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Depoimentos</TabsTrigger>
+                  <TabsTrigger value="seo" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">SEO</TabsTrigger>
                 </TabsList>
               </div>
-              {/* Duplicated tabs content would go here if needed - for now we just show a message */}
-              <p className="text-muted-foreground text-center py-8">Clique em "Mostrar Preview" para editar com visualização</p>
+              {/* Message when preview is hidden */}
+              <Card className="bg-card/50 backdrop-blur-sm border-border/30">
+                <CardContent className="py-16 text-center">
+                  <Eye className="w-16 h-16 mx-auto mb-4 text-primary/30" />
+                  <h3 className="text-lg font-semibold mb-2">Preview Oculto</h3>
+                  <p className="text-muted-foreground mb-6">
+                    Clique em "Mostrar Preview" para editar com visualização em tempo real
+                  </p>
+                  <Button variant="hero" onClick={() => setShowPreview(true)}>
+                    <Eye className="w-4 h-4 mr-2" />
+                    Mostrar Preview
+                  </Button>
+                </CardContent>
+              </Card>
             </Tabs>
           </main>
         </div>
