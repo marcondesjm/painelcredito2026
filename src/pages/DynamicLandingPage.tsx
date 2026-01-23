@@ -902,11 +902,23 @@ const DynamicLandingPageInner = () => {
             {page.cta_subtitle || 'Garanta seu acesso agora e transforme seus resultados'}
           </p>
           
-          {page.price_current && (
+          {(page.price_current || page.price_original) && (
             <div className="mb-8">
-              <p className="text-5xl font-bold" style={{ color: `hsl(${accentHsl})` }}>
-                {formatPrice(page.price_current)}
-              </p>
+              {page.price_original && (
+                <p className="text-xl text-muted-foreground line-through mb-1">
+                  {formatPrice(page.price_original)}
+                </p>
+              )}
+              {page.price_current && (
+                <p className="text-5xl font-bold" style={{ color: `hsl(${accentHsl})` }}>
+                  {formatPrice(page.price_current)}
+                </p>
+              )}
+              {page.price_installments && page.price_current && (
+                <p className="text-sm text-muted-foreground mt-2">
+                  ou {page.price_installments}x de {formatPrice(page.price_current / page.price_installments)}
+                </p>
+              )}
             </div>
           )}
 
