@@ -951,7 +951,14 @@ const DynamicLandingPageInner = () => {
               backgroundColor: `hsl(${accentHsl})`,
               boxShadow: `0 0 20px hsl(${accentHsl} / 0.4)`
             }}
-            onClick={() => page.hero_cta_link && navigate(page.hero_cta_link)}
+            onClick={(e) => {
+              if (isPreview) {
+                e.preventDefault();
+                handleSectionClick('cta');
+                return;
+              }
+              if (page.hero_cta_link) navigate(page.hero_cta_link);
+            }}
           >
             {page.hero_cta_text || 'Comprar Agora'}
             <ArrowRight className="w-5 h-5 ml-2" />
@@ -1010,8 +1017,13 @@ const DynamicLandingPageInner = () => {
                   className="bg-white p-3 rounded-lg cursor-pointer hover:shadow-lg hover:scale-105 transition-all group"
                   title="Clique para abrir no app do banco"
                   onClick={async (e) => {
-                    // Prevent editor click handling in preview; also provide desktop fallback.
-                    e.stopPropagation();
+                    // In editor preview, clicking should open the edit panel instead of performing actions.
+                    if (isPreview) {
+                      e.preventDefault();
+                      handleSectionClick('donation');
+                      return;
+                    }
+
                     const key = (page.donation_pix_key || '').trim();
                     if (!key) return;
                     if (!isMobileDevice()) {
@@ -1050,6 +1062,12 @@ const DynamicLandingPageInner = () => {
                   className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white transition-all hover:opacity-90 hover:scale-105"
                   style={{ backgroundColor: `hsl(${accentHsl})` }}
                   onClick={async (e) => {
+                    if (isPreview) {
+                      e.preventDefault();
+                      handleSectionClick('donation');
+                      return;
+                    }
+
                     e.preventDefault();
                     e.stopPropagation();
 
@@ -1090,6 +1108,11 @@ const DynamicLandingPageInner = () => {
                   size="sm"
                   className="w-full"
                   onClick={async (e) => {
+                    if (isPreview) {
+                      handleSectionClick('donation');
+                      return;
+                    }
+
                     e.stopPropagation();
                     const success = await copyToClipboard(page.donation_pix_key || '48996029392', e);
                     const btn = e.currentTarget;
