@@ -279,11 +279,35 @@ style.textContent = `
   }
   
   .driver-active-element {
+    position: relative !important;
+    z-index: 10001 !important;
+    background: rgba(30, 30, 50, 0.95) !important;
     box-shadow: 
       0 0 0 4px hsl(var(--primary)),
-      0 0 30px hsl(var(--primary) / 0.6),
-      0 0 60px hsl(var(--primary) / 0.3) !important;
+      0 0 0 8px rgba(139, 92, 246, 0.5),
+      0 0 40px hsl(var(--primary) / 0.8),
+      0 0 80px hsl(var(--primary) / 0.5),
+      0 0 120px hsl(var(--primary) / 0.3),
+      inset 0 0 30px rgba(139, 92, 246, 0.15) !important;
     border-radius: 12px !important;
+    filter: brightness(1.3) contrast(1.1) !important;
+  }
+  
+  .driver-active-element * {
+    color: #ffffff !important;
+    opacity: 1 !important;
+  }
+  
+  .driver-active-element input,
+  .driver-active-element textarea,
+  .driver-active-element select {
+    background: rgba(60, 60, 90, 0.9) !important;
+    border-color: hsl(var(--primary)) !important;
+    color: #ffffff !important;
+  }
+  
+  .driver-active-element label {
+    color: #e2e8f0 !important;
   }
 `;
 document.head.appendChild(style);
