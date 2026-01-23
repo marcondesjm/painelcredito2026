@@ -94,6 +94,9 @@ class DynamicLandingPageErrorBoundary extends React.Component<
   render() {
     if (!this.state.error) return this.props.children;
 
+    const qs = new URLSearchParams(window.location.search);
+    const showDebug = qs.get('debug') === 'true' || qs.get('preview') === 'true';
+
     return (
       <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-6">
         <div className="max-w-2xl w-full space-y-4">
@@ -105,6 +108,22 @@ class DynamicLandingPageErrorBoundary extends React.Component<
           <Card className="p-4 bg-card/60 border-border/50">
             <p className="text-sm font-mono whitespace-pre-wrap">{this.state.error.message}</p>
           </Card>
+
+          {showDebug && (
+            <Card className="p-4 bg-card/60 border-border/50">
+              <p className="text-xs font-mono whitespace-pre-wrap">
+                {this.state.error.stack || 'Sem stack disponível.'}
+              </p>
+              {this.state.info?.componentStack && (
+                <>
+                  <div className="h-px bg-border my-3" />
+                  <p className="text-xs font-mono whitespace-pre-wrap">
+                    {this.state.info.componentStack}
+                  </p>
+                </>
+              )}
+            </Card>
+          )}
         </div>
       </div>
     );
@@ -141,6 +160,18 @@ const DynamicLandingPageInner = () => {
     if (!debug) return;
     // eslint-disable-next-line no-console
     console.debug('[DynamicLandingPage] params', { slug, isPreview, draftId });
+
+    // eslint-disable-next-line no-console
+    console.debug('[DynamicLandingPage] component types', {
+      Button: typeof Button,
+      Card: typeof Card,
+      Accordion: typeof Accordion,
+      AccordionItem: typeof AccordionItem,
+      AccordionTrigger: typeof AccordionTrigger,
+      AccordionContent: typeof AccordionContent,
+      CountdownTimer: typeof CountdownTimer,
+      TrustBadge: typeof TrustBadge,
+    });
   }, [debug, slug, isPreview, draftId]);
 
   useEffect(() => {
@@ -173,7 +204,7 @@ const DynamicLandingPageInner = () => {
           .from('landing_pages')
           .select('*')
           .eq('id', draftId)
-          .single();
+          .maybeSingle();
         
         data = result.data;
         fetchError = result.error;
@@ -185,7 +216,7 @@ const DynamicLandingPageInner = () => {
             .select('*')
             .eq('slug', slug)
             .eq('is_published', true)
-            .single();
+            .maybeSingle();
           
           data = fallbackResult.data;
           fetchError = fallbackResult.error;
@@ -197,7 +228,7 @@ const DynamicLandingPageInner = () => {
           .select('*')
           .eq('slug', slug)
           .eq('is_published', true)
-          .single();
+          .maybeSingle();
         
         data = result.data;
         fetchError = result.error;
