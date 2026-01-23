@@ -45,6 +45,7 @@ interface LandingPageData {
   color_background: string;
   color_text: string;
   color_text_highlight: string;
+  color_icons: string;
   font_heading: string;
   font_body: string;
   video_enabled: boolean;
@@ -123,6 +124,7 @@ const defaultData: LandingPageData = {
   color_background: '#0a0a0f',
   color_text: '#ffffff',
   color_text_highlight: '#a855f7',
+  color_icons: '#8B5CF6',
   font_heading: 'Inter',
   font_body: 'Inter',
   video_enabled: false,
@@ -272,6 +274,7 @@ const LandingPageEditor = () => {
     color_background: draft.color_background || '#0a0a0f',
     color_text: draft.color_text || '#ffffff',
     color_text_highlight: draft.color_text_highlight || '#a855f7',
+    color_icons: draft.color_icons || '#8B5CF6',
     font_heading: draft.font_heading || 'Inter',
     font_body: draft.font_body || 'Inter',
     video_enabled: draft.video_enabled,
@@ -1041,6 +1044,23 @@ const LandingPageEditor = () => {
                             />
                           </div>
                           <p className="text-xs text-muted-foreground">"Simples. Rápido. Automático."</p>
+                        </div>
+                        <div className="space-y-2">
+                          <Label className="text-xs text-muted-foreground">Cor dos Ícones</Label>
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="color"
+                              value={data.color_icons}
+                              onChange={(e) => setData({ ...data, color_icons: e.target.value })}
+                              className="w-10 h-10 rounded cursor-pointer border-0 shrink-0"
+                            />
+                            <Input
+                              value={data.color_icons}
+                              onChange={(e) => setData({ ...data, color_icons: e.target.value })}
+                              className="h-10 text-xs bg-background/50"
+                            />
+                          </div>
+                          <p className="text-xs text-muted-foreground">Ícones das funcionalidades e badges</p>
                         </div>
                       </div>
                     </div>
