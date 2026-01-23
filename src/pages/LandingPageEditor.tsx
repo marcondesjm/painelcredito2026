@@ -60,6 +60,8 @@ interface LandingPageData {
   meta_description: string;
   og_image: string;
   facebook_pixel: string;
+  google_analytics: string;
+  google_tag_manager: string;
   section_order: SectionId[];
 }
 
@@ -154,6 +156,8 @@ const defaultData: LandingPageData = {
   meta_description: '',
   og_image: '',
   facebook_pixel: '',
+  google_analytics: '',
+  google_tag_manager: '',
   section_order: defaultSectionOrder,
 };
 
@@ -256,6 +260,8 @@ const LandingPageEditor = () => {
     meta_description: draft.meta_description || null,
     og_image: draft.og_image || null,
     facebook_pixel: draft.facebook_pixel || null,
+    google_analytics: draft.google_analytics || null,
+    google_tag_manager: draft.google_tag_manager || null,
     section_order: draft.section_order,
   });
 
@@ -456,6 +462,8 @@ const LandingPageEditor = () => {
         meta_description: page.meta_description || '',
         og_image: page.og_image || '',
         facebook_pixel: (page as any).facebook_pixel || '',
+        google_analytics: (page as any).google_analytics || '',
+        google_tag_manager: (page as any).google_tag_manager || '',
         section_order: (page.section_order as SectionId[]) || defaultSectionOrder,
       });
     } catch (error) {
@@ -1610,7 +1618,57 @@ const LandingPageEditor = () => {
 </script>
 <!-- End Facebook Pixel Code -->`}
                         className="bg-background/50 font-mono text-xs"
-                        rows={8}
+                        rows={6}
+                      />
+                    </div>
+                    
+                    {/* Google Analytics */}
+                    <div className="space-y-2 pt-4 border-t border-border/50">
+                      <Label className="text-sm flex items-center gap-2">
+                        <span className="text-orange-500">📈</span> Google Analytics (GA4)
+                      </Label>
+                      <p className="text-xs text-muted-foreground">
+                        Cole apenas o ID de medição (ex: G-XXXXXXXXXX) ou o script completo do Google Analytics.
+                      </p>
+                      <Textarea
+                        value={data.google_analytics}
+                        onChange={(e) => setData({ ...data, google_analytics: e.target.value })}
+                        placeholder={`G-XXXXXXXXXX
+
+ou cole o script completo:
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-XXXXXXXXXX');
+</script>`}
+                        className="bg-background/50 font-mono text-xs"
+                        rows={6}
+                      />
+                    </div>
+                    
+                    {/* Google Tag Manager */}
+                    <div className="space-y-2 pt-4 border-t border-border/50">
+                      <Label className="text-sm flex items-center gap-2">
+                        <span className="text-blue-600">🏷️</span> Google Tag Manager
+                      </Label>
+                      <p className="text-xs text-muted-foreground">
+                        Cole apenas o ID do container (ex: GTM-XXXXXXX) ou o script completo do GTM.
+                      </p>
+                      <Textarea
+                        value={data.google_tag_manager}
+                        onChange={(e) => setData({ ...data, google_tag_manager: e.target.value })}
+                        placeholder={`GTM-XXXXXXX
+
+ou cole o script completo:
+
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){...})(window,document,'script','dataLayer','GTM-XXXXXXX');</script>`}
+                        className="bg-background/50 font-mono text-xs"
+                        rows={5}
                       />
                     </div>
                   </CardContent>

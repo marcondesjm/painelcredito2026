@@ -37,6 +37,8 @@ export type Database = {
           features: Json | null
           font_body: string | null
           font_heading: string | null
+          google_analytics: string | null
+          google_tag_manager: string | null
           hero_cta_link: string | null
           hero_cta_text: string | null
           hero_image: string | null
@@ -82,6 +84,8 @@ export type Database = {
           features?: Json | null
           font_body?: string | null
           font_heading?: string | null
+          google_analytics?: string | null
+          google_tag_manager?: string | null
           hero_cta_link?: string | null
           hero_cta_text?: string | null
           hero_image?: string | null
@@ -127,6 +131,8 @@ export type Database = {
           features?: Json | null
           font_body?: string | null
           font_heading?: string | null
+          google_analytics?: string | null
+          google_tag_manager?: string | null
           hero_cta_link?: string | null
           hero_cta_text?: string | null
           hero_image?: string | null
