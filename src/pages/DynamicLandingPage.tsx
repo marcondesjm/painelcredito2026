@@ -62,6 +62,8 @@ interface LandingPageData {
   meta_title: string | null;
   meta_description: string | null;
   facebook_pixel: string | null;
+  google_analytics: string | null;
+  google_tag_manager: string | null;
   section_order: SectionId[] | null;
 }
 
@@ -618,12 +620,10 @@ const DynamicLandingPage = () => {
   // Inject Facebook Pixel script
   useEffect(() => {
     if (page?.facebook_pixel && !isPreview) {
-      // Create a container for the pixel script
       const pixelContainer = document.createElement('div');
       pixelContainer.id = 'fb-pixel-container';
       pixelContainer.innerHTML = page.facebook_pixel;
       
-      // Move scripts to head
       const scripts = pixelContainer.querySelectorAll('script');
       scripts.forEach((script) => {
         const newScript = document.createElement('script');
@@ -631,19 +631,115 @@ const DynamicLandingPage = () => {
         document.head.appendChild(newScript);
       });
       
-      // Move noscript to body
       const noscripts = pixelContainer.querySelectorAll('noscript');
       noscripts.forEach((noscript) => {
         document.body.insertBefore(noscript.cloneNode(true), document.body.firstChild);
       });
       
       return () => {
-        // Cleanup on unmount
         const container = document.getElementById('fb-pixel-container');
         if (container) container.remove();
       };
     }
   }, [page?.facebook_pixel, isPreview]);
+
+  // Inject Google Analytics
+  useEffect(() => {
+    if (page?.google_analytics && !isPreview) {
+      const gaValue = page.google_analytics.trim();
+      
+      // Check if it's just the ID (G-XXXXXXXXXX) or full script
+      if (gaValue.startsWith('G-') && !gaValue.includes('<script')) {
+        // Just the ID - create the standard GA4 script
+        const gaScript = document.createElement('script');
+        gaScript.async = true;
+        gaScript.src = `https://www.googletagmanager.com/gtag/js?id=${gaValue}`;
+        gaScript.id = 'ga-script-async';
+        document.head.appendChild(gaScript);
+        
+        const gaInit = document.createElement('script');
+        gaInit.id = 'ga-script-init';
+        gaInit.textContent = `
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', '${gaValue}');
+        `;
+        document.head.appendChild(gaInit);
+      } else {
+        // Full script provided
+        const container = document.createElement('div');
+        container.id = 'ga-container';
+        container.innerHTML = gaValue;
+        
+        container.querySelectorAll('script').forEach((script) => {
+          const newScript = document.createElement('script');
+          if (script.src) {
+            newScript.src = script.src;
+            newScript.async = true;
+          } else {
+            newScript.textContent = script.textContent;
+          }
+          document.head.appendChild(newScript);
+        });
+      }
+      
+      return () => {
+        document.getElementById('ga-script-async')?.remove();
+        document.getElementById('ga-script-init')?.remove();
+        document.getElementById('ga-container')?.remove();
+      };
+    }
+  }, [page?.google_analytics, isPreview]);
+
+  // Inject Google Tag Manager
+  useEffect(() => {
+    if (page?.google_tag_manager && !isPreview) {
+      const gtmValue = page.google_tag_manager.trim();
+      
+      // Check if it's just the ID (GTM-XXXXXXX) or full script
+      if (gtmValue.startsWith('GTM-') && !gtmValue.includes('<script')) {
+        // Just the ID - create the standard GTM script
+        const gtmScript = document.createElement('script');
+        gtmScript.id = 'gtm-script';
+        gtmScript.textContent = `
+          (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+          new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+          j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+          'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+          })(window,document,'script','dataLayer','${gtmValue}');
+        `;
+        document.head.insertBefore(gtmScript, document.head.firstChild);
+        
+        // Add noscript fallback
+        const gtmNoscript = document.createElement('noscript');
+        gtmNoscript.id = 'gtm-noscript';
+        gtmNoscript.innerHTML = `<iframe src="https://www.googletagmanager.com/ns.html?id=${gtmValue}" height="0" width="0" style="display:none;visibility:hidden"></iframe>`;
+        document.body.insertBefore(gtmNoscript, document.body.firstChild);
+      } else {
+        // Full script provided
+        const container = document.createElement('div');
+        container.id = 'gtm-container';
+        container.innerHTML = gtmValue;
+        
+        container.querySelectorAll('script').forEach((script) => {
+          const newScript = document.createElement('script');
+          newScript.textContent = script.textContent;
+          document.head.insertBefore(newScript, document.head.firstChild);
+        });
+        
+        container.querySelectorAll('noscript').forEach((noscript) => {
+          document.body.insertBefore(noscript.cloneNode(true), document.body.firstChild);
+        });
+      }
+      
+      return () => {
+        document.getElementById('gtm-script')?.remove();
+        document.getElementById('gtm-noscript')?.remove();
+        document.getElementById('gtm-container')?.remove();
+      };
+    }
+  }, [page?.google_tag_manager, isPreview]);
 
   // Generate PIX payment link (BR Code format)
   const generatePixLink = (pixKey: string, name: string, amount?: number) => {
