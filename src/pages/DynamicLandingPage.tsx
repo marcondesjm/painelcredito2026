@@ -6,10 +6,11 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Loader2, Star, Check, Shield, Clock, ArrowRight, MessageCircle, Zap, Headphones, LogOut, Menu } from 'lucide-react';
+import { Loader2, Star, Check, Shield, Clock, ArrowRight, MessageCircle, Zap, Headphones, LogOut, Menu, RefreshCw } from 'lucide-react';
 import { CountdownTimer } from '@/components/CountdownTimer';
 import { SocialProofNotification } from '@/components/SocialProofNotification';
 import { WhatsAppButton } from '@/components/WhatsAppButton';
+import { APP_VERSION, LAST_UPDATE } from '@/config/version';
 import backgroundHero from '@/assets/background-hero.png';
 import dashboardMockup from '@/assets/dashboard-mockup.png';
 
@@ -1245,8 +1246,45 @@ const DynamicLandingPageInner = () => {
 
       {/* Footer */}
       <footer className="py-8 px-4 border-t border-border/30">
-        <div className="max-w-6xl mx-auto text-center text-muted-foreground text-sm">
+        <div className="max-w-6xl mx-auto text-center text-muted-foreground text-sm space-y-4">
           <p>© {new Date().getFullYear()} Todos os direitos reservados.</p>
+          
+          {/* Version and Update Info */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2 border-t border-border/20">
+            <span className="text-xs">
+              Versão: <span className="font-semibold text-foreground">{APP_VERSION}</span>
+            </span>
+            <span className="hidden sm:inline text-border">|</span>
+            <span className="text-xs">
+              Atualizado em: <span className="font-semibold text-foreground">{LAST_UPDATE}</span>
+            </span>
+            <span className="hidden sm:inline text-border">|</span>
+            <span className="text-xs">
+              Agora: <span className="font-semibold text-foreground">
+                {new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })} às {new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+              </span>
+            </span>
+          </div>
+          
+          {/* Clear Cache Button */}
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-xs text-muted-foreground hover:text-foreground"
+            onClick={() => {
+              if ('caches' in window) {
+                caches.keys().then((names) => {
+                  names.forEach((name) => caches.delete(name));
+                });
+              }
+              localStorage.clear();
+              sessionStorage.clear();
+              window.location.reload();
+            }}
+          >
+            <RefreshCw className="w-3 h-3 mr-1" />
+            Limpar Cache e Atualizar
+          </Button>
         </div>
       </footer>
 
