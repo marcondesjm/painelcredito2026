@@ -32,6 +32,7 @@ export type Database = {
           donation_pix_name: string | null
           donation_qr_code: string | null
           donation_title: string | null
+          facebook_pixel: string | null
           faqs: Json | null
           features: Json | null
           font_body: string | null
@@ -76,6 +77,7 @@ export type Database = {
           donation_pix_name?: string | null
           donation_qr_code?: string | null
           donation_title?: string | null
+          facebook_pixel?: string | null
           faqs?: Json | null
           features?: Json | null
           font_body?: string | null
@@ -120,6 +122,7 @@ export type Database = {
           donation_pix_name?: string | null
           donation_qr_code?: string | null
           donation_title?: string | null
+          facebook_pixel?: string | null
           faqs?: Json | null
           features?: Json | null
           font_body?: string | null
