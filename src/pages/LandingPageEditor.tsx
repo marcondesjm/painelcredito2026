@@ -370,6 +370,30 @@ const LandingPageEditor = () => {
     };
   }, []);
 
+  // Map from tab to section for scrolling preview
+  const tabToSectionMap: Record<string, string> = {
+    'basico': 'hero',
+    'layout': 'hero',
+    'imagens': 'hero',
+    'video': 'video',
+    'precos': 'cta',
+    'sobre': 'about',
+    'doacao': 'donation',
+    'compra-segura': 'secure-purchase',
+    'conteudo': 'features',
+    'depoimentos': 'testimonials',
+    'faq': 'faq',
+    'seo': 'hero',
+  };
+
+  // When tab changes, scroll preview to corresponding section
+  useEffect(() => {
+    const section = tabToSectionMap[activeTab];
+    if (section && iframeRef.current?.contentWindow) {
+      iframeRef.current.contentWindow.postMessage({ type: 'scroll-to-section', section }, '*');
+    }
+  }, [activeTab]);
+
   // Listen for hover and click messages from preview iframe
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {

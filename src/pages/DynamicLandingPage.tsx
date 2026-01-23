@@ -190,6 +190,23 @@ const DynamicLandingPageInner = () => {
     }
   };
 
+  // Listen for scroll-to-section messages from parent editor
+  useEffect(() => {
+    if (!isPreview) return;
+    
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data?.type === 'scroll-to-section' && event.data.section) {
+        const sectionElement = document.querySelector(`[data-section-id="${event.data.section}"]`);
+        if (sectionElement) {
+          sectionElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, [isPreview]);
+
   useEffect(() => {
     if (!debug) return;
     // eslint-disable-next-line no-console
@@ -554,6 +571,7 @@ const DynamicLandingPageInner = () => {
   const renderHeroSection = () => (
     <section 
       key="hero"
+      data-section-id="hero"
       className={`relative min-h-screen flex items-center justify-center px-4 pt-32 pb-12 transition-all ${isPreview ? 'cursor-pointer' : ''} ${hoveredSection === 'hero' ? 'ring-2 ring-primary ring-inset' : ''}`}
       onMouseEnter={() => handleSectionHover('hero')}
     >
@@ -699,6 +717,7 @@ const DynamicLandingPageInner = () => {
     return (
       <section 
         key="video"
+        data-section-id="video"
         className={`py-20 px-4 transition-all ${isPreview ? 'cursor-pointer' : ''} ${hoveredSection === 'video' ? 'ring-2 ring-primary ring-inset' : ''}`}
         onMouseEnter={() => handleSectionHover('video')}
         onClick={() => handleSectionClick('video')}
@@ -762,6 +781,7 @@ const DynamicLandingPageInner = () => {
     return (
       <section 
         key="features"
+        data-section-id="features"
         className={`py-20 px-4 transition-all ${isPreview ? 'cursor-pointer' : ''} ${hoveredSection === 'features' ? 'ring-2 ring-primary ring-inset' : ''}`}
         onMouseEnter={() => handleSectionHover('features')}
       >
@@ -800,6 +820,7 @@ const DynamicLandingPageInner = () => {
     return (
       <section 
         key="about"
+        data-section-id="about"
         className={`py-20 px-4 bg-card/30 transition-all ${isPreview ? 'cursor-pointer' : ''} ${hoveredSection === 'about' ? 'ring-2 ring-primary ring-inset' : ''}`}
         onMouseEnter={() => handleSectionHover('about')}
       >
@@ -820,6 +841,7 @@ const DynamicLandingPageInner = () => {
     return (
       <section 
         key="how-it-works"
+        data-section-id="how-it-works"
         id="how-it-works"
         className={`py-20 px-4 transition-all ${isPreview ? 'cursor-pointer' : ''} ${hoveredSection === 'how-it-works' ? 'ring-2 ring-primary ring-inset' : ''}`}
         onMouseEnter={() => handleSectionHover('how-it-works')}
@@ -849,6 +871,7 @@ const DynamicLandingPageInner = () => {
     return (
       <section 
         key="testimonials"
+        data-section-id="testimonials"
         className={`py-20 px-4 bg-card/30 transition-all ${isPreview ? 'cursor-pointer' : ''} ${hoveredSection === 'testimonials' ? 'ring-2 ring-primary ring-inset' : ''}`}
         onMouseEnter={() => handleSectionHover('testimonials')}
       >
@@ -887,6 +910,7 @@ const DynamicLandingPageInner = () => {
     return (
       <section 
         key="faq"
+        data-section-id="faq"
         id="faq"
         className={`py-20 px-4 transition-all ${isPreview ? 'cursor-pointer' : ''} ${hoveredSection === 'faq' ? 'ring-2 ring-primary ring-inset' : ''}`}
         onMouseEnter={() => handleSectionHover('faq')}
@@ -927,6 +951,7 @@ const DynamicLandingPageInner = () => {
   const renderCtaSection = () => (
     <section 
       key="cta"
+      data-section-id="cta"
       className={`py-20 px-4 relative ${isPreview ? 'cursor-pointer' : ''} ${hoveredSection === 'cta' ? 'ring-2 ring-primary ring-inset bg-primary/5' : ''}`}
       onMouseEnter={() => handleSectionHover('cta')}
       onMouseLeave={handleSectionLeave}
@@ -1012,6 +1037,7 @@ const DynamicLandingPageInner = () => {
     return (
       <section 
         key="donation"
+        data-section-id="donation"
         className={`py-12 px-4 border-t border-border/30 relative ${isPreview ? 'cursor-pointer' : ''} ${hoveredSection === 'donation' ? 'ring-2 ring-primary ring-inset bg-primary/5' : ''}`}
         onMouseEnter={() => handleSectionHover('donation')}
         onMouseLeave={handleSectionLeave}
@@ -1190,6 +1216,7 @@ const DynamicLandingPageInner = () => {
     return (
       <section 
         key="secure-purchase"
+        data-section-id="secure-purchase"
         className={`py-20 px-4 transition-all ${isPreview ? 'cursor-pointer' : ''} ${hoveredSection === 'secure-purchase' ? 'ring-2 ring-primary ring-inset' : ''}`}
         onMouseEnter={() => handleSectionHover('secure-purchase')}
         onClick={() => isPreview && handleSectionClick('secure-purchase')}
