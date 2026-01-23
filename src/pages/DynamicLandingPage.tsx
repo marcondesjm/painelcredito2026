@@ -49,6 +49,7 @@ interface LandingPageData {
   color_background: string | null;
   color_text: string | null;
   color_text_highlight: string | null;
+  color_icons: string | null;
   font_heading: string | null;
   font_body: string | null;
   video_enabled: boolean | null;
@@ -688,9 +689,9 @@ const DynamicLandingPageInner = () => {
               <Card key={index} className="bg-card/50 backdrop-blur-sm border-border/50 p-6">
                 <div 
                   className="w-10 h-10 rounded-full flex items-center justify-center mb-4"
-                  style={{ backgroundColor: `hsl(${primaryHsl} / 0.2)` }}
+                  style={{ backgroundColor: `${page.color_icons || '#8B5CF6'}20` }}
                 >
-                  <Check className="w-5 h-5" style={{ color: `hsl(${primaryHsl})` }} />
+                  <Check className="w-5 h-5" style={{ color: page.color_icons || '#8B5CF6' }} />
                 </div>
                 <h3 className="font-semibold text-lg mb-2" style={{ fontFamily: fontHeading }}>{feature.title}</h3>
                 <p className="text-muted-foreground">{feature.description}</p>
@@ -737,7 +738,7 @@ const DynamicLandingPageInner = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {page.how_it_works.map((step, index) => (
               <div key={index} className="text-center">
-                <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-4 text-2xl font-bold text-primary">
+                <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold" style={{ backgroundColor: `${page.color_icons || '#8B5CF6'}20`, color: page.color_icons || '#8B5CF6' }}>
                   {index + 1}
                 </div>
                 <h3 className="font-semibold text-xl mb-2">{step.title}</h3>
