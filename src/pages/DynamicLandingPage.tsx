@@ -506,8 +506,15 @@ const DynamicLandingPageInner = () => {
 
   // Generate PIX link for banking apps
   const generatePixLink = (pixKey: string) => {
-    const cleanKey = pixKey.replace(/\D/g, '');
-    return `pix:${cleanKey}`;
+    const key = (pixKey || '').trim();
+    // PIX keys can be CPF/CNPJ, phone, email or random key. Do not strip non-digits.
+    // Deep-link support varies by bank/app; this is best-effort.
+    return key ? `pix:${key}` : '';
+  };
+
+  const isMobileDevice = () => {
+    if (typeof navigator === 'undefined') return false;
+    return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
   };
 
   // Copy to clipboard function
@@ -949,6 +956,16 @@ const DynamicLandingPageInner = () => {
                   href={generatePixLink(page.donation_pix_key || '')}
                   className="bg-white p-3 rounded-lg cursor-pointer hover:shadow-lg hover:scale-105 transition-all group"
                   title="Clique para abrir no app do banco"
+                  onClick={async (e) => {
+                    // Prevent editor click handling in preview; also provide desktop fallback.
+                    e.stopPropagation();
+                    const key = (page.donation_pix_key || '').trim();
+                    if (!key) return;
+                    if (!isMobileDevice()) {
+                      e.preventDefault();
+                      await copyToClipboard(key);
+                    }
+                  }}
                 >
                   <img 
                     src={page.donation_qr_code} 
@@ -979,10 +996,40 @@ const DynamicLandingPageInner = () => {
                   href={generatePixLink(page.donation_pix_key || '')}
                   className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white transition-all hover:opacity-90 hover:scale-105"
                   style={{ backgroundColor: `hsl(${accentHsl})` }}
-                  onClick={(e) => e.stopPropagation()}
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    const key = (page.donation_pix_key || '').trim();
+                    if (!key) return;
+
+                    // On desktop browsers, custom URI schemes usually won't open bank apps.
+                    // In that case, we copy the key so the user can paste it in the bank app.
+                    if (!isMobileDevice()) {
+                      const success = await copyToClipboard(key);
+                      const el = e.currentTarget;
+                      const originalText = el.textContent;
+                      el.textContent = success ? '✓ Chave copiada (abra seu app)' : 'Erro ao copiar';
+                      setTimeout(() => {
+                        el.textContent = originalText;
+                      }, 1800);
+                      return;
+                    }
+
+                    const uri = generatePixLink(key);
+                    if (!uri) return;
+
+                    // Best-effort: try to open bank app and also copy the key as fallback
+                    window.location.href = uri;
+                    await copyToClipboard(key);
+                  }}
                 >
                   <span>📱</span> Abrir no App do Banco
                 </a>
+
+                <p className="text-xs text-muted-foreground">
+                  Dica: esse botão costuma funcionar apenas no celular. Se não abrir, use “Copiar Chave PIX”.
+                </p>
 
                 {/* Copy button */}
                 <Button
