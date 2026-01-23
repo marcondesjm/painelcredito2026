@@ -736,6 +736,7 @@ const DynamicLandingPageInner = () => {
     return (
       <section 
         key="how-it-works"
+        id="how-it-works"
         className={`py-20 px-4 transition-all ${isPreview ? 'cursor-pointer' : ''} ${hoveredSection === 'how-it-works' ? 'ring-2 ring-primary ring-inset' : ''}`}
         onMouseEnter={() => handleSectionHover('how-it-works')}
       >
@@ -802,6 +803,7 @@ const DynamicLandingPageInner = () => {
     return (
       <section 
         key="faq"
+        id="faq"
         className={`py-20 px-4 transition-all ${isPreview ? 'cursor-pointer' : ''} ${hoveredSection === 'faq' ? 'ring-2 ring-primary ring-inset' : ''}`}
         onMouseEnter={() => handleSectionHover('faq')}
         onClick={() => handleSectionClick('faq')}
