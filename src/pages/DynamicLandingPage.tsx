@@ -531,7 +531,7 @@ const DynamicLandingPageInner = () => {
   const renderHeroSection = () => (
     <section 
       key="hero"
-      className={`relative min-h-screen flex items-center justify-center px-4 pt-24 pb-12 overflow-hidden transition-all ${isPreview ? 'cursor-pointer' : ''} ${hoveredSection === 'hero' ? 'ring-2 ring-primary ring-inset' : ''}`}
+      className={`relative min-h-screen flex items-center justify-center px-4 pt-32 pb-12 transition-all ${isPreview ? 'cursor-pointer' : ''} ${hoveredSection === 'hero' ? 'ring-2 ring-primary ring-inset' : ''}`}
       onMouseEnter={() => handleSectionHover('hero')}
     >
       <div className="relative z-10 max-w-7xl mx-auto w-full">
