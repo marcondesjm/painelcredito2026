@@ -6,7 +6,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Loader2, Star, Check, Shield, Clock, ArrowRight, MessageCircle, Zap, Headphones, LogOut, Menu, RefreshCw } from 'lucide-react';
+import { Loader2, Star, Check, Shield, Clock, ArrowRight, MessageCircle, Zap, Headphones, LogOut, Menu, RefreshCw, Heart, Award } from 'lucide-react';
 import { CountdownTimer } from '@/components/CountdownTimer';
 import { SocialProofNotification } from '@/components/SocialProofNotification';
 import { WhatsAppButton } from '@/components/WhatsAppButton';
@@ -71,6 +71,7 @@ interface LandingPageData {
   how_it_works: { step: number; title: string; description: string }[];
   testimonials: { name: string; text: string; rating: number }[];
   faqs: { question: string; answer: string }[];
+  secure_purchase_items: { title: string; description: string; icon?: string }[] | null;
   meta_title: string | null;
   meta_description: string | null;
   facebook_pixel: string | null;
@@ -1159,34 +1160,39 @@ const DynamicLandingPageInner = () => {
   };
 
   const renderSecurePurchaseSection = () => {
-    const trustItems = [
-      {
-        icon: <Shield className="w-5 h-5" />,
-        title: "Produto Testado",
-        description: "Ferramenta validada e funcionando perfeitamente."
-      },
-      {
-        icon: <Zap className="w-5 h-5" />,
-        title: "Entrega Automática",
-        description: "Receba acesso imediato após a confirmação do pagamento."
-      },
-      {
-        icon: <Headphones className="w-5 h-5" />,
-        title: "Suporte Disponível",
-        description: "Equipe pronta para ajudar sempre que precisar."
-      },
-      {
-        icon: <RefreshCw className="w-5 h-5" />,
-        title: "Atualizações Gratuitas",
-        description: "Melhorias constantes sem custo adicional."
-      }
+    // Helper to get icon component by name
+    const getIconByName = (iconName: string) => {
+      const icons: Record<string, React.ReactNode> = {
+        'Shield': <Shield className="w-5 h-5" />,
+        'Zap': <Zap className="w-5 h-5" />,
+        'Headphones': <Headphones className="w-5 h-5" />,
+        'RefreshCw': <RefreshCw className="w-5 h-5" />,
+        'Check': <Check className="w-5 h-5" />,
+        'Star': <Star className="w-5 h-5" />,
+        'Heart': <Heart className="w-5 h-5" />,
+        'Award': <Award className="w-5 h-5" />,
+      };
+      return icons[iconName] || <Shield className="w-5 h-5" />;
+    };
+
+    // Use custom items from database or fallback to defaults
+    const securePurchaseItems = (page.secure_purchase_items as { title: string; description: string; icon?: string }[]) || [];
+    
+    const defaultItems = [
+      { icon: 'Shield', title: "Produto Testado", description: "Ferramenta validada e funcionando perfeitamente." },
+      { icon: 'Zap', title: "Entrega Automática", description: "Receba acesso imediato após a confirmação do pagamento." },
+      { icon: 'Headphones', title: "Suporte Disponível", description: "Equipe pronta para ajudar sempre que precisar." },
+      { icon: 'RefreshCw', title: "Atualizações Gratuitas", description: "Melhorias constantes sem custo adicional." }
     ];
+
+    const itemsToRender = securePurchaseItems.length > 0 ? securePurchaseItems : defaultItems;
 
     return (
       <section 
         key="secure-purchase"
         className={`py-20 px-4 transition-all ${isPreview ? 'cursor-pointer' : ''} ${hoveredSection === 'secure-purchase' ? 'ring-2 ring-primary ring-inset' : ''}`}
         onMouseEnter={() => handleSectionHover('secure-purchase')}
+        onClick={() => isPreview && handleSectionClick('secure-purchase')}
       >
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
@@ -1199,13 +1205,13 @@ const DynamicLandingPageInner = () => {
           </div>
 
           <div className="grid sm:grid-cols-2 gap-8">
-            {trustItems.map((item, index) => (
+            {itemsToRender.map((item, index) => (
               <div key={index} className="flex items-start gap-4">
                 <div 
                   className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
                   style={{ backgroundColor: `${page.color_icons || '#8B5CF6'}20`, color: page.color_icons || '#8B5CF6' }}
                 >
-                  {item.icon}
+                  {getIconByName(item.icon || 'Shield')}
                 </div>
                 <div>
                   <h3 className="font-semibold text-foreground mb-1">{item.title}</h3>

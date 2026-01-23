@@ -59,6 +59,7 @@ export type Database = {
           price_original: number | null
           product_image: string | null
           section_order: Json | null
+          secure_purchase_items: Json | null
           slug: string
           testimonials: Json | null
           tiktok_pixel: string | null
@@ -114,6 +115,7 @@ export type Database = {
           price_original?: number | null
           product_image?: string | null
           section_order?: Json | null
+          secure_purchase_items?: Json | null
           slug: string
           testimonials?: Json | null
           tiktok_pixel?: string | null
@@ -169,6 +171,7 @@ export type Database = {
           price_original?: number | null
           product_image?: string | null
           section_order?: Json | null
+          secure_purchase_items?: Json | null
           slug?: string
           testimonials?: Json | null
           tiktok_pixel?: string | null

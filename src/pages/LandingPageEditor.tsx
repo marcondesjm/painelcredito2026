@@ -63,6 +63,7 @@ interface LandingPageData {
   how_it_works: { step: number; title: string; description: string; image?: string }[];
   testimonials: { name: string; text: string; rating: number; avatar?: string }[];
   faqs: { question: string; answer: string }[];
+  secure_purchase_items: { title: string; description: string; icon?: string }[];
   meta_title: string;
   meta_description: string;
   og_image: string;
@@ -166,6 +167,12 @@ const defaultData: LandingPageData = {
     { question: 'Tem limite de resgate de créditos?', answer: 'Não há limite de resgates. Você pode gerar quantos créditos quiser, sem restrições.' },
     { question: 'Está funcionando depois da atualização do Lovable?', answer: 'Sim, está funcionando depois do fix que a Lovable deu no método antigo das extensões que clicavam publish ao mesmo tempo. Nosso painel utiliza métodos diferentes e atualizados.' },
     { question: 'Funciona em uma conta que já indicou mais de 10 convites?', answer: 'Sim! Você pode resgatar créditos em uma conta que já indicou mais de 10 pessoas, desde que você tenha acesso a uma conta que já resgatou créditos nessa conta, então você pode depositar na conta desejada.' },
+  ],
+  secure_purchase_items: [
+    { title: 'Produto Testado', description: 'Ferramenta validada e funcionando perfeitamente.', icon: 'Shield' },
+    { title: 'Entrega Automática', description: 'Receba acesso imediato após a confirmação do pagamento.', icon: 'Zap' },
+    { title: 'Suporte Disponível', description: 'Equipe pronta para ajudar sempre que precisar.', icon: 'Headphones' },
+    { title: 'Atualizações Gratuitas', description: 'Melhorias constantes sem custo adicional.', icon: 'RefreshCw' },
   ],
   meta_title: '',
   meta_description: '',
@@ -292,6 +299,7 @@ const LandingPageEditor = () => {
     how_it_works: draft.how_it_works,
     testimonials: draft.testimonials,
     faqs: draft.faqs,
+    secure_purchase_items: draft.secure_purchase_items,
     meta_title: draft.meta_title || null,
     meta_description: draft.meta_description || null,
     og_image: draft.og_image || null,
@@ -371,6 +379,7 @@ const LandingPageEditor = () => {
         'features': 'conteudo',
         'about': 'sobre',
         'how-it-works': 'conteudo',
+        'secure-purchase': 'compra-segura',
         'testimonials': 'depoimentos',
         'faq': 'faq',
         'cta': 'precos',
@@ -487,6 +496,7 @@ const LandingPageEditor = () => {
         how_it_works: (page.how_it_works as { step: number; title: string; description: string; image?: string }[]) || [],
         testimonials: (page.testimonials as { name: string; text: string; rating: number; avatar?: string }[]) || [],
         faqs: (page.faqs as { question: string; answer: string }[]) || [],
+        secure_purchase_items: (page.secure_purchase_items as { title: string; description: string; icon?: string }[]) || defaultData.secure_purchase_items,
         price_original: page.price_original ? Number(page.price_original) : null,
         price_current: page.price_current ? Number(page.price_current) : null,
         meta_title: page.meta_title || '',
@@ -811,6 +821,7 @@ const LandingPageEditor = () => {
                   <TabsTrigger value="precos" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Preços</TabsTrigger>
                   <TabsTrigger value="sobre" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Sobre</TabsTrigger>
                   <TabsTrigger value="doacao" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Doação</TabsTrigger>
+                  <TabsTrigger value="compra-segura" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Compra Segura</TabsTrigger>
                   <TabsTrigger value="conteudo" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Conteúdo</TabsTrigger>
                   <TabsTrigger value="depoimentos" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Depoimentos</TabsTrigger>
                   <TabsTrigger value="faq" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">FAQ</TabsTrigger>
@@ -1490,6 +1501,89 @@ const LandingPageEditor = () => {
                         </p>
                       </div>
                     </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              {/* Tab Compra Segura */}
+              <TabsContent value="compra-segura">
+                <Card className="bg-card/50">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="text-lg">Compra Segura</CardTitle>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        onClick={() => {
+                          setData({
+                            ...data,
+                            secure_purchase_items: [...(data.secure_purchase_items || []), { title: '', description: '', icon: 'Shield' }]
+                          });
+                        }} 
+                        className="h-7"
+                      >
+                        <Plus className="w-3 h-3 mr-1" />
+                        Adicionar
+                      </Button>
+                    </div>
+                    <CardDescription>Configure os itens de confiança exibidos na seção</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    {(data.secure_purchase_items || []).length === 0 ? (
+                      <p className="text-muted-foreground text-center py-4 text-sm">Nenhum item de confiança</p>
+                    ) : (
+                      data.secure_purchase_items.map((item, index) => (
+                        <div key={index} className="p-3 bg-background/50 rounded-lg space-y-2">
+                          <div className="flex gap-2 items-start">
+                            <div className="flex-1 space-y-2">
+                              <Input
+                                value={item.title}
+                                onChange={(e) => {
+                                  const updated = [...data.secure_purchase_items];
+                                  updated[index].title = e.target.value;
+                                  setData({ ...data, secure_purchase_items: updated });
+                                }}
+                                placeholder="Título (ex: Produto Testado)"
+                                className="bg-card text-sm"
+                              />
+                              <Input
+                                value={item.description}
+                                onChange={(e) => {
+                                  const updated = [...data.secure_purchase_items];
+                                  updated[index].description = e.target.value;
+                                  setData({ ...data, secure_purchase_items: updated });
+                                }}
+                                placeholder="Descrição"
+                                className="bg-card text-sm"
+                              />
+                              <Input
+                                value={item.icon || ''}
+                                onChange={(e) => {
+                                  const updated = [...data.secure_purchase_items];
+                                  updated[index].icon = e.target.value;
+                                  setData({ ...data, secure_purchase_items: updated });
+                                }}
+                                placeholder="Ícone (Shield, Zap, Headphones, RefreshCw)"
+                                className="bg-card text-sm"
+                              />
+                            </div>
+                            <Button 
+                              variant="ghost" 
+                              size="icon" 
+                              onClick={() => {
+                                setData({
+                                  ...data,
+                                  secure_purchase_items: data.secure_purchase_items.filter((_, i) => i !== index)
+                                });
+                              }} 
+                              className="h-8 w-8"
+                            >
+                              <Trash2 className="w-3 h-3 text-destructive" />
+                            </Button>
+                          </div>
+                        </div>
+                      ))
+                    )}
                   </CardContent>
                 </Card>
               </TabsContent>
