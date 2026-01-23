@@ -738,6 +738,25 @@ const DynamicLandingPageInner = () => {
 
   const renderFeaturesSection = () => {
     if (page.features.length === 0) return null;
+    
+    // Icons for features (cycle through if there are more than 3)
+    const featureIcons = [
+      <svg key="monitor" className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+        <line x1="8" y1="21" x2="16" y2="21"></line>
+        <line x1="12" y1="17" x2="12" y2="21"></line>
+      </svg>,
+      <svg key="grid" className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <rect x="3" y="3" width="7" height="7"></rect>
+        <rect x="14" y="3" width="7" height="7"></rect>
+        <rect x="14" y="14" width="7" height="7"></rect>
+        <rect x="3" y="14" width="7" height="7"></rect>
+      </svg>,
+      <svg key="infinity" className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M18.178 8c5.096 0 5.096 8 0 8-5.095 0-7.133-8-12.739-8-4.585 0-4.585 8 0 8 5.606 0 7.644-8 12.74-8z"></path>
+      </svg>,
+    ];
+    
     return (
       <section 
         key="features"
@@ -745,20 +764,27 @@ const DynamicLandingPageInner = () => {
         onMouseEnter={() => handleSectionHover('features')}
       >
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
-            O que você <span style={{ color: page.color_text_highlight || '#a855f7' }}>recebe</span>
-          </h2>
+          {/* Section Header with title and description */}
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{ fontFamily: fontHeading }}>
+              O que é o <span style={{ color: page.color_text_highlight || '#a855f7' }}>Painel</span>?
+            </h2>
+            <p className="text-muted-foreground max-w-xl mx-auto">
+              Uma ferramenta automatizada que gera créditos para sua conta Lovable de forma simples e rápida.
+            </p>
+          </div>
+          
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {page.features.map((feature, index) => (
-              <Card key={index} className="bg-card/50 backdrop-blur-sm border-border/50 p-6">
+              <Card key={index} className="bg-card/50 backdrop-blur-sm border-border/50 p-6 hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10">
                 <div 
-                  className="w-10 h-10 rounded-full flex items-center justify-center mb-4"
-                  style={{ backgroundColor: `${page.color_icons || '#8B5CF6'}20` }}
+                  className="w-12 h-12 rounded-xl flex items-center justify-center mb-4"
+                  style={{ backgroundColor: `${page.color_icons || '#8B5CF6'}20`, color: page.color_icons || '#8B5CF6' }}
                 >
-                  <Check className="w-5 h-5" style={{ color: page.color_icons || '#8B5CF6' }} />
+                  {featureIcons[index % featureIcons.length]}
                 </div>
                 <h3 className="font-semibold text-lg mb-2" style={{ fontFamily: fontHeading }}>{feature.title}</h3>
-                <p className="text-muted-foreground">{feature.description}</p>
+                <p className="text-sm text-muted-foreground">{feature.description}</p>
               </Card>
             ))}
           </div>
