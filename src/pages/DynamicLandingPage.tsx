@@ -8,6 +8,8 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Loader2, Star, Check, Shield, Clock, ArrowRight, MessageCircle, Zap, Headphones, LogOut, Menu } from 'lucide-react';
 import { CountdownTimer } from '@/components/CountdownTimer';
+import { SocialProofNotification } from '@/components/SocialProofNotification';
+import { WhatsAppButton } from '@/components/WhatsAppButton';
 import backgroundHero from '@/assets/background-hero.png';
 import dashboardMockup from '@/assets/dashboard-mockup.png';
 
@@ -1183,6 +1185,12 @@ const DynamicLandingPageInner = () => {
           <p>© {new Date().getFullYear()} Todos os direitos reservados.</p>
         </div>
       </footer>
+
+      {/* Social Proof Notification */}
+      <SocialProofNotification />
+      
+      {/* WhatsApp Button */}
+      <WhatsAppButton />
     </div>
   );
 };
