@@ -156,8 +156,16 @@ const DynamicLandingPageInner = () => {
 
   const handleSectionHover = (section: string) => {
     if (isPreview && window.parent !== window) {
-      setHoveredSection(section);
-      window.parent.postMessage({ type: 'section-hover', section }, '*');
+      if (hoveredSection !== section) {
+        setHoveredSection(section);
+        window.parent.postMessage({ type: 'section-hover', section }, '*');
+      }
+    }
+  };
+
+  const handleSectionLeave = () => {
+    if (isPreview && window.parent !== window) {
+      setHoveredSection(null);
     }
   };
 
@@ -878,8 +886,9 @@ const DynamicLandingPageInner = () => {
   const renderCtaSection = () => (
     <section 
       key="cta"
-      className={`py-20 px-4 transition-all relative ${isPreview ? 'cursor-pointer' : ''} ${hoveredSection === 'cta' ? 'ring-2 ring-primary ring-inset bg-primary/5' : ''}`}
+      className={`py-20 px-4 relative ${isPreview ? 'cursor-pointer' : ''} ${hoveredSection === 'cta' ? 'ring-2 ring-primary ring-inset bg-primary/5' : ''}`}
       onMouseEnter={() => handleSectionHover('cta')}
+      onMouseLeave={handleSectionLeave}
       onClick={() => handleSectionClick('cta')}
     >
       {hoveredSection === 'cta' && isPreview && (
@@ -955,8 +964,9 @@ const DynamicLandingPageInner = () => {
     return (
       <section 
         key="donation"
-        className={`py-12 px-4 border-t border-border/30 transition-all relative ${isPreview ? 'cursor-pointer' : ''} ${hoveredSection === 'donation' ? 'ring-2 ring-primary ring-inset bg-primary/5' : ''}`}
+        className={`py-12 px-4 border-t border-border/30 relative ${isPreview ? 'cursor-pointer' : ''} ${hoveredSection === 'donation' ? 'ring-2 ring-primary ring-inset bg-primary/5' : ''}`}
         onMouseEnter={() => handleSectionHover('donation')}
+        onMouseLeave={handleSectionLeave}
         onClick={() => handleSectionClick('donation')}
       >
         {hoveredSection === 'donation' && isPreview && (
