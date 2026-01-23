@@ -182,9 +182,22 @@ const LandingPageEditor = () => {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [previewKey, setPreviewKey] = useState(0);
 
+  const [previewMounted, setPreviewMounted] = useState(true);
+
   const refreshPreview = () => {
     setPreviewKey(prev => prev + 1);
   };
+
+  // Hard reset: desmonta o iframe completamente e remonta após um tick
+  const recreatePreview = useCallback(() => {
+    setPreviewMounted(false);
+    // Aguarda o próximo frame para garantir que o iframe foi removido do DOM
+    requestAnimationFrame(() => {
+      setPreviewKey(prev => prev + 1);
+      setPreviewMounted(true);
+      toast.success('Preview recriado');
+    });
+  }, []);
 
   // Panel size persistence
   const PANEL_SIZE_KEY = 'editor-panel-sizes';
@@ -1740,6 +1753,16 @@ ttq.page();
                   >
                     <RefreshCw className="w-3 h-3" />
                   </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={recreatePreview}
+                    className="h-7 text-xs gap-1"
+                    title="Recriar preview (desmontar e remontar iframe)"
+                  >
+                    <RefreshCw className="w-3 h-3" />
+                    Recriar
+                  </Button>
                   {data.slug && (
                     <Button variant="ghost" size="sm" onClick={() => window.open(`/p/${data.slug}`, '_blank')} className="h-7 text-xs">
                       <ExternalLink className="w-3 h-3 mr-1" />
@@ -1756,7 +1779,7 @@ ttq.page();
                       <p>Preparando preview...</p>
                     </div>
                   </div>
-                ) : previewSrc ? (
+                ) : previewSrc && previewMounted ? (
                   <iframe
                     key={previewKey}
                     ref={iframeRef}
@@ -1764,6 +1787,13 @@ ttq.page();
                     className="w-full h-full border-0"
                     title="Preview"
                   />
+                ) : previewSrc && !previewMounted ? (
+                  <div className="flex items-center justify-center h-full text-muted-foreground">
+                    <div className="text-center">
+                      <Loader2 className="w-8 h-8 mx-auto mb-4 animate-spin" />
+                      <p>Recriando preview...</p>
+                    </div>
+                  </div>
                 ) : (
                   <div className="flex items-center justify-center h-full text-muted-foreground">
                     <div className="text-center">
