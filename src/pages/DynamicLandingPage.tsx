@@ -47,6 +47,8 @@ interface LandingPageData {
   color_primary: string | null;
   color_accent: string | null;
   color_background: string | null;
+  color_text: string | null;
+  color_text_highlight: string | null;
   font_heading: string | null;
   font_body: string | null;
   video_enabled: boolean | null;
@@ -536,8 +538,8 @@ const DynamicLandingPageInner = () => {
               className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight"
               style={{ fontFamily: fontHeading }}
             >
-              <span className="text-foreground">{(page.hero_title || page.title).split('.')[0]}. </span>
-              <span className="text-gradient">{(page.hero_title || page.title).split('.').slice(1).join('.') || 'Simples. Rápido. Automático.'}</span>
+              <span style={{ color: page.color_text || '#ffffff' }}>{(page.hero_title || page.title).split('.')[0]}. </span>
+              <span style={{ color: page.color_text_highlight || '#a855f7' }}>{(page.hero_title || page.title).split('.').slice(1).join('.') || 'Simples. Rápido. Automático.'}</span>
             </h1>
             
             {page.hero_subtitle && (

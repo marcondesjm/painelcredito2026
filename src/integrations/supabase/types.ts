@@ -23,6 +23,8 @@ export type Database = {
           color_accent: string | null
           color_background: string | null
           color_primary: string | null
+          color_text: string | null
+          color_text_highlight: string | null
           created_at: string
           cta_subtitle: string | null
           cta_title: string | null
@@ -75,6 +77,8 @@ export type Database = {
           color_accent?: string | null
           color_background?: string | null
           color_primary?: string | null
+          color_text?: string | null
+          color_text_highlight?: string | null
           created_at?: string
           cta_subtitle?: string | null
           cta_title?: string | null
@@ -127,6 +131,8 @@ export type Database = {
           color_accent?: string | null
           color_background?: string | null
           color_primary?: string | null
+          color_text?: string | null
+          color_text_highlight?: string | null
           created_at?: string
           cta_subtitle?: string | null
           cta_title?: string | null
