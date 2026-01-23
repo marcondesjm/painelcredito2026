@@ -94,10 +94,11 @@ const DynamicLandingPage = () => {
   };
 
   useEffect(() => {
-    if (slug) {
+    // No modo preview, podemos carregar pelo draftId mesmo sem slug
+    if (slug || (isPreview && draftId)) {
       fetchPage();
     }
-  }, [slug]);
+  }, [slug, isPreview, draftId]);
 
   const fetchPage = async () => {
     try {
