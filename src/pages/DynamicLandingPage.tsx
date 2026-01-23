@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -68,17 +68,61 @@ interface LandingPageData {
   section_order: SectionId[] | null;
 }
 
-const DynamicLandingPage = () => {
+type BoundaryState = {
+  error: Error | null;
+  info: React.ErrorInfo | null;
+};
+
+class DynamicLandingPageErrorBoundary extends React.Component<
+  { children: React.ReactNode },
+  BoundaryState
+> {
+  state: BoundaryState = { error: null, info: null };
+
+  static getDerivedStateFromError(error: Error): Partial<BoundaryState> {
+    return { error };
+  }
+
+  componentDidCatch(error: Error, info: React.ErrorInfo) {
+    // Este é o ponto principal: capturar QUALQUER crash de render e registrar no console.
+    // Assim a “tela preta” vira um erro rastreável.
+    // eslint-disable-next-line no-console
+    console.error('[DynamicLandingPage] render crash', error, info);
+    this.setState({ info });
+  }
+
+  render() {
+    if (!this.state.error) return this.props.children;
+
+    return (
+      <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-6">
+        <div className="max-w-2xl w-full space-y-4">
+          <h1 className="text-xl font-semibold">Erro ao renderizar a landing page</h1>
+          <p className="text-sm text-muted-foreground">
+            Veja o console para detalhes. Se quiser detalhes na tela, abra com{' '}
+            <code className="px-1 py-0.5 rounded bg-muted">?debug=true</code>.
+          </p>
+          <Card className="p-4 bg-card/60 border-border/50">
+            <p className="text-sm font-mono whitespace-pre-wrap">{this.state.error.message}</p>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+}
+
+const DynamicLandingPageInner = () => {
   const { slug } = useParams();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [page, setPage] = useState<LandingPageData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
   const [hoveredSection, setHoveredSection] = useState<string | null>(null);
   
   const isPreview = searchParams.get('preview') === 'true';
   const draftId = searchParams.get('draftId');
+  const debug = searchParams.get('debug') === 'true' || isPreview;
 
   const handleSectionHover = (section: string) => {
     if (isPreview && window.parent !== window) {
@@ -94,6 +138,12 @@ const DynamicLandingPage = () => {
   };
 
   useEffect(() => {
+    if (!debug) return;
+    // eslint-disable-next-line no-console
+    console.debug('[DynamicLandingPage] params', { slug, isPreview, draftId });
+  }, [debug, slug, isPreview, draftId]);
+
+  useEffect(() => {
     // No modo preview, podemos carregar pelo draftId mesmo sem slug
     if (slug || (isPreview && draftId)) {
       fetchPage();
@@ -102,6 +152,18 @@ const DynamicLandingPage = () => {
 
   const fetchPage = async () => {
     try {
+      setLoading(true);
+      setError(null);
+
+      if (debug) {
+        const { data: sessionData } = await supabase.auth.getSession();
+        // eslint-disable-next-line no-console
+        console.debug('[DynamicLandingPage] session', {
+          hasSession: !!sessionData.session,
+          userId: sessionData.session?.user?.id,
+        });
+      }
+
       let data = null;
       let fetchError = null;
 
@@ -142,7 +204,11 @@ const DynamicLandingPage = () => {
       }
 
       if (fetchError || !data) {
-        throw fetchError || new Error('Page not found');
+        const msg =
+          typeof (fetchError as any)?.message === 'string'
+            ? (fetchError as any).message
+            : 'Page not found';
+        throw new Error(msg);
       }
       
       setPage({
@@ -154,8 +220,10 @@ const DynamicLandingPage = () => {
         section_order: (data.section_order as SectionId[]) || defaultSectionOrder,
       });
     } catch (err) {
-      console.error('Error fetching page:', err);
-      setError(true);
+      const e = err instanceof Error ? err : new Error(String(err));
+      // eslint-disable-next-line no-console
+      console.error('[DynamicLandingPage] fetchPage error', e);
+      setError(e);
     } finally {
       setLoading(false);
     }
@@ -169,18 +237,23 @@ const DynamicLandingPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
       </div>
     );
   }
 
   if (error || !page) {
     return (
-      <div className="min-h-screen bg-[#0a0a0f] flex flex-col items-center justify-center p-4">
-        <h1 className="text-2xl font-bold mb-4 text-white">Página não encontrada</h1>
-        <p className="text-gray-400 mb-6">Esta página não existe ou não está publicada.</p>
-        <Button onClick={() => navigate('/')} className="bg-purple-600 hover:bg-purple-700 text-white">Voltar ao início</Button>
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6 text-center">
+        <h1 className="text-2xl font-bold mb-2">Página não encontrada</h1>
+        <p className="text-muted-foreground mb-6">Esta página não existe ou não está publicada.</p>
+        {debug && error?.message && (
+          <Card className="max-w-2xl w-full text-left p-4 mb-6 bg-card/60 border-border/50">
+            <p className="text-xs font-mono whitespace-pre-wrap">{error.message}</p>
+          </Card>
+        )}
+        <Button onClick={() => navigate('/')}>Voltar ao início</Button>
       </div>
     );
   }
@@ -906,5 +979,11 @@ const DynamicLandingPage = () => {
     </div>
   );
 };
+
+const DynamicLandingPage = () => (
+  <DynamicLandingPageErrorBoundary>
+    <DynamicLandingPageInner />
+  </DynamicLandingPageErrorBoundary>
+);
 
 export default DynamicLandingPage;
