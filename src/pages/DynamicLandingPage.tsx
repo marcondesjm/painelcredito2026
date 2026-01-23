@@ -867,8 +867,15 @@ const DynamicLandingPageInner = () => {
   const renderCtaSection = () => (
     <section 
       key="cta"
-      className="py-20 px-4"
+      className={`py-20 px-4 transition-all relative ${isPreview ? 'cursor-pointer' : ''} ${hoveredSection === 'cta' ? 'ring-2 ring-primary ring-inset bg-primary/5' : ''}`}
+      onMouseEnter={() => handleSectionHover('cta')}
+      onClick={() => handleSectionClick('cta')}
     >
+      {hoveredSection === 'cta' && isPreview && (
+        <div className="absolute top-2 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-xs px-3 py-1 rounded-full font-medium shadow-lg z-10">
+          💰 Clique para editar CTA
+        </div>
+      )}
       <div className="max-w-4xl mx-auto text-center">
         <div 
           className="rounded-2xl p-8 md:p-12 border"
