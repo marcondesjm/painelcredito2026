@@ -62,6 +62,10 @@ export type Database = {
           title: string
           updated_at: string
           user_id: string
+          video_enabled: boolean | null
+          video_thumbnail: string | null
+          video_title: string | null
+          video_url: string | null
         }
         Insert: {
           about_description?: string | null
@@ -110,6 +114,10 @@ export type Database = {
           title: string
           updated_at?: string
           user_id: string
+          video_enabled?: boolean | null
+          video_thumbnail?: string | null
+          video_title?: string | null
+          video_url?: string | null
         }
         Update: {
           about_description?: string | null
@@ -158,6 +166,10 @@ export type Database = {
           title?: string
           updated_at?: string
           user_id?: string
+          video_enabled?: boolean | null
+          video_thumbnail?: string | null
+          video_title?: string | null
+          video_url?: string | null
         }
         Relationships: []
       }
