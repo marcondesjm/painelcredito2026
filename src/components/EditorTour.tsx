@@ -167,103 +167,123 @@ export const triggerEditorTour = (userId: string) => {
 const style = document.createElement('style');
 style.textContent = `
   .driver-popover-custom {
-    background: linear-gradient(145deg, hsl(240 10% 12%), hsl(240 10% 8%)) !important;
-    border: 1px solid hsl(var(--primary) / 0.3) !important;
-    color: hsl(var(--foreground)) !important;
+    background: linear-gradient(145deg, #1a1a2e, #16162a) !important;
+    border: 2px solid hsl(var(--primary)) !important;
+    color: #ffffff !important;
     border-radius: 16px !important;
     box-shadow: 
-      0 25px 50px -12px rgba(0, 0, 0, 0.6),
-      0 0 30px hsl(var(--primary) / 0.15) !important;
-    max-width: 380px !important;
+      0 25px 50px -12px rgba(0, 0, 0, 0.8),
+      0 0 40px hsl(var(--primary) / 0.4),
+      0 0 80px hsl(var(--primary) / 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+    max-width: 400px !important;
+    backdrop-filter: blur(20px) !important;
   }
   
   .driver-popover-custom .driver-popover-title {
-    color: hsl(var(--foreground)) !important;
-    font-size: 1.2rem !important;
+    color: #ffffff !important;
+    font-size: 1.3rem !important;
     font-weight: 700 !important;
-    margin-bottom: 12px !important;
+    margin-bottom: 14px !important;
+    text-shadow: 0 2px 10px rgba(139, 92, 246, 0.3) !important;
   }
   
   .driver-popover-custom .driver-popover-description {
-    color: hsl(var(--muted-foreground)) !important;
-    font-size: 0.95rem !important;
-    line-height: 1.6 !important;
+    color: #e2e8f0 !important;
+    font-size: 1rem !important;
+    line-height: 1.7 !important;
   }
   
   .driver-popover-custom .driver-popover-description strong {
-    color: hsl(var(--primary)) !important;
-    font-weight: 600 !important;
+    color: #a78bfa !important;
+    font-weight: 700 !important;
+    text-shadow: 0 0 10px rgba(167, 139, 250, 0.5) !important;
   }
   
   .driver-popover-custom .driver-popover-progress-text {
-    color: hsl(var(--muted-foreground)) !important;
-    font-size: 0.8rem !important;
-    font-weight: 500 !important;
+    color: #94a3b8 !important;
+    font-size: 0.85rem !important;
+    font-weight: 600 !important;
   }
   
   .driver-popover-custom .driver-popover-prev-btn,
   .driver-popover-custom .driver-popover-next-btn {
-    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary) / 0.8)) !important;
-    color: hsl(var(--primary-foreground)) !important;
+    background: linear-gradient(135deg, #8B5CF6, #7C3AED) !important;
+    color: #ffffff !important;
     border: none !important;
-    border-radius: 8px !important;
-    padding: 10px 20px !important;
-    font-weight: 600 !important;
+    border-radius: 10px !important;
+    padding: 12px 24px !important;
+    font-weight: 700 !important;
     transition: all 0.3s ease !important;
-    font-size: 0.9rem !important;
+    font-size: 0.95rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4) !important;
   }
   
   .driver-popover-custom .driver-popover-prev-btn:hover,
   .driver-popover-custom .driver-popover-next-btn:hover {
-    transform: translateY(-2px) !important;
-    box-shadow: 0 4px 15px hsl(var(--primary) / 0.4) !important;
+    transform: translateY(-3px) scale(1.02) !important;
+    box-shadow: 0 8px 25px rgba(139, 92, 246, 0.6) !important;
   }
   
   .driver-popover-custom .driver-popover-prev-btn {
-    background: transparent !important;
-    color: hsl(var(--muted-foreground)) !important;
-    border: 1px solid hsl(var(--border)) !important;
-  }
-  
-  .driver-popover-custom .driver-popover-prev-btn:hover {
-    background: hsl(var(--muted) / 0.3) !important;
-    color: hsl(var(--foreground)) !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: #e2e8f0 !important;
+    border: 2px solid rgba(255, 255, 255, 0.2) !important;
     box-shadow: none !important;
   }
   
+  .driver-popover-custom .driver-popover-prev-btn:hover {
+    background: rgba(255, 255, 255, 0.2) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1) !important;
+    border-color: rgba(255, 255, 255, 0.4) !important;
+  }
+  
   .driver-popover-custom .driver-popover-close-btn {
-    color: hsl(var(--muted-foreground)) !important;
-    font-size: 1.2rem !important;
-    transition: color 0.2s !important;
+    color: #94a3b8 !important;
+    font-size: 1.4rem !important;
+    transition: all 0.2s !important;
+    width: 32px !important;
+    height: 32px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 50% !important;
   }
   
   .driver-popover-custom .driver-popover-close-btn:hover {
-    color: hsl(var(--foreground)) !important;
+    color: #ffffff !important;
+    background: rgba(255, 255, 255, 0.1) !important;
   }
   
   .driver-popover-custom .driver-popover-arrow-side-bottom {
-    border-bottom-color: hsl(240 10% 12%) !important;
+    border-bottom-color: #1a1a2e !important;
   }
   
   .driver-popover-custom .driver-popover-arrow-side-top {
-    border-top-color: hsl(240 10% 12%) !important;
+    border-top-color: #1a1a2e !important;
   }
   
   .driver-popover-custom .driver-popover-arrow-side-left {
-    border-left-color: hsl(240 10% 12%) !important;
+    border-left-color: #1a1a2e !important;
   }
   
   .driver-popover-custom .driver-popover-arrow-side-right {
-    border-right-color: hsl(240 10% 12%) !important;
+    border-right-color: #1a1a2e !important;
   }
 
   .driver-overlay {
-    background: rgba(0, 0, 0, 0.85) !important;
+    background: rgba(0, 0, 0, 0.9) !important;
   }
   
   .driver-active-element {
-    box-shadow: 0 0 0 4px hsl(var(--primary) / 0.5) !important;
-    border-radius: 8px !important;
+    box-shadow: 
+      0 0 0 4px hsl(var(--primary)),
+      0 0 30px hsl(var(--primary) / 0.6),
+      0 0 60px hsl(var(--primary) / 0.3) !important;
+    border-radius: 12px !important;
   }
 `;
 document.head.appendChild(style);
