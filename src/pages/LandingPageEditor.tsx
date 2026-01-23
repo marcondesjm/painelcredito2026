@@ -43,6 +43,8 @@ interface LandingPageData {
   color_primary: string;
   color_accent: string;
   color_background: string;
+  color_text: string;
+  color_text_highlight: string;
   font_heading: string;
   font_body: string;
   video_enabled: boolean;
@@ -119,6 +121,8 @@ const defaultData: LandingPageData = {
   color_primary: '#8B5CF6',
   color_accent: '#10B981',
   color_background: '#0a0a0f',
+  color_text: '#ffffff',
+  color_text_highlight: '#a855f7',
   font_heading: 'Inter',
   font_body: 'Inter',
   video_enabled: false,
@@ -266,6 +270,8 @@ const LandingPageEditor = () => {
     color_primary: draft.color_primary || '#8B5CF6',
     color_accent: draft.color_accent || '#10B981',
     color_background: draft.color_background || '#0a0a0f',
+    color_text: draft.color_text || '#ffffff',
+    color_text_highlight: draft.color_text_highlight || '#a855f7',
     font_heading: draft.font_heading || 'Inter',
     font_body: draft.font_body || 'Inter',
     video_enabled: draft.video_enabled,
@@ -997,6 +1003,44 @@ const LandingPageEditor = () => {
                               className="h-10 text-xs bg-background/50"
                             />
                           </div>
+                        </div>
+                      </div>
+
+                      {/* Text Colors */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-3 border-t border-border/20 mt-4">
+                        <div className="space-y-2">
+                          <Label className="text-xs text-muted-foreground">Cor do Texto Principal</Label>
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="color"
+                              value={data.color_text}
+                              onChange={(e) => setData({ ...data, color_text: e.target.value })}
+                              className="w-10 h-10 rounded cursor-pointer border-0 shrink-0"
+                            />
+                            <Input
+                              value={data.color_text}
+                              onChange={(e) => setData({ ...data, color_text: e.target.value })}
+                              className="h-10 text-xs bg-background/50"
+                            />
+                          </div>
+                          <p className="text-xs text-muted-foreground">Primeira parte do título</p>
+                        </div>
+                        <div className="space-y-2">
+                          <Label className="text-xs text-muted-foreground">Cor do Texto Destaque</Label>
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="color"
+                              value={data.color_text_highlight}
+                              onChange={(e) => setData({ ...data, color_text_highlight: e.target.value })}
+                              className="w-10 h-10 rounded cursor-pointer border-0 shrink-0"
+                            />
+                            <Input
+                              value={data.color_text_highlight}
+                              onChange={(e) => setData({ ...data, color_text_highlight: e.target.value })}
+                              className="h-10 text-xs bg-background/50"
+                            />
+                          </div>
+                          <p className="text-xs text-muted-foreground">"Simples. Rápido. Automático."</p>
                         </div>
                       </div>
                     </div>
