@@ -9,10 +9,10 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, Save, Loader2, ExternalLink, Sparkles, Plus, Trash2, Eye, EyeOff, GripVertical, Check, RefreshCw } from 'lucide-react';
+import { ArrowLeft, Save, Loader2, ExternalLink, Sparkles, Plus, Trash2, Eye, EyeOff, GripVertical, Check, RefreshCw, HelpCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { ImageUpload } from '@/components/ImageUpload';
-import { EditorTour } from '@/components/EditorTour';
+import { EditorTour, triggerEditorTour } from '@/components/EditorTour';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 import { SectionOrderManager, SectionId, defaultSectionOrder } from '@/components/SectionOrderManager';
 
@@ -617,6 +617,17 @@ const LandingPageEditor = () => {
                 Salvo
               </span>
             )}
+            
+            {/* Help button to restart tour */}
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => user && triggerEditorTour(user.id)}
+              title="Ver tutorial"
+              className="h-8 w-8"
+            >
+              <HelpCircle className="w-4 h-4" />
+            </Button>
             
             <Button 
               id="tour-preview-toggle"
@@ -1496,7 +1507,7 @@ const LandingPageEditor = () => {
 
           {/* Preview Panel */}
           <ResizablePanel defaultSize={defaultPreviewSize} minSize={25} maxSize={75}>
-            <div className="h-full border-l border-border/30 bg-muted/20 flex flex-col">
+            <div id="tour-preview-area" className="h-full border-l border-border/30 bg-muted/20 flex flex-col">
               <div className="p-3 border-b border-border/30 bg-card/50 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Eye className="w-4 h-4 text-muted-foreground" />
