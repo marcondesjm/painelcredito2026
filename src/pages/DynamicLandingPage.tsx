@@ -14,7 +14,7 @@ import { APP_VERSION, LAST_UPDATE } from '@/config/version';
 import backgroundHero from '@/assets/background-hero.png';
 import dashboardMockup from '@/assets/dashboard-mockup.png';
 
-type SectionId = 'hero' | 'video' | 'features' | 'about' | 'how-it-works' | 'testimonials' | 'faq' | 'cta' | 'donation';
+type SectionId = 'hero' | 'video' | 'features' | 'about' | 'how-it-works' | 'secure-purchase' | 'testimonials' | 'faq' | 'cta' | 'donation';
 
 const defaultSectionOrder: SectionId[] = [
   'hero',
@@ -22,6 +22,7 @@ const defaultSectionOrder: SectionId[] = [
   'features',
   'about',
   'how-it-works',
+  'secure-purchase',
   'testimonials',
   'faq',
   'cta',
@@ -1157,6 +1158,67 @@ const DynamicLandingPageInner = () => {
     );
   };
 
+  const renderSecurePurchaseSection = () => {
+    const trustItems = [
+      {
+        icon: <Shield className="w-5 h-5" />,
+        title: "Produto Testado",
+        description: "Ferramenta validada e funcionando perfeitamente."
+      },
+      {
+        icon: <Zap className="w-5 h-5" />,
+        title: "Entrega Automática",
+        description: "Receba acesso imediato após a confirmação do pagamento."
+      },
+      {
+        icon: <Headphones className="w-5 h-5" />,
+        title: "Suporte Disponível",
+        description: "Equipe pronta para ajudar sempre que precisar."
+      },
+      {
+        icon: <RefreshCw className="w-5 h-5" />,
+        title: "Atualizações Gratuitas",
+        description: "Melhorias constantes sem custo adicional."
+      }
+    ];
+
+    return (
+      <section 
+        key="secure-purchase"
+        className={`py-20 px-4 transition-all ${isPreview ? 'cursor-pointer' : ''} ${hoveredSection === 'secure-purchase' ? 'ring-2 ring-primary ring-inset' : ''}`}
+        onMouseEnter={() => handleSectionHover('secure-purchase')}
+      >
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{ fontFamily: fontHeading }}>
+              Compra <span style={{ color: page.color_text_highlight || '#a855f7' }}>Segura</span>
+            </h2>
+            <p className="text-muted-foreground">
+              Sua confiança é nossa prioridade.
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 gap-8">
+            {trustItems.map((item, index) => (
+              <div key={index} className="flex items-start gap-4">
+                <div 
+                  className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                  style={{ backgroundColor: `${page.color_icons || '#8B5CF6'}20`, color: page.color_icons || '#8B5CF6' }}
+                >
+                  {item.icon}
+                </div>
+                <div>
+                  <h3 className="font-semibold text-foreground mb-1">{item.title}</h3>
+                  <p className="text-sm text-muted-foreground">{item.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  };
+
   // Map section IDs to render functions
   const sectionRenderers: Record<SectionId, () => React.ReactNode> = {
     'hero': renderHeroSection,
@@ -1164,6 +1226,7 @@ const DynamicLandingPageInner = () => {
     'features': renderFeaturesSection,
     'about': renderAboutSection,
     'how-it-works': renderHowItWorksSection,
+    'secure-purchase': renderSecurePurchaseSection,
     'testimonials': renderTestimonialsSection,
     'faq': renderFaqSection,
     'cta': renderCtaSection,

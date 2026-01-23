@@ -3,7 +3,7 @@ import { ChevronUp, ChevronDown, GripVertical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
-export type SectionId = 'hero' | 'video' | 'features' | 'about' | 'how-it-works' | 'testimonials' | 'faq' | 'cta' | 'donation';
+export type SectionId = 'hero' | 'video' | 'features' | 'about' | 'how-it-works' | 'secure-purchase' | 'testimonials' | 'faq' | 'cta' | 'donation';
 
 interface SectionOrderManagerProps {
   sectionOrder: SectionId[];
@@ -16,6 +16,7 @@ const sectionLabels: Record<SectionId, string> = {
   'features': '✨ Funcionalidades',
   'about': '📝 Sobre',
   'how-it-works': '🔧 Como Funciona',
+  'secure-purchase': '🛡️ Compra Segura',
   'testimonials': '💬 Depoimentos',
   'faq': '❓ Perguntas Frequentes',
   'cta': '🎯 CTA Final',
@@ -28,6 +29,7 @@ export const defaultSectionOrder: SectionId[] = [
   'features',
   'about',
   'how-it-works',
+  'secure-purchase',
   'testimonials',
   'faq',
   'cta',
