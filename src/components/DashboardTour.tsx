@@ -32,7 +32,8 @@ export const DashboardTour = () => {
     const driverObj = driver({
       showProgress: true,
       animate: true,
-      overlayColor: 'rgba(0, 0, 0, 0.8)',
+      overlayColor: 'hsl(0 0% 0%)',
+      overlayOpacity: 0.35,
       stagePadding: 10,
       popoverClass: 'driver-popover-custom',
       nextBtnText: 'Próximo →',
@@ -229,20 +230,26 @@ style.textContent = `
     border-right-color: #1a1a2e !important;
   }
 
+  /* driver.js overlay is an SVG. Background on the SVG would darken EVERYTHING (including the cut-out). */
   .driver-overlay {
-    background: rgba(0, 0, 0, 0.75) !important;
+    background: transparent !important;
+  }
+
+  .driver-overlay path {
+    fill: hsl(0 0% 0%) !important;
+    opacity: 0.35 !important;
   }
   
   .driver-active-element {
     position: relative !important;
     z-index: 10001 !important;
-    background: #252540 !important;
     box-shadow: 
       0 0 0 4px #8B5CF6,
       0 0 0 8px rgba(139, 92, 246, 0.4),
       0 0 60px rgba(139, 92, 246, 0.6),
       0 0 100px rgba(139, 92, 246, 0.4) !important;
     border-radius: 12px !important;
+    filter: brightness(1.1) contrast(1.05) !important;
   }
   
   .driver-active-element,
