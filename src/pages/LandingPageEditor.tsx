@@ -62,6 +62,7 @@ interface LandingPageData {
   facebook_pixel: string;
   google_analytics: string;
   google_tag_manager: string;
+  tiktok_pixel: string;
   section_order: SectionId[];
 }
 
@@ -158,6 +159,7 @@ const defaultData: LandingPageData = {
   facebook_pixel: '',
   google_analytics: '',
   google_tag_manager: '',
+  tiktok_pixel: '',
   section_order: defaultSectionOrder,
 };
 
@@ -262,6 +264,7 @@ const LandingPageEditor = () => {
     facebook_pixel: draft.facebook_pixel || null,
     google_analytics: draft.google_analytics || null,
     google_tag_manager: draft.google_tag_manager || null,
+    tiktok_pixel: draft.tiktok_pixel || null,
     section_order: draft.section_order,
   });
 
@@ -464,6 +467,7 @@ const LandingPageEditor = () => {
         facebook_pixel: (page as any).facebook_pixel || '',
         google_analytics: (page as any).google_analytics || '',
         google_tag_manager: (page as any).google_tag_manager || '',
+        tiktok_pixel: (page as any).tiktok_pixel || '',
         section_order: (page.section_order as SectionId[]) || defaultSectionOrder,
       });
     } catch (error) {
@@ -1669,6 +1673,32 @@ ou cole o script completo:
 <script>(function(w,d,s,l,i){...})(window,document,'script','dataLayer','GTM-XXXXXXX');</script>`}
                         className="bg-background/50 font-mono text-xs"
                         rows={5}
+                      />
+                    </div>
+                    
+                    {/* TikTok Pixel */}
+                    <div className="space-y-2 pt-4 border-t border-border/50">
+                      <Label className="text-sm flex items-center gap-2">
+                        <span>🎵</span> TikTok Pixel
+                      </Label>
+                      <p className="text-xs text-muted-foreground">
+                        Cole apenas o ID do pixel (ex: XXXXXXXXXX) ou o script completo do TikTok Pixel.
+                      </p>
+                      <Textarea
+                        value={data.tiktok_pixel}
+                        onChange={(e) => setData({ ...data, tiktok_pixel: e.target.value })}
+                        placeholder={`XXXXXXXXXX
+
+ou cole o script completo:
+
+<!-- TikTok Pixel Code -->
+<script>
+!function (w, d, t) {...}(window, document, 'ttq');
+ttq.load('XXXXXXXXXX');
+ttq.page();
+</script>`}
+                        className="bg-background/50 font-mono text-xs"
+                        rows={6}
                       />
                     </div>
                   </CardContent>

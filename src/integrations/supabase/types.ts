@@ -58,6 +58,7 @@ export type Database = {
           section_order: Json | null
           slug: string
           testimonials: Json | null
+          tiktok_pixel: string | null
           title: string
           updated_at: string
           user_id: string
@@ -105,6 +106,7 @@ export type Database = {
           section_order?: Json | null
           slug: string
           testimonials?: Json | null
+          tiktok_pixel?: string | null
           title: string
           updated_at?: string
           user_id: string
@@ -152,6 +154,7 @@ export type Database = {
           section_order?: Json | null
           slug?: string
           testimonials?: Json | null
+          tiktok_pixel?: string | null
           title?: string
           updated_at?: string
           user_id?: string
