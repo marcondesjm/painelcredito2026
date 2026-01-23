@@ -62,7 +62,7 @@ export const Header = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-2">
+          <nav className="hidden lg:flex items-center gap-2">
             <Button 
               variant="hero" 
               size="sm"
@@ -88,6 +88,52 @@ export const Header = () => {
                 onClick={() => setLoginOpen(true)}
               >
                 Área de Membros
+              </Button>
+            )}
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="text-muted-foreground hover:text-foreground"
+              onClick={() => scrollToSection('how-it-works')}
+            >
+              Como Funciona
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="text-muted-foreground hover:text-foreground"
+              onClick={() => scrollToSection('faq')}
+            >
+              FAQ
+            </Button>
+          </nav>
+
+          {/* Tablet/Medium Navigation - simplified */}
+          <nav className="hidden md:flex lg:hidden items-center gap-2">
+            <Button 
+              variant="hero" 
+              size="sm"
+              onClick={() => navigate('/checkout')}
+            >
+              Painel Gerador
+            </Button>
+            {user ? (
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+                onClick={handleLogout}
+              >
+                <LogOut className="w-4 h-4" />
+              </Button>
+            ) : (
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+                onClick={() => setLoginOpen(true)}
+              >
+                Entrar
               </Button>
             )}
             <Button 
