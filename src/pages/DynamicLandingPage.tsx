@@ -5,7 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Loader2, Star, Check, Shield, Clock, ArrowRight, MessageCircle, Zap, Headphones, LogOut } from 'lucide-react';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Loader2, Star, Check, Shield, Clock, ArrowRight, MessageCircle, Zap, Headphones, LogOut, Menu } from 'lucide-react';
 import { CountdownTimer } from '@/components/CountdownTimer';
 import backgroundHero from '@/assets/background-hero.png';
 import dashboardMockup from '@/assets/dashboard-mockup.png';
@@ -1081,15 +1082,54 @@ const DynamicLandingPageInner = () => {
             </Button>
           </nav>
 
-          {/* Mobile - just the CTA button */}
-          <Button 
-            size="sm" 
-            className="md:hidden text-white"
-            style={{ backgroundColor: `hsl(${primaryHsl})` }}
-            onClick={() => page.hero_cta_link && navigate(page.hero_cta_link)}
-          >
-            {page.hero_cta_text || 'Comprar Agora'}
-          </Button>
+          {/* Mobile Menu */}
+          <Sheet>
+            <SheetTrigger asChild className="md:hidden">
+              <Button variant="ghost" size="icon" className="text-foreground">
+                <Menu className="w-6 h-6" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="bg-background border-border w-[280px]">
+              <nav className="flex flex-col gap-4 mt-8">
+                <Button 
+                  className="w-full text-white"
+                  style={{ backgroundColor: `hsl(${primaryHsl})` }}
+                  onClick={() => page.hero_cta_link && navigate(page.hero_cta_link)}
+                >
+                  {page.hero_cta_text || 'Comprar Agora'}
+                </Button>
+                <Button 
+                  variant="outline" 
+                  className="w-full"
+                  style={{ borderColor: `hsl(${primaryHsl} / 0.5)`, color: `hsl(${primaryHsl})` }}
+                  onClick={() => navigate('/auth')}
+                >
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Sair
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  className="w-full justify-start text-muted-foreground hover:text-foreground"
+                  onClick={() => {
+                    const el = document.getElementById('how-it-works');
+                    el?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                >
+                  Como Funciona
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  className="w-full justify-start text-muted-foreground hover:text-foreground"
+                  onClick={() => {
+                    const el = document.getElementById('faq');
+                    el?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                >
+                  FAQ
+                </Button>
+              </nav>
+            </SheetContent>
+          </Sheet>
         </div>
       </header>
 
