@@ -59,6 +59,7 @@ interface LandingPageData {
   meta_title: string;
   meta_description: string;
   og_image: string;
+  facebook_pixel: string;
   section_order: SectionId[];
 }
 
@@ -152,6 +153,7 @@ const defaultData: LandingPageData = {
   meta_title: '',
   meta_description: '',
   og_image: '',
+  facebook_pixel: '',
   section_order: defaultSectionOrder,
 };
 
@@ -253,6 +255,7 @@ const LandingPageEditor = () => {
     meta_title: draft.meta_title || null,
     meta_description: draft.meta_description || null,
     og_image: draft.og_image || null,
+    facebook_pixel: draft.facebook_pixel || null,
     section_order: draft.section_order,
   });
 
@@ -452,6 +455,7 @@ const LandingPageEditor = () => {
         meta_title: page.meta_title || '',
         meta_description: page.meta_description || '',
         og_image: page.og_image || '',
+        facebook_pixel: (page as any).facebook_pixel || '',
         section_order: (page.section_order as SectionId[]) || defaultSectionOrder,
       });
     } catch (error) {
@@ -1588,6 +1592,27 @@ const LandingPageEditor = () => {
                       folder="og"
                       aspectRatio="aspect-[1200/630]"
                     />
+                    
+                    {/* Facebook Pixel */}
+                    <div className="space-y-2 pt-4 border-t border-border/50">
+                      <Label className="text-sm flex items-center gap-2">
+                        <span className="text-blue-500">📊</span> Facebook Pixel
+                      </Label>
+                      <p className="text-xs text-muted-foreground">
+                        Cole o código do Pixel do Facebook (script completo). Será injetado automaticamente no &lt;head&gt; da sua página.
+                      </p>
+                      <Textarea
+                        value={data.facebook_pixel}
+                        onChange={(e) => setData({ ...data, facebook_pixel: e.target.value })}
+                        placeholder={`<!-- Facebook Pixel Code -->
+<script>
+  !function(f,b,e,v,n,t,s)...
+</script>
+<!-- End Facebook Pixel Code -->`}
+                        className="bg-background/50 font-mono text-xs"
+                        rows={8}
+                      />
+                    </div>
                   </CardContent>
                 </Card>
               </TabsContent>

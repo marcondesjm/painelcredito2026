@@ -61,6 +61,7 @@ interface LandingPageData {
   faqs: { question: string; answer: string }[];
   meta_title: string | null;
   meta_description: string | null;
+  facebook_pixel: string | null;
   section_order: SectionId[] | null;
 }
 
@@ -545,17 +546,24 @@ const DynamicLandingPage = () => {
             <div className="flex flex-col md:flex-row items-center justify-center gap-6">
               {/* QR Code */}
               {page.donation_qr_code && (
-                <div className="bg-white p-3 rounded-lg">
+                <a 
+                  href={generatePixLink(page.donation_pix_key || '', page.donation_pix_name || '')}
+                  className="bg-white p-3 rounded-lg cursor-pointer hover:shadow-lg hover:scale-105 transition-all group"
+                  title="Clique para abrir no app do banco"
+                >
                   <img 
                     src={page.donation_qr_code} 
                     alt="QR Code PIX" 
                     className="w-40 h-40 object-contain"
                   />
-                </div>
+                  <p className="text-xs text-gray-600 text-center mt-2 group-hover:text-primary transition-colors">
+                    📱 Toque para abrir no app
+                  </p>
+                </a>
               )}
               
               {/* PIX Info */}
-              <div className="bg-background/50 rounded-lg p-4 space-y-2">
+              <div className="bg-background/50 rounded-lg p-4 space-y-3">
                 <p className="text-sm font-medium">Chave PIX:</p>
                 <p 
                   className="text-lg font-bold font-mono cursor-pointer hover:opacity-80 transition-opacity"
@@ -563,6 +571,11 @@ const DynamicLandingPage = () => {
                   onClick={(e) => {
                     e.stopPropagation();
                     navigator.clipboard.writeText(page.donation_pix_key || '48996029392');
+                    // Show feedback
+                    const target = e.currentTarget;
+                    const originalText = target.textContent;
+                    target.textContent = '✓ Copiado!';
+                    setTimeout(() => { target.textContent = originalText; }, 1500);
                   }}
                   title="Clique para copiar"
                 >
@@ -571,7 +584,17 @@ const DynamicLandingPage = () => {
                 <p className="text-xs text-muted-foreground">
                   {page.donation_pix_name || 'Marcondes Jorge Machado'}
                 </p>
-                <p className="text-xs text-muted-foreground mt-2">Clique na chave para copiar</p>
+                
+                {/* Button to open in bank app */}
+                <a
+                  href={generatePixLink(page.donation_pix_key || '', page.donation_pix_name || '')}
+                  className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white transition-all hover:opacity-90 hover:scale-105"
+                  style={{ backgroundColor: `hsl(${accentHsl})` }}
+                >
+                  <span>📱</span> Abrir no App do Banco
+                </a>
+                
+                <p className="text-xs text-muted-foreground">Clique na chave para copiar</p>
               </div>
             </div>
           </div>
@@ -590,6 +613,47 @@ const DynamicLandingPage = () => {
     'faq': renderFaqSection,
     'cta': renderCtaSection,
     'donation': renderDonationSection,
+  };
+
+  // Inject Facebook Pixel script
+  useEffect(() => {
+    if (page?.facebook_pixel && !isPreview) {
+      // Create a container for the pixel script
+      const pixelContainer = document.createElement('div');
+      pixelContainer.id = 'fb-pixel-container';
+      pixelContainer.innerHTML = page.facebook_pixel;
+      
+      // Move scripts to head
+      const scripts = pixelContainer.querySelectorAll('script');
+      scripts.forEach((script) => {
+        const newScript = document.createElement('script');
+        newScript.textContent = script.textContent;
+        document.head.appendChild(newScript);
+      });
+      
+      // Move noscript to body
+      const noscripts = pixelContainer.querySelectorAll('noscript');
+      noscripts.forEach((noscript) => {
+        document.body.insertBefore(noscript.cloneNode(true), document.body.firstChild);
+      });
+      
+      return () => {
+        // Cleanup on unmount
+        const container = document.getElementById('fb-pixel-container');
+        if (container) container.remove();
+      };
+    }
+  }, [page?.facebook_pixel, isPreview]);
+
+  // Generate PIX payment link (BR Code format)
+  const generatePixLink = (pixKey: string, name: string, amount?: number) => {
+    // Format for PIX copia-e-cola / QR Code
+    // This creates a link that opens in banking apps
+    const cleanKey = pixKey.replace(/\D/g, '');
+    
+    // Use the pix: URI scheme for mobile apps
+    // Also provide a fallback copy functionality
+    return `pix:${cleanKey}`;
   };
 
   return (
