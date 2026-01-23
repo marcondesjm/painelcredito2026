@@ -840,12 +840,11 @@ const DynamicLandingPageInner = () => {
   const renderCtaSection = () => (
     <section 
       key="cta"
-      className={`py-20 px-4 ${isPreview ? 'cursor-pointer' : ''}`}
-      onMouseEnter={() => handleSectionHover('cta')}
+      className="py-20 px-4"
     >
       <div className="max-w-4xl mx-auto text-center">
         <div 
-          className={`rounded-2xl p-8 md:p-12 border transition-shadow duration-200 ${hoveredSection === 'cta' && isPreview ? 'ring-2 ring-primary' : ''}`}
+          className="rounded-2xl p-8 md:p-12 border"
           style={{
             background: `linear-gradient(to right, hsl(${primaryHsl} / 0.2), hsl(${accentHsl} / 0.2))`,
             borderColor: `hsl(${primaryHsl} / 0.3)`
