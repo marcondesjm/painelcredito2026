@@ -1032,10 +1032,10 @@ const DynamicLandingPageInner = () => {
       />
 
       {/* Header with Logo and Navigation */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/30 h-16 md:h-20">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/30 h-20 md:h-28">
         <div className="max-w-7xl mx-auto px-4 h-full flex items-center justify-between">
           {page.logo_image ? (
-            <img src={page.logo_image} alt="Logo" className="h-10 md:h-14 object-contain" />
+            <img src={page.logo_image} alt="Logo" className="h-16 md:h-24 object-contain" />
           ) : (
             <h1 className="font-bold text-lg" style={{ color: `hsl(${primaryHsl})` }}>{page.title}</h1>
           )}
