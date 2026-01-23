@@ -266,6 +266,171 @@ const DynamicLandingPageInner = () => {
     }
   }, [page]);
 
+  // IMPORTANT: Hooks must run in the same order on every render.
+  // These tracking effects must live ABOVE any conditional `return`.
+
+  // Inject Facebook Pixel script
+  useEffect(() => {
+    if (page?.facebook_pixel && !isPreview) {
+      const pixelContainer = document.createElement('div');
+      pixelContainer.id = 'fb-pixel-container';
+      pixelContainer.innerHTML = page.facebook_pixel;
+      
+      const scripts = pixelContainer.querySelectorAll('script');
+      scripts.forEach((script) => {
+        const newScript = document.createElement('script');
+        newScript.textContent = script.textContent;
+        document.head.appendChild(newScript);
+      });
+      
+      const noscripts = pixelContainer.querySelectorAll('noscript');
+      noscripts.forEach((noscript) => {
+        document.body.insertBefore(noscript.cloneNode(true), document.body.firstChild);
+      });
+      
+      return () => {
+        const container = document.getElementById('fb-pixel-container');
+        if (container) container.remove();
+      };
+    }
+  }, [page?.facebook_pixel, isPreview]);
+
+  // Inject Google Analytics
+  useEffect(() => {
+    if (page?.google_analytics && !isPreview) {
+      const gaValue = page.google_analytics.trim();
+      
+      // Check if it's just the ID (G-XXXXXXXXXX) or full script
+      if (gaValue.startsWith('G-') && !gaValue.includes('<script')) {
+        // Just the ID - create the standard GA4 script
+        const gaScript = document.createElement('script');
+        gaScript.async = true;
+        gaScript.src = `https://www.googletagmanager.com/gtag/js?id=${gaValue}`;
+        gaScript.id = 'ga-script-async';
+        document.head.appendChild(gaScript);
+        
+        const gaInit = document.createElement('script');
+        gaInit.id = 'ga-script-init';
+        gaInit.textContent = `
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', '${gaValue}');
+        `;
+        document.head.appendChild(gaInit);
+      } else {
+        // Full script provided
+        const container = document.createElement('div');
+        container.id = 'ga-container';
+        container.innerHTML = gaValue;
+        
+        container.querySelectorAll('script').forEach((script) => {
+          const newScript = document.createElement('script');
+          if (script.src) {
+            newScript.src = script.src;
+            newScript.async = true;
+          } else {
+            newScript.textContent = script.textContent;
+          }
+          document.head.appendChild(newScript);
+        });
+      }
+      
+      return () => {
+        document.getElementById('ga-script-async')?.remove();
+        document.getElementById('ga-script-init')?.remove();
+        document.getElementById('ga-container')?.remove();
+      };
+    }
+  }, [page?.google_analytics, isPreview]);
+
+  // Inject Google Tag Manager
+  useEffect(() => {
+    if (page?.google_tag_manager && !isPreview) {
+      const gtmValue = page.google_tag_manager.trim();
+      
+      // Check if it's just the ID (GTM-XXXXXXX) or full script
+      if (gtmValue.startsWith('GTM-') && !gtmValue.includes('<script')) {
+        // Just the ID - create the standard GTM script
+        const gtmScript = document.createElement('script');
+        gtmScript.id = 'gtm-script';
+        gtmScript.textContent = `
+          (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+          new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+          j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+          'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+          })(window,document,'script','dataLayer','${gtmValue}');
+        `;
+        document.head.insertBefore(gtmScript, document.head.firstChild);
+        
+        // Add noscript fallback
+        const gtmNoscript = document.createElement('noscript');
+        gtmNoscript.id = 'gtm-noscript';
+        gtmNoscript.innerHTML = `<iframe src="https://www.googletagmanager.com/ns.html?id=${gtmValue}" height="0" width="0" style="display:none;visibility:hidden"></iframe>`;
+        document.body.insertBefore(gtmNoscript, document.body.firstChild);
+      } else {
+        // Full script provided
+        const container = document.createElement('div');
+        container.id = 'gtm-container';
+        container.innerHTML = gtmValue;
+        
+        container.querySelectorAll('script').forEach((script) => {
+          const newScript = document.createElement('script');
+          newScript.textContent = script.textContent;
+          document.head.insertBefore(newScript, document.head.firstChild);
+        });
+        
+        container.querySelectorAll('noscript').forEach((noscript) => {
+          document.body.insertBefore(noscript.cloneNode(true), document.body.firstChild);
+        });
+      }
+      
+      return () => {
+        document.getElementById('gtm-script')?.remove();
+        document.getElementById('gtm-noscript')?.remove();
+        document.getElementById('gtm-container')?.remove();
+      };
+    }
+  }, [page?.google_tag_manager, isPreview]);
+
+  // Inject TikTok Pixel
+  useEffect(() => {
+    if (page?.tiktok_pixel && !isPreview) {
+      const ttValue = page.tiktok_pixel.trim();
+      
+      // Check if it's just the ID or full script
+      if (/^\d+$/.test(ttValue)) {
+        // Just the pixel ID - create the standard TikTok Pixel script
+        const ttScript = document.createElement('script');
+        ttScript.id = 'tiktok-pixel-script';
+        ttScript.textContent = `
+          !function (w, d, t) {
+            w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var i="https://analytics.tiktok.com/i18n/pixel/events.js";ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=i,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};var o=document.createElement("script");o.type="text/javascript",o.async=!0,o.src=i+"?sdkid="+e+"&lib="+t;var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(o,a)};
+            ttq.load('${ttValue}');
+            ttq.page();
+          }(window, document, 'ttq');
+        `;
+        document.head.appendChild(ttScript);
+      } else {
+        // Full script provided
+        const container = document.createElement('div');
+        container.id = 'tiktok-pixel-container';
+        container.innerHTML = ttValue;
+        
+        container.querySelectorAll('script').forEach((script) => {
+          const newScript = document.createElement('script');
+          newScript.textContent = script.textContent;
+          document.head.appendChild(newScript);
+        });
+      }
+      
+      return () => {
+        document.getElementById('tiktok-pixel-script')?.remove();
+        document.getElementById('tiktok-pixel-container')?.remove();
+      };
+    }
+  }, [page?.tiktok_pixel, isPreview]);
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -755,168 +920,6 @@ const DynamicLandingPageInner = () => {
     'cta': renderCtaSection,
     'donation': renderDonationSection,
   };
-
-  // Inject Facebook Pixel script
-  useEffect(() => {
-    if (page?.facebook_pixel && !isPreview) {
-      const pixelContainer = document.createElement('div');
-      pixelContainer.id = 'fb-pixel-container';
-      pixelContainer.innerHTML = page.facebook_pixel;
-      
-      const scripts = pixelContainer.querySelectorAll('script');
-      scripts.forEach((script) => {
-        const newScript = document.createElement('script');
-        newScript.textContent = script.textContent;
-        document.head.appendChild(newScript);
-      });
-      
-      const noscripts = pixelContainer.querySelectorAll('noscript');
-      noscripts.forEach((noscript) => {
-        document.body.insertBefore(noscript.cloneNode(true), document.body.firstChild);
-      });
-      
-      return () => {
-        const container = document.getElementById('fb-pixel-container');
-        if (container) container.remove();
-      };
-    }
-  }, [page?.facebook_pixel, isPreview]);
-
-  // Inject Google Analytics
-  useEffect(() => {
-    if (page?.google_analytics && !isPreview) {
-      const gaValue = page.google_analytics.trim();
-      
-      // Check if it's just the ID (G-XXXXXXXXXX) or full script
-      if (gaValue.startsWith('G-') && !gaValue.includes('<script')) {
-        // Just the ID - create the standard GA4 script
-        const gaScript = document.createElement('script');
-        gaScript.async = true;
-        gaScript.src = `https://www.googletagmanager.com/gtag/js?id=${gaValue}`;
-        gaScript.id = 'ga-script-async';
-        document.head.appendChild(gaScript);
-        
-        const gaInit = document.createElement('script');
-        gaInit.id = 'ga-script-init';
-        gaInit.textContent = `
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', '${gaValue}');
-        `;
-        document.head.appendChild(gaInit);
-      } else {
-        // Full script provided
-        const container = document.createElement('div');
-        container.id = 'ga-container';
-        container.innerHTML = gaValue;
-        
-        container.querySelectorAll('script').forEach((script) => {
-          const newScript = document.createElement('script');
-          if (script.src) {
-            newScript.src = script.src;
-            newScript.async = true;
-          } else {
-            newScript.textContent = script.textContent;
-          }
-          document.head.appendChild(newScript);
-        });
-      }
-      
-      return () => {
-        document.getElementById('ga-script-async')?.remove();
-        document.getElementById('ga-script-init')?.remove();
-        document.getElementById('ga-container')?.remove();
-      };
-    }
-  }, [page?.google_analytics, isPreview]);
-
-  // Inject Google Tag Manager
-  useEffect(() => {
-    if (page?.google_tag_manager && !isPreview) {
-      const gtmValue = page.google_tag_manager.trim();
-      
-      // Check if it's just the ID (GTM-XXXXXXX) or full script
-      if (gtmValue.startsWith('GTM-') && !gtmValue.includes('<script')) {
-        // Just the ID - create the standard GTM script
-        const gtmScript = document.createElement('script');
-        gtmScript.id = 'gtm-script';
-        gtmScript.textContent = `
-          (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-          new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-          j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-          'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-          })(window,document,'script','dataLayer','${gtmValue}');
-        `;
-        document.head.insertBefore(gtmScript, document.head.firstChild);
-        
-        // Add noscript fallback
-        const gtmNoscript = document.createElement('noscript');
-        gtmNoscript.id = 'gtm-noscript';
-        gtmNoscript.innerHTML = `<iframe src="https://www.googletagmanager.com/ns.html?id=${gtmValue}" height="0" width="0" style="display:none;visibility:hidden"></iframe>`;
-        document.body.insertBefore(gtmNoscript, document.body.firstChild);
-      } else {
-        // Full script provided
-        const container = document.createElement('div');
-        container.id = 'gtm-container';
-        container.innerHTML = gtmValue;
-        
-        container.querySelectorAll('script').forEach((script) => {
-          const newScript = document.createElement('script');
-          newScript.textContent = script.textContent;
-          document.head.insertBefore(newScript, document.head.firstChild);
-        });
-        
-        container.querySelectorAll('noscript').forEach((noscript) => {
-          document.body.insertBefore(noscript.cloneNode(true), document.body.firstChild);
-        });
-      }
-      
-      return () => {
-        document.getElementById('gtm-script')?.remove();
-        document.getElementById('gtm-noscript')?.remove();
-        document.getElementById('gtm-container')?.remove();
-      };
-    }
-  }, [page?.google_tag_manager, isPreview]);
-
-  // Inject TikTok Pixel
-  useEffect(() => {
-    if (page?.tiktok_pixel && !isPreview) {
-      const ttValue = page.tiktok_pixel.trim();
-      
-      // Check if it's just the ID or full script
-      if (/^\d+$/.test(ttValue)) {
-        // Just the pixel ID - create the standard TikTok Pixel script
-        const ttScript = document.createElement('script');
-        ttScript.id = 'tiktok-pixel-script';
-        ttScript.textContent = `
-          !function (w, d, t) {
-            w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var i="https://analytics.tiktok.com/i18n/pixel/events.js";ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=i,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};var o=document.createElement("script");o.type="text/javascript",o.async=!0,o.src=i+"?sdkid="+e+"&lib="+t;var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(o,a)};
-            ttq.load('${ttValue}');
-            ttq.page();
-          }(window, document, 'ttq');
-        `;
-        document.head.appendChild(ttScript);
-      } else {
-        // Full script provided
-        const container = document.createElement('div');
-        container.id = 'tiktok-pixel-container';
-        container.innerHTML = ttValue;
-        
-        container.querySelectorAll('script').forEach((script) => {
-          const newScript = document.createElement('script');
-          newScript.textContent = script.textContent;
-          document.head.appendChild(newScript);
-        });
-      }
-      
-      return () => {
-        document.getElementById('tiktok-pixel-script')?.remove();
-        document.getElementById('tiktok-pixel-container')?.remove();
-      };
-    }
-  }, [page?.tiktok_pixel, isPreview]);
   const generatePixLink = (pixKey: string, name: string, amount?: number) => {
     // Format for PIX copia-e-cola / QR Code
     // This creates a link that opens in banking apps
