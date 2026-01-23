@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -17,7 +17,8 @@ import {
   Heart,
   Copy,
   Check,
-  HelpCircle
+  HelpCircle,
+  Menu
 } from 'lucide-react';
 import {
   Dialog,
@@ -36,7 +37,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import logoPainel from '@/assets/logo-dashboard.png';
+import backgroundHero from '@/assets/background-hero.png';
 import { DashboardTour, triggerDashboardTour } from '@/components/DashboardTour';
 
 interface LandingPage {
@@ -57,6 +60,7 @@ const Dashboard = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [showDonationModal, setShowDonationModal] = useState(false);
   const [copiedPix, setCopiedPix] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const pixKey = '48996029392';
   const pixName = 'Marcondes Jorge Machado';
@@ -141,56 +145,92 @@ const Dashboard = () => {
 
   if (authLoading || loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-screen relative flex items-center justify-center">
+        {/* Fixed background */}
+        <div 
+          className="fixed inset-0 -z-20"
+          style={{ 
+            backgroundImage: `url(${backgroundHero})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat'
+          }}
+        />
+        {/* Dark overlay */}
+        <div className="fixed inset-0 bg-[hsl(240,10%,4%)]/70 -z-10" />
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen relative">
+      {/* Fixed background for entire page - identical to Index */}
+      <div 
+        className="fixed inset-0 -z-20"
+        style={{ 
+          backgroundImage: `url(${backgroundHero})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat'
+        }}
+      />
+      {/* Dark overlay - identical to Index */}
+      <div className="fixed inset-0 bg-[hsl(240,10%,4%)]/70 -z-10" />
+      
       {/* Dashboard Tour */}
       <DashboardTour />
       
-      {/* Header */}
-      <header className="border-b border-border/30 bg-card/50 backdrop-blur-sm sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-3 sm:px-4 py-3 sm:py-6 flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2 sm:gap-6">
-            <img src={logoPainel} alt="Logo" className="h-12 sm:h-24 md:h-32 lg:h-48 w-auto object-contain" />
-            <div className="hidden md:block">
-              <h1 className="font-bold text-xl lg:text-2xl">Dashboard</h1>
-              <p className="text-muted-foreground text-sm">Gerencie suas landing pages</p>
-            </div>
-          </div>
-          
-          <div className="flex items-center gap-1 sm:gap-2 flex-wrap justify-end">
+      {/* Header - identical to Index Header style */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/30 h-20 sm:h-24">
+        <div className="max-w-7xl mx-auto px-4 h-full flex items-center justify-between">
+          {/* Logo */}
+          <Link to="/" className="flex items-center gap-2 h-full py-2">
+            <img src={logoPainel} alt="Painel Créditos Lovable" className="h-full max-h-16 sm:max-h-20 object-contain" />
+          </Link>
+
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center gap-2">
+            <Button 
+              id="tour-dashboard-new-btn"
+              variant="hero" 
+              size="sm"
+              onClick={() => navigate('/dashboard/new')}
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Nova Página
+            </Button>
             <Button 
               id="tour-dashboard-donate"
               variant="outline" 
               size="sm" 
               onClick={() => setShowDonationModal(true)}
-              className="border-green-500/50 text-green-500 hover:bg-green-500/10 text-xs sm:text-sm px-2 sm:px-3"
+              className="border-green-500/50 text-green-500 hover:bg-green-500/10"
             >
-              <Heart className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-2" />
-              <span className="hidden sm:inline">Doar</span>
+              <Heart className="w-4 h-4 mr-2" />
+              Doar
             </Button>
             {isAdmin && (
-              <Button variant="outline" size="sm" onClick={() => navigate('/dashboard/admin')} className="border-destructive/50 text-destructive hover:bg-destructive/10 text-xs sm:text-sm px-2 sm:px-3">
-                <Shield className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-2" />
-                <span className="hidden sm:inline">Painel Admin</span>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => navigate('/dashboard/admin')} 
+                className="border-destructive/50 text-destructive hover:bg-destructive/10"
+              >
+                <Shield className="w-4 h-4 mr-2" />
+                Admin
               </Button>
             )}
             <Button 
               id="tour-dashboard-site"
-              variant="outline" 
+              variant="ghost" 
               size="sm" 
-              onClick={() => navigate('/')} 
-              className="text-xs sm:text-sm px-2 sm:px-3"
+              className="text-muted-foreground hover:text-foreground"
+              onClick={() => navigate('/')}
             >
-              <LayoutDashboard className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-2" />
-              <span className="hidden sm:inline">Ver Site</span>
+              <LayoutDashboard className="w-4 h-4 mr-2" />
+              Ver Site
             </Button>
-            {/* Help button to restart tour */}
             <Button
               variant="ghost"
               size="icon"
@@ -200,40 +240,127 @@ const Dashboard = () => {
             >
               <HelpCircle className="w-4 h-4" />
             </Button>
-            <Button variant="ghost" size="sm" onClick={handleLogout} className="text-xs sm:text-sm px-2 sm:px-3">
-              <LogOut className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-2" />
-              <span className="hidden sm:inline">Sair</span>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+              onClick={handleLogout}
+            >
+              <LogOut className="w-4 h-4 mr-2" />
+              Sair
             </Button>
-          </div>
+          </nav>
+
+          {/* Mobile Menu */}
+          <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+            <SheetTrigger asChild className="md:hidden">
+              <Button variant="ghost" size="icon" className="text-foreground">
+                <Menu className="w-6 h-6" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="bg-background border-border w-[280px]">
+              <nav className="flex flex-col gap-4 mt-8">
+                <Button 
+                  variant="hero" 
+                  className="w-full"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    navigate('/dashboard/new');
+                  }}
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Nova Página
+                </Button>
+                <Button 
+                  variant="outline" 
+                  className="w-full border-green-500/50 text-green-500 hover:bg-green-500/10"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    setShowDonationModal(true);
+                  }}
+                >
+                  <Heart className="w-4 h-4 mr-2" />
+                  Doar
+                </Button>
+                {isAdmin && (
+                  <Button 
+                    variant="outline" 
+                    className="w-full border-destructive/50 text-destructive hover:bg-destructive/10"
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      navigate('/dashboard/admin');
+                    }}
+                  >
+                    <Shield className="w-4 h-4 mr-2" />
+                    Painel Admin
+                  </Button>
+                )}
+                <Button 
+                  variant="ghost" 
+                  className="w-full justify-start text-muted-foreground hover:text-foreground"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    navigate('/');
+                  }}
+                >
+                  <LayoutDashboard className="w-4 h-4 mr-2" />
+                  Ver Site
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  className="w-full justify-start text-muted-foreground hover:text-foreground"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    if (user) triggerDashboardTour(user.id);
+                  }}
+                >
+                  <HelpCircle className="w-4 h-4 mr-2" />
+                  Ver Tutorial
+                </Button>
+                <Button 
+                  variant="outline" 
+                  className="w-full border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    handleLogout();
+                  }}
+                >
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Sair
+                </Button>
+              </nav>
+            </SheetContent>
+          </Sheet>
         </div>
       </header>
 
-      {/* Content */}
-      <main className="max-w-7xl mx-auto px-4 py-8">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h2 className="text-2xl font-bold">Suas Landing Pages</h2>
-            <p className="text-muted-foreground">Crie e gerencie suas páginas de vendas</p>
-          </div>
-          <Button id="tour-dashboard-new-btn" onClick={() => navigate('/dashboard/new')}>
-            <Plus className="w-4 h-4 mr-2" />
-            Nova Página
-          </Button>
+      {/* Content - with padding for fixed header */}
+      <main className="relative z-10 max-w-7xl mx-auto px-4 pt-28 sm:pt-32 pb-12">
+        {/* Hero-like title section */}
+        <div className="text-center mb-12">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+            <span className="text-foreground">Suas </span>
+            <span className="text-gradient">Landing Pages</span>
+          </h1>
+          <p className="text-lg text-muted-foreground max-w-xl mx-auto">
+            Crie e gerencie suas páginas de vendas profissionais
+          </p>
         </div>
 
+        {/* Pages Grid */}
         <div id="tour-dashboard-pages">
           {pages.length === 0 ? (
-            <Card className="bg-card/50 border-dashed">
+            <Card className="bg-card/50 backdrop-blur-sm border-dashed border-border/50 max-w-lg mx-auto">
               <CardContent className="py-16 text-center">
-                <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                  <Plus className="w-8 h-8 text-primary" />
+                <div className="w-20 h-20 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-6 animate-pulse">
+                  <Plus className="w-10 h-10 text-primary" />
                 </div>
-                <h3 className="text-lg font-semibold mb-2">Nenhuma página criada</h3>
-                <p className="text-muted-foreground mb-4">
+                <h3 className="text-xl font-semibold mb-3">Nenhuma página criada</h3>
+                <p className="text-muted-foreground mb-6">
                   Crie sua primeira landing page para começar a vender
                 </p>
-                <Button onClick={() => navigate('/dashboard/new')}>
-                  <Plus className="w-4 h-4 mr-2" />
+                <Button variant="hero" size="lg" onClick={() => navigate('/dashboard/new')}>
+                  <Plus className="w-5 h-5 mr-2" />
                   Criar Landing Page
                 </Button>
               </CardContent>
@@ -241,14 +368,17 @@ const Dashboard = () => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {pages.map((page) => (
-                <Card key={page.id} className="bg-card/50 hover:border-primary/50 transition-colors">
+                <Card key={page.id} className="bg-card/50 backdrop-blur-sm hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 group">
                   <CardHeader>
                     <div className="flex items-start justify-between">
                       <div className="flex-1 min-w-0">
-                        <CardTitle className="text-lg truncate">{page.title}</CardTitle>
-                        <CardDescription className="truncate">/{page.slug}</CardDescription>
+                        <CardTitle className="text-lg truncate group-hover:text-primary transition-colors">{page.title}</CardTitle>
+                        <CardDescription className="truncate font-mono text-xs mt-1">/{page.slug}</CardDescription>
                       </div>
-                      <Badge variant={page.is_published ? "default" : "secondary"}>
+                      <Badge 
+                        variant={page.is_published ? "default" : "secondary"}
+                        className={page.is_published ? "bg-accent text-accent-foreground" : ""}
+                      >
                         {page.is_published ? 'Publicada' : 'Rascunho'}
                       </Badge>
                     </div>
@@ -258,7 +388,7 @@ const Dashboard = () => {
                       <Button 
                         variant="outline" 
                         size="sm" 
-                        className="flex-1"
+                        className="flex-1 hover:bg-primary hover:text-primary-foreground hover:border-primary"
                         onClick={() => navigate(`/dashboard/edit/${page.id}`)}
                       >
                         <Edit className="w-4 h-4 mr-2" />
@@ -269,6 +399,7 @@ const Dashboard = () => {
                           variant="outline" 
                           size="sm"
                           onClick={() => window.open(`/p/${page.slug}`, '_blank')}
+                          className="hover:bg-accent hover:text-accent-foreground hover:border-accent"
                         >
                           <ExternalLink className="w-4 h-4" />
                         </Button>
@@ -277,7 +408,7 @@ const Dashboard = () => {
                         variant="ghost" 
                         size="sm"
                         onClick={() => setDeleteId(page.id)}
-                        className="text-destructive hover:text-destructive"
+                        className="text-destructive hover:text-destructive hover:bg-destructive/10"
                       >
                         <Trash2 className="w-4 h-4" />
                       </Button>
@@ -292,7 +423,7 @@ const Dashboard = () => {
 
       {/* Delete Dialog */}
       <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
-        <AlertDialogContent>
+        <AlertDialogContent className="bg-card/95 backdrop-blur-sm">
           <AlertDialogHeader>
             <AlertDialogTitle>Excluir página?</AlertDialogTitle>
             <AlertDialogDescription>
@@ -310,21 +441,21 @@ const Dashboard = () => {
 
       {/* Donation Modal */}
       <Dialog open={showDonationModal} onOpenChange={setShowDonationModal}>
-        <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
+        <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto bg-card/95 backdrop-blur-sm">
           <DialogHeader>
             <DialogTitle className="text-center text-lg sm:text-xl flex items-center justify-center gap-2">
-              <Heart className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" />
+              <Heart className="w-5 h-5 text-green-500" />
               Apoie o Desenvolvedor
             </DialogTitle>
           </DialogHeader>
           
-          <div className="flex flex-col items-center gap-4 sm:gap-6 py-2 sm:py-4">
+          <div className="flex flex-col items-center gap-6 py-4">
             {/* QR Code */}
-            <div className="bg-white p-2 sm:p-4 rounded-xl shadow-lg">
+            <div className="bg-white p-4 rounded-xl shadow-lg">
               <img 
                 src="https://nubank.com.br/cobrar/6d6f1/6790d4a9-0f3e-4d0e-a217-4bb1f43a457e" 
                 alt="QR Code PIX"
-                className="w-32 h-32 sm:w-48 sm:h-48 object-contain"
+                className="w-48 h-48 object-contain"
                 onError={(e) => {
                   e.currentTarget.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${pixKey}`;
                 }}
@@ -332,16 +463,16 @@ const Dashboard = () => {
             </div>
 
             {/* PIX Info */}
-            <div className="w-full space-y-2 sm:space-y-3">
-              <div className="bg-muted/50 rounded-lg p-3 sm:p-4 space-y-1 sm:space-y-2">
-                <p className="text-xs sm:text-sm text-muted-foreground">Nome do beneficiário:</p>
-                <p className="font-semibold text-sm sm:text-base">{pixName}</p>
+            <div className="w-full space-y-3">
+              <div className="bg-muted/50 rounded-lg p-4 space-y-2">
+                <p className="text-sm text-muted-foreground">Nome do beneficiário:</p>
+                <p className="font-semibold">{pixName}</p>
               </div>
               
-              <div className="bg-muted/50 rounded-lg p-3 sm:p-4 space-y-1 sm:space-y-2">
-                <p className="text-xs sm:text-sm text-muted-foreground">Chave PIX (Telefone):</p>
+              <div className="bg-muted/50 rounded-lg p-4 space-y-2">
+                <p className="text-sm text-muted-foreground">Chave PIX (Telefone):</p>
                 <div className="flex items-center justify-between gap-2">
-                  <p className="font-mono font-semibold text-sm sm:text-base">{pixKey}</p>
+                  <p className="font-mono font-semibold">{pixKey}</p>
                   <Button
                     variant="outline"
                     size="sm"
@@ -358,7 +489,7 @@ const Dashboard = () => {
               </div>
             </div>
 
-            <p className="text-xs sm:text-sm text-muted-foreground text-center px-2">
+            <p className="text-sm text-muted-foreground text-center">
               Sua doação ajuda a manter o projeto e desenvolver novas funcionalidades! 💚
             </p>
           </div>
