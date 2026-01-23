@@ -542,10 +542,20 @@ const DynamicLandingPageInner = () => {
             onClick={(e) => { e.stopPropagation(); handleSectionClick('images'); }}
           >
             <div className="relative animate-float">
+              {/* Glow effect behind image */}
+              <div 
+                className="absolute inset-0 blur-3xl opacity-60 scale-90 rounded-full"
+                style={{
+                  background: `radial-gradient(circle, hsl(${primaryHsl} / 0.6) 0%, hsl(${accentHsl} / 0.4) 50%, transparent 70%)`
+                }}
+              />
               <img 
                 src={page.product_image || dashboardMockup} 
                 alt="Dashboard Preview" 
-                className="w-full max-w-md lg:max-w-2xl mx-auto drop-shadow-2xl pointer-events-none"
+                className="relative w-full max-w-md lg:max-w-2xl mx-auto drop-shadow-2xl pointer-events-none"
+                style={{
+                  filter: `drop-shadow(0 0 30px hsl(${primaryHsl} / 0.5)) drop-shadow(0 0 60px hsl(${accentHsl} / 0.3))`
+                }}
               />
             </div>
             {hoveredSection === 'images' && isPreview && (
