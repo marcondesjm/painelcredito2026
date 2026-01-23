@@ -689,7 +689,7 @@ const DynamicLandingPageInner = () => {
       >
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
-            O que você <span className="text-gradient">recebe</span>
+            O que você <span style={{ color: page.color_text_highlight || '#a855f7' }}>recebe</span>
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {page.features.map((feature, index) => (
@@ -740,7 +740,7 @@ const DynamicLandingPageInner = () => {
       >
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
-            Como <span className="text-gradient">funciona</span>
+            Como <span style={{ color: page.color_text_highlight || '#a855f7' }}>funciona</span>
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {page.how_it_works.map((step, index) => (
@@ -768,7 +768,7 @@ const DynamicLandingPageInner = () => {
       >
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
-            O que nossa <span className="text-gradient">comunidade</span> diz
+            O que nossa <span style={{ color: page.color_text_highlight || '#a855f7' }}>comunidade</span> diz
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {page.testimonials.map((testimonial, index) => (
