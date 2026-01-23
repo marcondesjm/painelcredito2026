@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -149,23 +149,36 @@ const DynamicLandingPageInner = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const [hoveredSection, setHoveredSection] = useState<string | null>(null);
+  const hoverLeaveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   
   const isPreview = searchParams.get('preview') === 'true';
   const draftId = searchParams.get('draftId');
   const debug = searchParams.get('debug') === 'true' || isPreview;
 
+  const clearHoverLeaveTimeout = () => {
+    if (hoverLeaveTimeoutRef.current) {
+      clearTimeout(hoverLeaveTimeoutRef.current);
+      hoverLeaveTimeoutRef.current = null;
+    }
+  };
+
   const handleSectionHover = (section: string) => {
     if (isPreview && window.parent !== window) {
+      // Cancel pending leave to prevent rapid enter/leave flicker.
+      clearHoverLeaveTimeout();
       if (hoveredSection !== section) {
         setHoveredSection(section);
-        window.parent.postMessage({ type: 'section-hover', section }, '*');
       }
     }
   };
 
   const handleSectionLeave = () => {
     if (isPreview && window.parent !== window) {
-      setHoveredSection(null);
+      // Small delay prevents "blinking" when mouse crosses tight boundaries between sections.
+      clearHoverLeaveTimeout();
+      hoverLeaveTimeoutRef.current = setTimeout(() => {
+        setHoveredSection(null);
+      }, 120);
     }
   };
 

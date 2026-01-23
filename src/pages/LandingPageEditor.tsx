@@ -378,13 +378,7 @@ const LandingPageEditor = () => {
         'donation': 'basico',
       };
       
-      if (event.data?.type === 'section-hover') {
-        const tab = sectionMap[event.data.section];
-        if (tab) {
-          setActiveTab(tab);
-        }
-      }
-      
+      // NOTE: We intentionally ignore hover messages to avoid UI thrash/flicker in the preview.
       if (event.data?.type === 'section-click') {
         const tab = sectionMap[event.data.section];
         if (tab) {
