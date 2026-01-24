@@ -16,8 +16,17 @@ import {
   Eye,
   Trash2,
   CheckCircle,
-  XCircle
+  XCircle,
+  ShoppingCart,
+  Search,
+  Filter,
+  DollarSign,
+  Phone,
+  Clock,
+  RefreshCw
 } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
 import {
   AlertDialog,
@@ -61,6 +70,22 @@ interface LandingPageAdmin {
   user_name?: string;
 }
 
+interface Order {
+  id: string;
+  tier_name: string;
+  credits: number;
+  price: number;
+  customer_name: string;
+  customer_whatsapp: string;
+  customer_email: string;
+  invite_link: string | null;
+  coupon_code: string | null;
+  status: string;
+  landing_page_id: string | null;
+  created_at: string;
+  landing_page_title?: string;
+}
+
 const AdminDashboard = () => {
   const { user, loading: authLoading, signOut } = useAuth();
   const navigate = useNavigate();
@@ -68,13 +93,23 @@ const AdminDashboard = () => {
   const [checkingAdmin, setCheckingAdmin] = useState(true);
   const [users, setUsers] = useState<UserProfile[]>([]);
   const [pages, setPages] = useState<LandingPageAdmin[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [deleteUserId, setDeleteUserId] = useState<string | null>(null);
+  
+  // Order filters
+  const [orderSearch, setOrderSearch] = useState('');
+  const [orderStatusFilter, setOrderStatusFilter] = useState<string>('all');
+  const [orderPageFilter, setOrderPageFilter] = useState<string>('all');
+  
   const [stats, setStats] = useState({
     totalUsers: 0,
     totalPages: 0,
     publishedPages: 0,
-    newUsersToday: 0
+    newUsersToday: 0,
+    totalOrders: 0,
+    pendingOrders: 0,
+    totalRevenue: 0
   });
 
   useEffect(() => {
@@ -140,6 +175,27 @@ const AdminDashboard = () => {
 
       if (pagesError) throw pagesError;
 
+      // Fetch all orders
+      const { data: ordersData, error: ordersError } = await supabase
+        .from('orders')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (ordersError) throw ordersError;
+
+      // Map landing page titles
+      const pageMap: Record<string, string> = {};
+      landingPages?.forEach(p => {
+        pageMap[p.id] = p.title;
+      });
+
+      const enrichedOrders = ordersData?.map(order => ({
+        ...order,
+        landing_page_title: order.landing_page_id ? pageMap[order.landing_page_id] || 'Página removida' : 'N/A'
+      })) || [];
+
+      setOrders(enrichedOrders);
+
       // Count pages per user
       const pagesPerUser: Record<string, number> = {};
       landingPages?.forEach(page => {
@@ -182,11 +238,17 @@ const AdminDashboard = () => {
         return createdAt >= today;
       }).length || 0;
 
+      const totalRevenue = ordersData?.reduce((sum, o) => sum + (o.price || 0), 0) || 0;
+      const pendingOrders = ordersData?.filter(o => o.status === 'pending').length || 0;
+
       setStats({
         totalUsers: profiles?.length || 0,
         totalPages: landingPages?.length || 0,
         publishedPages: landingPages?.filter(p => p.is_published).length || 0,
-        newUsersToday
+        newUsersToday,
+        totalOrders: ordersData?.length || 0,
+        pendingOrders,
+        totalRevenue
       });
 
     } catch (error) {
@@ -204,6 +266,32 @@ const AdminDashboard = () => {
     setDeleteUserId(null);
   };
 
+  const handleUpdateOrderStatus = async (orderId: string, newStatus: string) => {
+    try {
+      const { error } = await supabase
+        .from('orders')
+        .update({ status: newStatus })
+        .eq('id', orderId);
+
+      if (error) throw error;
+
+      setOrders(prev => prev.map(o => 
+        o.id === orderId ? { ...o, status: newStatus } : o
+      ));
+
+      // Update stats
+      setStats(prev => ({
+        ...prev,
+        pendingOrders: orders.filter(o => o.id === orderId ? newStatus === 'pending' : o.status === 'pending').length
+      }));
+
+      toast.success(`Status atualizado para "${newStatus}"`);
+    } catch (error) {
+      console.error('Error updating order:', error);
+      toast.error('Erro ao atualizar pedido');
+    }
+  };
+
   const formatDate = (dateStr: string) => {
     return new Date(dateStr).toLocaleDateString('pt-BR', {
       day: '2-digit',
@@ -213,6 +301,30 @@ const AdminDashboard = () => {
       minute: '2-digit'
     });
   };
+
+  const formatPrice = (value: number) => {
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    }).format(value);
+  };
+
+  // Filter orders
+  const filteredOrders = orders.filter(order => {
+    const matchesSearch = orderSearch === '' || 
+      order.customer_name.toLowerCase().includes(orderSearch.toLowerCase()) ||
+      order.customer_email.toLowerCase().includes(orderSearch.toLowerCase()) ||
+      order.customer_whatsapp.includes(orderSearch) ||
+      order.tier_name.toLowerCase().includes(orderSearch.toLowerCase());
+    
+    const matchesStatus = orderStatusFilter === 'all' || order.status === orderStatusFilter;
+    const matchesPage = orderPageFilter === 'all' || order.landing_page_id === orderPageFilter;
+
+    return matchesSearch && matchesStatus && matchesPage;
+  });
+
+  // Get unique landing pages for filter
+  const uniquePages = pages.filter(p => orders.some(o => o.landing_page_id === p.id));
 
   if (authLoading || checkingAdmin || loading) {
     return (
@@ -253,58 +365,86 @@ const AdminDashboard = () => {
       {/* Content */}
       <main className="max-w-7xl mx-auto px-4 py-8">
         {/* Stats */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
           <Card className="bg-card/50">
-            <CardContent className="pt-6">
-              <div className="flex items-center gap-4">
-                <div className="p-3 rounded-full bg-primary/10">
-                  <Users className="w-6 h-6 text-primary" />
+            <CardContent className="pt-4 pb-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-full bg-primary/10">
+                  <Users className="w-5 h-5 text-primary" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold">{stats.totalUsers}</p>
-                  <p className="text-sm text-muted-foreground">Total de Usuários</p>
+                  <p className="text-xl font-bold">{stats.totalUsers}</p>
+                  <p className="text-xs text-muted-foreground">Usuários</p>
                 </div>
               </div>
             </CardContent>
           </Card>
 
           <Card className="bg-card/50">
-            <CardContent className="pt-6">
-              <div className="flex items-center gap-4">
-                <div className="p-3 rounded-full bg-green-500/10">
-                  <CheckCircle className="w-6 h-6 text-green-500" />
+            <CardContent className="pt-4 pb-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-full bg-blue-500/10">
+                  <FileText className="w-5 h-5 text-blue-500" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold">{stats.newUsersToday}</p>
-                  <p className="text-sm text-muted-foreground">Novos Hoje</p>
+                  <p className="text-xl font-bold">{stats.totalPages}</p>
+                  <p className="text-xs text-muted-foreground">Páginas</p>
                 </div>
               </div>
             </CardContent>
           </Card>
 
           <Card className="bg-card/50">
-            <CardContent className="pt-6">
-              <div className="flex items-center gap-4">
-                <div className="p-3 rounded-full bg-blue-500/10">
-                  <FileText className="w-6 h-6 text-blue-500" />
+            <CardContent className="pt-4 pb-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-full bg-orange-500/10">
+                  <ShoppingCart className="w-5 h-5 text-orange-500" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold">{stats.totalPages}</p>
-                  <p className="text-sm text-muted-foreground">Landing Pages</p>
+                  <p className="text-xl font-bold">{stats.totalOrders}</p>
+                  <p className="text-xs text-muted-foreground">Pedidos</p>
                 </div>
               </div>
             </CardContent>
           </Card>
 
           <Card className="bg-card/50">
-            <CardContent className="pt-6">
-              <div className="flex items-center gap-4">
-                <div className="p-3 rounded-full bg-purple-500/10">
-                  <Eye className="w-6 h-6 text-purple-500" />
+            <CardContent className="pt-4 pb-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-full bg-yellow-500/10">
+                  <Clock className="w-5 h-5 text-yellow-500" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold">{stats.publishedPages}</p>
-                  <p className="text-sm text-muted-foreground">Publicadas</p>
+                  <p className="text-xl font-bold">{stats.pendingOrders}</p>
+                  <p className="text-xs text-muted-foreground">Pendentes</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-card/50">
+            <CardContent className="pt-4 pb-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-full bg-green-500/10">
+                  <DollarSign className="w-5 h-5 text-green-500" />
+                </div>
+                <div>
+                  <p className="text-xl font-bold">{formatPrice(stats.totalRevenue)}</p>
+                  <p className="text-xs text-muted-foreground">Faturamento</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-card/50">
+            <CardContent className="pt-4 pb-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-full bg-purple-500/10">
+                  <Eye className="w-5 h-5 text-purple-500" />
+                </div>
+                <div>
+                  <p className="text-xl font-bold">{stats.publishedPages}</p>
+                  <p className="text-xs text-muted-foreground">Publicadas</p>
                 </div>
               </div>
             </CardContent>
@@ -312,17 +452,176 @@ const AdminDashboard = () => {
         </div>
 
         {/* Tabs */}
-        <Tabs defaultValue="users" className="space-y-6">
+        <Tabs defaultValue="orders" className="space-y-6">
           <TabsList>
+            <TabsTrigger value="orders" className="gap-2">
+              <ShoppingCart className="w-4 h-4" />
+              Pedidos ({stats.totalOrders})
+            </TabsTrigger>
             <TabsTrigger value="users" className="gap-2">
               <Users className="w-4 h-4" />
               Usuários ({stats.totalUsers})
             </TabsTrigger>
             <TabsTrigger value="pages" className="gap-2">
               <FileText className="w-4 h-4" />
-              Landing Pages ({stats.totalPages})
+              Páginas ({stats.totalPages})
             </TabsTrigger>
           </TabsList>
+
+          {/* Orders Tab */}
+          <TabsContent value="orders">
+            <Card className="bg-card/50">
+              <CardHeader>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                  <div>
+                    <CardTitle>Pedidos</CardTitle>
+                    <CardDescription>Gerencie todos os pedidos da plataforma</CardDescription>
+                  </div>
+                  <Button variant="outline" size="sm" onClick={() => fetchData()}>
+                    <RefreshCw className="w-4 h-4 mr-2" />
+                    Atualizar
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {/* Filters */}
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <div className="relative flex-1">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <Input
+                      placeholder="Buscar por nome, email, WhatsApp..."
+                      value={orderSearch}
+                      onChange={(e) => setOrderSearch(e.target.value)}
+                      className="pl-10 bg-background/50"
+                    />
+                  </div>
+                  <Select value={orderStatusFilter} onValueChange={setOrderStatusFilter}>
+                    <SelectTrigger className="w-full sm:w-[160px] bg-background/50">
+                      <SelectValue placeholder="Status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Todos Status</SelectItem>
+                      <SelectItem value="pending">Pendente</SelectItem>
+                      <SelectItem value="completed">Concluído</SelectItem>
+                      <SelectItem value="cancelled">Cancelado</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Select value={orderPageFilter} onValueChange={setOrderPageFilter}>
+                    <SelectTrigger className="w-full sm:w-[180px] bg-background/50">
+                      <SelectValue placeholder="Landing Page" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Todas Páginas</SelectItem>
+                      {uniquePages.map(page => (
+                        <SelectItem key={page.id} value={page.id}>
+                          {page.title}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Orders Table */}
+                <div className="rounded-md border overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Cliente</TableHead>
+                        <TableHead>Pacote</TableHead>
+                        <TableHead>Valor</TableHead>
+                        <TableHead>Página</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Data</TableHead>
+                        <TableHead className="w-[120px]">Ações</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {filteredOrders.length === 0 ? (
+                        <TableRow>
+                          <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
+                            Nenhum pedido encontrado
+                          </TableCell>
+                        </TableRow>
+                      ) : (
+                        filteredOrders.map((order) => (
+                          <TableRow key={order.id}>
+                            <TableCell>
+                              <div className="space-y-1">
+                                <p className="font-medium text-sm">{order.customer_name}</p>
+                                <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                                  <Mail className="w-3 h-3" />
+                                  {order.customer_email}
+                                </div>
+                                <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                                  <Phone className="w-3 h-3" />
+                                  {order.customer_whatsapp}
+                                </div>
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <div>
+                                <p className="font-medium text-sm">{order.tier_name}</p>
+                                <p className="text-xs text-muted-foreground">{order.credits.toLocaleString('pt-BR')} créditos</p>
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <span className="font-semibold text-green-500">{formatPrice(order.price)}</span>
+                            </TableCell>
+                            <TableCell>
+                              <span className="text-sm text-muted-foreground">{order.landing_page_title}</span>
+                            </TableCell>
+                            <TableCell>
+                              <Select 
+                                value={order.status} 
+                                onValueChange={(value) => handleUpdateOrderStatus(order.id, value)}
+                              >
+                                <SelectTrigger className={`w-[120px] h-8 text-xs ${
+                                  order.status === 'completed' ? 'bg-green-500/20 border-green-500/30 text-green-400' :
+                                  order.status === 'cancelled' ? 'bg-red-500/20 border-red-500/30 text-red-400' :
+                                  'bg-yellow-500/20 border-yellow-500/30 text-yellow-400'
+                                }`}>
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="pending">Pendente</SelectItem>
+                                  <SelectItem value="completed">Concluído</SelectItem>
+                                  <SelectItem value="cancelled">Cancelado</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </TableCell>
+                            <TableCell>
+                              <div className="text-xs text-muted-foreground">
+                                {formatDate(order.created_at)}
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <Button 
+                                variant="ghost" 
+                                size="sm"
+                                onClick={() => {
+                                  const msg = `Olá ${order.customer_name}! Seu pedido de ${order.tier_name} foi recebido.`;
+                                  window.open(`https://wa.me/${order.customer_whatsapp}?text=${encodeURIComponent(msg)}`, '_blank');
+                                }}
+                                className="text-green-500 hover:text-green-400"
+                              >
+                                <Phone className="w-4 h-4" />
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ))
+                      )}
+                    </TableBody>
+                  </Table>
+                </div>
+
+                {filteredOrders.length > 0 && (
+                  <p className="text-sm text-muted-foreground text-center">
+                    Mostrando {filteredOrders.length} de {orders.length} pedidos
+                  </p>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
 
           {/* Users Tab */}
           <TabsContent value="users">
