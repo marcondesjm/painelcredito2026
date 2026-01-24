@@ -77,9 +77,21 @@ export const LoginModal = ({ open, onOpenChange }: LoginModalProps) => {
         }
       }
     } catch (error: any) {
+      let errorMessage = error.message || "Ocorreu um erro. Tente novamente.";
+      
+      // Handle common error messages with better Portuguese translations
+      if (error.message?.includes("User already registered")) {
+        errorMessage = "Este email já está cadastrado. Faça login em vez de criar conta.";
+        setIsSignUp(false); // Switch to login mode
+      } else if (error.message?.includes("Invalid login credentials")) {
+        errorMessage = "Email ou senha incorretos. Verifique seus dados.";
+      } else if (error.message?.includes("Email not confirmed")) {
+        errorMessage = "Email não confirmado. Verifique sua caixa de entrada.";
+      }
+      
       toast({
         title: "Erro",
-        description: error.message || "Ocorreu um erro. Tente novamente.",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
