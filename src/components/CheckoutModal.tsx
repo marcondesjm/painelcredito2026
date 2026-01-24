@@ -55,6 +55,7 @@ export const CheckoutModal = ({
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState<any>(null);
   const [showPassword, setShowPassword] = useState(false);
+  const [userBalance, setUserBalance] = useState<number>(0);
   
   // Form fields
   const [name, setName] = useState('');
@@ -85,6 +86,17 @@ export const CheckoutModal = ({
         if (profile?.full_name) {
           setName(profile.full_name);
         }
+
+        // Fetch user balance
+        const { data: balanceData } = await supabase
+          .from('user_balances')
+          .select('balance')
+          .eq('user_id', session.user.id)
+          .maybeSingle();
+        
+        setUserBalance(balanceData?.balance || 0);
+      } else {
+        setUserBalance(0);
       }
     };
     
@@ -306,7 +318,9 @@ ${cupomText}
                     <Wallet className="w-4 h-4" style={{ color: primaryColor }} />
                     <span className="text-sm font-medium">{balanceLabel}</span>
                   </div>
-                  <span className="text-sm font-bold" style={{ color: accentColor }}>R$ 0,00</span>
+                  <span className="text-sm font-bold" style={{ color: accentColor }}>
+                    {userBalance.toLocaleString('pt-BR')} créditos
+                  </span>
                 </div>
               )}
 
