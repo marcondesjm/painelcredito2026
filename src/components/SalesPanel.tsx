@@ -24,10 +24,13 @@ import {
   XCircle, 
   Phone,
   Loader2,
-  TrendingUp
+  TrendingUp,
+  Check,
+  X
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { toast } from 'sonner';
 
 interface Order {
   id: string;
@@ -94,6 +97,42 @@ export const SalesPanel = ({ pageId, pageTitle, open, onOpenChange }: SalesPanel
       console.error('Error fetching orders:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleUpdateStatus = async (orderId: string, newStatus: string) => {
+    try {
+      const { error } = await supabase
+        .from('orders')
+        .update({ status: newStatus })
+        .eq('id', orderId);
+
+      if (error) throw error;
+
+      // Update local state
+      setOrders(prev => prev.map(o => 
+        o.id === orderId ? { ...o, status: newStatus } : o
+      ));
+
+      // Recalculate stats
+      const updatedOrders = orders.map(o => 
+        o.id === orderId ? { ...o, status: newStatus } : o
+      );
+      const pendingOrders = updatedOrders.filter(o => o.status === 'pending').length;
+      const approvedOrders = updatedOrders.filter(o => o.status === 'approved').length;
+      const totalRevenue = updatedOrders.filter(o => o.status === 'approved').reduce((acc, o) => acc + o.price, 0);
+
+      setStats(prev => ({
+        ...prev,
+        pending: pendingOrders,
+        approved: approvedOrders,
+        revenue: totalRevenue
+      }));
+
+      toast.success(newStatus === 'approved' ? 'Pedido aprovado!' : 'Status atualizado!');
+    } catch (error) {
+      console.error('Error updating order status:', error);
+      toast.error('Erro ao atualizar pedido');
     }
   };
 
@@ -199,17 +238,42 @@ export const SalesPanel = ({ pageId, pageTitle, open, onOpenChange }: SalesPanel
                         <TableCell>{getStatusBadge(order.status)}</TableCell>
                         <TableCell className="text-xs text-muted-foreground">{formatDate(order.created_at)}</TableCell>
                         <TableCell>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => {
-                              const msg = `Olá ${order.customer_name}!`;
-                              window.open(`https://wa.me/${order.customer_whatsapp}?text=${encodeURIComponent(msg)}`, '_blank');
-                            }}
-                            className="text-green-500 hover:text-green-400"
-                          >
-                            <Phone className="w-4 h-4" />
-                          </Button>
+                          <div className="flex items-center gap-1">
+                            {order.status === 'pending' && (
+                              <>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => handleUpdateStatus(order.id, 'approved')}
+                                  className="text-green-500 hover:text-green-400 hover:bg-green-500/10"
+                                  title="Aprovar pedido"
+                                >
+                                  <Check className="w-4 h-4" />
+                                </Button>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => handleUpdateStatus(order.id, 'rejected')}
+                                  className="text-red-500 hover:text-red-400 hover:bg-red-500/10"
+                                  title="Rejeitar pedido"
+                                >
+                                  <X className="w-4 h-4" />
+                                </Button>
+                              </>
+                            )}
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => {
+                                const msg = `Olá ${order.customer_name}!`;
+                                window.open(`https://wa.me/${order.customer_whatsapp}?text=${encodeURIComponent(msg)}`, '_blank');
+                              }}
+                              className="text-green-500 hover:text-green-400"
+                              title="Enviar WhatsApp"
+                            >
+                              <Phone className="w-4 h-4" />
+                            </Button>
+                          </div>
                         </TableCell>
                       </TableRow>
                     ))}
