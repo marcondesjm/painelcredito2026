@@ -16,6 +16,16 @@ interface CheckoutModalProps {
   landingPageId: string;
   primaryColor?: string;
   accentColor?: string;
+  // Checkout configuration
+  showBalance?: boolean;
+  balanceLabel?: string;
+  securityText?: string;
+  inviteEnabled?: boolean;
+  inviteLabel?: string;
+  invitePlaceholder?: string;
+  couponEnabled?: boolean;
+  couponLabel?: string;
+  buttonText?: string;
 }
 
 type Step = 'checkout' | 'signup' | 'success';
@@ -26,7 +36,16 @@ export const CheckoutModal = ({
   tier,
   landingPageId,
   primaryColor = '#8B5CF6',
-  accentColor = '#22C55E'
+  accentColor = '#22C55E',
+  showBalance = true,
+  balanceLabel = 'Seu saldo:',
+  securityText = 'Pagamento 100% seguro',
+  inviteEnabled = true,
+  inviteLabel = 'Link de Convite',
+  invitePlaceholder = 'https://lovable.dev/invite/...',
+  couponEnabled = true,
+  couponLabel = 'Cupom de Desconto',
+  buttonText = 'Continuar para Pagamento'
 }: CheckoutModalProps) => {
   const [step, setStep] = useState<Step>('checkout');
   const [loading, setLoading] = useState(false);
@@ -229,16 +248,18 @@ export const CheckoutModal = ({
               </div>
 
               {/* Balance Card */}
-              <div 
-                className="flex items-center justify-between p-3 rounded-lg border-2"
-                style={{ borderColor: `${primaryColor}30`, backgroundColor: `${primaryColor}08` }}
-              >
-                <div className="flex items-center gap-2">
-                  <Wallet className="w-4 h-4" style={{ color: primaryColor }} />
-                  <span className="text-sm font-medium">Seu saldo:</span>
+              {showBalance && (
+                <div 
+                  className="flex items-center justify-between p-3 rounded-lg border-2"
+                  style={{ borderColor: `${primaryColor}30`, backgroundColor: `${primaryColor}08` }}
+                >
+                  <div className="flex items-center gap-2">
+                    <Wallet className="w-4 h-4" style={{ color: primaryColor }} />
+                    <span className="text-sm font-medium">{balanceLabel}</span>
+                  </div>
+                  <span className="text-sm font-bold" style={{ color: accentColor }}>R$ 0,00</span>
                 </div>
-                <span className="text-sm font-bold" style={{ color: accentColor }}>R$ 0,00</span>
-              </div>
+              )}
 
               {/* Security Badge */}
               <div 
@@ -247,7 +268,7 @@ export const CheckoutModal = ({
               >
                 <RefreshCw className="w-4 h-4" style={{ color: accentColor }} />
                 <span className="text-sm font-medium" style={{ color: accentColor }}>
-                  Pagamento 100% seguro
+                  {securityText}
                 </span>
               </div>
 
@@ -287,67 +308,71 @@ export const CheckoutModal = ({
                 </div>
 
                 {/* Invite Link Section */}
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2">
-                    <LinkIcon className="w-4 h-4" style={{ color: primaryColor }} />
-                    <span className="text-sm font-medium">Link de Convite</span>
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-2">
-                    <Button
-                      type="button"
-                      variant={sendLinkNow ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setSendLinkNow(true)}
-                      className="h-10 font-medium"
-                      style={sendLinkNow ? { backgroundColor: '#F59E0B', color: 'white' } : {}}
-                    >
-                      Enviar agora
-                    </Button>
-                    <Button
-                      type="button"
-                      variant={!sendLinkNow ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setSendLinkNow(false)}
-                      className="h-10 font-medium"
-                      style={!sendLinkNow ? { backgroundColor: '#6B7280', color: 'white' } : {}}
-                    >
-                      Enviar depois
-                    </Button>
-                  </div>
+                {inviteEnabled && (
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2">
+                      <LinkIcon className="w-4 h-4" style={{ color: primaryColor }} />
+                      <span className="text-sm font-medium">{inviteLabel}</span>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-2">
+                      <Button
+                        type="button"
+                        variant={sendLinkNow ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setSendLinkNow(true)}
+                        className="h-10 font-medium"
+                        style={sendLinkNow ? { backgroundColor: '#F59E0B', color: 'white' } : {}}
+                      >
+                        Enviar agora
+                      </Button>
+                      <Button
+                        type="button"
+                        variant={!sendLinkNow ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setSendLinkNow(false)}
+                        className="h-10 font-medium"
+                        style={!sendLinkNow ? { backgroundColor: '#6B7280', color: 'white' } : {}}
+                      >
+                        Enviar depois
+                      </Button>
+                    </div>
 
-                  {sendLinkNow && (
-                    <Input
-                      value={inviteLink}
-                      onChange={(e) => setInviteLink(e.target.value)}
-                      placeholder="https://lovable.dev/invite/..."
-                      className="bg-background border-2 h-11 text-sm"
-                    />
-                  )}
-                </div>
+                    {sendLinkNow && (
+                      <Input
+                        value={inviteLink}
+                        onChange={(e) => setInviteLink(e.target.value)}
+                        placeholder={invitePlaceholder}
+                        className="bg-background border-2 h-11 text-sm"
+                      />
+                    )}
+                  </div>
+                )}
 
                 {/* Coupon */}
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <Tag className="w-4 h-4" style={{ color: '#F59E0B' }} />
-                    <span className="text-sm font-medium">Cupom de Desconto</span>
+                {couponEnabled && (
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <Tag className="w-4 h-4" style={{ color: '#F59E0B' }} />
+                      <span className="text-sm font-medium">{couponLabel}</span>
+                    </div>
+                    <div className="flex gap-2">
+                      <Input
+                        value={couponCode}
+                        onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                        placeholder="Digite o cupom"
+                        className="bg-background border-2 h-11 flex-1"
+                      />
+                      <Button 
+                        variant="outline" 
+                        className="h-11 px-4 font-medium"
+                        disabled={!couponCode}
+                      >
+                        Aplicar
+                      </Button>
+                    </div>
                   </div>
-                  <div className="flex gap-2">
-                    <Input
-                      value={couponCode}
-                      onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
-                      placeholder="Digite o cupom"
-                      className="bg-background border-2 h-11 flex-1"
-                    />
-                    <Button 
-                      variant="outline" 
-                      className="h-11 px-4 font-medium"
-                      disabled={!couponCode}
-                    >
-                      Aplicar
-                    </Button>
-                  </div>
-                </div>
+                )}
               </div>
 
               {/* Submit Button */}
@@ -363,7 +388,7 @@ export const CheckoutModal = ({
                     Processando...
                   </>
                 ) : (
-                  'Continuar para Pagamento'
+                  buttonText
                 )}
               </Button>
             </div>

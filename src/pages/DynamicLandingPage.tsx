@@ -102,6 +102,16 @@ interface LandingPageData {
   google_tag_manager: string | null;
   tiktok_pixel: string | null;
   section_order: SectionId[] | null;
+  // Checkout configuration
+  checkout_show_balance: boolean | null;
+  checkout_balance_label: string | null;
+  checkout_security_text: string | null;
+  checkout_invite_enabled: boolean | null;
+  checkout_invite_label: string | null;
+  checkout_invite_placeholder: string | null;
+  checkout_coupon_enabled: boolean | null;
+  checkout_coupon_label: string | null;
+  checkout_button_text: string | null;
 }
 
 type BoundaryState = {
@@ -1555,6 +1565,15 @@ const DynamicLandingPageInner = () => {
         landingPageId={page.id}
         primaryColor={page.color_primary || '#8B5CF6'}
         accentColor={page.color_accent || '#22C55E'}
+        showBalance={page.checkout_show_balance ?? true}
+        balanceLabel={page.checkout_balance_label || 'Seu saldo:'}
+        securityText={page.checkout_security_text || 'Pagamento 100% seguro'}
+        inviteEnabled={page.checkout_invite_enabled ?? true}
+        inviteLabel={page.checkout_invite_label || 'Link de Convite'}
+        invitePlaceholder={page.checkout_invite_placeholder || 'https://lovable.dev/invite/...'}
+        couponEnabled={page.checkout_coupon_enabled ?? true}
+        couponLabel={page.checkout_coupon_label || 'Cupom de Desconto'}
+        buttonText={page.checkout_button_text || 'Continuar para Pagamento'}
       />
     </div>
   );
