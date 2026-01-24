@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -84,45 +84,95 @@ export const CheckoutModal = ({
 
   const { discount, finalPrice, creditsUsed } = calculateDiscount();
 
-  useEffect(() => {
-    // Check if user is logged in
-    const checkUser = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      setUser(session?.user || null);
-      
-      if (session?.user) {
-        // Pre-fill email
-        setEmail(session.user.email || '');
-        
-        // Try to get profile data
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('full_name')
-          .eq('user_id', session.user.id)
-          .maybeSingle();
-        
-        if (profile?.full_name) {
-          setName(profile.full_name);
-        }
+  const fetchBalance = useCallback(async (userId: string) => {
+    const { data: balanceData, error: balanceError } = await supabase
+      .from('user_balances')
+      .select('balance')
+      .eq('user_id', userId)
+      .maybeSingle();
 
-        // Fetch user balance
-        const { data: balanceData } = await supabase
-          .from('user_balances')
-          .select('balance')
-          .eq('user_id', session.user.id)
-          .maybeSingle();
-        
-        setUserBalance(balanceData?.balance || 0);
-      } else {
-        setUserBalance(0);
-      }
-    };
-    
-    if (isOpen) {
-      checkUser();
-      setStep('checkout');
+    if (balanceError) {
+      console.error('Error fetching user balance:', balanceError);
+      return;
     }
-  }, [isOpen]);
+
+    setUserBalance((balanceData?.balance as number) || 0);
+  }, []);
+
+  const refreshUserContext = useCallback(async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    const sessionUser = session?.user ?? null;
+    setUser(sessionUser);
+
+    if (!sessionUser) {
+      setUserBalance(0);
+      return;
+    }
+
+    // Pre-fill email
+    setEmail(sessionUser.email || '');
+
+    // Try to get profile data
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('full_name')
+      .eq('user_id', sessionUser.id)
+      .maybeSingle();
+
+    if (profile?.full_name) {
+      setName(profile.full_name);
+    }
+
+    await fetchBalance(sessionUser.id);
+  }, [fetchBalance]);
+
+  useEffect(() => {
+    if (isOpen) {
+      refreshUserContext();
+      setStep('checkout');
+
+      // Keep in sync if auth state changes while the modal is open
+      const { data: { subscription } } = supabase.auth.onAuthStateChange(
+        (_event, session) => {
+          const sessionUser = session?.user ?? null;
+          setUser(sessionUser);
+
+          if (sessionUser) {
+            setEmail(sessionUser.email || '');
+            fetchBalance(sessionUser.id);
+          } else {
+            setUserBalance(0);
+          }
+        }
+      );
+
+      return () => subscription.unsubscribe();
+    }
+  }, [isOpen, refreshUserContext, fetchBalance]);
+
+  useEffect(() => {
+    if (!isOpen || !user?.id) return;
+
+    // Periodic refetch while modal is open
+    const intervalId = window.setInterval(() => {
+      fetchBalance(user.id);
+    }, 15000);
+
+    // Refetch when user returns to the tab/window
+    const handleFocus = () => fetchBalance(user.id);
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') fetchBalance(user.id);
+    };
+
+    window.addEventListener('focus', handleFocus);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      window.clearInterval(intervalId);
+      window.removeEventListener('focus', handleFocus);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [isOpen, user?.id, fetchBalance]);
 
   const formatPrice = (value: number) => {
     return new Intl.NumberFormat('pt-BR', {
@@ -218,6 +268,10 @@ export const CheckoutModal = ({
           setLoading(false);
           return;
         }
+
+        // Optimistic UI + ensure sync
+        setUserBalance((prev) => Math.max(0, prev - creditsUsed));
+        fetchBalance(user.id);
       }
 
       const { error } = await supabase
