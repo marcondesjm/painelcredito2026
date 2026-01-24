@@ -401,8 +401,8 @@ const Dashboard = () => {
                         variant="outline" 
                         size="sm"
                         onClick={() => setSalesPanel({ pageId: page.id, pageTitle: page.title })}
-                        className="hover:bg-primary hover:text-primary-foreground hover:border-primary"
-                        title="Ver vendas"
+                        className="hover:bg-green-500/20 hover:text-green-500 hover:border-green-500/50"
+                        title="📊 Ver vendas e pedidos"
                       >
                         <TrendingUp className="w-4 h-4" />
                       </Button>
