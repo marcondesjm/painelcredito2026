@@ -46,29 +46,29 @@ export const FAQSection = () => {
   ];
 
   return (
-    <section id="faq" className="py-20 px-4 relative">
+    <section id="faq" className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 relative">
       <div className="max-w-3xl mx-auto">
         {/* Section Header */}
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+        <div className="text-center mb-8 sm:mb-12">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
             Por que <span className="text-primary">escolher</span> o painel?
           </h2>
-          <p className="text-muted-foreground">
+          <p className="text-sm sm:text-base text-muted-foreground px-2">
             Tudo você precisa para usar a Lovable sem preocupações.
           </p>
         </div>
 
-        <Accordion type="single" collapsible className="space-y-3">
+        <Accordion type="single" collapsible className="space-y-2 sm:space-y-3">
           {faqs.map((faq, index) => (
             <AccordionItem
               key={index}
               value={`item-${index}`}
-              className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-xl px-6 data-[state=open]:border-primary/50"
+              className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-lg sm:rounded-xl px-4 sm:px-6 data-[state=open]:border-primary/50"
             >
-              <AccordionTrigger className="text-left hover:no-underline py-4">
-                <span className="text-foreground font-medium">{faq.question}</span>
+              <AccordionTrigger className="text-left hover:no-underline py-3 sm:py-4">
+                <span className="text-sm sm:text-base text-foreground font-medium pr-2">{faq.question}</span>
               </AccordionTrigger>
-              <AccordionContent className="text-muted-foreground pb-4">
+              <AccordionContent className="text-xs sm:text-sm text-muted-foreground pb-3 sm:pb-4">
                 {faq.answer}
               </AccordionContent>
             </AccordionItem>

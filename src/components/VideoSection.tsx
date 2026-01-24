@@ -5,13 +5,13 @@ export const VideoSection = () => {
   const [isPlaying, setIsPlaying] = useState(false);
 
   return (
-    <section className="py-20 px-4">
+    <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6">
       <div className="max-w-4xl mx-auto">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 sm:mb-12">
           <span className="text-gradient">🎬 Como Funciona</span>
         </h2>
         
-        <div className="relative rounded-2xl overflow-hidden border border-border/50 bg-card/30 backdrop-blur-sm group">
+        <div className="relative rounded-xl sm:rounded-2xl overflow-hidden border border-border/50 bg-card/30 backdrop-blur-sm group">
           {!isPlaying ? (
             <div className="relative">
               <img
@@ -22,13 +22,13 @@ export const VideoSection = () => {
               <div className="absolute inset-0 bg-background/50 flex items-center justify-center">
                 <button
                   onClick={() => setIsPlaying(true)}
-                  className="w-20 h-20 rounded-full bg-primary glow-primary flex items-center justify-center hover:scale-110 transition-transform duration-300"
+                  className="w-14 h-14 sm:w-20 sm:h-20 rounded-full bg-primary glow-primary flex items-center justify-center hover:scale-110 transition-transform duration-300"
                 >
-                  <Play className="w-8 h-8 text-primary-foreground ml-1" fill="currentColor" />
+                  <Play className="w-6 h-6 sm:w-8 sm:h-8 text-primary-foreground ml-0.5 sm:ml-1" fill="currentColor" />
                 </button>
               </div>
-              <div className="absolute bottom-4 left-4 bg-background/80 backdrop-blur-sm rounded-lg px-3 py-1">
-                <span className="text-sm text-foreground">2:45</span>
+              <div className="absolute bottom-2 left-2 sm:bottom-4 sm:left-4 bg-background/80 backdrop-blur-sm rounded-lg px-2 sm:px-3 py-0.5 sm:py-1">
+                <span className="text-xs sm:text-sm text-foreground">2:45</span>
               </div>
             </div>
           ) : (
@@ -42,7 +42,7 @@ export const VideoSection = () => {
           )}
         </div>
         
-        <p className="text-center text-muted-foreground mt-4">
+        <p className="text-center text-xs sm:text-sm text-muted-foreground mt-3 sm:mt-4">
           Tutorial Completo - Veja como é fácil usar o painel
         </p>
       </div>
