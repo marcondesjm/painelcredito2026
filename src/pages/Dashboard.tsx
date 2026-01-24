@@ -182,11 +182,11 @@ const Dashboard = () => {
       <DashboardTour />
       
       {/* Header - identical to Index Header style */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/30 h-16 sm:h-18 md:h-20">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/30 h-20 sm:h-22 md:h-24">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 h-full flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center h-full py-2">
-            <img src={logoPainel} alt="Painel Créditos Lovable" className="h-full max-h-[48px] sm:max-h-[56px] md:max-h-[64px] w-auto object-contain object-left" />
+            <img src={logoPainel} alt="Painel Créditos Lovable" className="h-full max-h-[64px] sm:max-h-[72px] md:max-h-[80px] w-auto object-contain object-left" />
           </Link>
 
           {/* Desktop Navigation */}
