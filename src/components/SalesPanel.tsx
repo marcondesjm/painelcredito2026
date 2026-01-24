@@ -62,6 +62,15 @@ export const SalesPanel = ({ pageId, pageTitle, open, onOpenChange }: SalesPanel
     revenue: 0
   });
 
+  const normalizeStatus = (status: string) => {
+    const s = (status || '').toLowerCase().trim();
+    // Accept pt-BR variants just in case data was saved translated
+    if (s === 'pendente') return 'pending';
+    if (s === 'aprovado') return 'approved';
+    if (s === 'rejeitado') return 'rejected';
+    return s;
+  };
+
   useEffect(() => {
     if (open && pageId) {
       fetchOrders();
@@ -79,13 +88,20 @@ export const SalesPanel = ({ pageId, pageTitle, open, onOpenChange }: SalesPanel
 
       if (error) throw error;
 
-      setOrders(data || []);
+      const normalizedOrders = (data || []).map((o) => ({
+        ...o,
+        status: normalizeStatus(o.status),
+      }));
+
+      setOrders(normalizedOrders);
 
       // Calculate stats
-      const totalOrders = data?.length || 0;
-      const pendingOrders = data?.filter(o => o.status === 'pending').length || 0;
-      const approvedOrders = data?.filter(o => o.status === 'approved').length || 0;
-      const totalRevenue = data?.filter(o => o.status === 'approved').reduce((acc, o) => acc + o.price, 0) || 0;
+      const totalOrders = normalizedOrders.length;
+      const pendingOrders = normalizedOrders.filter((o) => o.status === 'pending').length;
+      const approvedOrders = normalizedOrders.filter((o) => o.status === 'approved').length;
+      const totalRevenue = normalizedOrders
+        .filter((o) => o.status === 'approved')
+        .reduce((acc, o) => acc + o.price, 0);
 
       setStats({
         total: totalOrders,
@@ -148,7 +164,7 @@ export const SalesPanel = ({ pageId, pageTitle, open, onOpenChange }: SalesPanel
   };
 
   const getStatusBadge = (status: string) => {
-    switch (status) {
+    switch (normalizeStatus(status)) {
       case 'approved':
         return <Badge className="bg-green-500/20 text-green-500 border-green-500/30">Aprovado</Badge>;
       case 'pending':
@@ -239,7 +255,7 @@ export const SalesPanel = ({ pageId, pageTitle, open, onOpenChange }: SalesPanel
                         <TableCell className="text-xs text-muted-foreground">{formatDate(order.created_at)}</TableCell>
                         <TableCell>
                           <div className="flex items-center gap-1">
-                            {order.status === 'pending' && (
+                            {normalizeStatus(order.status) === 'pending' && (
                               <>
                                 <Button
                                   variant="ghost"
