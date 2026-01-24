@@ -894,13 +894,13 @@ const LandingPageEditor = () => {
                       {data.slug && (
                         <div className="flex items-center gap-2 p-2 rounded-md bg-primary/10 border border-primary/20">
                           <span className="text-xs text-muted-foreground">Link:</span>
-                          <code className="text-xs text-primary font-medium">seusite.com/{data.slug}</code>
+                          <code className="text-xs text-primary font-medium truncate">painelcredito2026.lovable.app/p/{data.slug}</code>
                           <Button 
                             variant="ghost" 
                             size="sm" 
-                            className="h-5 text-xs ml-auto"
+                            className="h-5 text-xs ml-auto shrink-0"
                             onClick={() => {
-                              navigator.clipboard.writeText(`${window.location.origin}/p/${data.slug}`);
+                              navigator.clipboard.writeText(`https://painelcredito2026.lovable.app/p/${data.slug}`);
                               toast.success('Link copiado!');
                             }}
                           >
