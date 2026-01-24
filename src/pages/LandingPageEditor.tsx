@@ -682,16 +682,41 @@ const LandingPageEditor = () => {
       checkout_link: '',
       highlight: false
     };
+    
+    // Auto-add 'pacotes' to section_order if not present
+    let newSectionOrder = data.section_order || defaultSectionOrder;
+    if (!newSectionOrder.includes('pacotes')) {
+      // Insert 'pacotes' after 'video' or 'hero' if video is not present
+      const videoIndex = newSectionOrder.indexOf('video');
+      const heroIndex = newSectionOrder.indexOf('hero');
+      const insertIndex = videoIndex !== -1 ? videoIndex + 1 : (heroIndex !== -1 ? heroIndex + 1 : 0);
+      newSectionOrder = [
+        ...newSectionOrder.slice(0, insertIndex),
+        'pacotes' as SectionId,
+        ...newSectionOrder.slice(insertIndex)
+      ];
+    }
+    
     setData({
       ...data,
-      pricing_tiers: [...(data.pricing_tiers || []), newTier]
+      pricing_tiers: [...(data.pricing_tiers || []), newTier],
+      section_order: newSectionOrder
     });
   };
 
   const removePricingTier = (index: number) => {
+    const newTiers = (data.pricing_tiers || []).filter((_, i) => i !== index);
+    
+    // Auto-remove 'pacotes' from section_order if no tiers left
+    let newSectionOrder = data.section_order || defaultSectionOrder;
+    if (newTiers.length === 0 && newSectionOrder.includes('pacotes')) {
+      newSectionOrder = newSectionOrder.filter(s => s !== 'pacotes');
+    }
+    
     setData({
       ...data,
-      pricing_tiers: (data.pricing_tiers || []).filter((_, i) => i !== index)
+      pricing_tiers: newTiers,
+      section_order: newSectionOrder
     });
   };
 
