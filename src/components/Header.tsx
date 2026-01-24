@@ -58,7 +58,7 @@ export const Header = () => {
         <div className="max-w-7xl mx-auto px-3 sm:px-4 h-full flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 h-full py-2">
-            <img src={logoPainel} alt="Painel Créditos Lovable" className="h-full max-h-12 sm:max-h-16 md:max-h-20 object-contain" />
+            <img src={logoPainel} alt="Painel Créditos Lovable" className="h-full max-h-14 sm:max-h-16 md:max-h-20 object-contain" />
           </Link>
 
           {/* Desktop Navigation */}
