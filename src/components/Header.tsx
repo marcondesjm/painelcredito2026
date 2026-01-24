@@ -4,7 +4,8 @@ import { LoginModal } from './LoginModal';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { User } from '@supabase/supabase-js';
-import { LogOut, Menu, X } from 'lucide-react';
+import { LogOut, Menu, X, Download } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import logoPainel from '@/assets/logo-painel.png';
 
@@ -106,6 +107,21 @@ export const Header = () => {
             >
               FAQ
             </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button 
+                  variant="ghost" 
+                  size="icon"
+                  className="text-muted-foreground hover:text-primary hover:bg-primary/10"
+                  onClick={() => navigate('/install')}
+                >
+                  <Download className="w-4 h-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Instalar App</p>
+              </TooltipContent>
+            </Tooltip>
           </nav>
 
           {/* Tablet/Medium Navigation - simplified */}
@@ -152,6 +168,21 @@ export const Header = () => {
             >
               FAQ
             </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button 
+                  variant="ghost" 
+                  size="icon"
+                  className="text-muted-foreground hover:text-primary hover:bg-primary/10"
+                  onClick={() => navigate('/install')}
+                >
+                  <Download className="w-4 h-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Instalar App</p>
+              </TooltipContent>
+            </Tooltip>
           </nav>
 
           {/* Mobile Menu */}
@@ -205,6 +236,14 @@ export const Header = () => {
                   onClick={() => scrollToSection('faq')}
                 >
                   FAQ
+                </Button>
+                <Button 
+                  variant="outline" 
+                  className="w-full border-green-500/50 text-green-500 hover:bg-green-500 hover:text-white"
+                  onClick={() => handleNavigate('/install')}
+                >
+                  <Download className="w-4 h-4 mr-2" />
+                  Instalar App
                 </Button>
               </nav>
             </SheetContent>
