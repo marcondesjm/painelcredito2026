@@ -1204,21 +1204,31 @@ const LandingPageEditor = () => {
                     <CardDescription>Upload ou cole URLs</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-6">
-                    <ImageUpload
-                      label="Logo"
-                      value={data.logo_image}
-                      onChange={(url) => setData({ ...data, logo_image: url })}
-                      folder="logos"
-                      aspectRatio="aspect-[3/1]"
-                      placeholder="Logo da sua marca"
-                    />
-                    <ImageUpload
-                      label="Imagem do Hero"
-                      value={data.hero_image}
-                      onChange={(url) => setData({ ...data, hero_image: url })}
-                      folder="hero"
-                      aspectRatio="aspect-video"
-                    />
+                    <div className="space-y-2">
+                      <ImageUpload
+                        label="Logo"
+                        value={data.logo_image}
+                        onChange={(url) => setData({ ...data, logo_image: url })}
+                        folder="logos"
+                        aspectRatio="aspect-[3/1]"
+                        placeholder="Logo da sua marca"
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        Medida recomendada: <span className="font-medium text-primary">1292x309px</span>
+                      </p>
+                    </div>
+                    <div className="space-y-2">
+                      <ImageUpload
+                        label="Imagem do Hero"
+                        value={data.hero_image}
+                        onChange={(url) => setData({ ...data, hero_image: url })}
+                        folder="hero"
+                        aspectRatio="aspect-video"
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        Medida recomendada: <span className="font-medium text-primary">1920x1080px</span>
+                      </p>
+                    </div>
                     <div className="space-y-2">
                       <ImageUpload
                         label="Mockup do Produto / Dashboard (Laptop)"
@@ -1229,16 +1239,21 @@ const LandingPageEditor = () => {
                         placeholder="Imagem do laptop/mockup exibido na seção principal"
                       />
                       <p className="text-xs text-muted-foreground">
-                        Esta é a imagem do laptop com dashboard que aparece na seção Hero
+                        Imagem do laptop com dashboard na seção Hero. Medida recomendada: <span className="font-medium text-primary">1920x1080px</span>
                       </p>
                     </div>
-                    <ImageUpload
-                      label="Imagem de Fundo"
-                      value={data.background_image}
-                      onChange={(url) => setData({ ...data, background_image: url })}
-                      folder="backgrounds"
-                      aspectRatio="aspect-[21/9]"
-                    />
+                    <div className="space-y-2">
+                      <ImageUpload
+                        label="Imagem de Fundo"
+                        value={data.background_image}
+                        onChange={(url) => setData({ ...data, background_image: url })}
+                        folder="backgrounds"
+                        aspectRatio="aspect-[21/9]"
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        Medida recomendada: <span className="font-medium text-primary">1536x1024px</span>
+                      </p>
+                    </div>
                   </CardContent>
                 </Card>
               </TabsContent>
