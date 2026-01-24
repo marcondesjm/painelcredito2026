@@ -1,0 +1,225 @@
+import { useState, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogHeader, 
+  DialogTitle 
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { 
+  ShoppingCart, 
+  DollarSign, 
+  Clock, 
+  CheckCircle, 
+  XCircle, 
+  Phone,
+  Loader2,
+  TrendingUp
+} from 'lucide-react';
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
+
+interface Order {
+  id: string;
+  customer_name: string;
+  customer_email: string;
+  customer_whatsapp: string;
+  tier_name: string;
+  credits: number;
+  price: number;
+  status: string;
+  created_at: string;
+  coupon_code: string | null;
+}
+
+interface SalesPanelProps {
+  pageId: string;
+  pageTitle: string;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}
+
+export const SalesPanel = ({ pageId, pageTitle, open, onOpenChange }: SalesPanelProps) => {
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState({
+    total: 0,
+    pending: 0,
+    approved: 0,
+    revenue: 0
+  });
+
+  useEffect(() => {
+    if (open && pageId) {
+      fetchOrders();
+    }
+  }, [open, pageId]);
+
+  const fetchOrders = async () => {
+    setLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('orders')
+        .select('*')
+        .eq('landing_page_id', pageId)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      setOrders(data || []);
+
+      // Calculate stats
+      const totalOrders = data?.length || 0;
+      const pendingOrders = data?.filter(o => o.status === 'pending').length || 0;
+      const approvedOrders = data?.filter(o => o.status === 'approved').length || 0;
+      const totalRevenue = data?.filter(o => o.status === 'approved').reduce((acc, o) => acc + o.price, 0) || 0;
+
+      setStats({
+        total: totalOrders,
+        pending: pendingOrders,
+        approved: approvedOrders,
+        revenue: totalRevenue
+      });
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const formatPrice = (value: number) => {
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL'
+    }).format(value);
+  };
+
+  const formatDate = (date: string) => {
+    return format(new Date(date), "dd/MM/yyyy HH:mm", { locale: ptBR });
+  };
+
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'approved':
+        return <Badge className="bg-green-500/20 text-green-500 border-green-500/30">Aprovado</Badge>;
+      case 'pending':
+        return <Badge className="bg-yellow-500/20 text-yellow-500 border-yellow-500/30">Pendente</Badge>;
+      case 'rejected':
+        return <Badge className="bg-red-500/20 text-red-500 border-red-500/30">Rejeitado</Badge>;
+      default:
+        return <Badge variant="secondary">{status}</Badge>;
+    }
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-card/95 backdrop-blur-sm">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2 text-xl">
+            <TrendingUp className="w-5 h-5 text-primary" />
+            Vendas - {pageTitle}
+          </DialogTitle>
+        </DialogHeader>
+
+        {loading ? (
+          <div className="flex items-center justify-center py-12">
+            <Loader2 className="w-8 h-8 animate-spin text-primary" />
+          </div>
+        ) : (
+          <>
+            {/* Stats Cards */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+              <div className="bg-muted/50 rounded-lg p-4 text-center">
+                <ShoppingCart className="w-5 h-5 mx-auto mb-2 text-primary" />
+                <p className="text-2xl font-bold">{stats.total}</p>
+                <p className="text-xs text-muted-foreground">Total de Pedidos</p>
+              </div>
+              <div className="bg-muted/50 rounded-lg p-4 text-center">
+                <Clock className="w-5 h-5 mx-auto mb-2 text-yellow-500" />
+                <p className="text-2xl font-bold">{stats.pending}</p>
+                <p className="text-xs text-muted-foreground">Pendentes</p>
+              </div>
+              <div className="bg-muted/50 rounded-lg p-4 text-center">
+                <CheckCircle className="w-5 h-5 mx-auto mb-2 text-green-500" />
+                <p className="text-2xl font-bold">{stats.approved}</p>
+                <p className="text-xs text-muted-foreground">Aprovados</p>
+              </div>
+              <div className="bg-muted/50 rounded-lg p-4 text-center">
+                <DollarSign className="w-5 h-5 mx-auto mb-2 text-accent" />
+                <p className="text-2xl font-bold">{formatPrice(stats.revenue)}</p>
+                <p className="text-xs text-muted-foreground">Faturamento</p>
+              </div>
+            </div>
+
+            {/* Orders Table */}
+            {orders.length === 0 ? (
+              <div className="text-center py-12 text-muted-foreground">
+                <ShoppingCart className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                <p>Nenhum pedido encontrado para esta página.</p>
+              </div>
+            ) : (
+              <div className="rounded-lg border border-border overflow-hidden">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="bg-muted/30 hover:bg-muted/30">
+                      <TableHead>Cliente</TableHead>
+                      <TableHead>Pacote</TableHead>
+                      <TableHead>Valor</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Data</TableHead>
+                      <TableHead>Ação</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {orders.map((order) => (
+                      <TableRow key={order.id} className="hover:bg-muted/20">
+                        <TableCell>
+                          <div>
+                            <p className="font-medium text-sm">{order.customer_name}</p>
+                            <p className="text-xs text-muted-foreground">{order.customer_email}</p>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div>
+                            <p className="text-sm">{order.tier_name}</p>
+                            <p className="text-xs text-muted-foreground">{order.credits} créditos</p>
+                          </div>
+                        </TableCell>
+                        <TableCell className="font-medium">{formatPrice(order.price)}</TableCell>
+                        <TableCell>{getStatusBadge(order.status)}</TableCell>
+                        <TableCell className="text-xs text-muted-foreground">{formatDate(order.created_at)}</TableCell>
+                        <TableCell>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => {
+                              const msg = `Olá ${order.customer_name}!`;
+                              window.open(`https://wa.me/${order.customer_whatsapp}?text=${encodeURIComponent(msg)}`, '_blank');
+                            }}
+                            className="text-green-500 hover:text-green-400"
+                          >
+                            <Phone className="w-4 h-4" />
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            )}
+          </>
+        )}
+      </DialogContent>
+    </Dialog>
+  );
+};

@@ -18,7 +18,8 @@ import {
   Copy,
   Check,
   HelpCircle,
-  Menu
+  Menu,
+  TrendingUp
 } from 'lucide-react';
 import {
   Dialog,
@@ -41,6 +42,7 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import logoPainel from '@/assets/logo-painel.png';
 import backgroundHero from '@/assets/background-hero.png';
 import { DashboardTour, triggerDashboardTour } from '@/components/DashboardTour';
+import { SalesPanel } from '@/components/SalesPanel';
 
 interface LandingPage {
   id: string;
@@ -61,6 +63,7 @@ const Dashboard = () => {
   const [showDonationModal, setShowDonationModal] = useState(false);
   const [copiedPix, setCopiedPix] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [salesPanel, setSalesPanel] = useState<{ pageId: string; pageTitle: string } | null>(null);
 
   const pixKey = '48996029392';
   const pixName = 'Marcondes Jorge Machado';
@@ -394,6 +397,15 @@ const Dashboard = () => {
                         <Edit className="w-4 h-4 mr-2" />
                         Editar
                       </Button>
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => setSalesPanel({ pageId: page.id, pageTitle: page.title })}
+                        className="hover:bg-primary hover:text-primary-foreground hover:border-primary"
+                        title="Ver vendas"
+                      >
+                        <TrendingUp className="w-4 h-4" />
+                      </Button>
                       {page.is_published && (
                         <Button 
                           variant="outline" 
@@ -496,6 +508,14 @@ const Dashboard = () => {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Sales Panel */}
+      <SalesPanel
+        pageId={salesPanel?.pageId || ''}
+        pageTitle={salesPanel?.pageTitle || ''}
+        open={!!salesPanel}
+        onOpenChange={(open) => !open && setSalesPanel(null)}
+      />
     </div>
   );
 };
