@@ -54,11 +54,11 @@ export const Header = () => {
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/30 h-20 sm:h-24 md:h-28">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/30 h-16 sm:h-18 md:h-20">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 h-full flex items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center h-full py-1">
-            <img src={logoPainel} alt="Painel Créditos Lovable" className="h-full max-h-[72px] sm:max-h-[88px] md:max-h-[104px] w-auto object-contain object-left" />
+          <Link to="/" className="flex items-center h-full py-2">
+            <img src={logoPainel} alt="Painel Créditos Lovable" className="h-full max-h-[40px] sm:max-h-[48px] md:max-h-[56px] w-auto object-contain object-left" />
           </Link>
 
           {/* Desktop Navigation */}
@@ -164,7 +164,7 @@ export const Header = () => {
             <SheetContent side="right" className="bg-background border-border w-[280px]">
             {/* Logo no menu mobile */}
               <div className="flex justify-center mb-6 pt-2">
-                <img src={logoPainel} alt="Painel Créditos Lovable" className="h-20 w-auto object-contain" />
+                <img src={logoPainel} alt="Painel Créditos Lovable" className="h-12 w-auto object-contain" />
               </div>
               <nav className="flex flex-col gap-4">
                 <Button 
