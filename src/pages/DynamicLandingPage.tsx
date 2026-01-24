@@ -90,6 +90,9 @@ interface LandingPageData {
   faqs: { question: string; answer: string }[];
   secure_purchase_items: { title: string; description: string; icon?: string }[] | null;
   pricing_tiers: PricingTier[] | null;
+  social_proof_enabled: boolean | null;
+  social_proof_product_name: string | null;
+  social_proof_customers: { name: string; city: string; state: string }[] | null;
   meta_title: string | null;
   meta_description: string | null;
   facebook_pixel: string | null;
@@ -1521,7 +1524,11 @@ const DynamicLandingPageInner = () => {
       </footer>
 
       {/* Social Proof Notification */}
-      <SocialProofNotification />
+      <SocialProofNotification 
+        enabled={page.social_proof_enabled ?? true}
+        productName={page.social_proof_product_name || 'o Gerador'}
+        customers={(page.social_proof_customers as { name: string; city: string; state: string }[]) || undefined}
+      />
       
       {/* WhatsApp Button */}
       <WhatsAppButton number={page.whatsapp_number || undefined} message={page.whatsapp_message || undefined} />

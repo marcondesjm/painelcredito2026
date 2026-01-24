@@ -1,22 +1,27 @@
 import { useState, useEffect } from 'react';
 import { ShoppingCart, X } from 'lucide-react';
 
-const customers = [
+export interface SocialProofCustomer {
+  name: string;
+  city: string;
+  state: string;
+}
+
+interface SocialProofNotificationProps {
+  enabled?: boolean;
+  productName?: string;
+  customers?: SocialProofCustomer[];
+}
+
+const defaultCustomers: SocialProofCustomer[] = [
   { name: "Carlos M.", city: "São Paulo", state: "SP" },
   { name: "Ana Paula S.", city: "Rio de Janeiro", state: "RJ" },
   { name: "Roberto F.", city: "Belo Horizonte", state: "MG" },
   { name: "Juliana C.", city: "Curitiba", state: "PR" },
   { name: "Fernando L.", city: "Salvador", state: "BA" },
   { name: "Mariana R.", city: "Brasília", state: "DF" },
-  { name: "Lucas P.", city: "Fortaleza", state: "CE" },
-  { name: "Beatriz A.", city: "Recife", state: "PE" },
   { name: "Pedro H.", city: "Porto Alegre", state: "RS" },
-  { name: "Camila S.", city: "Goiânia", state: "GO" },
-  { name: "Rafael M.", city: "Manaus", state: "AM" },
-  { name: "Larissa T.", city: "Campinas", state: "SP" },
   { name: "Thiago N.", city: "Florianópolis", state: "SC" },
-  { name: "Isabela D.", city: "Vitória", state: "ES" },
-  { name: "Gustavo B.", city: "Natal", state: "RN" },
 ];
 
 const getRandomTime = () => {
@@ -24,24 +29,34 @@ const getRandomTime = () => {
   return `${minutes} min atrás`;
 };
 
-export const SocialProofNotification = () => {
+export const SocialProofNotification = ({ 
+  enabled = true, 
+  productName = 'o Gerador',
+  customers = defaultCustomers 
+}: SocialProofNotificationProps) => {
   const [isVisible, setIsVisible] = useState(false);
-  const [currentCustomer, setCurrentCustomer] = useState(customers[0]);
+  const [currentCustomer, setCurrentCustomer] = useState(customers[0] || defaultCustomers[0]);
   const [time, setTime] = useState(getRandomTime());
 
+  const activeCustomers = customers && customers.length > 0 ? customers : defaultCustomers;
+
   useEffect(() => {
+    if (!enabled) return;
+    
     // Initial delay before first notification
     const initialDelay = setTimeout(() => {
       showNotification();
     }, 5000);
 
     return () => clearTimeout(initialDelay);
-  }, []);
+  }, [enabled]);
 
   const showNotification = () => {
+    if (!enabled) return;
+    
     // Pick a random customer
-    const randomIndex = Math.floor(Math.random() * customers.length);
-    setCurrentCustomer(customers[randomIndex]);
+    const randomIndex = Math.floor(Math.random() * activeCustomers.length);
+    setCurrentCustomer(activeCustomers[randomIndex]);
     setTime(getRandomTime());
     setIsVisible(true);
 
@@ -59,7 +74,7 @@ export const SocialProofNotification = () => {
     setIsVisible(false);
   };
 
-  if (!isVisible) return null;
+  if (!enabled || !isVisible) return null;
 
   return (
     <div className="fixed bottom-16 sm:bottom-4 left-2 sm:left-4 z-40 animate-in slide-in-from-left-full duration-500 max-w-[calc(100vw-1rem)] sm:max-w-sm">
@@ -72,7 +87,7 @@ export const SocialProofNotification = () => {
         {/* Content */}
         <div className="flex-1 min-w-0">
           <p className="text-xs sm:text-sm font-medium text-foreground">
-            <span className="text-primary">{currentCustomer.name}</span> adquiriu o Gerador
+            <span className="text-primary">{currentCustomer.name}</span> adquiriu {productName}
           </p>
           <p className="text-[10px] sm:text-xs text-muted-foreground mt-0.5">
             {currentCustomer.city}, {currentCustomer.state} • {time}

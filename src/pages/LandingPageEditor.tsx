@@ -68,6 +68,9 @@ interface LandingPageData {
   faqs: { question: string; answer: string }[];
   secure_purchase_items: { title: string; description: string; icon?: string }[];
   pricing_tiers: { id: string; name: string; credits: number; price_original: number; price_current: number; available: number; sales: number; checkout_link: string; highlight?: boolean }[];
+  social_proof_enabled: boolean;
+  social_proof_product_name: string;
+  social_proof_customers: { name: string; city: string; state: string }[];
   meta_title: string;
   meta_description: string;
   og_image: string;
@@ -180,6 +183,18 @@ const defaultData: LandingPageData = {
     { title: 'Atualizações Gratuitas', description: 'Melhorias constantes sem custo adicional.', icon: 'RefreshCw' },
   ],
   pricing_tiers: [],
+  social_proof_enabled: true,
+  social_proof_product_name: 'o Gerador',
+  social_proof_customers: [
+    { name: 'Carlos M.', city: 'São Paulo', state: 'SP' },
+    { name: 'Ana Paula S.', city: 'Rio de Janeiro', state: 'RJ' },
+    { name: 'Roberto F.', city: 'Belo Horizonte', state: 'MG' },
+    { name: 'Juliana C.', city: 'Curitiba', state: 'PR' },
+    { name: 'Fernando L.', city: 'Salvador', state: 'BA' },
+    { name: 'Mariana R.', city: 'Brasília', state: 'DF' },
+    { name: 'Pedro H.', city: 'Porto Alegre', state: 'RS' },
+    { name: 'Thiago N.', city: 'Florianópolis', state: 'SC' },
+  ],
   meta_title: '',
   meta_description: '',
   og_image: '',
@@ -534,6 +549,9 @@ const LandingPageEditor = () => {
         faqs: (page.faqs as { question: string; answer: string }[]) || [],
         secure_purchase_items: (page.secure_purchase_items as { title: string; description: string; icon?: string }[]) || defaultData.secure_purchase_items,
         pricing_tiers: (page.pricing_tiers as { id: string; name: string; credits: number; price_original: number; price_current: number; available: number; sales: number; checkout_link: string; highlight?: boolean }[]) || [],
+        social_proof_enabled: page.social_proof_enabled ?? true,
+        social_proof_product_name: page.social_proof_product_name || 'o Gerador',
+        social_proof_customers: (page.social_proof_customers as { name: string; city: string; state: string }[]) || defaultData.social_proof_customers,
         price_original: page.price_original ? Number(page.price_original) : null,
         price_current: page.price_current ? Number(page.price_current) : null,
         meta_title: page.meta_title || '',
@@ -918,6 +936,7 @@ const LandingPageEditor = () => {
                   <TabsTrigger value="compra-segura" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Compra Segura</TabsTrigger>
                   <TabsTrigger value="conteudo" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Conteúdo</TabsTrigger>
                   <TabsTrigger value="depoimentos" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Depoimentos</TabsTrigger>
+                  <TabsTrigger value="prova-social" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Prova Social</TabsTrigger>
                   <TabsTrigger value="faq" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">FAQ</TabsTrigger>
                   <TabsTrigger value="seo" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">SEO</TabsTrigger>
                 </TabsList>
@@ -2122,6 +2141,119 @@ const LandingPageEditor = () => {
                         </div>
                       ))
                     )}
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              {/* Tab Prova Social */}
+              <TabsContent value="prova-social">
+                <Card className="bg-card/50">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <CardTitle className="text-lg">Prova Social</CardTitle>
+                        <CardDescription>Configure as notificações de compras recentes</CardDescription>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Label className="text-xs">Ativar</Label>
+                        <Switch
+                          checked={data.social_proof_enabled}
+                          onCheckedChange={(checked) => setData({ ...data, social_proof_enabled: checked })}
+                        />
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="space-y-2">
+                      <Label className="text-sm">Nome do Produto</Label>
+                      <Input
+                        value={data.social_proof_product_name}
+                        onChange={(e) => setData({ ...data, social_proof_product_name: e.target.value })}
+                        placeholder="o Gerador"
+                        className="bg-background/50"
+                      />
+                      <p className="text-xs text-muted-foreground">Ex: "o Gerador", "o Painel Premium", "o Curso"</p>
+                    </div>
+
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <Label className="text-sm">Lista de Clientes</Label>
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          onClick={() => {
+                            const newCustomer = { name: 'Novo Cliente', city: 'São Paulo', state: 'SP' };
+                            setData({ 
+                              ...data, 
+                              social_proof_customers: [...(data.social_proof_customers || []), newCustomer] 
+                            });
+                          }}
+                          className="h-7"
+                        >
+                          <Plus className="w-3 h-3 mr-1" />
+                          Adicionar
+                        </Button>
+                      </div>
+                      
+                      <p className="text-xs text-muted-foreground">
+                        Adicione nomes e localizações que aparecerão nas notificações de compra
+                      </p>
+
+                      {(data.social_proof_customers || []).length === 0 ? (
+                        <div className="text-center py-4 text-muted-foreground">
+                          <p className="text-sm">Nenhum cliente cadastrado</p>
+                        </div>
+                      ) : (
+                        <div className="space-y-2 max-h-64 overflow-y-auto">
+                          {(data.social_proof_customers || []).map((customer, index) => (
+                            <div key={index} className="flex items-center gap-2 p-2 bg-background/50 rounded-lg">
+                              <Input
+                                value={customer.name}
+                                onChange={(e) => {
+                                  const updated = [...(data.social_proof_customers || [])];
+                                  updated[index] = { ...updated[index], name: e.target.value };
+                                  setData({ ...data, social_proof_customers: updated });
+                                }}
+                                placeholder="Nome (ex: Carlos M.)"
+                                className="bg-card text-sm flex-1"
+                              />
+                              <Input
+                                value={customer.city}
+                                onChange={(e) => {
+                                  const updated = [...(data.social_proof_customers || [])];
+                                  updated[index] = { ...updated[index], city: e.target.value };
+                                  setData({ ...data, social_proof_customers: updated });
+                                }}
+                                placeholder="Cidade"
+                                className="bg-card text-sm w-28"
+                              />
+                              <Input
+                                value={customer.state}
+                                onChange={(e) => {
+                                  const updated = [...(data.social_proof_customers || [])];
+                                  updated[index] = { ...updated[index], state: e.target.value };
+                                  setData({ ...data, social_proof_customers: updated });
+                                }}
+                                placeholder="UF"
+                                className="bg-card text-sm w-14"
+                                maxLength={2}
+                              />
+                              <Button 
+                                variant="ghost" 
+                                size="icon" 
+                                onClick={() => {
+                                  const updated = (data.social_proof_customers || []).filter((_, i) => i !== index);
+                                  setData({ ...data, social_proof_customers: updated });
+                                }}
+                                className="h-8 w-8"
+                              >
+                                <Trash2 className="w-3 h-3 text-destructive" />
+                              </Button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   </CardContent>
                 </Card>
               </TabsContent>

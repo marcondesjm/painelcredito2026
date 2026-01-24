@@ -63,6 +63,9 @@ export type Database = {
           section_order: Json | null
           secure_purchase_items: Json | null
           slug: string
+          social_proof_customers: Json | null
+          social_proof_enabled: boolean | null
+          social_proof_product_name: string | null
           testimonials: Json | null
           tiktok_pixel: string | null
           title: string
@@ -123,6 +126,9 @@ export type Database = {
           section_order?: Json | null
           secure_purchase_items?: Json | null
           slug: string
+          social_proof_customers?: Json | null
+          social_proof_enabled?: boolean | null
+          social_proof_product_name?: string | null
           testimonials?: Json | null
           tiktok_pixel?: string | null
           title: string
@@ -183,6 +189,9 @@ export type Database = {
           section_order?: Json | null
           secure_purchase_items?: Json | null
           slug?: string
+          social_proof_customers?: Json | null
+          social_proof_enabled?: boolean | null
+          social_proof_product_name?: string | null
           testimonials?: Json | null
           tiktok_pixel?: string | null
           title?: string
