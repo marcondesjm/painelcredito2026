@@ -9,7 +9,7 @@ import { Switch } from '@/components/ui/switch';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { PricingTier } from './PricingTiersSection';
-import { generatePixPayload, generatePixQRCodeUrl } from '@/lib/pix';
+import { generatePixPayload, generatePixQRCodeUrl, validatePixKey } from '@/lib/pix';
 
 interface CheckoutModalProps {
   isOpen: boolean;
@@ -641,6 +641,26 @@ ${cupomText}
 
               {/* PIX Payment Section */}
               {pixEnabled && pixKey && (() => {
+                // Validate PIX key before generating QR Code
+                const pixValidation = validatePixKey(pixKey);
+                
+                if (!pixValidation.isValid) {
+                  return (
+                    <div className="p-4 rounded-lg border-2 border-destructive/40 bg-destructive/5 space-y-2">
+                      <div className="flex items-center gap-2 text-destructive">
+                        <X className="w-5 h-5" />
+                        <h3 className="font-semibold text-sm">Chave PIX Inválida</h3>
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        {pixValidation.error}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        Tipo detectado: <span className="font-medium">{pixValidation.type}</span>
+                      </p>
+                    </div>
+                  );
+                }
+
                 // Generate dynamic PIX payload with EMV/BRCode standard
                 const pixPayload = generatePixPayload({
                   pixKey: pixKey,
@@ -656,7 +676,9 @@ ${cupomText}
                   <div className="p-4 rounded-lg border-2 space-y-4" style={{ borderColor: `${accentColor}40`, backgroundColor: `${accentColor}08` }}>
                     <div className="text-center">
                       <h3 className="font-semibold text-sm mb-1">💳 Pague via PIX</h3>
-                      <p className="text-xs text-muted-foreground">QR Code com valor incluso • Escaneie ou copie</p>
+                      <p className="text-xs text-muted-foreground">
+                        QR Code com valor incluso • {pixValidation.type === 'EVP' ? 'Chave Aleatória' : pixValidation.type}
+                      </p>
                     </div>
                     
                     {/* QR Code */}
