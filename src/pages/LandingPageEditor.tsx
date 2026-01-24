@@ -194,7 +194,30 @@ const defaultData: LandingPageData = {
     { title: 'Suporte Disponível', description: 'Equipe pronta para ajudar sempre que precisar.', icon: 'Headphones' },
     { title: 'Atualizações Gratuitas', description: 'Melhorias constantes sem custo adicional.', icon: 'RefreshCw' },
   ],
-  pricing_tiers: [],
+  pricing_tiers: [
+    {
+      id: 'tier-1k',
+      name: '1k de créditos',
+      credits: 1000,
+      price_original: 297,
+      price_current: 97,
+      available: 10,
+      sales: 50,
+      highlight: true,
+      checkout_link: ''
+    },
+    {
+      id: 'tier-5k',
+      name: '5k de créditos',
+      credits: 5000,
+      price_original: 297,
+      price_current: 197,
+      available: 10,
+      sales: 30,
+      highlight: false,
+      checkout_link: ''
+    }
+  ],
   social_proof_enabled: true,
   social_proof_product_name: 'o Gerador',
   social_proof_customers: [
