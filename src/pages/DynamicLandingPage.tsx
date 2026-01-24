@@ -330,6 +330,8 @@ const DynamicLandingPageInner = () => {
         testimonials: (data.testimonials as { name: string; text: string; rating: number }[]) || [],
         faqs: (data.faqs as { question: string; answer: string }[]) || [],
         section_order: (data.section_order as SectionId[]) || defaultSectionOrder,
+        pricing_tiers: (data.pricing_tiers as PricingTier[]) || [],
+        secure_purchase_items: (data.secure_purchase_items as { title: string; description: string; icon?: string }[]) || null,
       });
     } catch (err) {
       const e = err instanceof Error ? err : new Error(String(err));
