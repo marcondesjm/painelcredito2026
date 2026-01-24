@@ -317,6 +317,27 @@ const AdminDashboard = () => {
     setDeleteUserId(null);
   };
 
+  const handleDeleteOrder = async (orderId: string) => {
+    try {
+      const { error } = await supabase
+        .from('orders')
+        .delete()
+        .eq('id', orderId);
+
+      if (error) throw error;
+
+      setOrders(prev => prev.filter(o => o.id !== orderId));
+      setStats(prev => ({
+        ...prev,
+        totalOrders: prev.totalOrders - 1
+      }));
+      toast.success('Pedido excluído com sucesso');
+    } catch (error: any) {
+      console.error('Error deleting order:', error);
+      toast.error('Erro ao excluir pedido');
+    }
+  };
+
   const handleUpdateOrderStatus = async (orderId: string, newStatus: string) => {
     try {
       const { error } = await supabase
@@ -739,17 +760,27 @@ const AdminDashboard = () => {
                               </div>
                             </TableCell>
                             <TableCell>
-                              <Button 
-                                variant="ghost" 
-                                size="sm"
-                                onClick={() => {
-                                  const msg = `Olá ${order.customer_name}! Seu pedido de ${order.tier_name} foi recebido.`;
-                                  window.open(`https://wa.me/${order.customer_whatsapp}?text=${encodeURIComponent(msg)}`, '_blank');
-                                }}
-                                className="text-green-500 hover:text-green-400"
-                              >
-                                <Phone className="w-4 h-4" />
-                              </Button>
+                              <div className="flex items-center gap-1">
+                                <Button 
+                                  variant="ghost" 
+                                  size="sm"
+                                  onClick={() => {
+                                    const msg = `Olá ${order.customer_name}! Seu pedido de ${order.tier_name} foi recebido.`;
+                                    window.open(`https://wa.me/${order.customer_whatsapp}?text=${encodeURIComponent(msg)}`, '_blank');
+                                  }}
+                                  className="text-green-500 hover:text-green-400"
+                                >
+                                  <Phone className="w-4 h-4" />
+                                </Button>
+                                <Button 
+                                  variant="ghost" 
+                                  size="sm"
+                                  onClick={() => handleDeleteOrder(order.id)}
+                                  className="text-red-500 hover:text-red-400"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </Button>
+                              </div>
                             </TableCell>
                           </TableRow>
                         ))
