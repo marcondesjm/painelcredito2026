@@ -922,6 +922,41 @@ const LandingPageEditor = () => {
                         placeholder="Painel Créditos Lovable"
                         className="bg-background/50"
                       />
+                      <p className="text-xs text-muted-foreground">
+                        Nome interno para organização no dashboard
+                      </p>
+                    </div>
+
+                    {/* Meta Title for SEO/Sharing */}
+                    <div className="space-y-2">
+                      <Label htmlFor="meta_title" className="text-sm">Título do App (SEO)</Label>
+                      <Input
+                        id="meta_title"
+                        value={data.meta_title}
+                        onChange={(e) => setData({ ...data, meta_title: e.target.value })}
+                        placeholder="Lovable App Créditos Infinitos"
+                        className="bg-background/50"
+                        maxLength={60}
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        Aparece na aba do navegador e ao compartilhar. <span className="text-primary">{data.meta_title?.length || 0}/60</span>
+                      </p>
+                    </div>
+
+                    {/* Meta Description for SEO/Sharing */}
+                    <div className="space-y-2">
+                      <Label htmlFor="meta_description" className="text-sm">Descrição do App (SEO)</Label>
+                      <Textarea
+                        id="meta_description"
+                        value={data.meta_description}
+                        onChange={(e) => setData({ ...data, meta_description: e.target.value })}
+                        placeholder="Créditos Infinitos na Lovable. Simples. Rápido. Automático. Use nosso painel exclusivo e gere créditos ilimitados para seus projetos Lovable e revenda créditos."
+                        className="bg-background/50 min-h-[80px]"
+                        maxLength={160}
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        Descrição que aparece nos resultados de busca e ao compartilhar. <span className="text-primary">{data.meta_description?.length || 0}/160</span>
+                      </p>
                     </div>
 
                     <div id="tour-publish" className="flex items-center justify-between p-3 rounded-lg bg-background/50 border border-border/50">
