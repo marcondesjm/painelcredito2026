@@ -431,6 +431,7 @@ const LandingPageEditor = () => {
       const sectionMap: Record<string, string> = {
         'hero': 'basico',
         'pricing': 'precos',
+        'pacotes': 'pacotes',
         'features': 'conteudo',
         'about': 'sobre',
         'how-it-works': 'conteudo',
@@ -439,7 +440,7 @@ const LandingPageEditor = () => {
         'faq': 'faq',
         'cta': 'precos',
         'images': 'imagens',
-        'donation': 'basico',
+        'donation': 'doacao',
       };
       
       // NOTE: We intentionally ignore hover messages to avoid UI thrash/flicker in the preview.
