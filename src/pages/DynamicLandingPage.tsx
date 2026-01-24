@@ -1,5 +1,17 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
+
+// Helper function to handle both internal and external links
+const handleCtaClick = (link: string | null, navigate: ReturnType<typeof useNavigate>) => {
+  if (!link) return;
+  
+  // Check if it's an external URL
+  if (link.startsWith('http://') || link.startsWith('https://')) {
+    window.open(link, '_blank', 'noopener,noreferrer');
+  } else {
+    navigate(link);
+  }
+};
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -649,7 +661,7 @@ const DynamicLandingPageInner = () => {
                   backgroundColor: `hsl(${primaryHsl})`,
                   boxShadow: `0 0 20px hsl(${primaryHsl} / 0.4)`
                 }}
-                onClick={() => page.hero_cta_link && navigate(page.hero_cta_link)}
+                onClick={() => handleCtaClick(page.hero_cta_link, navigate)}
               >
                 {page.hero_cta_text || 'Comprar Agora'}
               </Button>
@@ -1026,7 +1038,7 @@ const DynamicLandingPageInner = () => {
                 handleSectionClick('cta');
                 return;
               }
-              if (page.hero_cta_link) navigate(page.hero_cta_link);
+              handleCtaClick(page.hero_cta_link, navigate);
             }}
           >
             {page.hero_cta_text || 'Comprar Agora'}
@@ -1330,7 +1342,7 @@ const DynamicLandingPageInner = () => {
               size="sm" 
               className="text-white"
               style={{ backgroundColor: `hsl(${primaryHsl})` }}
-              onClick={() => page.hero_cta_link && navigate(page.hero_cta_link)}
+              onClick={() => handleCtaClick(page.hero_cta_link, navigate)}
             >
               {page.hero_cta_text || 'Comprar Agora'}
             </Button>
@@ -1380,7 +1392,7 @@ const DynamicLandingPageInner = () => {
                 <Button 
                   className="w-full text-white"
                   style={{ backgroundColor: `hsl(${primaryHsl})` }}
-                  onClick={() => page.hero_cta_link && navigate(page.hero_cta_link)}
+                  onClick={() => handleCtaClick(page.hero_cta_link, navigate)}
                 >
                   {page.hero_cta_text || 'Comprar Agora'}
                 </Button>
