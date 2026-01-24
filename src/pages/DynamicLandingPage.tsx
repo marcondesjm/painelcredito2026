@@ -261,17 +261,30 @@ const DynamicLandingPageInner = () => {
         data = result.data;
         fetchError = result.error;
         
-        // Se falhou (ex: não autenticado), tenta pelo slug + publicado como fallback
-        if (fetchError && slug) {
+        // Se falhou (ex: não autenticado), tenta pelo slug (publicado ou não em modo preview)
+        if (!data && slug) {
+          // Em modo preview, permitir ver a página mesmo que não esteja publicada
           const fallbackResult = await supabase
             .from('landing_pages')
             .select('*')
             .eq('slug', slug)
-            .eq('is_published', true)
             .maybeSingle();
           
           data = fallbackResult.data;
           fetchError = fallbackResult.error;
+          
+          // Se ainda não encontrou, tenta apenas as publicadas
+          if (!data) {
+            const publishedResult = await supabase
+              .from('landing_pages')
+              .select('*')
+              .eq('slug', slug)
+              .eq('is_published', true)
+              .maybeSingle();
+            
+            data = publishedResult.data;
+            fetchError = publishedResult.error;
+          }
         }
       } else if (slug) {
         // Modo normal: busca apenas páginas publicadas pelo slug
