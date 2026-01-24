@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { ShoppingCart, Shield, Wallet, Link as LinkIcon, Tag, Loader2, CheckCircle, Eye, EyeOff } from 'lucide-react';
+import { ShoppingCart, Shield, Wallet, Link as LinkIcon, Tag, Loader2, CheckCircle, Eye, EyeOff, RefreshCw, X } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { PricingTier } from './PricingTiersSection';
@@ -192,93 +192,108 @@ export const CheckoutModal = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto p-0 gap-0 border-0">
         {step === 'checkout' && (
-          <>
-            <DialogHeader>
-              <DialogTitle className="flex items-center gap-2">
+          <div className="flex flex-col">
+            {/* Header */}
+            <div className="flex items-center justify-between p-4 border-b border-border/50">
+              <div className="flex items-center gap-2">
                 <ShoppingCart className="w-5 h-5" style={{ color: primaryColor }} />
-                Finalizar Pagamento
-              </DialogTitle>
-            </DialogHeader>
+                <span className="font-semibold text-lg">Finalizar Pagamento</span>
+              </div>
+              <button 
+                onClick={handleClose}
+                className="text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
 
-            <div className="space-y-4 py-4">
+            <div className="p-4 space-y-4">
               {/* Package Info */}
-              <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+              <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="text-lg">👛</span>
-                  <span className="font-medium">{tier.credits} Créditos</span>
+                  <span className="text-xl">👛</span>
+                  <span className="font-medium">{tier.credits.toLocaleString('pt-BR')} Créditos</span>
                 </div>
-                <span className="text-xl font-bold" style={{ color: accentColor }}>
+                <span className="text-2xl font-bold" style={{ color: accentColor }}>
                   {formatPrice(tier.price_current)}
                 </span>
               </div>
 
-              {/* Balance */}
-              <div className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
+              {/* Balance Card */}
+              <div 
+                className="flex items-center justify-between p-3 rounded-lg border-2"
+                style={{ borderColor: `${primaryColor}30`, backgroundColor: `${primaryColor}08` }}
+              >
                 <div className="flex items-center gap-2">
-                  <Wallet className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">Seu saldo:</span>
+                  <Wallet className="w-4 h-4" style={{ color: primaryColor }} />
+                  <span className="text-sm font-medium">Seu saldo:</span>
                 </div>
-                <span className="text-sm font-medium">R$ 0,00</span>
+                <span className="text-sm font-bold" style={{ color: accentColor }}>R$ 0,00</span>
               </div>
 
               {/* Security Badge */}
-              <div className="flex items-center justify-center gap-2 py-2">
-                <Shield className="w-4 h-4" style={{ color: accentColor }} />
-                <span className="text-sm text-muted-foreground">Pagamento 100% seguro</span>
+              <div 
+                className="flex items-center justify-center gap-2 py-2.5 rounded-full border"
+                style={{ borderColor: `${accentColor}40`, backgroundColor: `${accentColor}10` }}
+              >
+                <RefreshCw className="w-4 h-4" style={{ color: accentColor }} />
+                <span className="text-sm font-medium" style={{ color: accentColor }}>
+                  Pagamento 100% seguro
+                </span>
               </div>
 
               {/* Form */}
-              <div className="space-y-3">
+              <div className="space-y-4">
                 <div className="space-y-1.5">
-                  <Label className="text-sm">Nome Completo</Label>
+                  <Label className="text-sm font-medium">Nome Completo</Label>
                   <Input
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="João Silva"
-                    className="bg-background"
+                    className="bg-background border-2 h-11"
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1.5">
-                    <Label className="text-sm">WhatsApp</Label>
+                    <Label className="text-sm font-medium">WhatsApp</Label>
                     <Input
                       value={whatsapp}
                       onChange={handleWhatsappChange}
                       placeholder="(11) 99999-9999"
-                      className="bg-background"
+                      className="bg-background border-2 h-11"
                       maxLength={16}
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <Label className="text-sm">Email</Label>
+                    <Label className="text-sm font-medium">Email</Label>
                     <Input
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="seu@email.com"
-                      className="bg-background"
+                      className="bg-background border-2 h-11"
                     />
                   </div>
                 </div>
 
                 {/* Invite Link Section */}
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <div className="flex items-center gap-2">
                     <LinkIcon className="w-4 h-4" style={{ color: primaryColor }} />
                     <span className="text-sm font-medium">Link de Convite</span>
-                    <Badge variant="outline" className="text-xs">Opcional</Badge>
                   </div>
                   
-                  <div className="flex gap-2">
+                  <div className="grid grid-cols-2 gap-2">
                     <Button
                       type="button"
                       variant={sendLinkNow ? "default" : "outline"}
                       size="sm"
                       onClick={() => setSendLinkNow(true)}
-                      style={sendLinkNow ? { backgroundColor: primaryColor } : {}}
+                      className="h-10 font-medium"
+                      style={sendLinkNow ? { backgroundColor: '#F59E0B', color: 'white' } : {}}
                     >
                       Enviar agora
                     </Button>
@@ -287,6 +302,8 @@ export const CheckoutModal = ({
                       variant={!sendLinkNow ? "default" : "outline"}
                       size="sm"
                       onClick={() => setSendLinkNow(false)}
+                      className="h-10 font-medium"
+                      style={!sendLinkNow ? { backgroundColor: '#6B7280', color: 'white' } : {}}
                     >
                       Enviar depois
                     </Button>
@@ -297,7 +314,7 @@ export const CheckoutModal = ({
                       value={inviteLink}
                       onChange={(e) => setInviteLink(e.target.value)}
                       placeholder="https://lovable.dev/invite/..."
-                      className="bg-background text-sm"
+                      className="bg-background border-2 h-11 text-sm"
                     />
                   )}
                 </div>
@@ -305,7 +322,7 @@ export const CheckoutModal = ({
                 {/* Coupon */}
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
-                    <Tag className="w-4 h-4" style={{ color: accentColor }} />
+                    <Tag className="w-4 h-4" style={{ color: '#F59E0B' }} />
                     <span className="text-sm font-medium">Cupom de Desconto</span>
                   </div>
                   <div className="flex gap-2">
@@ -313,9 +330,13 @@ export const CheckoutModal = ({
                       value={couponCode}
                       onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
                       placeholder="Digite o cupom"
-                      className="bg-background flex-1"
+                      className="bg-background border-2 h-11 flex-1"
                     />
-                    <Button variant="outline" size="sm" disabled>
+                    <Button 
+                      variant="outline" 
+                      className="h-11 px-4 font-medium"
+                      disabled={!couponCode}
+                    >
                       Aplicar
                     </Button>
                   </div>
@@ -324,14 +345,14 @@ export const CheckoutModal = ({
 
               {/* Submit Button */}
               <Button
-                className="w-full text-white font-semibold"
+                className="w-full h-12 text-white font-semibold text-base"
                 style={{ backgroundColor: primaryColor }}
                 onClick={handleSubmitOrder}
                 disabled={loading}
               >
                 {loading ? (
                   <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
                     Processando...
                   </>
                 ) : (
@@ -339,65 +360,71 @@ export const CheckoutModal = ({
                 )}
               </Button>
             </div>
-          </>
+          </div>
         )}
 
         {step === 'signup' && (
-          <>
-            <DialogHeader className="text-center">
-              <div className="flex justify-center mb-2">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-pink-400 to-purple-500 flex items-center justify-center">
-                  <span className="text-white text-xl">💎</span>
+          <div className="flex flex-col">
+            {/* Header */}
+            <div className="flex items-center justify-between p-4 border-b border-border/50">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-pink-400 to-purple-500 flex items-center justify-center">
+                  <span className="text-white text-sm">💎</span>
                 </div>
+                <span className="font-semibold" style={{ color: primaryColor }}>CreditoPro</span>
               </div>
-              <DialogTitle className="text-center" style={{ color: primaryColor }}>
-                CreditoPro
-              </DialogTitle>
-              <p className="text-sm text-muted-foreground">Criar sua conta</p>
-            </DialogHeader>
+              <button 
+                onClick={handleClose}
+                className="text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
 
-            <div className="space-y-4 py-4">
+            <div className="p-4 space-y-4">
+              <p className="text-sm text-center text-muted-foreground">Criar sua conta</p>
+
               <div className="space-y-1.5">
-                <Label className="text-sm">Nome completo</Label>
+                <Label className="text-sm font-medium">Nome completo</Label>
                 <Input
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="João Silva"
-                  className="bg-background"
+                  className="bg-background border-2 h-11"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <Label className="text-sm">WhatsApp</Label>
+                <Label className="text-sm font-medium">WhatsApp</Label>
                 <Input
                   value={whatsapp}
                   onChange={handleWhatsappChange}
                   placeholder="(00) 00000-0000"
-                  className="bg-background"
+                  className="bg-background border-2 h-11"
                   maxLength={16}
                 />
               </div>
 
               <div className="space-y-1.5">
-                <Label className="text-sm">E-mail</Label>
+                <Label className="text-sm font-medium">E-mail</Label>
                 <Input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="seu@email.com"
-                  className="bg-background"
+                  className="bg-background border-2 h-11"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <Label className="text-sm">Senha</Label>
+                <Label className="text-sm font-medium">Senha</Label>
                 <div className="relative">
                   <Input
                     type={showPassword ? "text" : "password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="bg-background pr-10"
+                    className="bg-background border-2 h-11 pr-10"
                   />
                   <button
                     type="button"
@@ -410,26 +437,26 @@ export const CheckoutModal = ({
               </div>
 
               <div className="space-y-1.5">
-                <Label className="text-sm" style={{ color: primaryColor }}>
+                <Label className="text-sm font-medium" style={{ color: primaryColor }}>
                   Link de convite (opcional)
                 </Label>
                 <Input
                   value={inviteLink}
                   onChange={(e) => setInviteLink(e.target.value)}
                   placeholder="Cole o link de convite aqui"
-                  className="bg-background"
+                  className="bg-background border-2 h-11"
                 />
               </div>
 
               <Button
-                className="w-full text-white font-semibold"
+                className="w-full h-12 text-white font-semibold text-base"
                 style={{ backgroundColor: '#F59E0B' }}
                 onClick={handleSignup}
                 disabled={loading}
               >
                 {loading ? (
                   <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
                     Criando conta...
                   </>
                 ) : (
@@ -437,13 +464,12 @@ export const CheckoutModal = ({
                 )}
               </Button>
 
-              <p className="text-center text-xs text-muted-foreground">
+              <p className="text-center text-sm text-muted-foreground">
                 Já tem uma conta?{' '}
                 <button 
-                  className="underline hover:text-foreground"
+                  className="underline hover:text-foreground font-medium"
                   style={{ color: primaryColor }}
                   onClick={() => {
-                    // Could redirect to login
                     window.location.href = '/auth';
                   }}
                 >
@@ -451,27 +477,33 @@ export const CheckoutModal = ({
                 </button>
               </p>
             </div>
-          </>
+          </div>
         )}
 
         {step === 'success' && (
-          <div className="py-8 text-center space-y-4">
-            <div className="flex justify-center">
-              <div 
-                className="w-16 h-16 rounded-full flex items-center justify-center"
-                style={{ backgroundColor: `${accentColor}20` }}
-              >
-                <CheckCircle className="w-10 h-10" style={{ color: accentColor }} />
+          <div className="p-6">
+            <div className="py-8 text-center space-y-4">
+              <div className="flex justify-center">
+                <div 
+                  className="w-20 h-20 rounded-full flex items-center justify-center"
+                  style={{ backgroundColor: `${accentColor}20` }}
+                >
+                  <CheckCircle className="w-12 h-12" style={{ color: accentColor }} />
+                </div>
               </div>
+              <h3 className="text-2xl font-bold">Pedido Enviado!</h3>
+              <p className="text-muted-foreground">
+                Recebemos seu pedido de <strong>{tier.credits.toLocaleString('pt-BR')}</strong> créditos.<br />
+                Você receberá instruções de pagamento em breve.
+              </p>
+              <Button 
+                onClick={handleClose} 
+                variant="outline"
+                className="h-11 px-6"
+              >
+                Fechar
+              </Button>
             </div>
-            <h3 className="text-xl font-bold">Pedido Enviado!</h3>
-            <p className="text-muted-foreground text-sm">
-              Recebemos seu pedido de {tier.credits} créditos.<br />
-              Você receberá instruções de pagamento em breve.
-            </p>
-            <Button onClick={handleClose} variant="outline">
-              Fechar
-            </Button>
           </div>
         )}
       </DialogContent>
