@@ -67,6 +67,8 @@ interface LandingPageData {
   donation_pix_name: string | null;
   donation_qr_code: string | null;
   access_key: string | null;
+  whatsapp_number: string | null;
+  whatsapp_message: string | null;
   features: { title: string; description: string }[];
   how_it_works: { step: number; title: string; description: string }[];
   testimonials: { name: string; text: string; rating: number }[];
@@ -1472,7 +1474,7 @@ const DynamicLandingPageInner = () => {
       <SocialProofNotification />
       
       {/* WhatsApp Button */}
-      <WhatsAppButton />
+      <WhatsAppButton number={page.whatsapp_number || undefined} message={page.whatsapp_message || undefined} />
     </div>
   );
 };

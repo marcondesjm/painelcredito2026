@@ -41,7 +41,7 @@ const Index = () => {
       <FAQSection />
       <FinalCTASection />
       <Footer />
-      <WhatsAppButton />
+      <WhatsAppButton number="5548996029392" message="Olá! Gostaria de mais informações sobre o painel." />
       <SocialProofNotification />
     </div>
   );
