@@ -185,8 +185,8 @@ const Dashboard = () => {
       <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/30 h-16 sm:h-20 md:h-24">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 h-full flex items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 h-full py-2">
-            <img src={logoPainel} alt="Painel Créditos Lovable" className="h-full max-h-12 sm:max-h-16 md:max-h-20 object-contain" />
+          <Link to="/" className="flex items-center gap-2 h-full py-1">
+            <img src={logoPainel} alt="Painel Créditos Lovable" className="h-full max-h-14 sm:max-h-18 md:max-h-20 object-contain" />
           </Link>
 
           {/* Desktop Navigation */}
