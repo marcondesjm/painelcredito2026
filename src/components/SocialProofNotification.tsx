@@ -62,19 +62,19 @@ export const SocialProofNotification = () => {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed bottom-4 left-4 z-50 animate-in slide-in-from-left-full duration-500">
-      <div className="bg-card/95 backdrop-blur-sm border border-border/50 rounded-lg shadow-xl p-4 max-w-sm flex items-start gap-3">
+    <div className="fixed bottom-16 sm:bottom-4 left-2 sm:left-4 z-40 animate-in slide-in-from-left-full duration-500 max-w-[calc(100vw-1rem)] sm:max-w-sm">
+      <div className="bg-card/95 backdrop-blur-sm border border-border/50 rounded-lg shadow-xl p-3 sm:p-4 flex items-start gap-2 sm:gap-3">
         {/* Icon */}
-        <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
-          <ShoppingCart className="w-5 h-5 text-primary" />
+        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
+          <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
         </div>
         
         {/* Content */}
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-foreground">
+          <p className="text-xs sm:text-sm font-medium text-foreground">
             <span className="text-primary">{currentCustomer.name}</span> adquiriu o Gerador
           </p>
-          <p className="text-xs text-muted-foreground mt-0.5">
+          <p className="text-[10px] sm:text-xs text-muted-foreground mt-0.5">
             {currentCustomer.city}, {currentCustomer.state} • {time}
           </p>
         </div>
@@ -82,10 +82,10 @@ export const SocialProofNotification = () => {
         {/* Close button */}
         <button 
           onClick={handleClose}
-          className="text-muted-foreground hover:text-foreground transition-colors p-1 -mr-1 -mt-1"
+          className="text-muted-foreground hover:text-foreground transition-colors p-0.5 sm:p-1 -mr-1 -mt-1"
           aria-label="Fechar notificação"
         >
-          <X className="w-4 h-4" />
+          <X className="w-3 h-3 sm:w-4 sm:h-4" />
         </button>
       </div>
     </div>
