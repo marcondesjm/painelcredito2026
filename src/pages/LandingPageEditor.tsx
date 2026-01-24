@@ -878,7 +878,16 @@ const LandingPageEditor = () => {
                       <Input
                         id="slug"
                         value={data.slug}
-                        onChange={(e) => setData({ ...data, slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '') })}
+                        onChange={(e) => {
+                          const value = e.target.value
+                            .toLowerCase()
+                            .normalize('NFD')
+                            .replace(/[\u0300-\u036f]/g, '') // Remove acentos
+                            .replace(/\s+/g, '-') // Espaços viram hífens
+                            .replace(/[^a-z0-9-]/g, '') // Remove caracteres inválidos
+                            .replace(/-+/g, '-'); // Remove hífens duplicados
+                          setData({ ...data, slug: value });
+                        }}
                         placeholder="minha-pagina"
                         className="bg-background/50"
                       />
