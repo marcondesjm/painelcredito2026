@@ -63,6 +63,7 @@ export type Database = {
           section_order: Json | null
           secure_purchase_items: Json | null
           slug: string
+          social_proof_credits: number[] | null
           social_proof_customers: Json | null
           social_proof_enabled: boolean | null
           social_proof_product_name: string | null
@@ -126,6 +127,7 @@ export type Database = {
           section_order?: Json | null
           secure_purchase_items?: Json | null
           slug: string
+          social_proof_credits?: number[] | null
           social_proof_customers?: Json | null
           social_proof_enabled?: boolean | null
           social_proof_product_name?: string | null
@@ -189,6 +191,7 @@ export type Database = {
           section_order?: Json | null
           secure_purchase_items?: Json | null
           slug?: string
+          social_proof_credits?: number[] | null
           social_proof_customers?: Json | null
           social_proof_enabled?: boolean | null
           social_proof_product_name?: string | null
