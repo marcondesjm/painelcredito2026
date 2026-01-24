@@ -983,6 +983,7 @@ const LandingPageEditor = () => {
                   <TabsTrigger value="depoimentos" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Depoimentos</TabsTrigger>
                   <TabsTrigger value="prova-social" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Prova Social</TabsTrigger>
                   <TabsTrigger value="faq" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">FAQ</TabsTrigger>
+                  <TabsTrigger value="whatsapp" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">WhatsApp</TabsTrigger>
                   <TabsTrigger value="seo" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">SEO</TabsTrigger>
                 </TabsList>
               </div>
@@ -2521,6 +2522,77 @@ const LandingPageEditor = () => {
                 </Card>
               </TabsContent>
 
+              {/* Tab WhatsApp */}
+              <TabsContent value="whatsapp">
+                <Card className="bg-card/50">
+                  <CardHeader className="pb-4">
+                    <CardTitle className="text-lg flex items-center gap-2">
+                      <MessageCircle className="w-5 h-5 text-green-500" />
+                      WhatsApp
+                    </CardTitle>
+                    <CardDescription>Configurações do botão flutuante e notificações</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    {/* Botão Flutuante */}
+                    <div className="space-y-4">
+                      <h4 className="font-medium text-sm flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-green-500"></span>
+                        Botão Flutuante
+                      </h4>
+                      <div className="space-y-2">
+                        <Label className="text-sm">Número do WhatsApp</Label>
+                        <Input
+                          value={data.whatsapp_number}
+                          onChange={(e) => setData({ ...data, whatsapp_number: e.target.value.replace(/\D/g, '') })}
+                          placeholder="5548996029392"
+                          className="bg-background/50"
+                        />
+                        <p className="text-xs text-muted-foreground">
+                          Formato: código do país + DDD + número (apenas números). Se preenchido, aparece um botão flutuante no canto da tela.
+                        </p>
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-sm">Mensagem do Botão Flutuante</Label>
+                        <Textarea
+                          value={data.whatsapp_message}
+                          onChange={(e) => setData({ ...data, whatsapp_message: e.target.value })}
+                          placeholder="Olá! Gostaria de mais informações sobre o produto."
+                          className="bg-background/50"
+                          rows={3}
+                        />
+                        <p className="text-xs text-muted-foreground">
+                          Mensagem pré-definida quando o usuário clicar no botão flutuante
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Mensagem do Checkout */}
+                    <div className="border-t border-border/30 pt-6 space-y-4">
+                      <h4 className="font-medium text-sm flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-primary"></span>
+                        Mensagem do Checkout
+                      </h4>
+                      <div className="space-y-2">
+                        <Label className="text-sm">Template da Mensagem</Label>
+                        <p className="text-xs text-muted-foreground">
+                          Use variáveis: <code className="bg-muted px-1 rounded">{'{pacote}'}</code>, <code className="bg-muted px-1 rounded">{'{creditos}'}</code>, <code className="bg-muted px-1 rounded">{'{valor}'}</code>, <code className="bg-muted px-1 rounded">{'{nome}'}</code>, <code className="bg-muted px-1 rounded">{'{whatsapp}'}</code>, <code className="bg-muted px-1 rounded">{'{email}'}</code>, <code className="bg-muted px-1 rounded">{'{link_convite}'}</code>, <code className="bg-muted px-1 rounded">{'{cupom}'}</code>, <code className="bg-muted px-1 rounded">{'{data}'}</code>
+                        </p>
+                        <Textarea
+                          value={data.checkout_whatsapp_message}
+                          onChange={(e) => setData({ ...data, checkout_whatsapp_message: e.target.value })}
+                          placeholder="🛒 *NOVO PEDIDO*..."
+                          className="bg-background/50 font-mono text-sm"
+                          rows={12}
+                        />
+                        <p className="text-xs text-muted-foreground">
+                          Mensagem enviada quando o cliente finaliza uma compra
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
               {/* Tab SEO */}
               <TabsContent value="seo">
                 <Card className="bg-card/50">
@@ -2762,6 +2834,7 @@ ttq.page();
                   <TabsTrigger value="doacao" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Doação</TabsTrigger>
                   <TabsTrigger value="conteudo" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Conteúdo</TabsTrigger>
                   <TabsTrigger value="depoimentos" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Depoimentos</TabsTrigger>
+                  <TabsTrigger value="whatsapp" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">WhatsApp</TabsTrigger>
                   <TabsTrigger value="seo" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">SEO</TabsTrigger>
                 </TabsList>
               </div>
