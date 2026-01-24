@@ -22,15 +22,17 @@ import { Loader2, Star, Check, Shield, Clock, ArrowRight, MessageCircle, Zap, He
 import { CountdownTimer } from '@/components/CountdownTimer';
 import { SocialProofNotification } from '@/components/SocialProofNotification';
 import { WhatsAppButton } from '@/components/WhatsAppButton';
+import { PricingTiersSection, PricingTier } from '@/components/PricingTiersSection';
 import { APP_VERSION, LAST_UPDATE } from '@/config/version';
 import backgroundHero from '@/assets/background-hero.png';
 import dashboardMockup from '@/assets/dashboard-mockup.png';
 
-type SectionId = 'hero' | 'video' | 'features' | 'about' | 'how-it-works' | 'secure-purchase' | 'testimonials' | 'faq' | 'cta' | 'donation';
+type SectionId = 'hero' | 'video' | 'features' | 'about' | 'how-it-works' | 'secure-purchase' | 'testimonials' | 'faq' | 'cta' | 'donation' | 'pacotes';
 
 const defaultSectionOrder: SectionId[] = [
   'hero',
   'video',
+  'pacotes',
   'features',
   'about',
   'how-it-works',
@@ -87,6 +89,7 @@ interface LandingPageData {
   testimonials: { name: string; text: string; rating: number }[];
   faqs: { question: string; answer: string }[];
   secure_purchase_items: { title: string; description: string; icon?: string }[] | null;
+  pricing_tiers: PricingTier[] | null;
   meta_title: string | null;
   meta_description: string | null;
   facebook_pixel: string | null;
@@ -1284,6 +1287,15 @@ const DynamicLandingPageInner = () => {
   const sectionRenderers: Record<SectionId, () => React.ReactNode> = {
     'hero': renderHeroSection,
     'video': renderVideoSection,
+    'pacotes': () => (
+      <PricingTiersSection
+        tiers={(page.pricing_tiers as PricingTier[]) || []}
+        primaryColor={page.color_primary || '#8B5CF6'}
+        accentColor={page.color_accent || '#22C55E'}
+        isPreview={isPreview}
+        onTierClick={() => handleSectionClick('pacotes')}
+      />
+    ),
     'features': renderFeaturesSection,
     'about': renderAboutSection,
     'how-it-works': renderHowItWorksSection,
