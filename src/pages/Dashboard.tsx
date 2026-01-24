@@ -164,7 +164,7 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen relative">
+    <div className="min-h-screen relative overflow-x-hidden">
       {/* Fixed background for entire page - identical to Index */}
       <div 
         className="fixed inset-0 -z-20"
@@ -182,11 +182,11 @@ const Dashboard = () => {
       <DashboardTour />
       
       {/* Header - identical to Index Header style */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/30 h-20 sm:h-24">
-        <div className="max-w-7xl mx-auto px-4 h-full flex items-center justify-between">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/30 h-16 sm:h-20 md:h-24">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 h-full flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 h-full py-2">
-            <img src={logoPainel} alt="Painel Créditos Lovable" className="h-full max-h-16 sm:max-h-20 object-contain" />
+            <img src={logoPainel} alt="Painel Créditos Lovable" className="h-full max-h-12 sm:max-h-16 md:max-h-20 object-contain" />
           </Link>
 
           {/* Desktop Navigation */}
@@ -335,14 +335,14 @@ const Dashboard = () => {
       </header>
 
       {/* Content - with padding for fixed header */}
-      <main className="relative z-10 max-w-7xl mx-auto px-4 pt-28 sm:pt-32 pb-12">
+      <main className="relative z-10 max-w-7xl mx-auto px-3 sm:px-4 pt-20 sm:pt-24 md:pt-28 pb-8 sm:pb-12">
         {/* Hero-like title section */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+        <div className="text-center mb-8 sm:mb-12">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4">
             <span className="text-foreground">Suas </span>
             <span className="text-gradient">Landing Pages</span>
           </h1>
-          <p className="text-lg text-muted-foreground max-w-xl mx-auto">
+          <p className="text-sm sm:text-base md:text-lg text-muted-foreground max-w-xl mx-auto px-2">
             Crie e gerencie suas páginas de vendas profissionais
           </p>
         </div>

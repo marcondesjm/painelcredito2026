@@ -16,7 +16,7 @@ import backgroundHero from '@/assets/background-hero.png';
 
 const Index = () => {
   return (
-    <div className="min-h-screen relative">
+    <div className="min-h-screen relative overflow-x-hidden">
       {/* Fixed background for entire page */}
       <div 
         className="fixed inset-0 -z-20"

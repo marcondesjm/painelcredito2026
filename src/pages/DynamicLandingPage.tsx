@@ -574,7 +574,7 @@ const DynamicLandingPageInner = () => {
     <section 
       key="hero"
       data-section-id="hero"
-      className={`relative min-h-screen flex items-center justify-center px-4 pt-32 pb-12 transition-all ${isPreview ? 'cursor-pointer' : ''} ${hoveredSection === 'hero' ? 'ring-2 ring-primary ring-inset' : ''}`}
+      className={`relative min-h-screen flex items-center justify-center px-3 sm:px-4 pt-24 sm:pt-28 md:pt-32 pb-8 sm:pb-12 transition-all ${isPreview ? 'cursor-pointer' : ''} ${hoveredSection === 'hero' ? 'ring-2 ring-primary ring-inset' : ''}`}
       onMouseEnter={() => handleSectionHover('hero')}
     >
       <div className="relative z-10 max-w-7xl mx-auto w-full">
@@ -613,7 +613,7 @@ const DynamicLandingPageInner = () => {
           <div className="text-center lg:text-left order-1 lg:order-2">
             {/* Main heading */}
             <h1 
-              className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight"
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-4 sm:mb-6 leading-tight"
               style={{ fontFamily: fontHeading }}
             >
               <span style={{ color: page.color_text || '#ffffff' }}>{(page.hero_title || page.title).split('.')[0]}. </span>
@@ -1269,7 +1269,7 @@ const DynamicLandingPageInner = () => {
   };
   return (
     <div 
-      className="min-h-screen relative"
+      className="min-h-screen relative overflow-x-hidden"
       style={{
         '--dynamic-primary': primaryHsl,
         '--dynamic-accent': accentHsl,
@@ -1292,12 +1292,12 @@ const DynamicLandingPageInner = () => {
       />
 
       {/* Header with Logo and Navigation */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/30 h-20 md:h-28">
-        <div className="max-w-7xl mx-auto px-4 h-full flex items-center justify-between">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/30 h-16 sm:h-20 md:h-24">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 h-full flex items-center justify-between">
           {page.logo_image ? (
-            <img src={page.logo_image} alt="Logo" className="h-16 md:h-24 object-contain" />
+            <img src={page.logo_image} alt="Logo" className="h-12 sm:h-16 md:h-20 object-contain" />
           ) : (
-            <h1 className="font-bold text-lg" style={{ color: `hsl(${primaryHsl})` }}>{page.title}</h1>
+            <h1 className="font-bold text-base sm:text-lg" style={{ color: `hsl(${primaryHsl})` }}>{page.title}</h1>
           )}
           
           {/* Desktop Navigation */}
