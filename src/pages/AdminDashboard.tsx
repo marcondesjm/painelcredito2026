@@ -30,7 +30,10 @@ import {
   Settings,
   MessageCircle,
   Save,
-  Download
+  Download,
+  Wallet,
+  Plus,
+  Minus
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -64,6 +67,12 @@ interface UserProfile {
   email?: string;
   role?: string;
   landing_pages_count?: number;
+  balance?: number;
+}
+
+interface UserBalance {
+  user_id: string;
+  balance: number;
 }
 
 interface LandingPageAdmin {
@@ -114,6 +123,13 @@ const AdminDashboard = () => {
   const [whatsappNumber, setWhatsappNumber] = useState('');
   const [whatsappMessage, setWhatsappMessage] = useState('');
   const [savingSettings, setSavingSettings] = useState(false);
+  
+  // Balance management
+  const [balanceModalUser, setBalanceModalUser] = useState<UserProfile | null>(null);
+  const [balanceAmount, setBalanceAmount] = useState('');
+  const [balanceType, setBalanceType] = useState<'credit' | 'debit'>('credit');
+  const [balanceDescription, setBalanceDescription] = useState('');
+  const [savingBalance, setSavingBalance] = useState(false);
   
   const [stats, setStats] = useState({
     totalUsers: 0,
@@ -188,6 +204,19 @@ const AdminDashboard = () => {
 
       if (rolesError) throw rolesError;
 
+      // Fetch user balances
+      const { data: balances, error: balancesError } = await supabase
+        .from('user_balances')
+        .select('user_id, balance');
+
+      if (balancesError) console.error('Error fetching balances:', balancesError);
+
+      // Create balance map
+      const balanceMap: Record<string, number> = {};
+      balances?.forEach(b => {
+        balanceMap[b.user_id] = b.balance;
+      });
+
       // Fetch all landing pages
       const { data: landingPages, error: pagesError } = await supabase
         .from('landing_pages')
@@ -229,11 +258,12 @@ const AdminDashboard = () => {
         roleMap[r.user_id] = r.role;
       });
 
-      // Enrich user data
+      // Enrich user data with roles and balances
       const enrichedUsers = profiles?.map(profile => ({
         ...profile,
         role: roleMap[profile.user_id] || 'user',
-        landing_pages_count: pagesPerUser[profile.user_id] || 0
+        landing_pages_count: pagesPerUser[profile.user_id] || 0,
+        balance: balanceMap[profile.user_id] || 0
       })) || [];
 
       // Map user names to landing pages
@@ -306,10 +336,54 @@ const AdminDashboard = () => {
         pendingOrders: orders.filter(o => o.id === orderId ? newStatus === 'pending' : o.status === 'pending').length
       }));
 
-      toast.success(`Status atualizado para "${newStatus}"`);
+      // If approved, refetch data to update balances
+      if (newStatus === 'approved') {
+        await fetchData();
+        toast.success('Pedido aprovado! Créditos adicionados ao saldo do usuário.');
+      } else {
+        toast.success(`Status atualizado para "${newStatus}"`);
+      }
     } catch (error) {
       console.error('Error updating order:', error);
       toast.error('Erro ao atualizar pedido');
+    }
+  };
+
+  const handleUpdateBalance = async () => {
+    if (!balanceModalUser || !balanceAmount) return;
+    
+    const amount = parseFloat(balanceAmount);
+    if (isNaN(amount) || amount <= 0) {
+      toast.error('Informe um valor válido');
+      return;
+    }
+
+    setSavingBalance(true);
+    try {
+      const { error } = await supabase.rpc('update_user_balance', {
+        _user_id: balanceModalUser.user_id,
+        _amount: amount,
+        _type: balanceType,
+        _description: balanceDescription || (balanceType === 'credit' ? 'Créditos adicionados pelo admin' : 'Créditos removidos pelo admin'),
+        _admin_id: user?.id
+      });
+
+      if (error) throw error;
+
+      toast.success(balanceType === 'credit' 
+        ? `${amount} créditos adicionados com sucesso!` 
+        : `${amount} créditos removidos com sucesso!`
+      );
+      
+      setBalanceModalUser(null);
+      setBalanceAmount('');
+      setBalanceDescription('');
+      await fetchData();
+    } catch (error) {
+      console.error('Error updating balance:', error);
+      toast.error('Erro ao atualizar saldo');
+    } finally {
+      setSavingBalance(false);
     }
   };
 
@@ -569,6 +643,7 @@ const AdminDashboard = () => {
                     <SelectContent>
                       <SelectItem value="all">Todos Status</SelectItem>
                       <SelectItem value="pending">Pendente</SelectItem>
+                      <SelectItem value="approved">Aprovado</SelectItem>
                       <SelectItem value="completed">Concluído</SelectItem>
                       <SelectItem value="cancelled">Cancelado</SelectItem>
                     </SelectContent>
@@ -643,7 +718,8 @@ const AdminDashboard = () => {
                                 onValueChange={(value) => handleUpdateOrderStatus(order.id, value)}
                               >
                                 <SelectTrigger className={`w-[120px] h-8 text-xs ${
-                                  order.status === 'completed' ? 'bg-green-500/20 border-green-500/30 text-green-400' :
+                                  order.status === 'approved' ? 'bg-green-500/20 border-green-500/30 text-green-400' :
+                                  order.status === 'completed' ? 'bg-blue-500/20 border-blue-500/30 text-blue-400' :
                                   order.status === 'cancelled' ? 'bg-red-500/20 border-red-500/30 text-red-400' :
                                   'bg-yellow-500/20 border-yellow-500/30 text-yellow-400'
                                 }`}>
@@ -651,6 +727,7 @@ const AdminDashboard = () => {
                                 </SelectTrigger>
                                 <SelectContent>
                                   <SelectItem value="pending">Pendente</SelectItem>
+                                  <SelectItem value="approved">Aprovado ✓</SelectItem>
                                   <SelectItem value="completed">Concluído</SelectItem>
                                   <SelectItem value="cancelled">Cancelado</SelectItem>
                                 </SelectContent>
@@ -704,15 +781,16 @@ const AdminDashboard = () => {
                       <TableRow>
                         <TableHead>Nome</TableHead>
                         <TableHead>Role</TableHead>
+                        <TableHead>Saldo</TableHead>
                         <TableHead>Landing Pages</TableHead>
                         <TableHead>Data de Cadastro</TableHead>
-                        <TableHead className="w-[100px]">Ações</TableHead>
+                        <TableHead className="w-[140px]">Ações</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {users.length === 0 ? (
                         <TableRow>
-                          <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
+                          <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
                             Nenhum usuário encontrado
                           </TableCell>
                         </TableRow>
@@ -741,6 +819,15 @@ const AdminDashboard = () => {
                               </Badge>
                             </TableCell>
                             <TableCell>
+                              <div className="flex items-center gap-1">
+                                <Wallet className="w-4 h-4 text-green-500" />
+                                <span className="font-semibold text-green-500">
+                                  {(profile.balance || 0).toLocaleString('pt-BR')}
+                                </span>
+                                <span className="text-xs text-muted-foreground">créditos</span>
+                              </div>
+                            </TableCell>
+                            <TableCell>
                               <Badge variant="outline">
                                 {profile.landing_pages_count} páginas
                               </Badge>
@@ -752,15 +839,42 @@ const AdminDashboard = () => {
                               </div>
                             </TableCell>
                             <TableCell>
-                              <Button 
-                                variant="ghost" 
-                                size="sm"
-                                onClick={() => setDeleteUserId(profile.user_id)}
-                                className="text-destructive hover:text-destructive"
-                                disabled={profile.role === 'admin'}
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </Button>
+                              <div className="flex gap-1">
+                                <Button 
+                                  variant="ghost" 
+                                  size="sm"
+                                  onClick={() => {
+                                    setBalanceModalUser(profile);
+                                    setBalanceType('credit');
+                                  }}
+                                  className="text-green-500 hover:text-green-400"
+                                  title="Adicionar créditos"
+                                >
+                                  <Plus className="w-4 h-4" />
+                                </Button>
+                                <Button 
+                                  variant="ghost" 
+                                  size="sm"
+                                  onClick={() => {
+                                    setBalanceModalUser(profile);
+                                    setBalanceType('debit');
+                                  }}
+                                  className="text-orange-500 hover:text-orange-400"
+                                  title="Remover créditos"
+                                >
+                                  <Minus className="w-4 h-4" />
+                                </Button>
+                                <Button 
+                                  variant="ghost" 
+                                  size="sm"
+                                  onClick={() => setDeleteUserId(profile.user_id)}
+                                  className="text-destructive hover:text-destructive"
+                                  disabled={profile.role === 'admin'}
+                                  title="Excluir usuário"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </Button>
+                              </div>
                             </TableCell>
                           </TableRow>
                         ))
@@ -952,6 +1066,78 @@ const AdminDashboard = () => {
             <AlertDialogAction onClick={handleDeleteUser} className="bg-destructive text-destructive-foreground">
               Excluir
             </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Balance Management Modal */}
+      <AlertDialog open={!!balanceModalUser} onOpenChange={() => {
+        setBalanceModalUser(null);
+        setBalanceAmount('');
+        setBalanceDescription('');
+      }}>
+        <AlertDialogContent className="sm:max-w-md">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <Wallet className="w-5 h-5" />
+              {balanceType === 'credit' ? 'Adicionar Créditos' : 'Remover Créditos'}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {balanceModalUser && (
+                <div className="space-y-3 mt-2">
+                  <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                    <span className="text-sm">Usuário:</span>
+                    <span className="font-medium text-foreground">{balanceModalUser.full_name || 'Sem nome'}</span>
+                  </div>
+                  <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                    <span className="text-sm">Saldo atual:</span>
+                    <span className="font-semibold text-green-500">{(balanceModalUser.balance || 0).toLocaleString('pt-BR')} créditos</span>
+                  </div>
+                </div>
+              )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="balance-amount">Quantidade de Créditos</Label>
+              <Input
+                id="balance-amount"
+                type="number"
+                placeholder="Ex: 500"
+                value={balanceAmount}
+                onChange={(e) => setBalanceAmount(e.target.value)}
+                className="bg-background"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="balance-description">Descrição (opcional)</Label>
+              <Input
+                id="balance-description"
+                placeholder="Ex: Recarga manual, Bônus, etc."
+                value={balanceDescription}
+                onChange={(e) => setBalanceDescription(e.target.value)}
+                className="bg-background"
+              />
+            </div>
+          </div>
+
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <Button 
+              onClick={handleUpdateBalance}
+              disabled={savingBalance || !balanceAmount}
+              className={balanceType === 'credit' ? 'bg-green-600 hover:bg-green-700' : 'bg-orange-600 hover:bg-orange-700'}
+            >
+              {savingBalance ? (
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              ) : balanceType === 'credit' ? (
+                <Plus className="w-4 h-4 mr-2" />
+              ) : (
+                <Minus className="w-4 h-4 mr-2" />
+              )}
+              {balanceType === 'credit' ? 'Adicionar' : 'Remover'} Créditos
+            </Button>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
