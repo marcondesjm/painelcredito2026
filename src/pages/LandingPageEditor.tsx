@@ -91,6 +91,11 @@ interface LandingPageData {
   checkout_coupon_label: string;
   checkout_button_text: string;
   checkout_whatsapp_message: string;
+  // PIX payment configuration
+  pix_enabled: boolean;
+  pix_key: string;
+  pix_name: string;
+  pix_qr_base: string;
 }
 
 const fontOptions = [
@@ -264,6 +269,11 @@ const defaultData: LandingPageData = {
 {cupom}
 
 📅 *Data:* {data}`,
+  // PIX payment configuration
+  pix_enabled: true,
+  pix_key: '',
+  pix_name: '',
+  pix_qr_base: '',
 };
 
 const LandingPageEditor = () => {
@@ -398,6 +408,11 @@ const LandingPageEditor = () => {
     google_tag_manager: draft.google_tag_manager || null,
     tiktok_pixel: draft.tiktok_pixel || null,
     section_order: draft.section_order,
+    // PIX payment configuration
+    pix_enabled: draft.pix_enabled ?? true,
+    pix_key: draft.pix_key || null,
+    pix_name: draft.pix_name || null,
+    pix_qr_base: draft.pix_qr_base || null,
   });
 
   // Auto-save function with debounce
@@ -1807,6 +1822,63 @@ const LandingPageEditor = () => {
                             className="bg-background/50 text-sm min-h-[200px] font-mono"
                           />
                         </div>
+                      </div>
+                    </div>
+
+                    {/* PIX Payment Configuration */}
+                    <div className="pt-4 border-t border-border/50">
+                      <h4 className="text-sm font-semibold mb-4">💳 Configuração do PIX</h4>
+                      
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between p-3 rounded-lg bg-background/50 border border-border/50">
+                          <div className="flex items-center gap-3">
+                            <Switch
+                              checked={data.pix_enabled}
+                              onCheckedChange={(checked) => setData({ ...data, pix_enabled: checked })}
+                            />
+                            <div>
+                              <p className="font-medium text-sm">Exibir PIX no Checkout</p>
+                              <p className="text-xs text-muted-foreground">Mostra QR Code com valor para pagamento</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        {data.pix_enabled && (
+                          <>
+                            <div className="space-y-1">
+                              <Label className="text-xs">Chave PIX</Label>
+                              <Input
+                                value={data.pix_key}
+                                onChange={(e) => setData({ ...data, pix_key: e.target.value })}
+                                placeholder="CPF, CNPJ, Email, Telefone ou Chave Aleatória"
+                                className="bg-background/50 text-sm"
+                              />
+                            </div>
+
+                            <div className="space-y-1">
+                              <Label className="text-xs">Nome do Beneficiário</Label>
+                              <Input
+                                value={data.pix_name}
+                                onChange={(e) => setData({ ...data, pix_name: e.target.value })}
+                                placeholder="Nome que aparecerá no pagamento"
+                                className="bg-background/50 text-sm"
+                              />
+                            </div>
+
+                            <div className="space-y-1">
+                              <Label className="text-xs">URL do QR Code Base (opcional)</Label>
+                              <Input
+                                value={data.pix_qr_base}
+                                onChange={(e) => setData({ ...data, pix_qr_base: e.target.value })}
+                                placeholder="https://nubank.com.br/cobrar/..."
+                                className="bg-background/50 text-sm"
+                              />
+                              <p className="text-xs text-muted-foreground">
+                                Cole a URL do QR Code do seu banco ou deixe vazio para gerar automaticamente
+                              </p>
+                            </div>
+                          </>
+                        )}
                       </div>
                     </div>
                   </CardContent>

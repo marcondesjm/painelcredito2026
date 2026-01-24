@@ -1577,6 +1577,10 @@ const DynamicLandingPageInner = () => {
         buttonText={page.checkout_button_text || 'Continuar para Pagamento'}
         whatsappNumber={page.whatsapp_number || ''}
         whatsappMessage={page.checkout_whatsapp_message || ''}
+        pixEnabled={(page as any).pix_enabled ?? false}
+        pixKey={(page as any).pix_key || ''}
+        pixName={(page as any).pix_name || ''}
+        pixQrBase={(page as any).pix_qr_base || ''}
       />
     </div>
   );
