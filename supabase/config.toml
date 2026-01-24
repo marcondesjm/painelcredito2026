@@ -1,1 +1,4 @@
 project_id = "flanziflwdvhrxoiaovp"
+
+[functions.notify-order]
+verify_jwt = false
