@@ -1312,12 +1312,13 @@ const DynamicLandingPageInner = () => {
             <img 
               src={page.logo_image} 
               alt="Logo" 
-              className={`object-contain ${
-                page.logo_size === 'small' ? 'h-8 sm:h-10 md:h-12' :
-                page.logo_size === 'large' ? 'h-14 sm:h-18 md:h-20' :
-                page.logo_size === 'xlarge' ? 'h-16 sm:h-20 md:h-22' :
-                'h-10 sm:h-14 md:h-16' // medium (default)
-              }`}
+              className="object-contain"
+              style={{
+                height: page.logo_size === 'small' ? '32px' :
+                        page.logo_size === 'large' ? '64px' :
+                        page.logo_size === 'xlarge' ? '80px' :
+                        '48px' // medium (default)
+              }}
             />
           ) : (
             <h1 className="font-bold text-base sm:text-lg" style={{ color: `hsl(${primaryHsl})` }}>{page.title}</h1>
