@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
+import { useAppSettings } from '@/hooks/useAppSettings';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import { 
   Users, 
   FileText, 
@@ -23,7 +26,10 @@ import {
   DollarSign,
   Phone,
   Clock,
-  RefreshCw
+  RefreshCw,
+  Settings,
+  MessageCircle,
+  Save
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -88,6 +94,7 @@ interface Order {
 
 const AdminDashboard = () => {
   const { user, loading: authLoading, signOut } = useAuth();
+  const { settings: appSettings, updateSetting, loading: settingsLoading } = useAppSettings();
   const navigate = useNavigate();
   const [isAdmin, setIsAdmin] = useState(false);
   const [checkingAdmin, setCheckingAdmin] = useState(true);
@@ -101,6 +108,11 @@ const AdminDashboard = () => {
   const [orderSearch, setOrderSearch] = useState('');
   const [orderStatusFilter, setOrderStatusFilter] = useState<string>('all');
   const [orderPageFilter, setOrderPageFilter] = useState<string>('all');
+
+  // Settings form
+  const [whatsappNumber, setWhatsappNumber] = useState('');
+  const [whatsappMessage, setWhatsappMessage] = useState('');
+  const [savingSettings, setSavingSettings] = useState(false);
   
   const [stats, setStats] = useState({
     totalUsers: 0,
@@ -111,6 +123,14 @@ const AdminDashboard = () => {
     pendingOrders: 0,
     totalRevenue: 0
   });
+
+  // Sync settings form when loaded
+  useEffect(() => {
+    if (!settingsLoading) {
+      setWhatsappNumber(appSettings.whatsapp_number || '');
+      setWhatsappMessage(appSettings.whatsapp_message || '');
+    }
+  }, [appSettings, settingsLoading]);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -466,6 +486,10 @@ const AdminDashboard = () => {
               <FileText className="w-4 h-4" />
               Páginas ({stats.totalPages})
             </TabsTrigger>
+            <TabsTrigger value="settings" className="gap-2">
+              <Settings className="w-4 h-4" />
+              Configurações
+            </TabsTrigger>
           </TabsList>
 
           {/* Orders Tab */}
@@ -776,6 +800,94 @@ const AdminDashboard = () => {
                       )}
                     </TableBody>
                   </Table>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Settings Tab */}
+          <TabsContent value="settings">
+            <Card className="bg-card/50">
+              <CardHeader>
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-full bg-whatsapp/10">
+                    <MessageCircle className="w-5 h-5 text-whatsapp" />
+                  </div>
+                  <div>
+                    <CardTitle>Botão Flutuante WhatsApp</CardTitle>
+                    <CardDescription>Configure o botão de contato que aparece em todas as páginas</CardDescription>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="grid gap-4 max-w-lg">
+                  <div className="space-y-2">
+                    <Label htmlFor="whatsapp-number">Número do WhatsApp</Label>
+                    <Input
+                      id="whatsapp-number"
+                      placeholder="5548999999999"
+                      value={whatsappNumber}
+                      onChange={(e) => setWhatsappNumber(e.target.value)}
+                      className="bg-background/50"
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      Formato: código do país + DDD + número (ex: 5548999999999)
+                    </p>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="whatsapp-message">Mensagem Padrão</Label>
+                    <Textarea
+                      id="whatsapp-message"
+                      placeholder="Olá! Gostaria de mais informações..."
+                      value={whatsappMessage}
+                      onChange={(e) => setWhatsappMessage(e.target.value)}
+                      className="bg-background/50 min-h-[100px]"
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      Mensagem que será pré-preenchida ao clicar no botão
+                    </p>
+                  </div>
+
+                  <Button 
+                    onClick={async () => {
+                      setSavingSettings(true);
+                      try {
+                        const result1 = await updateSetting('whatsapp_number', whatsappNumber);
+                        const result2 = await updateSetting('whatsapp_message', whatsappMessage);
+                        
+                        if (result1.success && result2.success) {
+                          toast.success('Configurações salvas com sucesso!');
+                        } else {
+                          toast.error('Erro ao salvar configurações');
+                        }
+                      } finally {
+                        setSavingSettings(false);
+                      }
+                    }}
+                    disabled={savingSettings}
+                    className="w-fit"
+                  >
+                    {savingSettings ? (
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    ) : (
+                      <Save className="w-4 h-4 mr-2" />
+                    )}
+                    Salvar Configurações
+                  </Button>
+                </div>
+
+                {/* Preview */}
+                <div className="border-t pt-6">
+                  <h4 className="text-sm font-medium mb-3">Preview do Botão</h4>
+                  <div className="relative bg-muted/30 rounded-lg p-8 h-32">
+                    <div className="absolute bottom-4 right-4 w-12 h-12 bg-whatsapp rounded-full flex items-center justify-center shadow-lg">
+                      <MessageCircle className="w-6 h-6 text-foreground" fill="currentColor" />
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      O botão aparecerá no canto inferior direito de todas as páginas
+                    </p>
+                  </div>
                 </div>
               </CardContent>
             </Card>

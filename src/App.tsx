@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import { InstallBanner } from "@/components/InstallBanner";
-import { WhatsAppButton } from "@/components/WhatsAppButton";
+import { GlobalWhatsAppButton } from "@/components/GlobalWhatsAppButton";
 import Index from "./pages/Index";
 import Checkout from "./pages/Checkout";
 import Auth from "./pages/Auth";
@@ -43,7 +43,7 @@ const App = () => (
             <Route path="*" element={<NotFound />} />
           </Routes>
           <InstallBanner />
-          <WhatsAppButton number="5548996029392" message="Olá! Gostaria de mais informações sobre o painel." />
+          <GlobalWhatsAppButton />
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
