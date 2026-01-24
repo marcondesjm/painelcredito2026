@@ -90,6 +90,7 @@ interface LandingPageData {
   checkout_coupon_enabled: boolean;
   checkout_coupon_label: string;
   checkout_button_text: string;
+  checkout_whatsapp_message: string;
 }
 
 const fontOptions = [
@@ -225,6 +226,21 @@ const defaultData: LandingPageData = {
   checkout_coupon_enabled: true,
   checkout_coupon_label: 'Cupom de Desconto',
   checkout_button_text: 'Continuar para Pagamento',
+  checkout_whatsapp_message: `🛒 *NOVO PEDIDO*
+
+📦 *Pacote:* {pacote}
+💳 *Créditos:* {creditos}
+💰 *Valor:* {valor}
+
+👤 *Cliente:*
+• Nome: {nome}
+• WhatsApp: {whatsapp}
+• Email: {email}
+
+{link_convite}
+{cupom}
+
+📅 *Data:* {data}`,
 };
 
 const LandingPageEditor = () => {
@@ -1752,6 +1768,19 @@ const LandingPageEditor = () => {
                             onChange={(e) => setData({ ...data, checkout_button_text: e.target.value })}
                             placeholder="Continuar para Pagamento"
                             className="bg-background/50 text-sm"
+                          />
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label className="text-xs">Mensagem do WhatsApp</Label>
+                          <p className="text-xs text-muted-foreground">
+                            Use variáveis: {'{pacote}'}, {'{creditos}'}, {'{valor}'}, {'{nome}'}, {'{whatsapp}'}, {'{email}'}, {'{link_convite}'}, {'{cupom}'}, {'{data}'}
+                          </p>
+                          <Textarea
+                            value={data.checkout_whatsapp_message}
+                            onChange={(e) => setData({ ...data, checkout_whatsapp_message: e.target.value })}
+                            placeholder="Mensagem para WhatsApp..."
+                            className="bg-background/50 text-sm min-h-[200px] font-mono"
                           />
                         </div>
                       </div>

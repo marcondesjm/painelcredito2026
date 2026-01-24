@@ -29,6 +29,7 @@ export type Database = {
           checkout_invite_placeholder: string | null
           checkout_security_text: string | null
           checkout_show_balance: boolean | null
+          checkout_whatsapp_message: string | null
           color_accent: string | null
           color_background: string | null
           color_icons: string | null
@@ -102,6 +103,7 @@ export type Database = {
           checkout_invite_placeholder?: string | null
           checkout_security_text?: string | null
           checkout_show_balance?: boolean | null
+          checkout_whatsapp_message?: string | null
           color_accent?: string | null
           color_background?: string | null
           color_icons?: string | null
@@ -175,6 +177,7 @@ export type Database = {
           checkout_invite_placeholder?: string | null
           checkout_security_text?: string | null
           checkout_show_balance?: boolean | null
+          checkout_whatsapp_message?: string | null
           color_accent?: string | null
           color_background?: string | null
           color_icons?: string | null

@@ -27,6 +27,7 @@ interface CheckoutModalProps {
   couponLabel?: string;
   buttonText?: string;
   whatsappNumber?: string;
+  whatsappMessage?: string;
 }
 
 type Step = 'checkout' | 'signup' | 'success';
@@ -47,7 +48,8 @@ export const CheckoutModal = ({
   couponEnabled = true,
   couponLabel = 'Cupom de Desconto',
   buttonText = 'Continuar para Pagamento',
-  whatsappNumber = ''
+  whatsappNumber = '',
+  whatsappMessage = ''
 }: CheckoutModalProps) => {
   const [step, setStep] = useState<Step>('checkout');
   const [loading, setLoading] = useState(false);
@@ -192,7 +194,26 @@ export const CheckoutModal = ({
       
       // Build WhatsApp message with order details
       const formattedPrice = formatPrice(tier.price_current);
-      const orderMessage = `🛒 *NOVO PEDIDO*
+      const linkConviteText = sendLinkNow && inviteLink 
+        ? `🔗 *Link de Convite:* ${inviteLink}` 
+        : '⏳ *Link de Convite:* Será enviado depois';
+      const cupomText = couponCode ? `🎫 *Cupom:* ${couponCode}` : '';
+      
+      // Use custom template if provided, otherwise use default
+      let orderMessage: string;
+      if (whatsappMessage) {
+        orderMessage = whatsappMessage
+          .replace('{pacote}', tier.name)
+          .replace('{creditos}', tier.credits.toLocaleString('pt-BR'))
+          .replace('{valor}', formattedPrice)
+          .replace('{nome}', name)
+          .replace('{whatsapp}', whatsapp)
+          .replace('{email}', email)
+          .replace('{link_convite}', linkConviteText)
+          .replace('{cupom}', cupomText)
+          .replace('{data}', new Date().toLocaleString('pt-BR'));
+      } else {
+        orderMessage = `🛒 *NOVO PEDIDO*
 
 📦 *Pacote:* ${tier.name}
 💳 *Créditos:* ${tier.credits.toLocaleString('pt-BR')}
@@ -203,10 +224,11 @@ export const CheckoutModal = ({
 • WhatsApp: ${whatsapp}
 • Email: ${email}
 
-${sendLinkNow && inviteLink ? `🔗 *Link de Convite:* ${inviteLink}` : '⏳ *Link de Convite:* Será enviado depois'}
-${couponCode ? `🎫 *Cupom:* ${couponCode}` : ''}
+${linkConviteText}
+${cupomText}
 
 📅 *Data:* ${new Date().toLocaleString('pt-BR')}`;
+      }
 
       // Send to WhatsApp if number is configured
       if (whatsappNumber) {
