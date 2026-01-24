@@ -33,6 +33,7 @@ interface LandingPageData {
   product_image: string;
   background_image: string;
   logo_image: string;
+  logo_size: 'small' | 'medium' | 'large' | 'xlarge';
   price_original: number | null;
   price_current: number | null;
   price_installments: number;
@@ -115,6 +116,7 @@ const defaultData: LandingPageData = {
   product_image: '',
   background_image: '',
   logo_image: '',
+  logo_size: 'medium' as const,
   price_original: 150,
   price_current: 99.99,
   price_installments: 12,
@@ -271,6 +273,7 @@ const LandingPageEditor = () => {
     product_image: draft.product_image || null,
     background_image: draft.background_image || null,
     logo_image: draft.logo_image || null,
+    logo_size: draft.logo_size || 'medium',
     price_original: draft.price_original,
     price_current: draft.price_current,
     price_installments: draft.price_installments,
@@ -504,6 +507,7 @@ const LandingPageEditor = () => {
         product_image: page.product_image || '',
         background_image: page.background_image || '',
         logo_image: page.logo_image || '',
+        logo_size: (page.logo_size as 'small' | 'medium' | 'large' | 'xlarge') || 'medium',
         about_title: page.about_title || '',
         about_description: page.about_description || '',
         cta_title: page.cta_title || 'Pronto para começar?',
@@ -1260,6 +1264,33 @@ const LandingPageEditor = () => {
                       <p className="text-xs text-muted-foreground">
                         Medida recomendada: <span className="font-medium text-primary">234x56px</span>
                       </p>
+                    </div>
+                    
+                    {/* Logo Size Selector */}
+                    <div className="space-y-2">
+                      <Label className="text-sm">Tamanho da Logo no Cabeçalho</Label>
+                      <div className="grid grid-cols-4 gap-2">
+                        {[
+                          { value: 'small', label: 'P', desc: 'Pequeno' },
+                          { value: 'medium', label: 'M', desc: 'Médio' },
+                          { value: 'large', label: 'G', desc: 'Grande' },
+                          { value: 'xlarge', label: 'GG', desc: 'Extra Grande' },
+                        ].map((size) => (
+                          <button
+                            key={size.value}
+                            type="button"
+                            onClick={() => setData({ ...data, logo_size: size.value as 'small' | 'medium' | 'large' | 'xlarge' })}
+                            className={`p-3 rounded-lg border transition-all text-center ${
+                              data.logo_size === size.value
+                                ? 'border-primary ring-2 ring-primary/30 bg-primary/10'
+                                : 'border-border/50 hover:border-primary/50 bg-background/50'
+                            }`}
+                          >
+                            <span className="font-bold text-lg">{size.label}</span>
+                            <p className="text-xs text-muted-foreground mt-1">{size.desc}</p>
+                          </button>
+                        ))}
+                      </div>
                     </div>
                     <div className="space-y-2">
                       <ImageUpload
