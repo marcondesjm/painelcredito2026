@@ -38,6 +38,47 @@ export type Database = {
         }
         Relationships: []
       }
+      balance_transactions: {
+        Row: {
+          admin_id: string | null
+          amount: number
+          created_at: string
+          description: string | null
+          id: string
+          order_id: string | null
+          type: string
+          user_id: string
+        }
+        Insert: {
+          admin_id?: string | null
+          amount: number
+          created_at?: string
+          description?: string | null
+          id?: string
+          order_id?: string | null
+          type: string
+          user_id: string
+        }
+        Update: {
+          admin_id?: string | null
+          amount?: number
+          created_at?: string
+          description?: string | null
+          id?: string
+          order_id?: string | null
+          type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "balance_transactions_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       landing_pages: {
         Row: {
           about_description: string | null
@@ -352,6 +393,30 @@ export type Database = {
         }
         Relationships: []
       }
+      user_balances: {
+        Row: {
+          balance: number
+          created_at: string
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          balance?: number
+          created_at?: string
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          balance?: number
+          created_at?: string
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -384,6 +449,17 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      update_user_balance: {
+        Args: {
+          _admin_id?: string
+          _amount: number
+          _description?: string
+          _order_id?: string
+          _type: string
+          _user_id: string
+        }
+        Returns: undefined
       }
     }
     Enums: {
