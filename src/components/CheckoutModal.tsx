@@ -4,7 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { ShoppingCart, Shield, Wallet, Link as LinkIcon, Tag, Loader2, CheckCircle, Eye, EyeOff, RefreshCw, X } from 'lucide-react';
+import { ShoppingCart, Shield, Wallet, Link as LinkIcon, Tag, Loader2, CheckCircle, Eye, EyeOff, RefreshCw, X, Sparkles } from 'lucide-react';
+import { Switch } from '@/components/ui/switch';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { PricingTier } from './PricingTiersSection';
@@ -56,6 +57,7 @@ export const CheckoutModal = ({
   const [user, setUser] = useState<any>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [userBalance, setUserBalance] = useState<number>(0);
+  const [useBalanceAsDiscount, setUseBalanceAsDiscount] = useState(false);
   
   // Form fields
   const [name, setName] = useState('');
@@ -65,6 +67,22 @@ export const CheckoutModal = ({
   const [inviteLink, setInviteLink] = useState('');
   const [sendLinkNow, setSendLinkNow] = useState(true);
   const [couponCode, setCouponCode] = useState('');
+
+  // Calculate discount and final price
+  const calculateDiscount = () => {
+    if (!tier || !useBalanceAsDiscount || userBalance <= 0) return { discount: 0, finalPrice: tier?.price_current || 0, creditsUsed: 0 };
+    
+    // Each credit is worth R$ 0.10 as discount (adjust this rate as needed)
+    const creditValueInReais = 0.10;
+    const maxDiscountFromBalance = userBalance * creditValueInReais;
+    const discount = Math.min(maxDiscountFromBalance, tier.price_current);
+    const creditsUsed = Math.ceil(discount / creditValueInReais);
+    const finalPrice = Math.max(0, tier.price_current - discount);
+    
+    return { discount, finalPrice, creditsUsed };
+  };
+
+  const { discount, finalPrice, creditsUsed } = calculateDiscount();
 
   useEffect(() => {
     // Check if user is logged in
@@ -183,6 +201,25 @@ export const CheckoutModal = ({
 
     setLoading(true);
     try {
+      // If using balance as discount, deduct credits first
+      if (useBalanceAsDiscount && creditsUsed > 0) {
+        const { error: balanceError } = await supabase.rpc('update_user_balance', {
+          _user_id: user.id,
+          _amount: creditsUsed,
+          _type: 'debit',
+          _description: `Desconto no pedido - ${tier.name}`,
+          _order_id: null,
+          _admin_id: null
+        });
+
+        if (balanceError) {
+          console.error('Error deducting balance:', balanceError);
+          toast.error('Erro ao aplicar desconto do saldo');
+          setLoading(false);
+          return;
+        }
+      }
+
       const { error } = await supabase
         .from('orders')
         .insert({
@@ -191,7 +228,7 @@ export const CheckoutModal = ({
           tier_id: tier.id,
           tier_name: tier.name,
           credits: tier.credits,
-          price: tier.price_current,
+          price: finalPrice, // Use final price after discount
           customer_name: name,
           customer_whatsapp: whatsapp.replace(/\D/g, ''),
           customer_email: email,
@@ -205,7 +242,11 @@ export const CheckoutModal = ({
       toast.success('Pedido registrado! Redirecionando...');
       
       // Build WhatsApp message with order details
-      const formattedPrice = formatPrice(tier.price_current);
+      const formattedPrice = formatPrice(finalPrice);
+      const formattedOriginalPrice = formatPrice(tier.price_current);
+      const discountText = useBalanceAsDiscount && discount > 0 
+        ? `💎 *Desconto (${creditsUsed} créditos):* -${formatPrice(discount)}\n💰 *Valor Original:* ${formattedOriginalPrice}\n💰 *Valor Final:* ${formattedPrice}`
+        : `💰 *Valor:* ${formattedPrice}`;
       const linkConviteText = sendLinkNow && inviteLink 
         ? `🔗 *Link de Convite:* ${inviteLink}` 
         : '⏳ *Link de Convite:* Será enviado depois';
@@ -229,7 +270,7 @@ export const CheckoutModal = ({
 
 📦 *Pacote:* ${tier.name}
 💳 *Créditos:* ${tier.credits.toLocaleString('pt-BR')}
-💰 *Valor:* ${formattedPrice}
+${discountText}
 
 👤 *Cliente:*
 • Nome: ${name}
@@ -272,6 +313,7 @@ ${cupomText}
     setPassword('');
     setInviteLink('');
     setCouponCode('');
+    setUseBalanceAsDiscount(false);
     onClose();
   };
 
@@ -303,24 +345,74 @@ ${cupomText}
                   <span className="text-xl">👛</span>
                   <span className="font-medium">{tier.credits.toLocaleString('pt-BR')} Créditos</span>
                 </div>
-                <span className="text-2xl font-bold" style={{ color: accentColor }}>
-                  {formatPrice(tier.price_current)}
-                </span>
+                <div className="text-right">
+                  {useBalanceAsDiscount && discount > 0 ? (
+                    <>
+                      <span className="text-sm text-muted-foreground line-through mr-2">
+                        {formatPrice(tier.price_current)}
+                      </span>
+                      <span className="text-2xl font-bold" style={{ color: accentColor }}>
+                        {formatPrice(finalPrice)}
+                      </span>
+                    </>
+                  ) : (
+                    <span className="text-2xl font-bold" style={{ color: accentColor }}>
+                      {formatPrice(tier.price_current)}
+                    </span>
+                  )}
+                </div>
               </div>
 
-              {/* Balance Card */}
+              {/* Balance Card with Toggle */}
               {showBalance && (
                 <div 
-                  className="flex items-center justify-between p-3 rounded-lg border-2"
+                  className="p-3 rounded-lg border-2 space-y-3"
                   style={{ borderColor: `${primaryColor}30`, backgroundColor: `${primaryColor}08` }}
                 >
-                  <div className="flex items-center gap-2">
-                    <Wallet className="w-4 h-4" style={{ color: primaryColor }} />
-                    <span className="text-sm font-medium">{balanceLabel}</span>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Wallet className="w-4 h-4" style={{ color: primaryColor }} />
+                      <span className="text-sm font-medium">{balanceLabel}</span>
+                    </div>
+                    <span className="text-sm font-bold" style={{ color: accentColor }}>
+                      {userBalance.toLocaleString('pt-BR')} créditos
+                    </span>
                   </div>
-                  <span className="text-sm font-bold" style={{ color: accentColor }}>
-                    {userBalance.toLocaleString('pt-BR')} créditos
-                  </span>
+                  
+                  {/* Use balance as discount toggle */}
+                  {userBalance > 0 && (
+                    <div 
+                      className="flex items-center justify-between p-2.5 rounded-lg"
+                      style={{ backgroundColor: useBalanceAsDiscount ? `${accentColor}15` : 'transparent' }}
+                    >
+                      <div className="flex items-center gap-2">
+                        <Sparkles className="w-4 h-4" style={{ color: useBalanceAsDiscount ? accentColor : '#888' }} />
+                        <span className="text-sm font-medium">Usar créditos como desconto</span>
+                      </div>
+                      <Switch
+                        checked={useBalanceAsDiscount}
+                        onCheckedChange={setUseBalanceAsDiscount}
+                      />
+                    </div>
+                  )}
+                  
+                  {/* Discount summary */}
+                  {useBalanceAsDiscount && discount > 0 && (
+                    <div className="pt-2 border-t border-border/30 space-y-1.5">
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-muted-foreground">Créditos usados:</span>
+                        <span className="font-medium">{creditsUsed.toLocaleString('pt-BR')}</span>
+                      </div>
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-muted-foreground">Desconto:</span>
+                        <span className="font-medium text-green-500">-{formatPrice(discount)}</span>
+                      </div>
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-muted-foreground">Saldo restante:</span>
+                        <span className="font-medium">{(userBalance - creditsUsed).toLocaleString('pt-BR')} créditos</span>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
 
