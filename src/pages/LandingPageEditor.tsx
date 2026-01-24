@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, Save, Loader2, ExternalLink, Sparkles, Plus, Trash2, Eye, EyeOff, GripVertical, Check, RefreshCw, HelpCircle, Menu } from 'lucide-react';
+import { ArrowLeft, Save, Loader2, ExternalLink, Sparkles, Plus, Trash2, Eye, EyeOff, GripVertical, Check, RefreshCw, HelpCircle, Menu, MessageCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { ImageUpload } from '@/components/ImageUpload';
 import { EditorTour, triggerEditorTour } from '@/components/EditorTour';
@@ -59,6 +59,8 @@ interface LandingPageData {
   donation_pix_name: string;
   donation_qr_code: string;
   access_key: string;
+  whatsapp_number: string;
+  whatsapp_message: string;
   features: { title: string; description: string; icon?: string }[];
   how_it_works: { step: number; title: string; description: string; image?: string }[];
   testimonials: { name: string; text: string; rating: number; avatar?: string }[];
@@ -139,6 +141,8 @@ const defaultData: LandingPageData = {
   donation_pix_name: 'Marcondes Jorge Machado',
   donation_qr_code: '',
   access_key: '',
+  whatsapp_number: '',
+  whatsapp_message: 'Olá! Gostaria de mais informações.',
   features: [
     { title: 'Dashboard Completo', description: 'Visualize todos os seus créditos em um painel intuitivo e organizado.' },
     { title: 'Relatórios Detalhados', description: 'Gere relatórios completos sobre suas movimentações financeiras.' },
@@ -295,6 +299,8 @@ const LandingPageEditor = () => {
     donation_pix_name: draft.donation_pix_name || null,
     donation_qr_code: draft.donation_qr_code || null,
     access_key: draft.access_key || null,
+    whatsapp_number: draft.whatsapp_number || null,
+    whatsapp_message: draft.whatsapp_message || null,
     features: draft.features,
     how_it_works: draft.how_it_works,
     testimonials: draft.testimonials,
@@ -516,6 +522,8 @@ const LandingPageEditor = () => {
         donation_pix_name: page.donation_pix_name || 'Marcondes Jorge Machado',
         donation_qr_code: page.donation_qr_code || '',
         access_key: page.access_key || '',
+        whatsapp_number: (page as any).whatsapp_number || '',
+        whatsapp_message: (page as any).whatsapp_message || 'Olá! Gostaria de mais informações.',
         features: (page.features as { title: string; description: string; icon?: string }[]) || [],
         how_it_works: (page.how_it_works as { step: number; title: string; description: string; image?: string }[]) || [],
         testimonials: (page.testimonials as { name: string; text: string; rating: number; avatar?: string }[]) || [],
@@ -1509,6 +1517,40 @@ const LandingPageEditor = () => {
                       aspectRatio="aspect-square"
                       placeholder="Imagem do QR Code PIX"
                     />
+
+                    <div className="border-t border-border/30 pt-4 mt-4">
+                      <h4 className="font-medium text-sm mb-3 flex items-center gap-2">
+                        <MessageCircle className="w-4 h-4 text-green-500" />
+                        WhatsApp
+                      </h4>
+                      <div className="space-y-4">
+                        <div className="space-y-2">
+                          <Label className="text-sm">Número do WhatsApp</Label>
+                          <Input
+                            value={data.whatsapp_number}
+                            onChange={(e) => setData({ ...data, whatsapp_number: e.target.value.replace(/\D/g, '') })}
+                            placeholder="5548996029392"
+                            className="bg-background/50"
+                          />
+                          <p className="text-xs text-muted-foreground">
+                            Formato: código do país + DDD + número (apenas números)
+                          </p>
+                        </div>
+                        <div className="space-y-2">
+                          <Label className="text-sm">Mensagem Pré-definida</Label>
+                          <Textarea
+                            value={data.whatsapp_message}
+                            onChange={(e) => setData({ ...data, whatsapp_message: e.target.value })}
+                            placeholder="Olá! Gostaria de mais informações."
+                            className="bg-background/50"
+                            rows={2}
+                          />
+                          <p className="text-xs text-muted-foreground">
+                            Mensagem que aparecerá automaticamente quando o usuário clicar no botão
+                          </p>
+                        </div>
+                      </div>
+                    </div>
 
                     <div className="border-t border-border/30 pt-4 mt-4">
                       <h4 className="font-medium text-sm mb-3">Chave de Acesso</h4>
