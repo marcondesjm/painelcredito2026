@@ -21,6 +21,7 @@ interface PricingTiersSectionProps {
   accentColor?: string;
   isPreview?: boolean;
   onTierClick?: (tier: PricingTier) => void;
+  onBuyClick?: (tier: PricingTier) => void;
 }
 
 const formatPrice = (value: number) => {
@@ -42,7 +43,8 @@ export const PricingTiersSection = ({
   primaryColor = '#8B5CF6',
   accentColor = '#22C55E',
   isPreview = false,
-  onTierClick
+  onTierClick,
+  onBuyClick
 }: PricingTiersSectionProps) => {
   const handleTierSelect = (tier: PricingTier) => {
     if (isPreview) {
@@ -50,6 +52,13 @@ export const PricingTiersSection = ({
       return;
     }
     
+    // If onBuyClick is provided, use it (opens checkout modal)
+    if (onBuyClick) {
+      onBuyClick(tier);
+      return;
+    }
+    
+    // Fallback to external checkout link
     if (tier.checkout_link) {
       if (tier.checkout_link.startsWith('http://') || tier.checkout_link.startsWith('https://')) {
         window.open(tier.checkout_link, '_blank', 'noopener,noreferrer');
