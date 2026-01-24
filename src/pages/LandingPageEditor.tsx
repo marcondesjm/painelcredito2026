@@ -67,6 +67,7 @@ interface LandingPageData {
   testimonials: { name: string; text: string; rating: number; avatar?: string }[];
   faqs: { question: string; answer: string }[];
   secure_purchase_items: { title: string; description: string; icon?: string }[];
+  pricing_tiers: { id: string; name: string; credits: number; price_original: number; price_current: number; available: number; sales: number; checkout_link: string; highlight?: boolean }[];
   meta_title: string;
   meta_description: string;
   og_image: string;
@@ -178,6 +179,7 @@ const defaultData: LandingPageData = {
     { title: 'Suporte Disponível', description: 'Equipe pronta para ajudar sempre que precisar.', icon: 'Headphones' },
     { title: 'Atualizações Gratuitas', description: 'Melhorias constantes sem custo adicional.', icon: 'RefreshCw' },
   ],
+  pricing_tiers: [],
   meta_title: '',
   meta_description: '',
   og_image: '',
@@ -531,6 +533,7 @@ const LandingPageEditor = () => {
         testimonials: (page.testimonials as { name: string; text: string; rating: number; avatar?: string }[]) || [],
         faqs: (page.faqs as { question: string; answer: string }[]) || [],
         secure_purchase_items: (page.secure_purchase_items as { title: string; description: string; icon?: string }[]) || defaultData.secure_purchase_items,
+        pricing_tiers: (page.pricing_tiers as { id: string; name: string; credits: number; price_original: number; price_current: number; available: number; sales: number; checkout_link: string; highlight?: boolean }[]) || [],
         price_original: page.price_original ? Number(page.price_original) : null,
         price_current: page.price_current ? Number(page.price_current) : null,
         meta_title: page.meta_title || '',
@@ -665,6 +668,37 @@ const LandingPageEditor = () => {
       ...data,
       faqs: (data.faqs || []).filter((_, i) => i !== index)
     });
+  };
+
+  const addPricingTier = () => {
+    const newTier = {
+      id: crypto.randomUUID(),
+      name: 'OFERTA ESPECIAL',
+      credits: 1000,
+      price_original: 297,
+      price_current: 97,
+      available: 10,
+      sales: 0,
+      checkout_link: '',
+      highlight: false
+    };
+    setData({
+      ...data,
+      pricing_tiers: [...(data.pricing_tiers || []), newTier]
+    });
+  };
+
+  const removePricingTier = (index: number) => {
+    setData({
+      ...data,
+      pricing_tiers: (data.pricing_tiers || []).filter((_, i) => i !== index)
+    });
+  };
+
+  const updatePricingTier = (index: number, field: string, value: any) => {
+    const tiers = [...(data.pricing_tiers || [])];
+    tiers[index] = { ...tiers[index], [field]: value };
+    setData({ ...data, pricing_tiers: tiers });
   };
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -853,6 +887,7 @@ const LandingPageEditor = () => {
                   <TabsTrigger value="imagens" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Imagens</TabsTrigger>
                   <TabsTrigger value="video" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Vídeo</TabsTrigger>
                   <TabsTrigger value="precos" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Preços</TabsTrigger>
+                  <TabsTrigger value="pacotes" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Pacotes</TabsTrigger>
                   <TabsTrigger value="sobre" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Sobre</TabsTrigger>
                   <TabsTrigger value="doacao" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Doação</TabsTrigger>
                   <TabsTrigger value="compra-segura" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Compra Segura</TabsTrigger>
@@ -1400,6 +1435,141 @@ const LandingPageEditor = () => {
                         </div>
                       </div>
                     </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              {/* Tab Pacotes */}
+              <TabsContent value="pacotes">
+                <Card className="bg-card/50">
+                  <CardHeader className="pb-4">
+                    <CardTitle className="text-lg">Pacotes de Créditos</CardTitle>
+                    <CardDescription>Configure diferentes pacotes para venda com links externos (Kiwify, Hotmart, etc)</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {(data.pricing_tiers || []).length === 0 && (
+                      <div className="text-center py-8 text-muted-foreground">
+                        <p className="mb-2">Nenhum pacote criado ainda</p>
+                        <p className="text-xs">Adicione pacotes de créditos para exibir na landing page</p>
+                      </div>
+                    )}
+                    
+                    {(data.pricing_tiers || []).map((tier, index) => (
+                      <div key={tier.id} className="p-4 rounded-lg bg-background/50 border border-border/50 space-y-3">
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="font-medium text-sm">Pacote {index + 1}</span>
+                          <div className="flex items-center gap-2">
+                            <label className="flex items-center gap-2 text-xs">
+                              <input
+                                type="checkbox"
+                                checked={tier.highlight || false}
+                                onChange={(e) => updatePricingTier(index, 'highlight', e.target.checked)}
+                                className="rounded border-border"
+                              />
+                              Destaque
+                            </label>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => removePricingTier(index)}
+                              className="h-7 text-destructive hover:text-destructive"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </div>
+                        
+                        <div className="grid grid-cols-2 gap-3">
+                          <div className="space-y-1">
+                            <Label className="text-xs">Nome/Título</Label>
+                            <Input
+                              value={tier.name}
+                              onChange={(e) => updatePricingTier(index, 'name', e.target.value)}
+                              placeholder="OFERTA ESPECIAL"
+                              className="bg-background/50 text-sm"
+                            />
+                          </div>
+                          <div className="space-y-1">
+                            <Label className="text-xs">Créditos</Label>
+                            <Input
+                              type="number"
+                              value={tier.credits}
+                              onChange={(e) => updatePricingTier(index, 'credits', Number(e.target.value))}
+                              placeholder="1000"
+                              className="bg-background/50 text-sm"
+                            />
+                          </div>
+                        </div>
+                        
+                        <div className="grid grid-cols-2 gap-3">
+                          <div className="space-y-1">
+                            <Label className="text-xs">Preço Original (De)</Label>
+                            <Input
+                              type="number"
+                              step="0.01"
+                              value={tier.price_original}
+                              onChange={(e) => updatePricingTier(index, 'price_original', Number(e.target.value))}
+                              placeholder="297.00"
+                              className="bg-background/50 text-sm"
+                            />
+                          </div>
+                          <div className="space-y-1">
+                            <Label className="text-xs">Preço Atual (Por)</Label>
+                            <Input
+                              type="number"
+                              step="0.01"
+                              value={tier.price_current}
+                              onChange={(e) => updatePricingTier(index, 'price_current', Number(e.target.value))}
+                              placeholder="97.00"
+                              className="bg-background/50 text-sm"
+                            />
+                          </div>
+                        </div>
+                        
+                        <div className="grid grid-cols-2 gap-3">
+                          <div className="space-y-1">
+                            <Label className="text-xs">Disponíveis</Label>
+                            <Input
+                              type="number"
+                              value={tier.available}
+                              onChange={(e) => updatePricingTier(index, 'available', Number(e.target.value))}
+                              placeholder="10"
+                              className="bg-background/50 text-sm"
+                            />
+                          </div>
+                          <div className="space-y-1">
+                            <Label className="text-xs">Vendas</Label>
+                            <Input
+                              type="number"
+                              value={tier.sales}
+                              onChange={(e) => updatePricingTier(index, 'sales', Number(e.target.value))}
+                              placeholder="50"
+                              className="bg-background/50 text-sm"
+                            />
+                          </div>
+                        </div>
+                        
+                        <div className="space-y-1">
+                          <Label className="text-xs">Link de Checkout (Kiwify, Hotmart, etc)</Label>
+                          <Input
+                            value={tier.checkout_link}
+                            onChange={(e) => updatePricingTier(index, 'checkout_link', e.target.value)}
+                            placeholder="https://pay.kiwify.com.br/..."
+                            className="bg-background/50 text-sm"
+                          />
+                          <p className="text-xs text-muted-foreground">Cole o link de pagamento externo</p>
+                        </div>
+                      </div>
+                    ))}
+                    
+                    <Button
+                      variant="outline"
+                      onClick={addPricingTier}
+                      className="w-full border-dashed"
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      Adicionar Pacote
+                    </Button>
                   </CardContent>
                 </Card>
               </TabsContent>

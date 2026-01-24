@@ -58,6 +58,7 @@ export type Database = {
           price_current: number | null
           price_installments: number | null
           price_original: number | null
+          pricing_tiers: Json | null
           product_image: string | null
           section_order: Json | null
           secure_purchase_items: Json | null
@@ -117,6 +118,7 @@ export type Database = {
           price_current?: number | null
           price_installments?: number | null
           price_original?: number | null
+          pricing_tiers?: Json | null
           product_image?: string | null
           section_order?: Json | null
           secure_purchase_items?: Json | null
@@ -176,6 +178,7 @@ export type Database = {
           price_current?: number | null
           price_installments?: number | null
           price_original?: number | null
+          pricing_tiers?: Json | null
           product_image?: string | null
           section_order?: Json | null
           secure_purchase_items?: Json | null
