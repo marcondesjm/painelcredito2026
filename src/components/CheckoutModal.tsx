@@ -165,12 +165,27 @@ export const CheckoutModal = ({
   useEffect(() => {
     if (!isOpen || !user?.id) return;
 
-    // Periodic refetch while modal is open
-    const intervalId = window.setInterval(() => {
-      fetchBalance(user.id);
-    }, 15000);
+    // Subscribe to realtime changes on user_balances
+    const channel = supabase
+      .channel(`balance-${user.id}`)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'user_balances',
+          filter: `user_id=eq.${user.id}`,
+        },
+        (payload) => {
+          console.log('Realtime balance update:', payload);
+          if (payload.new && 'balance' in payload.new) {
+            setUserBalance((payload.new as { balance: number }).balance);
+          }
+        }
+      )
+      .subscribe();
 
-    // Refetch when user returns to the tab/window
+    // Refetch when user returns to the tab/window (as fallback)
     const handleFocus = () => fetchBalance(user.id);
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') fetchBalance(user.id);
@@ -180,7 +195,7 @@ export const CheckoutModal = ({
     document.addEventListener('visibilitychange', handleVisibilityChange);
 
     return () => {
-      window.clearInterval(intervalId);
+      supabase.removeChannel(channel);
       window.removeEventListener('focus', handleFocus);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
