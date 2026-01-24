@@ -38,6 +38,94 @@ function sanitizeString(str: string, maxLength: number = 25): string {
     .trim();
 }
 
+// Valida CPF
+function isValidCPF(cpf: string): boolean {
+  const cleanCpf = cpf.replace(/\D/g, '');
+  
+  if (cleanCpf.length !== 11) return false;
+  if (/^(\d)\1+$/.test(cleanCpf)) return false; // Todos dígitos iguais
+  
+  // Validação dos dígitos verificadores
+  let sum = 0;
+  for (let i = 0; i < 9; i++) {
+    sum += parseInt(cleanCpf[i]) * (10 - i);
+  }
+  let digit1 = (sum * 10) % 11;
+  if (digit1 === 10) digit1 = 0;
+  if (digit1 !== parseInt(cleanCpf[9])) return false;
+  
+  sum = 0;
+  for (let i = 0; i < 10; i++) {
+    sum += parseInt(cleanCpf[i]) * (11 - i);
+  }
+  let digit2 = (sum * 10) % 11;
+  if (digit2 === 10) digit2 = 0;
+  if (digit2 !== parseInt(cleanCpf[10])) return false;
+  
+  return true;
+}
+
+// Valida CNPJ
+function isValidCNPJ(cnpj: string): boolean {
+  const cleanCnpj = cnpj.replace(/\D/g, '');
+  
+  if (cleanCnpj.length !== 14) return false;
+  if (/^(\d)\1+$/.test(cleanCnpj)) return false;
+  
+  const weights1 = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+  const weights2 = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+  
+  let sum = 0;
+  for (let i = 0; i < 12; i++) {
+    sum += parseInt(cleanCnpj[i]) * weights1[i];
+  }
+  let digit1 = sum % 11;
+  digit1 = digit1 < 2 ? 0 : 11 - digit1;
+  if (digit1 !== parseInt(cleanCnpj[12])) return false;
+  
+  sum = 0;
+  for (let i = 0; i < 13; i++) {
+    sum += parseInt(cleanCnpj[i]) * weights2[i];
+  }
+  let digit2 = sum % 11;
+  digit2 = digit2 < 2 ? 0 : 11 - digit2;
+  if (digit2 !== parseInt(cleanCnpj[13])) return false;
+  
+  return true;
+}
+
+// Valida Email
+function isValidEmail(email: string): boolean {
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  return emailRegex.test(email) && email.length <= 77;
+}
+
+// Valida Telefone (formato brasileiro)
+function isValidPhone(phone: string): boolean {
+  const cleanPhone = phone.replace(/\D/g, '');
+  // Com DDI: 55 + DDD (2) + número (8-9) = 12-13 dígitos
+  // Sem DDI: DDD (2) + número (8-9) = 10-11 dígitos
+  if (cleanPhone.length < 10 || cleanPhone.length > 13) return false;
+  
+  // Se começa com 55, valida formato brasileiro
+  if (cleanPhone.startsWith('55')) {
+    const withoutDDI = cleanPhone.slice(2);
+    return withoutDDI.length >= 10 && withoutDDI.length <= 11;
+  }
+  
+  return cleanPhone.length >= 10 && cleanPhone.length <= 11;
+}
+
+// Valida chave aleatória (EVP - 32 caracteres UUID sem hífens ou com)
+function isValidEVP(key: string): boolean {
+  // UUID com hífens: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx (36 chars)
+  // UUID sem hífens: 32 chars hexadecimais
+  const uuidRegex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+  const cleanUuidRegex = /^[0-9a-fA-F]{32}$/;
+  
+  return uuidRegex.test(key) || cleanUuidRegex.test(key);
+}
+
 // Detecta o tipo de chave PIX
 function getPixKeyType(key: string): 'CPF' | 'CNPJ' | 'PHONE' | 'EMAIL' | 'EVP' {
   const cleanKey = key.replace(/\D/g, '');
@@ -60,6 +148,54 @@ function getPixKeyType(key: string): 'CPF' | 'CNPJ' | 'PHONE' | 'EMAIL' | 'EVP' 
   
   // Chave aleatória (EVP)
   return 'EVP';
+}
+
+export interface PixKeyValidationResult {
+  isValid: boolean;
+  type: 'CPF' | 'CNPJ' | 'PHONE' | 'EMAIL' | 'EVP';
+  error?: string;
+}
+
+/**
+ * Valida uma chave PIX e retorna o resultado
+ */
+export function validatePixKey(key: string): PixKeyValidationResult {
+  if (!key || key.trim() === '') {
+    return { isValid: false, type: 'EVP', error: 'Chave PIX não pode estar vazia' };
+  }
+
+  const trimmedKey = key.trim();
+  const type = getPixKeyType(trimmedKey);
+
+  switch (type) {
+    case 'CPF':
+      if (!isValidCPF(trimmedKey)) {
+        return { isValid: false, type, error: 'CPF inválido. Verifique os dígitos.' };
+      }
+      break;
+    case 'CNPJ':
+      if (!isValidCNPJ(trimmedKey)) {
+        return { isValid: false, type, error: 'CNPJ inválido. Verifique os dígitos.' };
+      }
+      break;
+    case 'EMAIL':
+      if (!isValidEmail(trimmedKey)) {
+        return { isValid: false, type, error: 'Email inválido. Verifique o formato.' };
+      }
+      break;
+    case 'PHONE':
+      if (!isValidPhone(trimmedKey)) {
+        return { isValid: false, type, error: 'Telefone inválido. Use formato: +5511999999999' };
+      }
+      break;
+    case 'EVP':
+      if (!isValidEVP(trimmedKey)) {
+        return { isValid: false, type, error: 'Chave aleatória inválida. Deve ser um UUID válido.' };
+      }
+      break;
+  }
+
+  return { isValid: true, type };
 }
 
 // Formata a chave PIX conforme o tipo
