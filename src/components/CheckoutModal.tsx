@@ -26,6 +26,7 @@ interface CheckoutModalProps {
   couponEnabled?: boolean;
   couponLabel?: string;
   buttonText?: string;
+  whatsappNumber?: string;
 }
 
 type Step = 'checkout' | 'signup' | 'success';
@@ -45,7 +46,8 @@ export const CheckoutModal = ({
   invitePlaceholder = 'https://lovable.dev/invite/...',
   couponEnabled = true,
   couponLabel = 'Cupom de Desconto',
-  buttonText = 'Continuar para Pagamento'
+  buttonText = 'Continuar para Pagamento',
+  whatsappNumber = ''
 }: CheckoutModalProps) => {
   const [step, setStep] = useState<Step>('checkout');
   const [loading, setLoading] = useState(false);
@@ -186,9 +188,34 @@ export const CheckoutModal = ({
 
       if (error) throw error;
 
-      toast.success('Pedido registrado! Redirecionando para pagamento...');
+      toast.success('Pedido registrado! Redirecionando...');
       
-      // Redirect to checkout link if available
+      // Build WhatsApp message with order details
+      const formattedPrice = formatPrice(tier.price_current);
+      const orderMessage = `🛒 *NOVO PEDIDO*
+
+📦 *Pacote:* ${tier.name}
+💳 *Créditos:* ${tier.credits.toLocaleString('pt-BR')}
+💰 *Valor:* ${formattedPrice}
+
+👤 *Cliente:*
+• Nome: ${name}
+• WhatsApp: ${whatsapp}
+• Email: ${email}
+
+${sendLinkNow && inviteLink ? `🔗 *Link de Convite:* ${inviteLink}` : '⏳ *Link de Convite:* Será enviado depois'}
+${couponCode ? `🎫 *Cupom:* ${couponCode}` : ''}
+
+📅 *Data:* ${new Date().toLocaleString('pt-BR')}`;
+
+      // Send to WhatsApp if number is configured
+      if (whatsappNumber) {
+        const cleanNumber = whatsappNumber.replace(/\D/g, '');
+        const encodedMessage = encodeURIComponent(orderMessage);
+        window.open(`https://wa.me/${cleanNumber}?text=${encodedMessage}`, '_blank');
+      }
+      
+      // Also redirect to checkout link if available
       if (tier.checkout_link) {
         window.open(tier.checkout_link, '_blank');
         handleClose();
