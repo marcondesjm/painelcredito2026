@@ -20,6 +20,15 @@ export type Database = {
           about_title: string | null
           access_key: string | null
           background_image: string | null
+          checkout_balance_label: string | null
+          checkout_button_text: string | null
+          checkout_coupon_enabled: boolean | null
+          checkout_coupon_label: string | null
+          checkout_invite_enabled: boolean | null
+          checkout_invite_label: string | null
+          checkout_invite_placeholder: string | null
+          checkout_security_text: string | null
+          checkout_show_balance: boolean | null
           color_accent: string | null
           color_background: string | null
           color_icons: string | null
@@ -84,6 +93,15 @@ export type Database = {
           about_title?: string | null
           access_key?: string | null
           background_image?: string | null
+          checkout_balance_label?: string | null
+          checkout_button_text?: string | null
+          checkout_coupon_enabled?: boolean | null
+          checkout_coupon_label?: string | null
+          checkout_invite_enabled?: boolean | null
+          checkout_invite_label?: string | null
+          checkout_invite_placeholder?: string | null
+          checkout_security_text?: string | null
+          checkout_show_balance?: boolean | null
           color_accent?: string | null
           color_background?: string | null
           color_icons?: string | null
@@ -148,6 +166,15 @@ export type Database = {
           about_title?: string | null
           access_key?: string | null
           background_image?: string | null
+          checkout_balance_label?: string | null
+          checkout_button_text?: string | null
+          checkout_coupon_enabled?: boolean | null
+          checkout_coupon_label?: string | null
+          checkout_invite_enabled?: boolean | null
+          checkout_invite_label?: string | null
+          checkout_invite_placeholder?: string | null
+          checkout_security_text?: string | null
+          checkout_show_balance?: boolean | null
           color_accent?: string | null
           color_background?: string | null
           color_icons?: string | null

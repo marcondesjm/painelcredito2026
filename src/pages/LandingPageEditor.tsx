@@ -80,6 +80,16 @@ interface LandingPageData {
   google_tag_manager: string;
   tiktok_pixel: string;
   section_order: SectionId[];
+  // Checkout configuration
+  checkout_show_balance: boolean;
+  checkout_balance_label: string;
+  checkout_security_text: string;
+  checkout_invite_enabled: boolean;
+  checkout_invite_label: string;
+  checkout_invite_placeholder: string;
+  checkout_coupon_enabled: boolean;
+  checkout_coupon_label: string;
+  checkout_button_text: string;
 }
 
 const fontOptions = [
@@ -205,6 +215,16 @@ const defaultData: LandingPageData = {
   google_tag_manager: '',
   tiktok_pixel: '',
   section_order: defaultSectionOrder,
+  // Checkout configuration
+  checkout_show_balance: true,
+  checkout_balance_label: 'Seu saldo:',
+  checkout_security_text: 'Pagamento 100% seguro',
+  checkout_invite_enabled: true,
+  checkout_invite_label: 'Link de Convite',
+  checkout_invite_placeholder: 'https://lovable.dev/invite/...',
+  checkout_coupon_enabled: true,
+  checkout_coupon_label: 'Cupom de Desconto',
+  checkout_button_text: 'Continuar para Pagamento',
 };
 
 const LandingPageEditor = () => {
@@ -1623,6 +1643,119 @@ const LandingPageEditor = () => {
                       <Plus className="w-4 h-4 mr-2" />
                       Adicionar Pacote
                     </Button>
+
+                    {/* Checkout Configuration */}
+                    <div className="pt-4 border-t border-border/50">
+                      <h4 className="text-sm font-semibold mb-4">Configurações do Checkout</h4>
+                      
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between p-3 rounded-lg bg-background/50 border border-border/50">
+                          <div className="flex items-center gap-3">
+                            <Switch
+                              checked={data.checkout_show_balance}
+                              onCheckedChange={(checked) => setData({ ...data, checkout_show_balance: checked })}
+                            />
+                            <div>
+                              <p className="font-medium text-sm">Exibir Saldo</p>
+                              <p className="text-xs text-muted-foreground">Mostra o saldo do cliente</p>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {data.checkout_show_balance && (
+                          <div className="space-y-1">
+                            <Label className="text-xs">Texto do Saldo</Label>
+                            <Input
+                              value={data.checkout_balance_label}
+                              onChange={(e) => setData({ ...data, checkout_balance_label: e.target.value })}
+                              placeholder="Seu saldo:"
+                              className="bg-background/50 text-sm"
+                            />
+                          </div>
+                        )}
+
+                        <div className="space-y-1">
+                          <Label className="text-xs">Texto de Segurança</Label>
+                          <Input
+                            value={data.checkout_security_text}
+                            onChange={(e) => setData({ ...data, checkout_security_text: e.target.value })}
+                            placeholder="Pagamento 100% seguro"
+                            className="bg-background/50 text-sm"
+                          />
+                        </div>
+
+                        <div className="flex items-center justify-between p-3 rounded-lg bg-background/50 border border-border/50">
+                          <div className="flex items-center gap-3">
+                            <Switch
+                              checked={data.checkout_invite_enabled}
+                              onCheckedChange={(checked) => setData({ ...data, checkout_invite_enabled: checked })}
+                            />
+                            <div>
+                              <p className="font-medium text-sm">Link de Convite</p>
+                              <p className="text-xs text-muted-foreground">Permite adicionar link de convite</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        {data.checkout_invite_enabled && (
+                          <div className="grid grid-cols-2 gap-3">
+                            <div className="space-y-1">
+                              <Label className="text-xs">Rótulo</Label>
+                              <Input
+                                value={data.checkout_invite_label}
+                                onChange={(e) => setData({ ...data, checkout_invite_label: e.target.value })}
+                                placeholder="Link de Convite"
+                                className="bg-background/50 text-sm"
+                              />
+                            </div>
+                            <div className="space-y-1">
+                              <Label className="text-xs">Placeholder</Label>
+                              <Input
+                                value={data.checkout_invite_placeholder}
+                                onChange={(e) => setData({ ...data, checkout_invite_placeholder: e.target.value })}
+                                placeholder="https://..."
+                                className="bg-background/50 text-sm"
+                              />
+                            </div>
+                          </div>
+                        )}
+
+                        <div className="flex items-center justify-between p-3 rounded-lg bg-background/50 border border-border/50">
+                          <div className="flex items-center gap-3">
+                            <Switch
+                              checked={data.checkout_coupon_enabled}
+                              onCheckedChange={(checked) => setData({ ...data, checkout_coupon_enabled: checked })}
+                            />
+                            <div>
+                              <p className="font-medium text-sm">Cupom de Desconto</p>
+                              <p className="text-xs text-muted-foreground">Permite usar cupom</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        {data.checkout_coupon_enabled && (
+                          <div className="space-y-1">
+                            <Label className="text-xs">Rótulo do Cupom</Label>
+                            <Input
+                              value={data.checkout_coupon_label}
+                              onChange={(e) => setData({ ...data, checkout_coupon_label: e.target.value })}
+                              placeholder="Cupom de Desconto"
+                              className="bg-background/50 text-sm"
+                            />
+                          </div>
+                        )}
+
+                        <div className="space-y-1">
+                          <Label className="text-xs">Texto do Botão</Label>
+                          <Input
+                            value={data.checkout_button_text}
+                            onChange={(e) => setData({ ...data, checkout_button_text: e.target.value })}
+                            placeholder="Continuar para Pagamento"
+                            className="bg-background/50 text-sm"
+                          />
+                        </div>
+                      </div>
+                    </div>
                   </CardContent>
                 </Card>
               </TabsContent>
