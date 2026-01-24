@@ -89,7 +89,7 @@ export const LoginModal = ({ open, onOpenChange }: LoginModalProps) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md bg-card border-border">
+      <DialogContent className="max-w-[95vw] sm:max-w-md bg-card border-border mx-auto max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-center text-xl font-bold text-foreground">
             Área de Membros
