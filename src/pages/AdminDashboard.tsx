@@ -29,7 +29,8 @@ import {
   RefreshCw,
   Settings,
   MessageCircle,
-  Save
+  Save,
+  Download
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -501,10 +502,52 @@ const AdminDashboard = () => {
                     <CardTitle>Pedidos</CardTitle>
                     <CardDescription>Gerencie todos os pedidos da plataforma</CardDescription>
                   </div>
-                  <Button variant="outline" size="sm" onClick={() => fetchData()}>
-                    <RefreshCw className="w-4 h-4 mr-2" />
-                    Atualizar
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={() => {
+                        // Export filtered orders to CSV
+                        const headers = ['ID', 'Cliente', 'Email', 'WhatsApp', 'Pacote', 'Créditos', 'Valor', 'Status', 'Página', 'Cupom', 'Link Convite', 'Data'];
+                        const csvData = filteredOrders.map(order => [
+                          order.id,
+                          order.customer_name,
+                          order.customer_email,
+                          order.customer_whatsapp,
+                          order.tier_name,
+                          order.credits,
+                          order.price,
+                          order.status,
+                          order.landing_page_title || 'N/A',
+                          order.coupon_code || '',
+                          order.invite_link || '',
+                          formatDate(order.created_at)
+                        ]);
+                        
+                        const csvContent = [
+                          headers.join(';'),
+                          ...csvData.map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(';'))
+                        ].join('\n');
+                        
+                        const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+                        const link = document.createElement('a');
+                        link.href = URL.createObjectURL(blob);
+                        link.download = `pedidos_${new Date().toISOString().split('T')[0]}.csv`;
+                        link.click();
+                        URL.revokeObjectURL(link.href);
+                        
+                        toast.success(`${filteredOrders.length} pedidos exportados!`);
+                      }}
+                      disabled={filteredOrders.length === 0}
+                    >
+                      <Download className="w-4 h-4 mr-2" />
+                      Exportar CSV
+                    </Button>
+                    <Button variant="outline" size="sm" onClick={() => fetchData()}>
+                      <RefreshCw className="w-4 h-4 mr-2" />
+                      Atualizar
+                    </Button>
+                  </div>
                 </div>
               </CardHeader>
               <CardContent className="space-y-4">
