@@ -167,8 +167,15 @@ export const CheckoutModal = ({
 
       if (error) throw error;
 
-      setStep('success');
-      toast.success('Pedido enviado com sucesso!');
+      toast.success('Pedido registrado! Redirecionando para pagamento...');
+      
+      // Redirect to checkout link if available
+      if (tier.checkout_link) {
+        window.open(tier.checkout_link, '_blank');
+        handleClose();
+      } else {
+        setStep('success');
+      }
     } catch (error: any) {
       console.error('Order error:', error);
       toast.error(error.message || 'Erro ao enviar pedido');
