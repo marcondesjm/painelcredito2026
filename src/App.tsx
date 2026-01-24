@@ -13,6 +13,7 @@ import LandingPageEditor from "./pages/LandingPageEditor";
 import DynamicLandingPage from "./pages/DynamicLandingPage";
 import TermsOfUse from "./pages/TermsOfUse";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
+import Install from "./pages/Install";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -35,6 +36,7 @@ const App = () => (
             <Route path="/p/:slug" element={<DynamicLandingPage />} />
             <Route path="/termos" element={<TermsOfUse />} />
             <Route path="/privacidade" element={<PrivacyPolicy />} />
+            <Route path="/install" element={<Install />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
