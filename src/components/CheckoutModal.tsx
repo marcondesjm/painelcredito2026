@@ -58,6 +58,7 @@ export const CheckoutModal = ({
   const [showPassword, setShowPassword] = useState(false);
   const [userBalance, setUserBalance] = useState<number>(0);
   const [useBalanceAsDiscount, setUseBalanceAsDiscount] = useState(false);
+  const [loadingBalance, setLoadingBalance] = useState(false);
   
   // Form fields
   const [name, setName] = useState('');
@@ -84,20 +85,31 @@ export const CheckoutModal = ({
 
   const { discount, finalPrice, creditsUsed } = calculateDiscount();
 
-  const fetchBalance = useCallback(async (userId: string) => {
-    const { data: balanceData, error: balanceError } = await supabase
-      .from('user_balances')
-      .select('balance')
-      .eq('user_id', userId)
-      .maybeSingle();
+  const fetchBalance = useCallback(async (userId: string, showLoading = false) => {
+    if (showLoading) setLoadingBalance(true);
+    try {
+      const { data: balanceData, error: balanceError } = await supabase
+        .from('user_balances')
+        .select('balance')
+        .eq('user_id', userId)
+        .maybeSingle();
 
-    if (balanceError) {
-      console.error('Error fetching user balance:', balanceError);
-      return;
+      if (balanceError) {
+        console.error('Error fetching user balance:', balanceError);
+        return;
+      }
+
+      setUserBalance((balanceData?.balance as number) || 0);
+    } finally {
+      if (showLoading) setLoadingBalance(false);
     }
-
-    setUserBalance((balanceData?.balance as number) || 0);
   }, []);
+
+  const handleManualRefresh = () => {
+    if (user?.id) {
+      fetchBalance(user.id, true);
+    }
+  };
 
   const refreshUserContext = useCallback(async () => {
     const { data: { session } } = await supabase.auth.getSession();
@@ -428,9 +440,27 @@ ${cupomText}
                       <Wallet className="w-4 h-4" style={{ color: primaryColor }} />
                       <span className="text-sm font-medium">{balanceLabel}</span>
                     </div>
-                    <span className="text-sm font-bold" style={{ color: accentColor }}>
-                      {userBalance.toLocaleString('pt-BR')} créditos
-                    </span>
+                    <div className="flex items-center gap-2">
+                      {loadingBalance ? (
+                        <Loader2 className="w-3.5 h-3.5 animate-spin text-muted-foreground" />
+                      ) : (
+                        <span className="text-sm font-bold" style={{ color: accentColor }}>
+                          {userBalance.toLocaleString('pt-BR')} créditos
+                        </span>
+                      )}
+                      <button
+                        type="button"
+                        onClick={handleManualRefresh}
+                        disabled={loadingBalance}
+                        className="p-1 rounded-md hover:bg-background/50 transition-colors disabled:opacity-50"
+                        title="Atualizar saldo"
+                      >
+                        <RefreshCw 
+                          className={`w-3.5 h-3.5 ${loadingBalance ? 'animate-spin' : ''}`} 
+                          style={{ color: primaryColor }} 
+                        />
+                      </button>
+                    </div>
                   </div>
                   
                   {/* Use balance as discount toggle */}
