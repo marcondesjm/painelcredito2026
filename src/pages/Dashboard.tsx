@@ -186,7 +186,7 @@ const Dashboard = () => {
         <div className="max-w-7xl mx-auto px-3 sm:px-4 h-full flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center h-full py-2">
-            <img src={logoPainel} alt="Painel Créditos Lovable" className="h-full max-h-[40px] sm:max-h-[48px] md:max-h-[56px] w-auto object-contain object-left" />
+            <img src={logoPainel} alt="Painel Créditos Lovable" className="h-full max-h-[48px] sm:max-h-[56px] md:max-h-[64px] w-auto object-contain object-left" />
           </Link>
 
           {/* Desktop Navigation */}
