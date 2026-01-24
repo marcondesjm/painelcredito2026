@@ -1,14 +1,15 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { ShoppingCart, Shield, Wallet, Link as LinkIcon, Tag, Loader2, CheckCircle, Eye, EyeOff, RefreshCw, X, Sparkles } from 'lucide-react';
+import { ShoppingCart, Shield, Wallet, Link as LinkIcon, Tag, Loader2, CheckCircle, Eye, EyeOff, RefreshCw, X, Sparkles, Copy } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { PricingTier } from './PricingTiersSection';
+import { generatePixPayload, generatePixQRCodeUrl } from '@/lib/pix';
 
 interface CheckoutModalProps {
   isOpen: boolean;
@@ -639,58 +640,91 @@ ${cupomText}
               </div>
 
               {/* PIX Payment Section */}
-              {pixEnabled && pixKey && (
-                <div className="p-4 rounded-lg border-2 space-y-4" style={{ borderColor: `${accentColor}40`, backgroundColor: `${accentColor}08` }}>
-                  <div className="text-center">
-                    <h3 className="font-semibold text-sm mb-1">💳 Pague via PIX</h3>
-                    <p className="text-xs text-muted-foreground">Escaneie o QR Code ou copie a chave</p>
-                  </div>
-                  
-                  {/* QR Code */}
-                  <div className="flex justify-center">
-                    <div className="bg-white p-3 rounded-lg shadow-md">
-                      <img 
-                        src={pixQrBase || `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(pixKey)}`}
-                        alt="QR Code PIX"
-                        className="w-32 h-32 object-contain"
-                        onError={(e) => {
-                          e.currentTarget.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(pixKey)}`;
-                        }}
-                      />
+              {pixEnabled && pixKey && (() => {
+                // Generate dynamic PIX payload with EMV/BRCode standard
+                const pixPayload = generatePixPayload({
+                  pixKey: pixKey,
+                  merchantName: pixName || 'Vendedor',
+                  merchantCity: 'SAO PAULO',
+                  amount: finalPrice > 0 ? finalPrice : undefined,
+                  txId: tier?.id?.substring(0, 25) || 'PEDIDO',
+                  description: tier?.name?.substring(0, 25)
+                });
+                const pixQrUrl = pixQrBase || generatePixQRCodeUrl(pixPayload, 150);
+
+                return (
+                  <div className="p-4 rounded-lg border-2 space-y-4" style={{ borderColor: `${accentColor}40`, backgroundColor: `${accentColor}08` }}>
+                    <div className="text-center">
+                      <h3 className="font-semibold text-sm mb-1">💳 Pague via PIX</h3>
+                      <p className="text-xs text-muted-foreground">QR Code com valor incluso • Escaneie ou copie</p>
                     </div>
-                  </div>
-                  
-                  {/* PIX Info */}
-                  <div className="space-y-2">
-                    {pixName && (
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="text-muted-foreground">Beneficiário:</span>
-                        <span className="font-medium">{pixName}</span>
+                    
+                    {/* QR Code */}
+                    <div className="flex justify-center">
+                      <div className="bg-white p-3 rounded-lg shadow-md">
+                        <img 
+                          src={pixQrUrl}
+                          alt="QR Code PIX"
+                          className="w-36 h-36 object-contain"
+                          onError={(e) => {
+                            e.currentTarget.src = generatePixQRCodeUrl(pixPayload, 150);
+                          }}
+                        />
                       </div>
-                    )}
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="text-muted-foreground">Valor:</span>
-                      <span className="font-bold text-base" style={{ color: accentColor }}>
-                        {formatPrice(finalPrice)}
-                      </span>
+                    </div>
+                    
+                    {/* PIX Info */}
+                    <div className="space-y-2 text-center">
+                      {pixName && (
+                        <p className="text-xs text-muted-foreground">
+                          Para: <span className="font-medium text-foreground">{pixName}</span>
+                        </p>
+                      )}
+                      <div className="flex items-center justify-center gap-2">
+                        <span className="text-xs text-muted-foreground">Valor:</span>
+                        <span className="font-bold text-lg" style={{ color: accentColor }}>
+                          {formatPrice(finalPrice)}
+                        </span>
+                      </div>
+                      {tier?.name && (
+                        <p className="text-xs text-muted-foreground">
+                          Ref: {tier.name}
+                        </p>
+                      )}
+                    </div>
+                    
+                    {/* Copy Buttons */}
+                    <div className="grid grid-cols-2 gap-2">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        className="text-xs"
+                        onClick={() => {
+                          navigator.clipboard.writeText(pixPayload);
+                          toast.success('Código PIX copiado!');
+                        }}
+                      >
+                        <Copy className="w-3 h-3 mr-1" />
+                        Copia e Cola
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        className="text-xs"
+                        onClick={() => {
+                          navigator.clipboard.writeText(pixKey);
+                          toast.success('Chave PIX copiada!');
+                        }}
+                      >
+                        <Copy className="w-3 h-3 mr-1" />
+                        Chave PIX
+                      </Button>
                     </div>
                   </div>
-                  
-                  {/* Copy PIX Key Button */}
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    className="w-full"
-                    onClick={() => {
-                      navigator.clipboard.writeText(pixKey);
-                      toast.success('Chave PIX copiada!');
-                    }}
-                  >
-                    📋 Copiar Chave PIX
-                  </Button>
-                </div>
-              )}
+                );
+              })()}
 
               {/* Submit Button */}
               <Button
