@@ -209,6 +209,68 @@ export type Database = {
         }
         Relationships: []
       }
+      orders: {
+        Row: {
+          coupon_code: string | null
+          created_at: string
+          credits: number
+          customer_email: string
+          customer_name: string
+          customer_whatsapp: string
+          id: string
+          invite_link: string | null
+          landing_page_id: string | null
+          price: number
+          status: string
+          tier_id: string
+          tier_name: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          coupon_code?: string | null
+          created_at?: string
+          credits: number
+          customer_email: string
+          customer_name: string
+          customer_whatsapp: string
+          id?: string
+          invite_link?: string | null
+          landing_page_id?: string | null
+          price: number
+          status?: string
+          tier_id: string
+          tier_name: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          coupon_code?: string | null
+          created_at?: string
+          credits?: number
+          customer_email?: string
+          customer_name?: string
+          customer_whatsapp?: string
+          id?: string
+          invite_link?: string | null
+          landing_page_id?: string | null
+          price?: number
+          status?: string
+          tier_id?: string
+          tier_name?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_landing_page_id_fkey"
+            columns: ["landing_page_id"]
+            isOneToOne: false
+            referencedRelation: "landing_pages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null

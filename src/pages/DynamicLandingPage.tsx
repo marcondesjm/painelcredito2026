@@ -23,6 +23,7 @@ import { CountdownTimer } from '@/components/CountdownTimer';
 import { SocialProofNotification } from '@/components/SocialProofNotification';
 import { WhatsAppButton } from '@/components/WhatsAppButton';
 import { PricingTiersSection, PricingTier } from '@/components/PricingTiersSection';
+import { CheckoutModal } from '@/components/CheckoutModal';
 import { APP_VERSION, LAST_UPDATE } from '@/config/version';
 import backgroundHero from '@/assets/background-hero.png';
 import dashboardMockup from '@/assets/dashboard-mockup.png';
@@ -174,6 +175,10 @@ const DynamicLandingPageInner = () => {
   const [error, setError] = useState<Error | null>(null);
   const [hoveredSection, setHoveredSection] = useState<string | null>(null);
   const hoverLeaveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  
+  // Checkout modal state
+  const [checkoutModalOpen, setCheckoutModalOpen] = useState(false);
+  const [selectedTier, setSelectedTier] = useState<PricingTier | null>(null);
   
   const isPreview = searchParams.get('preview') === 'true';
   const draftId = searchParams.get('draftId');
@@ -1300,6 +1305,10 @@ const DynamicLandingPageInner = () => {
         accentColor={page.color_accent || '#22C55E'}
         isPreview={isPreview}
         onTierClick={() => handleSectionClick('pacotes')}
+        onBuyClick={(tier) => {
+          setSelectedTier(tier);
+          setCheckoutModalOpen(true);
+        }}
       />
     ),
     'features': renderFeaturesSection,
@@ -1534,6 +1543,19 @@ const DynamicLandingPageInner = () => {
       
       {/* WhatsApp Button */}
       <WhatsAppButton number={page.whatsapp_number || undefined} message={page.whatsapp_message || undefined} />
+      
+      {/* Checkout Modal */}
+      <CheckoutModal
+        isOpen={checkoutModalOpen}
+        onClose={() => {
+          setCheckoutModalOpen(false);
+          setSelectedTier(null);
+        }}
+        tier={selectedTier}
+        landingPageId={page.id}
+        primaryColor={page.color_primary || '#8B5CF6'}
+        accentColor={page.color_accent || '#22C55E'}
+      />
     </div>
   );
 };
