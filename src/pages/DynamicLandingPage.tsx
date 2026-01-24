@@ -41,6 +41,7 @@ interface LandingPageData {
   product_image: string | null;
   background_image: string | null;
   logo_image: string | null;
+  logo_size: string | null;
   price_original: number | null;
   price_current: number | null;
   price_installments: number | null;
@@ -1308,7 +1309,16 @@ const DynamicLandingPageInner = () => {
       <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/30 h-16 sm:h-20 md:h-24">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 h-full flex items-center justify-between">
           {page.logo_image ? (
-            <img src={page.logo_image} alt="Logo" className="h-12 sm:h-16 md:h-20 object-contain" />
+            <img 
+              src={page.logo_image} 
+              alt="Logo" 
+              className={`object-contain ${
+                page.logo_size === 'small' ? 'h-8 sm:h-10 md:h-12' :
+                page.logo_size === 'large' ? 'h-14 sm:h-18 md:h-20' :
+                page.logo_size === 'xlarge' ? 'h-16 sm:h-20 md:h-22' :
+                'h-10 sm:h-14 md:h-16' // medium (default)
+              }`}
+            />
           ) : (
             <h1 className="font-bold text-base sm:text-lg" style={{ color: `hsl(${primaryHsl})` }}>{page.title}</h1>
           )}

@@ -51,6 +51,7 @@ export type Database = {
           id: string
           is_published: boolean | null
           logo_image: string | null
+          logo_size: string | null
           meta_description: string | null
           meta_title: string | null
           og_image: string | null
@@ -109,6 +110,7 @@ export type Database = {
           id?: string
           is_published?: boolean | null
           logo_image?: string | null
+          logo_size?: string | null
           meta_description?: string | null
           meta_title?: string | null
           og_image?: string | null
@@ -167,6 +169,7 @@ export type Database = {
           id?: string
           is_published?: boolean | null
           logo_image?: string | null
+          logo_size?: string | null
           meta_description?: string | null
           meta_title?: string | null
           og_image?: string | null
