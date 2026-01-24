@@ -1574,6 +1574,7 @@ const DynamicLandingPageInner = () => {
         couponEnabled={page.checkout_coupon_enabled ?? true}
         couponLabel={page.checkout_coupon_label || 'Cupom de Desconto'}
         buttonText={page.checkout_button_text || 'Continuar para Pagamento'}
+        whatsappNumber={page.whatsapp_number || ''}
       />
     </div>
   );
