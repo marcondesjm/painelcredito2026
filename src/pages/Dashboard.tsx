@@ -398,8 +398,9 @@ const Dashboard = () => {
                         <Button 
                           variant="outline" 
                           size="sm"
-                          onClick={() => window.open(`/p/${page.slug}`, '_blank')}
+                          onClick={() => window.open(`https://painelcredito2026.lovable.app/p/${page.slug}`, '_blank')}
                           className="hover:bg-accent hover:text-accent-foreground hover:border-accent"
+                          title="Abrir página publicada"
                         >
                           <ExternalLink className="w-4 h-4" />
                         </Button>
