@@ -71,6 +71,7 @@ interface LandingPageData {
   social_proof_enabled: boolean;
   social_proof_product_name: string;
   social_proof_customers: { name: string; city: string; state: string }[];
+  social_proof_credits: number[];
   meta_title: string;
   meta_description: string;
   og_image: string;
@@ -195,6 +196,7 @@ const defaultData: LandingPageData = {
     { name: 'Pedro H.', city: 'Porto Alegre', state: 'RS' },
     { name: 'Thiago N.', city: 'Florianópolis', state: 'SC' },
   ],
+  social_proof_credits: [200, 500, 1000, 2000],
   meta_title: '',
   meta_description: '',
   og_image: '',
@@ -324,6 +326,11 @@ const LandingPageEditor = () => {
     testimonials: draft.testimonials,
     faqs: draft.faqs,
     secure_purchase_items: draft.secure_purchase_items,
+    pricing_tiers: draft.pricing_tiers,
+    social_proof_enabled: draft.social_proof_enabled,
+    social_proof_product_name: draft.social_proof_product_name || 'o Gerador',
+    social_proof_customers: draft.social_proof_customers,
+    social_proof_credits: draft.social_proof_credits || [200, 500, 1000, 2000],
     meta_title: draft.meta_title || null,
     meta_description: draft.meta_description || null,
     og_image: draft.og_image || null,
@@ -552,6 +559,7 @@ const LandingPageEditor = () => {
         social_proof_enabled: page.social_proof_enabled ?? true,
         social_proof_product_name: page.social_proof_product_name || 'o Gerador',
         social_proof_customers: (page.social_proof_customers as { name: string; city: string; state: string }[]) || defaultData.social_proof_customers,
+        social_proof_credits: (page.social_proof_credits as number[]) || [200, 500, 1000, 2000],
         price_original: page.price_original ? Number(page.price_original) : null,
         price_current: page.price_current ? Number(page.price_current) : null,
         meta_title: page.meta_title || '',
@@ -2173,6 +2181,34 @@ const LandingPageEditor = () => {
                         className="bg-background/50"
                       />
                       <p className="text-xs text-muted-foreground">Ex: "o Gerador", "o Painel Premium", "o Curso"</p>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label className="text-sm">Opções de Créditos</Label>
+                      <div className="flex flex-wrap gap-2">
+                        {[200, 500, 1000, 2000, 5000, 10000].map((credit) => {
+                          const isSelected = (data.social_proof_credits || [200, 500, 1000, 2000]).includes(credit);
+                          return (
+                            <Button
+                              key={credit}
+                              type="button"
+                              variant={isSelected ? "default" : "outline"}
+                              size="sm"
+                              onClick={() => {
+                                const currentCredits = data.social_proof_credits || [200, 500, 1000, 2000];
+                                const newCredits = isSelected
+                                  ? currentCredits.filter(c => c !== credit)
+                                  : [...currentCredits, credit].sort((a, b) => a - b);
+                                setData({ ...data, social_proof_credits: newCredits });
+                              }}
+                              className="h-7 text-xs"
+                            >
+                              {credit >= 1000 ? `${credit / 1000}k` : credit}
+                            </Button>
+                          );
+                        })}
+                      </div>
+                      <p className="text-xs text-muted-foreground">Selecione os valores de créditos que aparecerão nas notificações</p>
                     </div>
 
                     <div className="space-y-3">

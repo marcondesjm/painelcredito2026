@@ -11,6 +11,7 @@ interface SocialProofNotificationProps {
   enabled?: boolean;
   productName?: string;
   customers?: SocialProofCustomer[];
+  creditOptions?: number[];
 }
 
 const defaultCustomers: SocialProofCustomer[] = [
@@ -24,21 +25,31 @@ const defaultCustomers: SocialProofCustomer[] = [
   { name: "Thiago N.", city: "Florianópolis", state: "SC" },
 ];
 
+const defaultCreditOptions = [200, 500, 1000, 2000];
+
 const getRandomTime = () => {
   const minutes = Math.floor(Math.random() * 10) + 1;
   return `${minutes} min atrás`;
 };
 
+const getRandomCredits = (options: number[]) => {
+  const randomIndex = Math.floor(Math.random() * options.length);
+  return options[randomIndex];
+};
+
 export const SocialProofNotification = ({ 
   enabled = true, 
   productName = 'o Gerador',
-  customers = defaultCustomers 
+  customers = defaultCustomers,
+  creditOptions = defaultCreditOptions
 }: SocialProofNotificationProps) => {
   const [isVisible, setIsVisible] = useState(false);
   const [currentCustomer, setCurrentCustomer] = useState(customers[0] || defaultCustomers[0]);
+  const [currentCredits, setCurrentCredits] = useState(creditOptions[0] || 1000);
   const [time, setTime] = useState(getRandomTime());
 
   const activeCustomers = customers && customers.length > 0 ? customers : defaultCustomers;
+  const activeCreditOptions = creditOptions && creditOptions.length > 0 ? creditOptions : defaultCreditOptions;
 
   useEffect(() => {
     if (!enabled) return;
@@ -54,9 +65,10 @@ export const SocialProofNotification = ({
   const showNotification = () => {
     if (!enabled) return;
     
-    // Pick a random customer
-    const randomIndex = Math.floor(Math.random() * activeCustomers.length);
-    setCurrentCustomer(activeCustomers[randomIndex]);
+    // Pick a random customer and credit amount
+    const randomCustomerIndex = Math.floor(Math.random() * activeCustomers.length);
+    setCurrentCustomer(activeCustomers[randomCustomerIndex]);
+    setCurrentCredits(getRandomCredits(activeCreditOptions));
     setTime(getRandomTime());
     setIsVisible(true);
 
@@ -90,7 +102,7 @@ export const SocialProofNotification = ({
             <span className="text-primary">{currentCustomer.name}</span> adquiriu {productName}
           </p>
           <p className="text-[10px] sm:text-xs text-muted-foreground mt-0.5">
-            {currentCustomer.city}, {currentCustomer.state} • {time}
+            <span className="text-accent font-medium">{currentCredits} créditos</span> • {currentCustomer.city}, {currentCustomer.state} • {time}
           </p>
         </div>
 

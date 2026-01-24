@@ -93,6 +93,7 @@ interface LandingPageData {
   social_proof_enabled: boolean | null;
   social_proof_product_name: string | null;
   social_proof_customers: { name: string; city: string; state: string }[] | null;
+  social_proof_credits: number[] | null;
   meta_title: string | null;
   meta_description: string | null;
   facebook_pixel: string | null;
@@ -1528,6 +1529,7 @@ const DynamicLandingPageInner = () => {
         enabled={page.social_proof_enabled ?? true}
         productName={page.social_proof_product_name || 'o Gerador'}
         customers={(page.social_proof_customers as { name: string; city: string; state: string }[]) || undefined}
+        creditOptions={(page.social_proof_credits as number[]) || undefined}
       />
       
       {/* WhatsApp Button */}
