@@ -1214,7 +1214,7 @@ const LandingPageEditor = () => {
                         placeholder="Logo da sua marca"
                       />
                       <p className="text-xs text-muted-foreground">
-                        Medida recomendada: <span className="font-medium text-primary">1292x309px</span>
+                        Medida recomendada: <span className="font-medium text-primary">234x56px</span>
                       </p>
                     </div>
                     <div className="space-y-2">
