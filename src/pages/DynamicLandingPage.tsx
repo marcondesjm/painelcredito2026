@@ -112,6 +112,7 @@ interface LandingPageData {
   checkout_coupon_enabled: boolean | null;
   checkout_coupon_label: string | null;
   checkout_button_text: string | null;
+  checkout_whatsapp_message: string | null;
 }
 
 type BoundaryState = {
@@ -1575,6 +1576,7 @@ const DynamicLandingPageInner = () => {
         couponLabel={page.checkout_coupon_label || 'Cupom de Desconto'}
         buttonText={page.checkout_button_text || 'Continuar para Pagamento'}
         whatsappNumber={page.whatsapp_number || ''}
+        whatsappMessage={page.checkout_whatsapp_message || ''}
       />
     </div>
   );
