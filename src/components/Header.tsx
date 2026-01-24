@@ -6,7 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { User } from '@supabase/supabase-js';
 import { LogOut, Menu, X } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import logoPainel from '@/assets/logo-dashboard.png';
+import logoPainel from '@/assets/logo-painel.png';
 
 export const Header = () => {
   const [loginOpen, setLoginOpen] = useState(false);

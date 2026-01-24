@@ -38,7 +38,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import logoPainel from '@/assets/logo-dashboard.png';
+import logoPainel from '@/assets/logo-painel.png';
 import backgroundHero from '@/assets/background-hero.png';
 import { DashboardTour, triggerDashboardTour } from '@/components/DashboardTour';
 
