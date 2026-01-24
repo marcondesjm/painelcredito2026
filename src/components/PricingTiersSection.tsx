@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Check, Clock, TrendingUp, Sparkles } from 'lucide-react';
+import { Check, TrendingUp, Sparkles } from 'lucide-react';
 
 export interface PricingTier {
   id: string;
@@ -65,6 +65,47 @@ export const PricingTiersSection = ({
 
   return (
     <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6">
+      <style>{`
+        @keyframes shimmer {
+          0% { background-position: -200% center; }
+          100% { background-position: 200% center; }
+        }
+        @keyframes pulse-glow {
+          0%, 100% { opacity: 0.5; transform: scale(1); }
+          50% { opacity: 0.8; transform: scale(1.02); }
+        }
+        @keyframes float {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-5px); }
+        }
+        .highlight-card {
+          animation: float 3s ease-in-out infinite;
+        }
+        .shimmer-badge {
+          background: linear-gradient(
+            90deg,
+            transparent 0%,
+            rgba(255,255,255,0.4) 50%,
+            transparent 100%
+          );
+          background-size: 200% 100%;
+          animation: shimmer 2s infinite;
+        }
+        .glow-effect::before {
+          content: '';
+          position: absolute;
+          inset: -2px;
+          border-radius: inherit;
+          padding: 2px;
+          background: linear-gradient(135deg, var(--glow-color), transparent, var(--glow-color));
+          -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+          mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+          -webkit-mask-composite: xor;
+          mask-composite: exclude;
+          animation: pulse-glow 2s ease-in-out infinite;
+        }
+      `}</style>
+      
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-10">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3">
@@ -78,35 +119,51 @@ export const PricingTiersSection = ({
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
           {tiers.map((tier) => {
             const savings = tier.price_original - tier.price_current;
-            const savingsPercent = Math.round((savings / tier.price_original) * 100);
             
             return (
               <Card
                 key={tier.id}
-                className={`relative overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-xl ${
+                className={`relative overflow-hidden transition-all duration-500 group ${
                   tier.highlight 
-                    ? 'border-2 ring-2 ring-offset-2 ring-offset-background' 
-                    : 'border border-border/50'
+                    ? 'highlight-card border-2 ring-2 ring-offset-2 ring-offset-background hover:scale-[1.05] glow-effect' 
+                    : 'border border-border/50 hover:scale-[1.02] hover:shadow-xl'
                 }`}
                 style={{
                   borderColor: tier.highlight ? primaryColor : undefined,
-                  boxShadow: tier.highlight ? `0 0 30px ${primaryColor}30` : undefined,
-                }}
+                  boxShadow: tier.highlight ? `0 0 40px ${primaryColor}40, 0 0 80px ${primaryColor}20` : undefined,
+                  '--glow-color': primaryColor,
+                } as React.CSSProperties}
               >
+                {/* Animated background gradient for highlighted cards */}
                 {tier.highlight && (
                   <div 
-                    className="absolute top-0 left-0 right-0 py-1.5 text-center text-xs font-bold text-white"
+                    className="absolute inset-0 opacity-10 transition-opacity duration-500 group-hover:opacity-20"
+                    style={{
+                      background: `radial-gradient(circle at 50% 0%, ${primaryColor}60 0%, transparent 70%)`
+                    }}
+                  />
+                )}
+                
+                {tier.highlight && (
+                  <div 
+                    className="absolute top-0 left-0 right-0 py-1.5 text-center text-xs font-bold text-white overflow-hidden"
                     style={{ backgroundColor: primaryColor }}
                   >
-                    <Sparkles className="inline-block w-3 h-3 mr-1" />
-                    MAIS POPULAR
+                    <div className="absolute inset-0 shimmer-badge" />
+                    <span className="relative z-10 flex items-center justify-center gap-1">
+                      <Sparkles className="w-3 h-3 animate-pulse" />
+                      MAIS POPULAR
+                      <Sparkles className="w-3 h-3 animate-pulse" />
+                    </span>
                   </div>
                 )}
                 
-                <div className={`p-5 ${tier.highlight ? 'pt-10' : ''}`}>
+                <div className={`p-5 relative z-10 ${tier.highlight ? 'pt-10' : ''}`}>
                   {/* Header */}
                   <div className="mb-4">
-                    <h3 className="font-bold text-lg leading-tight mb-1">
+                    <h3 className={`font-bold text-lg leading-tight mb-1 transition-colors duration-300 ${
+                      tier.highlight ? 'group-hover:text-white' : ''
+                    }`}>
                       {formatCredits(tier.credits)} de créditos
                     </h3>
                     <p className="text-sm text-muted-foreground line-clamp-1">
@@ -124,7 +181,9 @@ export const PricingTiersSection = ({
                     <div className="text-xs text-muted-foreground mt-2 mb-1">Nosso preço</div>
                     <div className="flex items-center gap-2 flex-wrap">
                       <span 
-                        className="text-2xl font-bold"
+                        className={`text-2xl font-bold transition-all duration-300 ${
+                          tier.highlight ? 'group-hover:scale-110' : ''
+                        }`}
                         style={{ color: accentColor }}
                       >
                         {formatPrice(tier.price_current)}
@@ -132,7 +191,7 @@ export const PricingTiersSection = ({
                       {tier.available > 0 && (
                         <Badge 
                           variant="outline" 
-                          className="text-xs"
+                          className="text-xs transition-all duration-300 group-hover:scale-105"
                           style={{ 
                             borderColor: accentColor,
                             color: accentColor 
@@ -169,10 +228,14 @@ export const PricingTiersSection = ({
 
                   {/* CTA Button */}
                   <Button
-                    className="w-full text-white font-semibold"
+                    className={`w-full text-white font-semibold transition-all duration-300 ${
+                      tier.highlight 
+                        ? 'group-hover:scale-105 group-hover:shadow-lg' 
+                        : 'hover:scale-105'
+                    }`}
                     style={{ 
                       backgroundColor: tier.highlight ? primaryColor : accentColor,
-                      boxShadow: tier.highlight ? `0 4px 15px ${primaryColor}40` : undefined
+                      boxShadow: tier.highlight ? `0 4px 20px ${primaryColor}50` : undefined
                     }}
                     onClick={() => handleTierSelect(tier)}
                   >
