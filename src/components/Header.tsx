@@ -162,9 +162,9 @@ export const Header = () => {
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="bg-background border-border w-[280px]">
-              {/* Logo no menu mobile */}
+            {/* Logo no menu mobile */}
               <div className="flex justify-center mb-6 pt-2">
-                <img src={logoPainel} alt="Painel Créditos Lovable" className="h-12 object-contain" />
+                <img src={logoPainel} alt="Painel Créditos Lovable" className="h-20 w-auto object-contain" />
               </div>
               <nav className="flex flex-col gap-4">
                 <Button 
