@@ -1,3 +1,4 @@
+// Force rebuild - prices updated to R$ 600,00 -> R$ 349,99
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
