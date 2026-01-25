@@ -3,9 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { useAuth } from '@/hooks/useAuth';
-import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import logoPainel from '@/assets/logo-dashboard.png';
@@ -17,13 +16,11 @@ const Auth = () => {
   const [fullName, setFullName] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { signIn, signUp, user, loading, isAdmin, checkingRole, checkIsAdmin } = useAuth();
+  const { signIn, signUp, user, loading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Redireciona para dashboard quando usuário estiver autenticado e o carregamento terminar
     if (!loading && user) {
-      // Pequeno delay para garantir que a sessão foi processada
       const timeout = setTimeout(() => {
         navigate('/dashboard');
       }, 100);
@@ -81,23 +78,29 @@ const Auth = () => {
       <div className="absolute inset-0 bg-gradient-radial pointer-events-none" />
       
       <Card className="w-full max-w-md bg-card/50 backdrop-blur-sm border-border/50">
-        <CardHeader className="text-center">
-          <img src={logoPainel} alt="Logo" className="h-40 mx-auto mb-4" />
-          <CardTitle className="text-2xl">
-            {isLogin ? 'Entrar na sua conta' : 'Criar nova conta'}
-          </CardTitle>
-          <CardDescription>
-            {isLogin 
-              ? 'Acesse o painel de gerenciamento' 
-              : 'Cadastre-se para criar suas landing pages'}
-          </CardDescription>
-        </CardHeader>
-        
-        <CardContent>
+        <CardContent className="pt-6">
+          {/* Logo */}
+          <div className="flex justify-center mb-6">
+            <img src={logoPainel} alt="Logo" className="h-16 object-contain" />
+          </div>
+
+          {/* Title */}
+          <div className="text-center mb-6">
+            <h1 className="text-2xl font-bold text-foreground">
+              {isLogin ? 'Entrar na conta' : 'Criar nova conta'}
+            </h1>
+            <p className="text-sm text-muted-foreground mt-1">
+              {isLogin 
+                ? 'Acesse o painel de gerenciamento' 
+                : 'Cadastre-se para criar suas landing pages'}
+            </p>
+          </div>
+          
           <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Full Name - only for signup */}
             {!isLogin && (
               <div className="space-y-2">
-                <Label htmlFor="fullName">Nome completo</Label>
+                <Label htmlFor="fullName" className="text-foreground">Nome completo</Label>
                 <Input
                   id="fullName"
                   type="text"
@@ -110,7 +113,7 @@ const Auth = () => {
             )}
             
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className="text-foreground">Email</Label>
               <Input
                 id="email"
                 type="email"
@@ -123,7 +126,7 @@ const Auth = () => {
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="password">Senha</Label>
+              <Label htmlFor="password" className="text-foreground">Senha</Label>
               <div className="relative">
                 <Input
                   id="password"
@@ -147,26 +150,26 @@ const Auth = () => {
             
             <Button 
               type="submit" 
+              variant="hero"
               className="w-full" 
               disabled={isSubmitting}
             >
-              {isSubmitting ? (
-                <Loader2 className="w-4 h-4 animate-spin mr-2" />
-              ) : null}
+              {isSubmitting && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
               {isLogin ? 'Entrar' : 'Criar conta'}
             </Button>
           </form>
           
           <div className="mt-6 text-center">
-            <button
-              type="button"
-              onClick={() => setIsLogin(!isLogin)}
-              className="text-sm text-muted-foreground hover:text-primary transition-colors"
-            >
-              {isLogin 
-                ? 'Não tem conta? Cadastre-se' 
-                : 'Já tem conta? Entre aqui'}
-            </button>
+            <p className="text-sm text-muted-foreground">
+              {isLogin ? 'Não tem conta?' : 'Já tem conta?'}{' '}
+              <button
+                type="button"
+                onClick={() => setIsLogin(!isLogin)}
+                className="text-primary hover:underline"
+              >
+                {isLogin ? 'Cadastre-se' : 'Entre aqui'}
+              </button>
+            </p>
           </div>
         </CardContent>
       </Card>
