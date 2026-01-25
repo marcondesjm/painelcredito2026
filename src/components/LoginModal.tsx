@@ -108,57 +108,57 @@ export const LoginModal = ({ open, onOpenChange }: LoginModalProps) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[95vw] sm:max-w-md bg-card border-border mx-auto max-h-[90vh] overflow-y-auto overflow-x-hidden p-6">
+      <DialogContent className="max-w-[95vw] sm:max-w-sm bg-card border-border mx-auto p-5">
         {/* Logo */}
-        <div className="flex justify-center mb-4">
-          <img src={logoPainel} alt="Logo" className="h-16 object-contain" />
+        <div className="flex justify-center mb-2">
+          <img src={logoPainel} alt="Logo" className="h-10 object-contain" />
         </div>
 
         {/* Title */}
-        <div className="text-center mb-6">
-          <h2 className="text-2xl font-bold text-foreground">
+        <div className="text-center mb-3">
+          <h2 className="text-xl font-bold text-foreground">
             {isSignUp ? 'Criar nova conta' : 'Entrar na conta'}
           </h2>
-          <p className="text-sm text-muted-foreground mt-1">
+          <p className="text-xs text-muted-foreground mt-0.5">
             {isSignUp 
               ? 'Cadastre-se para criar suas landing pages' 
               : 'Acesse o painel de gerenciamento'}
           </p>
         </div>
         
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-3">
           {/* Full Name - only for signup */}
           {isSignUp && (
-            <div className="space-y-2">
-              <Label htmlFor="fullName" className="text-foreground">Nome completo</Label>
+            <div className="space-y-1">
+              <Label htmlFor="fullName" className="text-foreground text-sm">Nome completo</Label>
               <Input
                 id="fullName"
                 type="text"
                 placeholder="Seu nome"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                className="bg-background border-border"
+                className="bg-background border-border h-9"
               />
             </div>
           )}
 
           {/* Email */}
-          <div className="space-y-2">
-            <Label htmlFor="email" className="text-foreground">Email</Label>
+          <div className="space-y-1">
+            <Label htmlFor="email" className="text-foreground text-sm">Email</Label>
             <Input
               id="email"
               type="email"
               placeholder="seu@email.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="bg-background border-border"
+              className="bg-background border-border h-9"
               required
             />
           </div>
 
           {/* Password */}
-          <div className="space-y-2">
-            <Label htmlFor="password" className="text-foreground">Senha</Label>
+          <div className="space-y-1">
+            <Label htmlFor="password" className="text-foreground text-sm">Senha</Label>
             <div className="relative">
               <Input
                 id="password"
@@ -166,7 +166,7 @@ export const LoginModal = ({ open, onOpenChange }: LoginModalProps) => {
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="pr-10 bg-background border-border"
+                className="pr-10 bg-background border-border h-9"
                 required
                 minLength={6}
               />
@@ -183,14 +183,14 @@ export const LoginModal = ({ open, onOpenChange }: LoginModalProps) => {
           <Button 
             type="submit" 
             variant="hero" 
-            className="w-full"
+            className="w-full h-9"
             disabled={isLoading}
           >
             {isLoading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
             {isSignUp ? 'Criar conta' : 'Entrar'}
           </Button>
 
-          <p className="text-center text-sm text-muted-foreground">
+          <p className="text-center text-xs text-muted-foreground pt-1">
             {isSignUp ? 'Já tem conta?' : 'Não tem uma conta?'}{' '}
             <button
               type="button"
