@@ -17,7 +17,7 @@ export const LoginModal = ({ open, onOpenChange }: LoginModalProps) => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isSignUp, setIsSignUp] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(true);
   const { toast } = useToast();
   const navigate = useNavigate();
 
