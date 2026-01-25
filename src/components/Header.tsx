@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { LoginModal } from './LoginModal';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { User } from '@supabase/supabase-js';
 import { LogOut, Menu, X, Download } from 'lucide-react';
@@ -14,6 +14,8 @@ export const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const navigate = useNavigate();
+  const location = useLocation();
+  const isAuthPage = location.pathname === '/auth';
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
@@ -81,14 +83,14 @@ export const Header = () => {
                 <LogOut className="w-4 h-4 mr-2" />
                 Sair
               </Button>
-            ) : (
+            ) : isAuthPage ? null : (
               <Button 
                 variant="outline" 
                 size="sm" 
                 className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
-                onClick={() => setLoginOpen(true)}
+                onClick={() => navigate('/auth')}
               >
-                Área de Membros
+                Criar conta
               </Button>
             )}
             <Button 
@@ -142,14 +144,14 @@ export const Header = () => {
               >
                 <LogOut className="w-4 h-4" />
               </Button>
-            ) : (
+            ) : isAuthPage ? null : (
               <Button 
                 variant="outline" 
                 size="sm" 
                 className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
-                onClick={() => setLoginOpen(true)}
+                onClick={() => navigate('/auth')}
               >
-                Entrar
+                Criar conta
               </Button>
             )}
             <Button 
@@ -214,13 +216,13 @@ export const Header = () => {
                     <LogOut className="w-4 h-4 mr-2" />
                     Sair
                   </Button>
-                ) : (
+                ) : isAuthPage ? null : (
                   <Button 
                     variant="outline" 
                     className="w-full border-primary text-primary hover:bg-primary hover:text-primary-foreground"
-                    onClick={handleOpenLogin}
+                    onClick={() => handleNavigate('/auth')}
                   >
-                    Área de Membros
+                    Criar conta
                   </Button>
                 )}
                 <Button 
