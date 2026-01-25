@@ -18,7 +18,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Loader2, Star, Check, Shield, Clock, ArrowRight, MessageCircle, Zap, Headphones, LogOut, Menu, RefreshCw, Heart, Award } from 'lucide-react';
+import { Loader2, Star, Check, Shield, Clock, ArrowRight, MessageCircle, Zap, Headphones, UserPlus, Menu, RefreshCw, Heart, Award } from 'lucide-react';
 import { CountdownTimer } from '@/components/CountdownTimer';
 import { SocialProofNotification } from '@/components/SocialProofNotification';
 import { WhatsAppButton } from '@/components/WhatsAppButton';
@@ -1391,8 +1391,8 @@ const DynamicLandingPageInner = () => {
               style={{ borderColor: `hsl(${primaryHsl} / 0.5)`, color: `hsl(${primaryHsl})` }}
               onClick={() => navigate('/auth')}
             >
-              <LogOut className="w-4 h-4 mr-2" />
-              Sair
+              <UserPlus className="w-4 h-4 mr-2" />
+              Criar conta
             </Button>
             <Button 
               variant="ghost" 
@@ -1440,8 +1440,8 @@ const DynamicLandingPageInner = () => {
                   style={{ borderColor: `hsl(${primaryHsl} / 0.5)`, color: `hsl(${primaryHsl})` }}
                   onClick={() => navigate('/auth')}
                 >
-                  <LogOut className="w-4 h-4 mr-2" />
-                  Sair
+                  <UserPlus className="w-4 h-4 mr-2" />
+                  Criar conta
                 </Button>
                 <Button 
                   variant="ghost" 
