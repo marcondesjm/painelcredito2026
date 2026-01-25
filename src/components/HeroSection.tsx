@@ -58,8 +58,11 @@ export const HeroSection = () => {
               
               {/* Price */}
               <div className="flex items-baseline gap-2 sm:gap-3">
-                <span className="text-lg sm:text-xl text-muted-foreground line-through">R$ 150,00</span>
-                <span className="text-2xl sm:text-3xl md:text-4xl font-bold text-accent">R$ 99,99</span>
+                <span className="text-lg sm:text-xl text-muted-foreground line-through">R$ 600,00</span>
+                <span className="text-2xl sm:text-3xl md:text-4xl font-bold text-accent">R$ 349,99</span>
+                <span className="bg-accent/20 text-accent text-xs font-bold px-2 py-1 rounded">
+                  Economia de 40%
+                </span>
               </div>
             </div>
 
