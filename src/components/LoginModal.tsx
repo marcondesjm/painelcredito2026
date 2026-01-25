@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Mail, Lock, LogIn, Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import logoPainel from '@/assets/logo-dashboard.png';
+
 interface LoginModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -15,6 +17,7 @@ interface LoginModalProps {
 export const LoginModal = ({ open, onOpenChange }: LoginModalProps) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [fullName, setFullName] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isSignUp, setIsSignUp] = useState(true);
@@ -31,7 +34,10 @@ export const LoginModal = ({ open, onOpenChange }: LoginModalProps) => {
           email,
           password,
           options: {
-            emailRedirectTo: `${window.location.origin}/dashboard/new`
+            emailRedirectTo: `${window.location.origin}/dashboard/new`,
+            data: {
+              full_name: fullName
+            }
           }
         });
         if (error) throw error;
@@ -102,41 +108,65 @@ export const LoginModal = ({ open, onOpenChange }: LoginModalProps) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[95vw] sm:max-w-md bg-card border-border mx-auto max-h-[90vh] overflow-y-auto overflow-x-hidden">
-        <DialogHeader>
-          <DialogTitle className="text-center text-xl font-bold text-foreground">
-            Área de Membros
-          </DialogTitle>
-        </DialogHeader>
+      <DialogContent className="max-w-[95vw] sm:max-w-md bg-card border-border mx-auto max-h-[90vh] overflow-y-auto overflow-x-hidden p-6">
+        {/* Logo */}
+        <div className="flex justify-center mb-4">
+          <img src={logoPainel} alt="Logo" className="h-16 object-contain" />
+        </div>
+
+        {/* Title */}
+        <div className="text-center mb-6">
+          <h2 className="text-2xl font-bold text-foreground">
+            {isSignUp ? 'Criar nova conta' : 'Entrar na conta'}
+          </h2>
+          <p className="text-sm text-muted-foreground mt-1">
+            {isSignUp 
+              ? 'Cadastre-se para criar suas landing pages' 
+              : 'Acesse o painel de gerenciamento'}
+          </p>
+        </div>
         
-        <form onSubmit={handleSubmit} className="space-y-4 mt-4">
-          <div className="space-y-2">
-            <Label htmlFor="email" className="text-muted-foreground">Email</Label>
-            <div className="relative">
-              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Full Name - only for signup */}
+          {isSignUp && (
+            <div className="space-y-2">
+              <Label htmlFor="fullName" className="text-foreground">Nome completo</Label>
               <Input
-                id="email"
-                type="email"
-                placeholder="seu@email.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="pl-10 bg-background border-border"
-                required
+                id="fullName"
+                type="text"
+                placeholder="Seu nome"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                className="bg-background border-border"
               />
             </div>
+          )}
+
+          {/* Email */}
+          <div className="space-y-2">
+            <Label htmlFor="email" className="text-foreground">Email</Label>
+            <Input
+              id="email"
+              type="email"
+              placeholder="seu@email.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="bg-background border-border"
+              required
+            />
           </div>
 
+          {/* Password */}
           <div className="space-y-2">
-            <Label htmlFor="password" className="text-muted-foreground">Senha</Label>
+            <Label htmlFor="password" className="text-foreground">Senha</Label>
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
                 id="password"
                 type={showPassword ? "text" : "password"}
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="pl-10 pr-10 bg-background border-border"
+                className="pr-10 bg-background border-border"
                 required
                 minLength={6}
               />
@@ -156,18 +186,18 @@ export const LoginModal = ({ open, onOpenChange }: LoginModalProps) => {
             className="w-full"
             disabled={isLoading}
           >
-            <LogIn className="w-4 h-4 mr-2" />
-            {isLoading ? 'Carregando...' : isSignUp ? 'Criar Conta' : 'Entrar'}
+            {isLoading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+            {isSignUp ? 'Criar conta' : 'Entrar'}
           </Button>
 
           <p className="text-center text-sm text-muted-foreground">
-            {isSignUp ? 'Já tem uma conta?' : 'Não tem uma conta?'}{' '}
+            {isSignUp ? 'Já tem conta?' : 'Não tem uma conta?'}{' '}
             <button
               type="button"
               onClick={() => setIsSignUp(!isSignUp)}
               className="text-primary hover:underline"
             >
-              {isSignUp ? 'Faça login' : 'Adquira seu acesso'}
+              {isSignUp ? 'Entre aqui' : 'Cadastre-se'}
             </button>
           </p>
         </form>
