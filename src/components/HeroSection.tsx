@@ -4,10 +4,23 @@ import { TrustBadge } from './TrustBadge';
 import { Zap, Shield, Headphones } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import productPainel from '@/assets/product-painel.png';
-
+import { useHomepageSettings } from '@/hooks/useHomepageSettings';
 
 export const HeroSection = () => {
   const navigate = useNavigate();
+  const { settings } = useHomepageSettings();
+  const { hero } = settings;
+
+  const formatPrice = (value: number) => {
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    }).format(value);
+  };
+
+  const savings = hero.price_original > hero.price_current
+    ? Math.round(((hero.price_original - hero.price_current) / hero.price_original) * 100)
+    : null;
   
   return (
     <section className="relative min-h-screen flex items-center justify-center px-4 sm:px-6 pt-24 sm:pt-28 md:pt-32 pb-8 sm:pb-12 overflow-hidden">
@@ -29,13 +42,13 @@ export const HeroSection = () => {
           <div className="text-center lg:text-left">
             {/* Main heading */}
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 leading-tight">
-              <span className="text-foreground">Créditos Infinitos na Lovable. </span>
-              <span className="text-gradient">Simples. Rápido. Automático.</span>
+              <span className="text-foreground">{hero.title} </span>
+              <span className="text-gradient">{hero.title_highlight}</span>
             </h1>
 
             {/* Subheading */}
             <p className="text-base sm:text-lg text-muted-foreground mb-6 sm:mb-8 max-w-xl mx-auto lg:mx-0">
-              Use nosso painel exclusivo e gere créditos ilimitados para seus projetos Lovable e revenda créditos.
+              {hero.subtitle}
             </p>
 
             {/* CTA Button */}
@@ -46,7 +59,7 @@ export const HeroSection = () => {
                 className="w-full sm:w-auto min-w-[200px]"
                 onClick={() => navigate('/checkout')}
               >
-                Comprar Agora
+                {hero.cta_text}
               </Button>
             </div>
 
@@ -57,12 +70,18 @@ export const HeroSection = () => {
               </span>
               
               {/* Price */}
-              <div className="flex items-baseline gap-2 sm:gap-3">
-                <span className="text-lg sm:text-xl text-muted-foreground line-through">R$ 600,00</span>
-                <span className="text-2xl sm:text-3xl md:text-4xl font-bold text-accent">R$ 349,99</span>
-                <span className="bg-accent/20 text-accent text-xs font-bold px-2 py-1 rounded">
-                  Economia de 40%
+              <div className="flex items-baseline gap-2 sm:gap-3 flex-wrap justify-center lg:justify-start">
+                <span className="text-lg sm:text-xl text-muted-foreground line-through">
+                  {formatPrice(hero.price_original)}
                 </span>
+                <span className="text-2xl sm:text-3xl md:text-4xl font-bold text-accent">
+                  {formatPrice(hero.price_current)}
+                </span>
+                {savings && (
+                  <span className="bg-accent/20 text-accent text-xs font-bold px-2 py-1 rounded">
+                    Economia de {savings}%
+                  </span>
+                )}
               </div>
             </div>
 
