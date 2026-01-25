@@ -11,7 +11,7 @@ import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import logoPainel from '@/assets/logo-dashboard.png';
 
 const Auth = () => {
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
