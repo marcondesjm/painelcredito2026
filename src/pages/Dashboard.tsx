@@ -28,6 +28,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { toast } from 'sonner';
 import {
   AlertDialog,
@@ -399,21 +404,59 @@ const Dashboard = () => {
                         Editar
                       </Button>
                       {page.is_published && (
-                        <Button 
-                          variant="outline" 
-                          size="sm"
-                          onClick={() => {
-                            const cleanUrl = `https://painelcredito2026.lovable.app/p/${page.slug}?clean=true`;
-                            navigator.clipboard.writeText(cleanUrl);
-                            toast.success('Link de divulgação copiado!', {
-                              description: 'Página limpa, sem botões. Perfeita para visitantes!'
-                            });
-                          }}
-                          className="hover:bg-blue-500/20 hover:text-blue-500 hover:border-blue-500/50"
-                          title="📤 Copiar link de divulgação (página limpa)"
-                        >
-                          <Share2 className="w-4 h-4" />
-                        </Button>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              className="hover:bg-blue-500/20 hover:text-blue-500 hover:border-blue-500/50"
+                              title="📤 Copiar link de divulgação"
+                            >
+                              <Share2 className="w-4 h-4" />
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-64 p-2" align="center">
+                            <div className="flex flex-col gap-1">
+                              <p className="text-xs text-muted-foreground px-2 py-1 font-medium">Copiar link:</p>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="justify-start text-left h-auto py-2"
+                                onClick={() => {
+                                  const url = `https://painelcredito2026.lovable.app/p/${page.slug}`;
+                                  navigator.clipboard.writeText(url);
+                                  toast.success('Link copiado!', {
+                                    description: 'Link completo com barra de navegação'
+                                  });
+                                }}
+                              >
+                                <ExternalLink className="w-4 h-4 mr-2 shrink-0" />
+                                <div className="flex flex-col">
+                                  <span className="font-medium">Link Normal</span>
+                                  <span className="text-xs text-muted-foreground">Com barra e botões</span>
+                                </div>
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="justify-start text-left h-auto py-2"
+                                onClick={() => {
+                                  const cleanUrl = `https://painelcredito2026.lovable.app/p/${page.slug}?clean=true`;
+                                  navigator.clipboard.writeText(cleanUrl);
+                                  toast.success('Link limpo copiado!', {
+                                    description: 'Perfeito para divulgar para visitantes!'
+                                  });
+                                }}
+                              >
+                                <Share2 className="w-4 h-4 mr-2 shrink-0" />
+                                <div className="flex flex-col">
+                                  <span className="font-medium">Link Limpo</span>
+                                  <span className="text-xs text-muted-foreground">Sem barra, ideal para visitantes</span>
+                                </div>
+                              </Button>
+                            </div>
+                          </PopoverContent>
+                        </Popover>
                       )}
                       <Button 
                         variant="outline" 
