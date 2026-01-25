@@ -211,6 +211,9 @@ const DynamicLandingPageInner = () => {
     return () => subscription.unsubscribe();
   }, []);
 
+  // Clean mode for visitors - no header
+  const isClean = searchParams.get('clean') === 'true';
+
   const clearHoverLeaveTimeout = () => {
     if (hoverLeaveTimeoutRef.current) {
       clearTimeout(hoverLeaveTimeoutRef.current);
@@ -641,7 +644,7 @@ const DynamicLandingPageInner = () => {
     <section 
       key="hero"
       data-section-id="hero"
-      className={`relative min-h-screen flex items-center justify-center px-3 sm:px-4 pt-24 sm:pt-28 md:pt-32 pb-8 sm:pb-12 transition-all ${isPreview ? 'cursor-pointer' : ''} ${hoveredSection === 'hero' ? 'ring-2 ring-primary ring-inset' : ''}`}
+      className={`relative min-h-screen flex items-center justify-center px-3 sm:px-4 ${isClean ? 'pt-8' : 'pt-24 sm:pt-28 md:pt-32'} pb-8 sm:pb-12 transition-all ${isPreview ? 'cursor-pointer' : ''} ${hoveredSection === 'hero' ? 'ring-2 ring-primary ring-inset' : ''}`}
       onMouseEnter={() => handleSectionHover('hero')}
     >
       <div className="relative z-10 max-w-7xl mx-auto w-full">
@@ -1371,150 +1374,152 @@ const DynamicLandingPageInner = () => {
         style={{ backgroundColor: `${page.color_background || '#0a0a0f'}e6` }}
       />
 
-      {/* Header with Logo and Navigation */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/30 h-16 sm:h-20 md:h-24">
-        <div className="max-w-7xl mx-auto px-3 sm:px-4 h-full flex items-center justify-between">
-          {page.logo_image ? (
-            <img 
-              src={page.logo_image} 
-              alt="Logo" 
-              className="object-contain"
-              style={{
-                height: page.logo_size === 'small' ? '32px' :
-                        page.logo_size === 'large' ? '64px' :
-                        page.logo_size === 'xlarge' ? '80px' :
-                        '48px' // medium (default)
-              }}
-            />
-          ) : (
-            <h1 className="font-bold text-base sm:text-lg" style={{ color: `hsl(${primaryHsl})` }}>{page.title}</h1>
-          )}
-          
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-2">
-            <Button 
-              size="sm" 
-              className="text-white"
-              style={{ backgroundColor: `hsl(${primaryHsl})` }}
-              onClick={() => handleCtaClick(page.hero_cta_link, navigate)}
-            >
-              {page.hero_cta_text || 'Comprar Agora'}
-            </Button>
-            {user ? (
+      {/* Header with Logo and Navigation - hidden in clean mode */}
+      {!isClean && (
+        <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/30 h-16 sm:h-20 md:h-24">
+          <div className="max-w-7xl mx-auto px-3 sm:px-4 h-full flex items-center justify-between">
+            {page.logo_image ? (
+              <img 
+                src={page.logo_image} 
+                alt="Logo" 
+                className="object-contain"
+                style={{
+                  height: page.logo_size === 'small' ? '32px' :
+                          page.logo_size === 'large' ? '64px' :
+                          page.logo_size === 'xlarge' ? '80px' :
+                          '48px' // medium (default)
+                }}
+              />
+            ) : (
+              <h1 className="font-bold text-base sm:text-lg" style={{ color: `hsl(${primaryHsl})` }}>{page.title}</h1>
+            )}
+            
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex items-center gap-2">
               <Button 
-                variant="outline" 
                 size="sm" 
-                className="border-primary/50 text-primary hover:bg-primary hover:text-primary-foreground"
-                style={{ borderColor: `hsl(${primaryHsl} / 0.5)`, color: `hsl(${primaryHsl})` }}
-                onClick={async () => {
-                  await supabase.auth.signOut();
-                  setUser(null);
+                className="text-white"
+                style={{ backgroundColor: `hsl(${primaryHsl})` }}
+                onClick={() => handleCtaClick(page.hero_cta_link, navigate)}
+              >
+                {page.hero_cta_text || 'Comprar Agora'}
+              </Button>
+              {user ? (
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="border-primary/50 text-primary hover:bg-primary hover:text-primary-foreground"
+                  style={{ borderColor: `hsl(${primaryHsl} / 0.5)`, color: `hsl(${primaryHsl})` }}
+                  onClick={async () => {
+                    await supabase.auth.signOut();
+                    setUser(null);
+                  }}
+                >
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Sair
+                </Button>
+              ) : (
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="border-primary/50 text-primary hover:bg-primary hover:text-primary-foreground"
+                  style={{ borderColor: `hsl(${primaryHsl} / 0.5)`, color: `hsl(${primaryHsl})` }}
+                  onClick={() => navigate('/auth')}
+                >
+                  <UserPlus className="w-4 h-4 mr-2" />
+                  Criar conta
+                </Button>
+              )}
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="text-muted-foreground hover:text-foreground"
+                onClick={() => {
+                  const el = document.getElementById('how-it-works');
+                  el?.scrollIntoView({ behavior: 'smooth' });
                 }}
               >
-                <LogOut className="w-4 h-4 mr-2" />
-                Sair
+                Como Funciona
               </Button>
-            ) : (
               <Button 
-                variant="outline" 
+                variant="ghost" 
                 size="sm" 
-                className="border-primary/50 text-primary hover:bg-primary hover:text-primary-foreground"
-                style={{ borderColor: `hsl(${primaryHsl} / 0.5)`, color: `hsl(${primaryHsl})` }}
-                onClick={() => navigate('/auth')}
+                className="text-muted-foreground hover:text-foreground"
+                onClick={() => {
+                  const el = document.getElementById('faq');
+                  el?.scrollIntoView({ behavior: 'smooth' });
+                }}
               >
-                <UserPlus className="w-4 h-4 mr-2" />
-                Criar conta
+                FAQ
               </Button>
-            )}
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="text-muted-foreground hover:text-foreground"
-              onClick={() => {
-                const el = document.getElementById('how-it-works');
-                el?.scrollIntoView({ behavior: 'smooth' });
-              }}
-            >
-              Como Funciona
-            </Button>
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="text-muted-foreground hover:text-foreground"
-              onClick={() => {
-                const el = document.getElementById('faq');
-                el?.scrollIntoView({ behavior: 'smooth' });
-              }}
-            >
-              FAQ
-            </Button>
-          </nav>
+            </nav>
 
-          {/* Mobile Menu */}
-          <Sheet>
-            <SheetTrigger asChild className="md:hidden">
-              <Button variant="ghost" size="icon" className="text-foreground">
-                <Menu className="w-6 h-6" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className="bg-background border-border w-[280px]">
-              <nav className="flex flex-col gap-4 mt-8">
-                <Button 
-                  className="w-full text-white"
-                  style={{ backgroundColor: `hsl(${primaryHsl})` }}
-                  onClick={() => handleCtaClick(page.hero_cta_link, navigate)}
-                >
-                  {page.hero_cta_text || 'Comprar Agora'}
+            {/* Mobile Menu */}
+            <Sheet>
+              <SheetTrigger asChild className="md:hidden">
+                <Button variant="ghost" size="icon" className="text-foreground">
+                  <Menu className="w-6 h-6" />
                 </Button>
-                {user ? (
+              </SheetTrigger>
+              <SheetContent side="right" className="bg-background border-border w-[280px]">
+                <nav className="flex flex-col gap-4 mt-8">
                   <Button 
-                    variant="outline" 
-                    className="w-full"
-                    style={{ borderColor: `hsl(${primaryHsl} / 0.5)`, color: `hsl(${primaryHsl})` }}
-                    onClick={async () => {
-                      await supabase.auth.signOut();
-                      setUser(null);
+                    className="w-full text-white"
+                    style={{ backgroundColor: `hsl(${primaryHsl})` }}
+                    onClick={() => handleCtaClick(page.hero_cta_link, navigate)}
+                  >
+                    {page.hero_cta_text || 'Comprar Agora'}
+                  </Button>
+                  {user ? (
+                    <Button 
+                      variant="outline" 
+                      className="w-full"
+                      style={{ borderColor: `hsl(${primaryHsl} / 0.5)`, color: `hsl(${primaryHsl})` }}
+                      onClick={async () => {
+                        await supabase.auth.signOut();
+                        setUser(null);
+                      }}
+                    >
+                      <LogOut className="w-4 h-4 mr-2" />
+                      Sair
+                    </Button>
+                  ) : (
+                    <Button 
+                      variant="outline" 
+                      className="w-full"
+                      style={{ borderColor: `hsl(${primaryHsl} / 0.5)`, color: `hsl(${primaryHsl})` }}
+                      onClick={() => navigate('/auth')}
+                    >
+                      <UserPlus className="w-4 h-4 mr-2" />
+                      Criar conta
+                    </Button>
+                  )}
+                  <Button 
+                    variant="ghost" 
+                    className="w-full justify-start text-muted-foreground hover:text-foreground"
+                    onClick={() => {
+                      const el = document.getElementById('how-it-works');
+                      el?.scrollIntoView({ behavior: 'smooth' });
                     }}
                   >
-                    <LogOut className="w-4 h-4 mr-2" />
-                    Sair
+                    Como Funciona
                   </Button>
-                ) : (
                   <Button 
-                    variant="outline" 
-                    className="w-full"
-                    style={{ borderColor: `hsl(${primaryHsl} / 0.5)`, color: `hsl(${primaryHsl})` }}
-                    onClick={() => navigate('/auth')}
+                    variant="ghost" 
+                    className="w-full justify-start text-muted-foreground hover:text-foreground"
+                    onClick={() => {
+                      const el = document.getElementById('faq');
+                      el?.scrollIntoView({ behavior: 'smooth' });
+                    }}
                   >
-                    <UserPlus className="w-4 h-4 mr-2" />
-                    Criar conta
+                    FAQ
                   </Button>
-                )}
-                <Button 
-                  variant="ghost" 
-                  className="w-full justify-start text-muted-foreground hover:text-foreground"
-                  onClick={() => {
-                    const el = document.getElementById('how-it-works');
-                    el?.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                >
-                  Como Funciona
-                </Button>
-                <Button 
-                  variant="ghost" 
-                  className="w-full justify-start text-muted-foreground hover:text-foreground"
-                  onClick={() => {
-                    const el = document.getElementById('faq');
-                    el?.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                >
-                  FAQ
-                </Button>
-              </nav>
-            </SheetContent>
-          </Sheet>
-        </div>
-      </header>
+                </nav>
+              </SheetContent>
+            </Sheet>
+          </div>
+        </header>
+      )}
 
       {/* Render sections in the configured order */}
       {sectionOrder.map((sectionId) => sectionRenderers[sectionId]?.())}
