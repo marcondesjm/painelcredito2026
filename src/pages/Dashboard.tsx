@@ -19,7 +19,8 @@ import {
   Check,
   HelpCircle,
   Menu,
-  TrendingUp
+  TrendingUp,
+  Share2
 } from 'lucide-react';
 import {
   Dialog,
@@ -397,6 +398,23 @@ const Dashboard = () => {
                         <Edit className="w-4 h-4 mr-2" />
                         Editar
                       </Button>
+                      {page.is_published && (
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => {
+                            const cleanUrl = `https://painelcredito2026.lovable.app/p/${page.slug}?clean=true`;
+                            navigator.clipboard.writeText(cleanUrl);
+                            toast.success('Link de divulgação copiado!', {
+                              description: 'Página limpa, sem botões. Perfeita para visitantes!'
+                            });
+                          }}
+                          className="hover:bg-blue-500/20 hover:text-blue-500 hover:border-blue-500/50"
+                          title="📤 Copiar link de divulgação (página limpa)"
+                        >
+                          <Share2 className="w-4 h-4" />
+                        </Button>
+                      )}
                       <Button 
                         variant="outline" 
                         size="sm"
