@@ -80,12 +80,12 @@ const Auth = () => {
       <Card className="w-full max-w-md bg-card/50 backdrop-blur-sm border-border/50">
         <CardContent className="pt-6">
           {/* Logo */}
-          <div className="flex justify-center mb-6">
-            <img src={logoPainel} alt="Logo" className="h-16 object-contain" />
+          <div className="flex justify-center mb-3">
+            <img src={logoPainel} alt="Logo" className="h-14 object-contain" />
           </div>
 
           {/* Title */}
-          <div className="text-center mb-6">
+          <div className="text-center mb-4">
             <h1 className="text-2xl font-bold text-foreground">
               {isLogin ? 'Entrar na conta' : 'Criar nova conta'}
             </h1>
