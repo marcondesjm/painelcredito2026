@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Header } from '@/components/Header';
 import { HeroSection } from '@/components/HeroSection';
 import { FeaturesSection } from '@/components/FeaturesSection';
@@ -13,7 +14,7 @@ import { Footer } from '@/components/Footer';
 import { WhatsAppButton } from '@/components/WhatsAppButton';
 import { SocialProofNotification } from '@/components/SocialProofNotification';
 import { PricingTiersSection, PricingTier } from '@/components/PricingTiersSection';
-import { useNavigate } from 'react-router-dom';
+import { CheckoutModal } from '@/components/CheckoutModal';
 import backgroundHero from '@/assets/background-hero.png';
 import { useHomepageSettings } from '@/hooks/useHomepageSettings';
 
@@ -27,7 +28,7 @@ const fallbackTiers: PricingTier[] = [
     price_current: 29.99,
     available: 50,
     sales: 127,
-    checkout_link: '/checkout',
+    checkout_link: '',
     highlight: false
   },
   {
@@ -38,7 +39,7 @@ const fallbackTiers: PricingTier[] = [
     price_current: 349.99,
     available: 30,
     sales: 243,
-    checkout_link: '/checkout',
+    checkout_link: '',
     highlight: true
   },
   {
@@ -49,7 +50,7 @@ const fallbackTiers: PricingTier[] = [
     price_current: 179.99,
     available: 20,
     sales: 89,
-    checkout_link: '/checkout',
+    checkout_link: '',
     highlight: false
   },
   {
@@ -60,20 +61,22 @@ const fallbackTiers: PricingTier[] = [
     price_current: 799.99,
     available: 10,
     sales: 34,
-    checkout_link: '/checkout',
+    checkout_link: '',
     highlight: false
   }
 ];
 
 const Index = () => {
-  const navigate = useNavigate();
   const { settings, loading } = useHomepageSettings();
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const [selectedTier, setSelectedTier] = useState<PricingTier | null>(null);
 
   // Use database tiers if available, otherwise fallback
   const tiers = settings.pricing_tiers.length > 0 ? settings.pricing_tiers : fallbackTiers;
 
   const handleBuyClick = (tier: PricingTier) => {
-    navigate('/checkout', { state: { selectedTier: tier } });
+    setSelectedTier(tier);
+    setCheckoutOpen(true);
   };
 
   return (
@@ -108,8 +111,23 @@ const Index = () => {
       <FAQSection />
       <FinalCTASection />
       <Footer />
-      <WhatsAppButton number="5548996029392" message="Olá! Gostaria de mais informações sobre o painel." />
+      <WhatsAppButton number={settings.whatsapp_number || '5548996029392'} message="Olá! Gostaria de mais informações sobre o painel." />
       <SocialProofNotification />
+      
+      {/* Checkout Modal */}
+      <CheckoutModal
+        isOpen={checkoutOpen}
+        onClose={() => setCheckoutOpen(false)}
+        tier={selectedTier}
+        landingPageId="homepage"
+        primaryColor="#8B5CF6"
+        accentColor="#22C55E"
+        pixEnabled={true}
+        pixKey={settings.pix_key || ''}
+        pixName={settings.pix_name || ''}
+        whatsappNumber={settings.whatsapp_number || '5548996029392'}
+        showBalance={true}
+      />
     </div>
   );
 };

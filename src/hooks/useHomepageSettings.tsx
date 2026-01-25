@@ -14,6 +14,9 @@ interface HeroSettings {
 interface HomepageSettings {
   pricing_tiers: PricingTier[];
   hero: HeroSettings;
+  pix_key: string;
+  pix_name: string;
+  whatsapp_number: string;
 }
 
 const defaultSettings: HomepageSettings = {
@@ -25,7 +28,10 @@ const defaultSettings: HomepageSettings = {
     price_original: 600,
     price_current: 349.99,
     cta_text: 'Comprar Agora'
-  }
+  },
+  pix_key: '',
+  pix_name: '',
+  whatsapp_number: '5548996029392'
 };
 
 export const useHomepageSettings = () => {
@@ -49,6 +55,12 @@ export const useHomepageSettings = () => {
           newSettings.pricing_tiers = item.value as PricingTier[];
         } else if (item.key === 'hero' && item.value) {
           newSettings.hero = item.value as HeroSettings;
+        } else if (item.key === 'pix_key' && typeof item.value === 'string') {
+          newSettings.pix_key = item.value;
+        } else if (item.key === 'pix_name' && typeof item.value === 'string') {
+          newSettings.pix_name = item.value;
+        } else if (item.key === 'whatsapp_number' && typeof item.value === 'string') {
+          newSettings.whatsapp_number = item.value;
         }
       });
 

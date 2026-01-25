@@ -6,7 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Plus, Trash2, Save, Loader2, Star, GripVertical } from 'lucide-react';
+import { Plus, Trash2, Save, Loader2, Star, CreditCard, MessageSquare } from 'lucide-react';
 import { toast } from 'sonner';
 import { useHomepageSettings, HeroSettings } from '@/hooks/useHomepageSettings';
 import { PricingTier } from '@/components/PricingTiersSection';
@@ -18,10 +18,16 @@ export const HomepageEditor = () => {
   // Local state for editing
   const [hero, setHero] = useState<HeroSettings>(settings.hero);
   const [tiers, setTiers] = useState<PricingTier[]>(settings.pricing_tiers);
+  const [pixKey, setPixKey] = useState(settings.pix_key);
+  const [pixName, setPixName] = useState(settings.pix_name);
+  const [whatsappNumber, setWhatsappNumber] = useState(settings.whatsapp_number);
 
   useEffect(() => {
     setHero(settings.hero);
     setTiers(settings.pricing_tiers);
+    setPixKey(settings.pix_key);
+    setPixName(settings.pix_name);
+    setWhatsappNumber(settings.whatsapp_number);
   }, [settings]);
 
   const handleSaveHero = async () => {
@@ -40,6 +46,19 @@ export const HomepageEditor = () => {
     const result = await updateSetting('pricing_tiers', tiers);
     if (result.success) {
       toast.success('Pacotes atualizados com sucesso!');
+    } else {
+      toast.error('Erro ao salvar: ' + result.error);
+    }
+    setSaving(false);
+  };
+
+  const handleSavePayment = async () => {
+    setSaving(true);
+    await updateSetting('pix_key', pixKey);
+    await updateSetting('pix_name', pixName);
+    const result = await updateSetting('whatsapp_number', whatsappNumber);
+    if (result.success) {
+      toast.success('Configurações de pagamento salvas!');
     } else {
       toast.error('Erro ao salvar: ' + result.error);
     }
@@ -99,9 +118,10 @@ export const HomepageEditor = () => {
       </div>
 
       <Tabs defaultValue="hero" className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
+        <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="hero">Hero (Topo)</TabsTrigger>
           <TabsTrigger value="tiers">Pacotes de Créditos</TabsTrigger>
+          <TabsTrigger value="payment">Pagamento</TabsTrigger>
         </TabsList>
 
         {/* Hero Tab */}
@@ -306,6 +326,70 @@ export const HomepageEditor = () => {
               </Button>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        {/* Payment Settings Tab */}
+        <TabsContent value="payment" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <CreditCard className="w-5 h-5" />
+                Configurações PIX
+              </CardTitle>
+              <CardDescription>Configure sua chave PIX para receber pagamentos</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <Label>Chave PIX</Label>
+                  <Input
+                    value={pixKey}
+                    onChange={(e) => setPixKey(e.target.value)}
+                    placeholder="CPF, CNPJ, Email, Telefone ou Chave Aleatória"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Insira sua chave PIX para gerar o QR Code de pagamento
+                  </p>
+                </div>
+                <div className="space-y-2">
+                  <Label>Nome do Beneficiário</Label>
+                  <Input
+                    value={pixName}
+                    onChange={(e) => setPixName(e.target.value)}
+                    placeholder="Nome que aparecerá no PIX"
+                  />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <MessageSquare className="w-5 h-5" />
+                WhatsApp
+              </CardTitle>
+              <CardDescription>Configure o número para receber pedidos</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label>Número do WhatsApp (com DDD)</Label>
+                <Input
+                  value={whatsappNumber}
+                  onChange={(e) => setWhatsappNumber(e.target.value)}
+                  placeholder="5511999999999"
+                />
+                <p className="text-xs text-muted-foreground">
+                  Formato: código do país + DDD + número (sem espaços ou traços)
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Button onClick={handleSavePayment} disabled={saving} className="w-full">
+            {saving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
+            Salvar Configurações de Pagamento
+          </Button>
         </TabsContent>
       </Tabs>
     </div>
