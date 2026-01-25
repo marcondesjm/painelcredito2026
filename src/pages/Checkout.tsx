@@ -1,12 +1,28 @@
-// Force rebuild - prices updated to R$ 600,00 -> R$ 349,99
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ArrowLeft, Shield, Zap, Headphones, Check, Mail, Lock } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import productPainel from '@/assets/product-painel.png';
+import { PricingTier } from '@/components/PricingTiersSection';
+
+// Default tier when accessing /checkout directly (without selecting a package)
+const defaultTier: PricingTier = {
+  id: 'default',
+  name: 'Painel Gerador de Créditos',
+  credits: 5000,
+  price_original: 600,
+  price_current: 349.99,
+  available: 30,
+  sales: 243,
+  checkout_link: '',
+  highlight: false
+};
 
 const Checkout = () => {
+  const location = useLocation();
+  const selectedTier = (location.state as { selectedTier?: PricingTier })?.selectedTier || defaultTier;
+  
   const [email, setEmail] = useState('');
 
   const benefits = [
@@ -17,10 +33,28 @@ const Checkout = () => {
     "Comunidade Exclusiva"
   ];
 
+  const formatPrice = (value: number) => {
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    }).format(value);
+  };
+
+  const calculateSavings = () => {
+    if (!selectedTier.price_original || selectedTier.price_original <= selectedTier.price_current) {
+      return null;
+    }
+    const savings = Math.round(((selectedTier.price_original - selectedTier.price_current) / selectedTier.price_original) * 100);
+    return savings;
+  };
+
+  const savings = calculateSavings();
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Integrate with payment gateway
-    const whatsappMessage = encodeURIComponent(`Olá! Gostaria de comprar o Painel Gerador de Créditos. Meu email: ${email}`);
+    const whatsappMessage = encodeURIComponent(
+      `Olá! Gostaria de comprar o ${selectedTier.name} (${selectedTier.credits.toLocaleString('pt-BR')} créditos) por ${formatPrice(selectedTier.price_current)}. Meu email: ${email}`
+    );
     window.open(`https://wa.me/5548996029392?text=${whatsappMessage}`, '_blank');
   };
 
@@ -48,16 +82,26 @@ const Checkout = () => {
               />
               <div>
                 <h1 className="text-xl font-bold text-foreground">
-                  Painel Gerador de Créditos
+                  {selectedTier.name}
                 </h1>
-                <p className="text-lg font-semibold text-foreground">Acesso Completo</p>
+                <p className="text-lg font-semibold text-foreground">
+                  {selectedTier.credits.toLocaleString('pt-BR')} Créditos
+                </p>
                 <p className="text-sm text-muted-foreground">Acesso vitalício • Sem mensalidades</p>
-                <div className="flex items-center gap-2 mt-2">
-                  <span className="text-muted-foreground line-through text-sm">R$ 600,00</span>
-                  <span className="text-2xl font-bold text-accent">R$ 349,99</span>
-                  <span className="bg-accent/20 text-accent text-xs px-2 py-0.5 rounded-full">
-                    Economia de 40%
+                <div className="flex items-center gap-2 mt-2 flex-wrap">
+                  {selectedTier.price_original && selectedTier.price_original > selectedTier.price_current && (
+                    <span className="text-muted-foreground line-through text-sm">
+                      {formatPrice(selectedTier.price_original)}
+                    </span>
+                  )}
+                  <span className="text-2xl font-bold text-accent">
+                    {formatPrice(selectedTier.price_current)}
                   </span>
+                  {savings && (
+                    <span className="bg-accent/20 text-accent text-xs px-2 py-0.5 rounded-full">
+                      Economia de {savings}%
+                    </span>
+                  )}
                 </div>
               </div>
             </div>
