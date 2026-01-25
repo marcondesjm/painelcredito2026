@@ -18,7 +18,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Loader2, Star, Check, Shield, Clock, ArrowRight, MessageCircle, Zap, Headphones, UserPlus, Menu, RefreshCw, Heart, Award } from 'lucide-react';
+import { Loader2, Star, Check, Shield, Clock, ArrowRight, MessageCircle, Zap, Headphones, UserPlus, LogOut, Menu, RefreshCw, Heart, Award } from 'lucide-react';
 import { CountdownTimer } from '@/components/CountdownTimer';
 import { SocialProofNotification } from '@/components/SocialProofNotification';
 import { WhatsAppButton } from '@/components/WhatsAppButton';
@@ -186,6 +186,7 @@ const DynamicLandingPageInner = () => {
   const [error, setError] = useState<Error | null>(null);
   const [hoveredSection, setHoveredSection] = useState<string | null>(null);
   const hoverLeaveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [user, setUser] = useState<any>(null);
   
   // Checkout modal state
   const [checkoutModalOpen, setCheckoutModalOpen] = useState(false);
@@ -194,6 +195,21 @@ const DynamicLandingPageInner = () => {
   const isPreview = searchParams.get('preview') === 'true';
   const draftId = searchParams.get('draftId');
   const debug = searchParams.get('debug') === 'true' || isPreview;
+
+  // Check auth state
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setUser(session?.user ?? null);
+      }
+    );
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   const clearHoverLeaveTimeout = () => {
     if (hoverLeaveTimeoutRef.current) {
@@ -1384,16 +1400,32 @@ const DynamicLandingPageInner = () => {
             >
               {page.hero_cta_text || 'Comprar Agora'}
             </Button>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="border-primary/50 text-primary hover:bg-primary hover:text-primary-foreground"
-              style={{ borderColor: `hsl(${primaryHsl} / 0.5)`, color: `hsl(${primaryHsl})` }}
-              onClick={() => navigate('/auth')}
-            >
-              <UserPlus className="w-4 h-4 mr-2" />
-              Criar conta
-            </Button>
+            {user ? (
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="border-primary/50 text-primary hover:bg-primary hover:text-primary-foreground"
+                style={{ borderColor: `hsl(${primaryHsl} / 0.5)`, color: `hsl(${primaryHsl})` }}
+                onClick={async () => {
+                  await supabase.auth.signOut();
+                  setUser(null);
+                }}
+              >
+                <LogOut className="w-4 h-4 mr-2" />
+                Sair
+              </Button>
+            ) : (
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="border-primary/50 text-primary hover:bg-primary hover:text-primary-foreground"
+                style={{ borderColor: `hsl(${primaryHsl} / 0.5)`, color: `hsl(${primaryHsl})` }}
+                onClick={() => navigate('/auth')}
+              >
+                <UserPlus className="w-4 h-4 mr-2" />
+                Criar conta
+              </Button>
+            )}
             <Button 
               variant="ghost" 
               size="sm" 
@@ -1434,15 +1466,30 @@ const DynamicLandingPageInner = () => {
                 >
                   {page.hero_cta_text || 'Comprar Agora'}
                 </Button>
-                <Button 
-                  variant="outline" 
-                  className="w-full"
-                  style={{ borderColor: `hsl(${primaryHsl} / 0.5)`, color: `hsl(${primaryHsl})` }}
-                  onClick={() => navigate('/auth')}
-                >
-                  <UserPlus className="w-4 h-4 mr-2" />
-                  Criar conta
-                </Button>
+                {user ? (
+                  <Button 
+                    variant="outline" 
+                    className="w-full"
+                    style={{ borderColor: `hsl(${primaryHsl} / 0.5)`, color: `hsl(${primaryHsl})` }}
+                    onClick={async () => {
+                      await supabase.auth.signOut();
+                      setUser(null);
+                    }}
+                  >
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Sair
+                  </Button>
+                ) : (
+                  <Button 
+                    variant="outline" 
+                    className="w-full"
+                    style={{ borderColor: `hsl(${primaryHsl} / 0.5)`, color: `hsl(${primaryHsl})` }}
+                    onClick={() => navigate('/auth')}
+                  >
+                    <UserPlus className="w-4 h-4 mr-2" />
+                    Criar conta
+                  </Button>
+                )}
                 <Button 
                   variant="ghost" 
                   className="w-full justify-start text-muted-foreground hover:text-foreground"
