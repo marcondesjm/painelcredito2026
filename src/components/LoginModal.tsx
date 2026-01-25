@@ -34,7 +34,7 @@ export const LoginModal = ({ open, onOpenChange }: LoginModalProps) => {
           email,
           password,
           options: {
-            emailRedirectTo: `${window.location.origin}/dashboard/new`,
+            emailRedirectTo: `${window.location.origin}/dashboard`,
             data: {
               full_name: fullName
             }
@@ -42,14 +42,14 @@ export const LoginModal = ({ open, onOpenChange }: LoginModalProps) => {
         });
         if (error) throw error;
         
-        // If user is auto-confirmed, redirect to editor
+        // If user is auto-confirmed, redirect to dashboard
         if (data.user && data.session) {
           toast({
             title: "Conta criada!",
-            description: "Bem-vindo! Vamos criar sua primeira página.",
+            description: "Bem-vindo ao painel!",
           });
           onOpenChange(false);
-          navigate('/dashboard/new');
+          navigate('/dashboard');
         } else {
           toast({
             title: "Conta criada!",
