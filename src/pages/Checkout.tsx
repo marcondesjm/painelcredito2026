@@ -84,11 +84,16 @@ const Checkout = () => {
                 <h1 className="text-xl font-bold text-foreground">
                   {selectedTier.name}
                 </h1>
-                <p className="text-lg font-semibold text-foreground">
-                  {selectedTier.credits.toLocaleString('pt-BR')} Créditos
-                </p>
+                <p className="text-lg font-semibold text-foreground">Acesso Completo</p>
                 <p className="text-sm text-muted-foreground">Acesso vitalício • Sem mensalidades</p>
-                <div className="flex items-center gap-2 mt-2 flex-wrap">
+                
+                {/* Oferta Limitada badge + Price */}
+                <div className="flex items-center gap-2 mt-3 mb-1">
+                  <span className="bg-primary text-primary-foreground text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">
+                    Oferta Limitada
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 flex-wrap">
                   {selectedTier.price_original && selectedTier.price_original > selectedTier.price_current && (
                     <span className="text-muted-foreground line-through text-sm">
                       {formatPrice(selectedTier.price_original)}
