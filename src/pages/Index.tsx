@@ -15,8 +15,10 @@ import { SocialProofNotification } from '@/components/SocialProofNotification';
 import { PricingTiersSection, PricingTier } from '@/components/PricingTiersSection';
 import { useNavigate } from 'react-router-dom';
 import backgroundHero from '@/assets/background-hero.png';
+import { useHomepageSettings } from '@/hooks/useHomepageSettings';
 
-const exampleTiers: PricingTier[] = [
+// Fallback tiers when database is loading or empty
+const fallbackTiers: PricingTier[] = [
   {
     id: '1',
     name: 'Pacote Iniciante',
@@ -65,6 +67,10 @@ const exampleTiers: PricingTier[] = [
 
 const Index = () => {
   const navigate = useNavigate();
+  const { settings, loading } = useHomepageSettings();
+
+  // Use database tiers if available, otherwise fallback
+  const tiers = settings.pricing_tiers.length > 0 ? settings.pricing_tiers : fallbackTiers;
 
   const handleBuyClick = (tier: PricingTier) => {
     navigate('/checkout', { state: { selectedTier: tier } });
@@ -87,7 +93,7 @@ const Index = () => {
       <Header />
       <HeroSection />
       <PricingTiersSection 
-        tiers={exampleTiers} 
+        tiers={tiers} 
         primaryColor="#8B5CF6" 
         accentColor="#22C55E"
         onBuyClick={handleBuyClick}

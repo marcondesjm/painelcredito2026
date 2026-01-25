@@ -57,6 +57,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { HomepageEditor } from '@/components/HomepageEditor';
 import logoPainel from '@/assets/logo-dashboard.png';
 
 interface UserProfile {
@@ -620,7 +621,7 @@ const AdminDashboard = () => {
 
         {/* Tabs */}
         <Tabs defaultValue="orders" className="space-y-6">
-          <TabsList>
+          <TabsList className="flex-wrap">
             <TabsTrigger value="orders" className="gap-2">
               <ShoppingCart className="w-4 h-4" />
               Pedidos ({stats.totalOrders})
@@ -632,6 +633,10 @@ const AdminDashboard = () => {
             <TabsTrigger value="pages" className="gap-2">
               <FileText className="w-4 h-4" />
               Páginas ({stats.totalPages})
+            </TabsTrigger>
+            <TabsTrigger value="homepage" className="gap-2">
+              <Eye className="w-4 h-4" />
+              Página Principal
             </TabsTrigger>
             <TabsTrigger value="settings" className="gap-2">
               <Settings className="w-4 h-4" />
@@ -1143,6 +1148,11 @@ const AdminDashboard = () => {
                 </div>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          {/* Homepage Tab */}
+          <TabsContent value="homepage">
+            <HomepageEditor />
           </TabsContent>
         </Tabs>
       </main>
