@@ -20,7 +20,8 @@ import {
   HelpCircle,
   Menu,
   TrendingUp,
-  Share2
+  Share2,
+  Eye
 } from 'lucide-react';
 import {
   Dialog,
@@ -430,9 +431,9 @@ const Dashboard = () => {
                                   });
                                 }}
                               >
-                                <ExternalLink className="w-4 h-4 mr-2 shrink-0" />
+                                <Copy className="w-4 h-4 mr-2 shrink-0" />
                                 <div className="flex flex-col">
-                                  <span className="font-medium">Link Normal</span>
+                                  <span className="font-medium">Copiar Link Normal</span>
                                   <span className="text-xs text-muted-foreground">Com barra e botões</span>
                                 </div>
                               </Button>
@@ -450,8 +451,36 @@ const Dashboard = () => {
                               >
                                 <Share2 className="w-4 h-4 mr-2 shrink-0" />
                                 <div className="flex flex-col">
-                                  <span className="font-medium">Link Limpo</span>
+                                  <span className="font-medium">Copiar Link Limpo</span>
                                   <span className="text-xs text-muted-foreground">Sem barra, ideal para visitantes</span>
+                                </div>
+                              </Button>
+                              
+                              <div className="border-t border-border my-1" />
+                              <p className="text-xs text-muted-foreground px-2 py-1 font-medium">Abrir em nova aba:</p>
+                              
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="justify-start text-left h-auto py-2"
+                                onClick={() => window.open(`https://painelcredito2026.lovable.app/p/${page.slug}`, '_blank')}
+                              >
+                                <ExternalLink className="w-4 h-4 mr-2 shrink-0" />
+                                <div className="flex flex-col">
+                                  <span className="font-medium">Abrir Normal</span>
+                                  <span className="text-xs text-muted-foreground">Com barra e botões</span>
+                                </div>
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="justify-start text-left h-auto py-2 text-blue-500 hover:text-blue-400"
+                                onClick={() => window.open(`https://painelcredito2026.lovable.app/p/${page.slug}?clean=true`, '_blank')}
+                              >
+                                <Eye className="w-4 h-4 mr-2 shrink-0" />
+                                <div className="flex flex-col">
+                                  <span className="font-medium">Abrir Limpa</span>
+                                  <span className="text-xs text-muted-foreground">Sem barra, como visitante vê</span>
                                 </div>
                               </Button>
                             </div>
@@ -467,17 +496,6 @@ const Dashboard = () => {
                       >
                         <TrendingUp className="w-4 h-4" />
                       </Button>
-                      {page.is_published && (
-                        <Button 
-                          variant="outline" 
-                          size="sm"
-                          onClick={() => window.open(`https://painelcredito2026.lovable.app/p/${page.slug}`, '_blank')}
-                          className="hover:bg-accent hover:text-accent-foreground hover:border-accent"
-                          title="Abrir página publicada"
-                        >
-                          <ExternalLink className="w-4 h-4" />
-                        </Button>
-                      )}
                       <Button 
                         variant="ghost" 
                         size="sm"
