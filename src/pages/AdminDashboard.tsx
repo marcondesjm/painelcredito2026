@@ -512,6 +512,20 @@ const AdminDashboard = () => {
               <p className="text-sm text-muted-foreground">Gerenciamento de usuários e páginas</p>
             </div>
           </div>
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={async () => {
+              setLoading(true);
+              await fetchData();
+              toast.success('Dados atualizados com sucesso!');
+            }}
+            disabled={loading}
+            className="gap-2"
+          >
+            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+            <span className="hidden sm:inline">Atualizar</span>
+          </Button>
         </div>
       </header>
 
