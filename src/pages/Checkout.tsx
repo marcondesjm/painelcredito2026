@@ -52,8 +52,8 @@ const Checkout = () => {
                 <p className="text-lg font-semibold text-foreground">Acesso Completo</p>
                 <p className="text-sm text-muted-foreground">Acesso vitalício • Sem mensalidades</p>
                 <div className="flex items-center gap-2 mt-2">
-                  <span className="text-muted-foreground line-through text-sm">R$ 150,00</span>
-                  <span className="text-2xl font-bold text-accent">R$ 99,99</span>
+                  <span className="text-muted-foreground line-through text-sm">R$ 600,00</span>
+                  <span className="text-2xl font-bold text-accent">R$ 349,99</span>
                   <span className="bg-accent/20 text-accent text-xs px-2 py-0.5 rounded-full">
                     Economia de 40%
                   </span>
