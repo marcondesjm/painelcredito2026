@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { ShoppingCart, Shield, Wallet, Link as LinkIcon, Tag, Loader2, CheckCircle, Eye, EyeOff, RefreshCw, X, Sparkles, Copy } from 'lucide-react';
+import { ShoppingCart, Shield, Wallet, Link as LinkIcon, Tag, Loader2, CheckCircle, Eye, EyeOff, RefreshCw, X, Sparkles, Copy, Send, Phone } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -744,6 +744,47 @@ ${cupomText}
                         Chave PIX
                       </Button>
                     </div>
+
+                    {/* Send Proof to WhatsApp */}
+                    {whatsappNumber && (
+                      <div className="pt-3 border-t border-border/30 space-y-2">
+                        <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
+                          <Phone className="w-3 h-3" />
+                          <span>WhatsApp do vendedor:</span>
+                          <span className="font-medium text-foreground">
+                            {whatsappNumber.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3')}
+                          </span>
+                        </div>
+                        <Button
+                          type="button"
+                          className="w-full text-white font-medium"
+                          size="sm"
+                          style={{ backgroundColor: '#25D366' }}
+                          onClick={() => {
+                            const cleanNumber = whatsappNumber.replace(/\D/g, '');
+                            const proofMessage = `📲 *COMPROVANTE PIX*
+
+📦 *Pacote:* ${tier?.name}
+💳 *Créditos:* ${tier?.credits.toLocaleString('pt-BR')}
+💰 *Valor:* ${formatPrice(finalPrice)}
+
+👤 *Cliente:*
+• Nome: ${name || 'Não informado'}
+• WhatsApp: ${whatsapp || 'Não informado'}
+• Email: ${email || 'Não informado'}
+
+📅 *Data:* ${new Date().toLocaleString('pt-BR')}
+
+_Por favor, anexe o comprovante do PIX nesta conversa._`;
+                            const encodedMessage = encodeURIComponent(proofMessage);
+                            window.open(`https://wa.me/${cleanNumber}?text=${encodedMessage}`, '_blank');
+                          }}
+                        >
+                          <Send className="w-4 h-4 mr-2" />
+                          Enviar Comprovante via WhatsApp
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 );
               })()}
