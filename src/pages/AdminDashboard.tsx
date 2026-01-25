@@ -113,6 +113,10 @@ const AdminDashboard = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [deleteUserId, setDeleteUserId] = useState<string | null>(null);
+  const [deletePageId, setDeletePageId] = useState<string | null>(null);
+  
+  // ID da primeira landing page (matriz) - não pode ser excluída
+  const MAIN_LANDING_PAGE_ID = '11f96cef-351c-4758-bf41-9ef4b03d915c';
   
   // Order filters
   const [orderSearch, setOrderSearch] = useState('');
@@ -335,6 +339,39 @@ const AdminDashboard = () => {
     } catch (error: any) {
       console.error('Error deleting order:', error);
       toast.error('Erro ao excluir pedido');
+    }
+  };
+
+  const handleDeletePage = async () => {
+    if (!deletePageId) return;
+
+    // Proteção extra no frontend
+    if (deletePageId === MAIN_LANDING_PAGE_ID) {
+      toast.error('Não é permitido excluir a página principal (matriz)');
+      setDeletePageId(null);
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('landing_pages')
+        .delete()
+        .eq('id', deletePageId);
+
+      if (error) throw error;
+
+      setPages(prev => prev.filter(p => p.id !== deletePageId));
+      setStats(prev => ({
+        ...prev,
+        totalPages: prev.totalPages - 1,
+        publishedPages: prev.publishedPages - (pages.find(p => p.id === deletePageId)?.is_published ? 1 : 0)
+      }));
+      toast.success('Landing page excluída com sucesso');
+    } catch (error: any) {
+      console.error('Error deleting landing page:', error);
+      toast.error('Erro ao excluir landing page');
+    } finally {
+      setDeletePageId(null);
     }
   };
 
@@ -973,15 +1010,28 @@ const AdminDashboard = () => {
                               </div>
                             </TableCell>
                             <TableCell>
-                              {page.is_published && (
+                              <div className="flex items-center gap-1">
+                                {page.is_published && (
+                                  <Button 
+                                    variant="ghost" 
+                                    size="sm"
+                                    onClick={() => window.open(`/p/${page.slug}`, '_blank')}
+                                    title="Visualizar página"
+                                  >
+                                    <Eye className="w-4 h-4" />
+                                  </Button>
+                                )}
                                 <Button 
                                   variant="ghost" 
                                   size="sm"
-                                  onClick={() => window.open(`/p/${page.slug}`, '_blank')}
+                                  onClick={() => setDeletePageId(page.id)}
+                                  className="text-destructive hover:text-destructive"
+                                  disabled={page.id === MAIN_LANDING_PAGE_ID}
+                                  title={page.id === MAIN_LANDING_PAGE_ID ? 'Página principal (matriz) - não pode ser excluída' : 'Excluir página'}
                                 >
-                                  <Eye className="w-4 h-4" />
+                                  <Trash2 className="w-4 h-4" />
                                 </Button>
-                              )}
+                              </div>
                             </TableCell>
                           </TableRow>
                         ))
@@ -1095,6 +1145,24 @@ const AdminDashboard = () => {
           <AlertDialogFooter>
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
             <AlertDialogAction onClick={handleDeleteUser} className="bg-destructive text-destructive-foreground">
+              Excluir
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Delete Page Dialog */}
+      <AlertDialog open={!!deletePageId} onOpenChange={() => setDeletePageId(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Excluir Landing Page?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Esta ação não pode ser desfeita. A landing page e todos os pedidos associados a ela serão permanentemente afetados.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeletePage} className="bg-destructive text-destructive-foreground">
               Excluir
             </AlertDialogAction>
           </AlertDialogFooter>
