@@ -111,7 +111,7 @@ export const LoginModal = ({ open, onOpenChange }: LoginModalProps) => {
       <DialogContent className="max-w-[95vw] sm:max-w-sm bg-card border-border mx-auto p-5">
         {/* Logo */}
         <div className="flex justify-center mb-2">
-          <img src={logoPainel} alt="Logo" className="h-14 object-contain" />
+          <img src={logoPainel} alt="Logo" className="h-16 object-contain" />
         </div>
 
         {/* Title */}
