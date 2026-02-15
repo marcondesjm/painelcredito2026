@@ -571,47 +571,6 @@ ${cupomText}
                   </div>
                 </div>
 
-                {/* Invite Link Section */}
-                {inviteEnabled && (
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-2">
-                      <LinkIcon className="w-4 h-4" style={{ color: primaryColor }} />
-                      <span className="text-sm font-medium">{inviteLabel}</span>
-                    </div>
-                    
-                    <div className="grid grid-cols-2 gap-2">
-                      <Button
-                        type="button"
-                        variant={sendLinkNow ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => setSendLinkNow(true)}
-                        className="h-10 font-medium"
-                        style={sendLinkNow ? { backgroundColor: '#F59E0B', color: 'white' } : {}}
-                      >
-                        Enviar agora
-                      </Button>
-                      <Button
-                        type="button"
-                        variant={!sendLinkNow ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => setSendLinkNow(false)}
-                        className="h-10 font-medium"
-                        style={!sendLinkNow ? { backgroundColor: '#6B7280', color: 'white' } : {}}
-                      >
-                        Enviar depois
-                      </Button>
-                    </div>
-
-                    {sendLinkNow && (
-                      <Input
-                        value={inviteLink}
-                        onChange={(e) => setInviteLink(e.target.value)}
-                        placeholder={invitePlaceholder}
-                        className="bg-background border-2 h-11 text-sm"
-                      />
-                    )}
-                  </div>
-                )}
 
                 {/* Coupon */}
                 {couponEnabled && (
