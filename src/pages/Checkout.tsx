@@ -5,6 +5,7 @@ import { ArrowLeft, Shield, Zap, Headphones, Check, Mail, Lock } from 'lucide-re
 import { Link, useLocation } from 'react-router-dom';
 import productPainel from '@/assets/product-painel.png';
 import { PricingTier } from '@/components/PricingTiersSection';
+import { useHomepageSettings } from '@/hooks/useHomepageSettings';
 
 // Default tier when accessing /checkout directly (without selecting a package)
 const defaultTier: PricingTier = {
@@ -22,16 +23,10 @@ const defaultTier: PricingTier = {
 const Checkout = () => {
   const location = useLocation();
   const selectedTier = (location.state as { selectedTier?: PricingTier })?.selectedTier || defaultTier;
+  const { settings } = useHomepageSettings();
+  const { checkout } = settings;
   
   const [email, setEmail] = useState('');
-
-  const benefits = [
-    "Acesso Vitalício ao Painel",
-    "Gerador de Créditos Ilimitado",
-    "Suporte Premium 24/7",
-    "Atualizações Gratuitas",
-    "Comunidade Exclusiva"
-  ];
 
   const formatPrice = (value: number) => {
     return new Intl.NumberFormat('pt-BR', {
@@ -44,8 +39,7 @@ const Checkout = () => {
     if (!selectedTier.price_original || selectedTier.price_original <= selectedTier.price_current) {
       return null;
     }
-    const savings = Math.round(((selectedTier.price_original - selectedTier.price_current) / selectedTier.price_original) * 100);
-    return savings;
+    return Math.round(((selectedTier.price_original - selectedTier.price_current) / selectedTier.price_original) * 100);
   };
 
   const savings = calculateSavings();
@@ -55,7 +49,7 @@ const Checkout = () => {
     const whatsappMessage = encodeURIComponent(
       `Olá! Gostaria de comprar o ${selectedTier.name} (${selectedTier.credits.toLocaleString('pt-BR')} créditos) por ${formatPrice(selectedTier.price_current)}. Meu email: ${email}`
     );
-    window.open(`https://wa.me/5548996029392?text=${whatsappMessage}`, '_blank');
+    window.open(`https://wa.me/${settings.whatsapp_number || '5548996029392'}?text=${whatsappMessage}`, '_blank');
   };
 
   return (
@@ -84,13 +78,12 @@ const Checkout = () => {
                 <h1 className="text-xl font-bold text-foreground">
                   {selectedTier.name}
                 </h1>
-                <p className="text-lg font-semibold text-foreground">Acesso Completo</p>
-                <p className="text-sm text-muted-foreground">Acesso vitalício • Sem mensalidades</p>
+                <p className="text-lg font-semibold text-foreground">{checkout.product_subtitle}</p>
+                <p className="text-sm text-muted-foreground">{checkout.product_description}</p>
                 
-                {/* Oferta Limitada badge + Price */}
                 <div className="flex items-center gap-2 mt-3 mb-1">
                   <span className="bg-primary text-primary-foreground text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">
-                    Oferta Limitada
+                    {checkout.badge_text}
                   </span>
                 </div>
                 <div className="flex items-center gap-2 flex-wrap">
@@ -131,7 +124,7 @@ const Checkout = () => {
             <div>
               <h3 className="font-semibold text-foreground mb-3">O que você vai receber:</h3>
               <ul className="space-y-2">
-                {benefits.map((benefit, index) => (
+                {checkout.benefits.map((benefit, index) => (
                   <li key={index} className="flex items-center gap-2 text-muted-foreground">
                     <Check className="w-4 h-4 text-accent" />
                     {benefit}
@@ -168,7 +161,7 @@ const Checkout = () => {
               </div>
 
               <Button type="submit" variant="hero" size="xl" className="w-full">
-                COMPRAR AGORA
+                {checkout.button_text}
               </Button>
 
               <p className="text-center text-sm text-muted-foreground">

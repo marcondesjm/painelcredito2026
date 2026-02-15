@@ -12,9 +12,18 @@ interface HeroSettings {
   badge_text: string;
 }
 
+interface CheckoutSettings {
+  product_subtitle: string;
+  product_description: string;
+  badge_text: string;
+  benefits: string[];
+  button_text: string;
+}
+
 interface HomepageSettings {
   pricing_tiers: PricingTier[];
   hero: HeroSettings;
+  checkout: CheckoutSettings;
   pix_key: string;
   pix_name: string;
   whatsapp_number: string;
@@ -30,6 +39,19 @@ const defaultSettings: HomepageSettings = {
     price_current: 349.99,
     cta_text: 'Comprar Agora',
     badge_text: 'Oferta Limitada'
+  },
+  checkout: {
+    product_subtitle: 'Acesso Completo',
+    product_description: 'Acesso vitalício • Sem mensalidades',
+    badge_text: 'Oferta Limitada',
+    benefits: [
+      'Acesso Vitalício ao Painel',
+      'Gerador de Créditos Ilimitado',
+      'Suporte Premium 24/7',
+      'Atualizações Gratuitas',
+      'Comunidade Exclusiva'
+    ],
+    button_text: 'COMPRAR AGORA'
   },
   pix_key: '',
   pix_name: '',
@@ -63,6 +85,8 @@ export const useHomepageSettings = () => {
           newSettings.pix_name = item.value;
         } else if (item.key === 'whatsapp_number' && typeof item.value === 'string') {
           newSettings.whatsapp_number = item.value;
+        } else if (item.key === 'checkout' && item.value) {
+          newSettings.checkout = item.value as CheckoutSettings;
         }
       });
 
@@ -119,4 +143,4 @@ export const useHomepageSettings = () => {
   };
 };
 
-export type { HeroSettings, HomepageSettings };
+export type { HeroSettings, CheckoutSettings, HomepageSettings };
