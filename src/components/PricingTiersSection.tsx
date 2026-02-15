@@ -184,6 +184,17 @@ const formatPrice = (value: number) => {
   }).format(value);
 };
 
+const translateTierName = (name: string): string => {
+  const map: Record<string, string> = {
+    'Pacote Iniciante': 'Starter Package',
+    'Pacote Básico': 'Basic Package',
+    'Pacote Profissional': 'Professional Package',
+    'Pacote Premium': 'Premium Package',
+    'Pacote Avançado': 'Advanced Package',
+  };
+  return map[name] || name;
+};
+
 const formatCredits = (credits: number) => {
   if (credits >= 1000) {
     return `${(credits / 1000).toFixed(0)}k`;
@@ -339,7 +350,7 @@ export const PricingTiersSection = ({
                       </Badge>
                     )}
                     <p className="text-sm text-muted-foreground line-clamp-1">
-                      {tier.name}
+                      {language === 'en' ? translateTierName(tier.name) : tier.name}
                     </p>
                   </div>
 
