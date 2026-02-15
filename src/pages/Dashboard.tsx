@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import { SocialProofNotification } from '@/components/SocialProofNotification';
+import { useHomepageSettings } from '@/hooks/useHomepageSettings';
 import { getLandingPageUrl } from '@/lib/urls';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
@@ -63,6 +65,7 @@ interface LandingPage {
 
 const Dashboard = () => {
   const { user, loading: authLoading, signOut } = useAuth();
+  const { settings: homepageSettings } = useHomepageSettings();
   const navigate = useNavigate();
   const [pages, setPages] = useState<LandingPage[]>([]);
   const [loading, setLoading] = useState(true);
@@ -593,6 +596,12 @@ const Dashboard = () => {
         pageTitle={salesPanel?.pageTitle || ''}
         open={!!salesPanel}
         onOpenChange={(open) => !open && setSalesPanel(null)}
+      />
+      <SocialProofNotification 
+        enabled={homepageSettings.social_proof.enabled}
+        productName={homepageSettings.social_proof.product_name}
+        customers={homepageSettings.social_proof.customers}
+        creditOptions={homepageSettings.social_proof.credit_options}
       />
     </div>
   );
