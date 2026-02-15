@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { ShoppingCart, Shield, Wallet, Link as LinkIcon, Tag, Loader2, CheckCircle, Eye, EyeOff, RefreshCw, X, Sparkles, Copy, Send, Phone, Globe, UserCircle, ChevronRight } from 'lucide-react';
+import { ShoppingCart, Shield, Wallet, Link as LinkIcon, Tag, Loader2, CheckCircle, Eye, EyeOff, RefreshCw, X, Sparkles, Copy, Send, Phone, Globe, UserCircle, ChevronRight, ArrowLeft } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -76,6 +76,7 @@ export const CheckoutModal = ({
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [inviteLink, setInviteLink] = useState('');
+  const [surname, setSurname] = useState('');
   const [sendLinkNow, setSendLinkNow] = useState(true);
   const [couponCode, setCouponCode] = useState('');
   const [cpf, setCpf] = useState('');
@@ -399,6 +400,7 @@ ${cupomText}
   const handleClose = () => {
     setStep('delivery');
     setName('');
+    setSurname('');
     setWhatsapp('');
     setEmail('');
     setPassword('');
@@ -515,83 +517,109 @@ ${cupomText}
 
         {step === 'checkout' && (
           <div className="flex flex-col">
-            {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b border-border/50">
-              <div className="flex items-center gap-2">
-                <ShoppingCart className="w-5 h-5" style={{ color: primaryColor }} />
-                <span className="font-semibold text-lg">Finalizar Pagamento</span>
+            {/* Progress Steps */}
+            <div className="flex items-center justify-center gap-0 pt-6 pb-2 px-4">
+              <div className="flex flex-col items-center">
+                <div className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold" style={{ backgroundColor: `${primaryColor}30`, color: primaryColor }}>
+                  <CheckCircle className="w-4 h-4" />
+                </div>
+                <span className="text-xs mt-1 text-muted-foreground">Pacote</span>
               </div>
-              <button 
-                onClick={handleClose}
-                className="text-muted-foreground hover:text-foreground transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
+              <div className="w-10 h-0.5 mt-[-12px]" style={{ backgroundColor: primaryColor }} />
+              <div className="flex flex-col items-center">
+                <div className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold" style={{ backgroundColor: `${primaryColor}30`, color: primaryColor }}>
+                  <CheckCircle className="w-4 h-4" />
+                </div>
+                <span className="text-xs mt-1 text-muted-foreground">Entrega</span>
+              </div>
+              <div className="w-10 h-0.5 mt-[-12px]" style={{ backgroundColor: primaryColor }} />
+              <div className="flex flex-col items-center">
+                <div className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold text-white" style={{ backgroundColor: primaryColor }}>
+                  3
+                </div>
+                <span className="text-xs mt-1 font-semibold" style={{ color: primaryColor }}>Dados</span>
+              </div>
             </div>
 
-            <div className="p-4 space-y-4">
-              {/* Package Info */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="text-xl">👛</span>
-                  <span className="font-medium">{tier.credits.toLocaleString('pt-BR')} Créditos</span>
+            <div className="p-5 space-y-5">
+              {/* Icon & Title */}
+              <div className="text-center space-y-1">
+                <div className="flex justify-center mb-3">
+                  <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: `${primaryColor}20` }}>
+                    <UserCircle className="w-6 h-6" style={{ color: primaryColor }} />
+                  </div>
                 </div>
-                <div className="text-right">
-                  {useBalanceAsDiscount && discount > 0 ? (
-                    <>
-                      <span className="text-sm text-muted-foreground line-through mr-2">
-                        {formatPrice(tier.price_current)}
-                      </span>
-                      <span className="text-2xl font-bold" style={{ color: accentColor }}>
-                        {formatPrice(finalPrice)}
-                      </span>
-                    </>
-                  ) : (
-                    <span className="text-2xl font-bold" style={{ color: accentColor }}>
-                      {formatPrice(tier.price_current)}
-                    </span>
-                  )}
-                </div>
+                <h2 className="text-xl font-bold text-foreground">Dados para Pagamento</h2>
+                <p className="text-sm text-muted-foreground">Preencha seus dados para gerar o PIX</p>
               </div>
 
-
-              {/* Security Badge */}
-              <div 
-                className="flex items-center justify-center gap-2 py-2.5 rounded-full border"
-                style={{ borderColor: `${accentColor}40`, backgroundColor: `${accentColor}10` }}
-              >
-                <RefreshCw className="w-4 h-4" style={{ color: accentColor }} />
-                <span className="text-sm font-medium" style={{ color: accentColor }}>
-                  {securityText}
-                </span>
+              {/* Order Summary */}
+              <div className="rounded-xl border border-border/50 overflow-hidden">
+                <div className="px-4 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider" style={{ backgroundColor: `${primaryColor}10` }}>
+                  Resumo do Pedido
+                </div>
+                <div className="divide-y divide-border/30">
+                  <div className="flex items-center justify-between px-4 py-2.5 text-sm">
+                    <div className="flex items-center gap-2">
+                      <span>💳</span>
+                      <span className="text-muted-foreground">Créditos Comprados:</span>
+                    </div>
+                    <span className="font-bold text-foreground">{tier.credits.toLocaleString('pt-BR')}</span>
+                  </div>
+                  <div className="flex items-center justify-between px-4 py-2.5 text-sm">
+                    <div className="flex items-center gap-2">
+                      <span>🎁</span>
+                      <span className="text-muted-foreground">Créditos Grátis:</span>
+                    </div>
+                    <span className="font-bold" style={{ color: accentColor }}>+0</span>
+                  </div>
+                  <div className="flex items-center justify-between px-4 py-2.5 text-sm" style={{ backgroundColor: `${primaryColor}08` }}>
+                    <div className="flex items-center gap-2">
+                      <span>✨</span>
+                      <span className="font-medium text-foreground">Total de Créditos:</span>
+                    </div>
+                    <span className="font-bold text-foreground">{tier.credits.toLocaleString('pt-BR')}</span>
+                  </div>
+                  <div className="flex items-center justify-between px-4 py-3" style={{ background: `linear-gradient(90deg, ${primaryColor}15, ${accentColor}15)` }}>
+                    <span className="font-semibold text-foreground">Valor a Pagar:</span>
+                    <span className="text-xl font-bold" style={{ color: accentColor }}>
+                      {formatPrice(finalPrice)}
+                    </span>
+                  </div>
+                </div>
               </div>
 
               {/* Form */}
-              <div className="space-y-4">
-                <div className="space-y-1.5">
-                  <Label className="text-sm font-medium">Nome Completo</Label>
-                  <Input
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="João Silva"
-                    className="bg-background border-2 h-11"
-                  />
+              <div className="space-y-3">
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-1.5">
+                    <Label className="text-sm font-medium">Nome</Label>
+                    <Input
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="João"
+                      className="bg-background border-2 h-11"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="text-sm font-medium">Sobrenome</Label>
+                    <Input
+                      value={surname}
+                      onChange={(e) => setSurname(e.target.value)}
+                      placeholder="Silva"
+                      className="bg-background border-2 h-11"
+                    />
+                  </div>
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label className="text-sm font-medium">CPF</Label>
+                  <Label className="text-sm font-medium">Email</Label>
                   <Input
-                    value={cpf}
-                    onChange={(e) => {
-                      const digits = e.target.value.replace(/\D/g, '');
-                      if (digits.length <= 3) setCpf(digits);
-                      else if (digits.length <= 6) setCpf(`${digits.slice(0, 3)}.${digits.slice(3)}`);
-                      else if (digits.length <= 9) setCpf(`${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6)}`);
-                      else setCpf(`${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6, 9)}-${digits.slice(9, 11)}`);
-                    }}
-                    placeholder="000.000.000-00"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="seu@email.com"
                     className="bg-background border-2 h-11"
-                    maxLength={14}
                   />
                 </div>
 
@@ -607,17 +635,22 @@ ${cupomText}
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <Label className="text-sm font-medium">Email</Label>
+                    <Label className="text-sm font-medium">CPF</Label>
                     <Input
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="seu@email.com"
+                      value={cpf}
+                      onChange={(e) => {
+                        const digits = e.target.value.replace(/\D/g, '');
+                        if (digits.length <= 3) setCpf(digits);
+                        else if (digits.length <= 6) setCpf(`${digits.slice(0, 3)}.${digits.slice(3)}`);
+                        else if (digits.length <= 9) setCpf(`${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6)}`);
+                        else setCpf(`${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6, 9)}-${digits.slice(9, 11)}`);
+                      }}
+                      placeholder="000.000.000-00"
                       className="bg-background border-2 h-11"
+                      maxLength={14}
                     />
                   </div>
                 </div>
-
 
                 {/* Coupon */}
                 {couponEnabled && (
@@ -645,172 +678,32 @@ ${cupomText}
                 )}
               </div>
 
-              {/* PIX Payment Section */}
-              {pixEnabled && pixKey && (() => {
-                // Validate PIX key before generating QR Code
-                const pixValidation = validatePixKey(pixKey);
-                
-                if (!pixValidation.isValid) {
-                  return (
-                    <div className="p-4 rounded-lg border-2 border-destructive/40 bg-destructive/5 space-y-2">
-                      <div className="flex items-center gap-2 text-destructive">
-                        <X className="w-5 h-5" />
-                        <h3 className="font-semibold text-sm">Chave PIX Inválida</h3>
-                      </div>
-                      <p className="text-xs text-muted-foreground">
-                        {pixValidation.error}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        Tipo detectado: <span className="font-medium">{pixValidation.type}</span>
-                      </p>
-                    </div>
-                  );
-                }
-
-                // Generate dynamic PIX payload with EMV/BRCode standard
-                const pixPayload = generatePixPayload({
-                  pixKey: pixKey,
-                  merchantName: pixName || 'Vendedor',
-                  merchantCity: 'SAO PAULO',
-                  amount: finalPrice > 0 ? finalPrice : undefined,
-                  txId: tier?.id?.substring(0, 25) || 'PEDIDO',
-                  description: tier?.name?.substring(0, 25)
-                });
-                const pixQrUrl = pixQrBase || generatePixQRCodeUrl(pixPayload, 150);
-
-                return (
-                  <div className="p-4 rounded-lg border-2 space-y-4" style={{ borderColor: `${accentColor}40`, backgroundColor: `${accentColor}08` }}>
-                    <div className="text-center">
-                      <h3 className="font-semibold text-sm mb-1">💳 Pague via PIX</h3>
-                      <p className="text-xs text-muted-foreground">
-                        QR Code com valor incluso • {pixValidation.type === 'EVP' ? 'Chave Aleatória' : pixValidation.type}
-                      </p>
-                    </div>
-                    
-                    {/* QR Code */}
-                    <div className="flex justify-center">
-                      <div className="bg-white p-3 rounded-lg shadow-md">
-                        <img 
-                          src={pixQrUrl}
-                          alt="QR Code PIX"
-                          className="w-36 h-36 object-contain"
-                          onError={(e) => {
-                            e.currentTarget.src = generatePixQRCodeUrl(pixPayload, 150);
-                          }}
-                        />
-                      </div>
-                    </div>
-                    
-                    {/* PIX Info */}
-                    <div className="space-y-2 text-center">
-                      {pixName && (
-                        <p className="text-xs text-muted-foreground">
-                          Para: <span className="font-medium text-foreground">{pixName}</span>
-                        </p>
-                      )}
-                      <div className="flex items-center justify-center gap-2">
-                        <span className="text-xs text-muted-foreground">Valor:</span>
-                        <span className="font-bold text-lg" style={{ color: accentColor }}>
-                          {formatPrice(finalPrice)}
-                        </span>
-                      </div>
-                      {tier?.name && (
-                        <p className="text-xs text-muted-foreground">
-                          Ref: {tier.name}
-                        </p>
-                      )}
-                    </div>
-                    
-                    {/* Copy Buttons */}
-                    <div className="grid grid-cols-2 gap-2">
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        className="text-xs"
-                        onClick={() => {
-                          navigator.clipboard.writeText(pixPayload);
-                          toast.success('Código PIX copiado!');
-                        }}
-                      >
-                        <Copy className="w-3 h-3 mr-1" />
-                        Copia e Cola
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        className="text-xs"
-                        onClick={() => {
-                          navigator.clipboard.writeText(pixKey);
-                          toast.success('Chave PIX copiada!');
-                        }}
-                      >
-                        <Copy className="w-3 h-3 mr-1" />
-                        Chave PIX
-                      </Button>
-                    </div>
-
-                    {/* Send Proof to WhatsApp */}
-                    {whatsappNumber && (
-                      <div className="pt-3 border-t border-border/30 space-y-2">
-                        <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
-                          <Phone className="w-3 h-3" />
-                          <span>WhatsApp do vendedor:</span>
-                          <span className="font-medium text-foreground">
-                            {whatsappNumber.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3')}
-                          </span>
-                        </div>
-                        <Button
-                          type="button"
-                          className="w-full text-white font-medium"
-                          size="sm"
-                          style={{ backgroundColor: '#25D366' }}
-                          onClick={() => {
-                            const cleanNumber = whatsappNumber.replace(/\D/g, '');
-                            const proofMessage = `📲 *COMPROVANTE PIX*
-
-📦 *Pacote:* ${tier?.name}
-💳 *Créditos:* ${tier?.credits.toLocaleString('pt-BR')}
-💰 *Valor:* ${formatPrice(finalPrice)}
-
-👤 *Cliente:*
-• Nome: ${name || 'Não informado'}
-• WhatsApp: ${whatsapp || 'Não informado'}
-• Email: ${email || 'Não informado'}
-
-📅 *Data:* ${new Date().toLocaleString('pt-BR')}
-
-_Por favor, anexe o comprovante do PIX nesta conversa._`;
-                            const encodedMessage = encodeURIComponent(proofMessage);
-                            window.open(`https://wa.me/${cleanNumber}?text=${encodedMessage}`, '_blank');
-                          }}
-                        >
-                          <Send className="w-4 h-4 mr-2" />
-                          Enviar Comprovante via WhatsApp
-                        </Button>
-                      </div>
-                    )}
-                  </div>
-                );
-              })()}
-
-              {/* Submit Button */}
-              <Button
-                className="w-full h-12 text-white font-semibold text-base"
-                style={{ backgroundColor: primaryColor }}
-                onClick={handleSubmitOrder}
-                disabled={loading}
-              >
-                {loading ? (
-                  <>
-                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                    Processando...
-                  </>
-                ) : (
-                  buttonText
-                )}
-              </Button>
+              {/* Action Buttons */}
+              <div className="flex gap-3">
+                <Button
+                  variant="outline"
+                  className="flex-1 h-12"
+                  onClick={() => setStep('delivery')}
+                >
+                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  Voltar
+                </Button>
+                <Button
+                  className="flex-1 h-12 text-white font-semibold text-base"
+                  style={{ background: `linear-gradient(90deg, ${primaryColor}, ${accentColor})` }}
+                  onClick={handleSubmitOrder}
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                      Processando...
+                    </>
+                  ) : (
+                    'Gerar PIX'
+                  )}
+                </Button>
+              </div>
             </div>
           </div>
         )}
