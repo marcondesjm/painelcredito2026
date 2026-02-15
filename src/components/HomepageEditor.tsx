@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -114,9 +115,15 @@ export const HomepageEditor = () => {
           <h2 className="text-2xl font-bold">Página Principal</h2>
           <p className="text-muted-foreground">Edite o conteúdo da homepage</p>
         </div>
-        <Button variant="outline" onClick={refetch}>
-          Atualizar
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={() => window.open('/', '_blank')}>
+            <ExternalLink className="w-4 h-4 mr-2" />
+            Ver Página
+          </Button>
+          <Button variant="outline" onClick={refetch}>
+            Atualizar
+          </Button>
+        </div>
       </div>
 
       <Tabs defaultValue="hero" className="w-full">
