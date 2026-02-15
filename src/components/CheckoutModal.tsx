@@ -571,14 +571,14 @@ ${cupomText}
                       <span>🎁</span>
                       <span className="text-muted-foreground">Créditos Grátis:</span>
                     </div>
-                    <span className="font-bold" style={{ color: accentColor }}>+0</span>
+                    <span className="font-bold" style={{ color: accentColor }}>+{(tier.bonus_credits || 0).toLocaleString('pt-BR')}</span>
                   </div>
                   <div className="flex items-center justify-between px-4 py-2.5 text-sm" style={{ backgroundColor: `${primaryColor}08` }}>
                     <div className="flex items-center gap-2">
                       <span>✨</span>
                       <span className="font-medium text-foreground">Total de Créditos:</span>
                     </div>
-                    <span className="font-bold text-foreground">{tier.credits.toLocaleString('pt-BR')}</span>
+                    <span className="font-bold text-foreground">{(tier.credits + (tier.bonus_credits || 0)).toLocaleString('pt-BR')}</span>
                   </div>
                   <div className="flex items-center justify-between px-4 py-3" style={{ background: `linear-gradient(90deg, ${primaryColor}15, ${accentColor}15)` }}>
                     <span className="font-semibold text-foreground">Valor a Pagar:</span>
