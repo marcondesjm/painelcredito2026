@@ -401,6 +401,19 @@ export const HomepageEditor = () => {
                               }}
                             />
                           </div>
+                          <div className="flex-1 space-y-1">
+                            <Label className="text-xs">Bônus</Label>
+                            <Input
+                              type="number"
+                              value={opt.bonus_credits || 0}
+                              onChange={(e) => {
+                                const updated = [...customPackageOptions];
+                                updated[index] = { ...updated[index], bonus_credits: Number(e.target.value) };
+                                setCustomPackageOptions(updated);
+                              }}
+                              placeholder="0"
+                            />
+                          </div>
                           <Button
                             variant="destructive"
                             size="icon"

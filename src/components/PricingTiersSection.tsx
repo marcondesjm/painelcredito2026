@@ -8,6 +8,7 @@ import { Check, TrendingUp, Sparkles, MessageCircle, Package } from 'lucide-reac
 interface CustomPackageOption {
   credits: number;
   price: number;
+  bonus_credits?: number;
 }
 
 interface CustomPackageCardProps {
@@ -29,6 +30,7 @@ const CustomPackageCard = ({ primaryColor, accentColor, onBuyClick, options }: C
       id: 'custom',
       name: 'Pacote Personalizado',
       credits: selectedCredits,
+      bonus_credits: selectedOption?.bonus_credits || 0,
       price_original: totalPrice * 1.5,
       price_current: totalPrice,
       available: 1,
@@ -83,6 +85,14 @@ const CustomPackageCard = ({ primaryColor, accentColor, onBuyClick, options }: C
                 <span>Créditos</span>
                 <span className="font-medium text-foreground">{formatCredits(selectedCredits)}</span>
               </div>
+              {(selectedOption?.bonus_credits ?? 0) > 0 && (
+                <div className="flex justify-between text-xs">
+                  <span className="text-muted-foreground">Bônus</span>
+                  <span className="font-bold" style={{ color: accentColor }}>
+                    🎁 +{formatCredits(selectedOption!.bonus_credits!)}
+                  </span>
+                </div>
+              )}
               <div className="flex justify-between text-xs">
                 <span className="text-muted-foreground">Valor</span>
                 <span className="font-bold text-lg" style={{ color: accentColor }}>

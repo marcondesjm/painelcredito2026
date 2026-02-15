@@ -37,6 +37,7 @@ interface SocialProofSettings {
 interface CustomPackageOption {
   credits: number;
   price: number;
+  bonus_credits?: number;
 }
 
 interface HomepageSettings {
