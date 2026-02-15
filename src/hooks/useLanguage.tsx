@@ -29,6 +29,11 @@ const translations: Record<Language, Record<string, string>> = {
     'cookie.accept_all': 'Aceitar Todos',
     'cookie.essential_only': 'Apenas Essenciais',
     // Hero
+    'hero.title': 'Créditos Infinitos na Lovable.',
+    'hero.title_highlight': 'Simples. Rápido. Automático.',
+    'hero.subtitle': 'Use nosso painel exclusivo e gere créditos ilimitados para seus projetos Lovable e revenda créditos.',
+    'hero.cta_text': 'Comprar Agora',
+    'hero.badge_text': 'Oferta Limitada',
     'hero.savings': 'Economia de',
     'hero.expires_in': 'EXPIRA EM',
     'hero.auto_delivery': 'Entrega Automática',
@@ -115,6 +120,11 @@ const translations: Record<Language, Record<string, string>> = {
     'cookie.accept_all': 'Accept All',
     'cookie.essential_only': 'Essential Only',
     // Hero
+    'hero.title': 'Unlimited Credits on Lovable.',
+    'hero.title_highlight': 'Simple. Fast. Automatic.',
+    'hero.subtitle': 'Use our exclusive panel and generate unlimited credits for your Lovable projects and resell credits.',
+    'hero.cta_text': 'Buy Now',
+    'hero.badge_text': 'Limited Offer',
     'hero.savings': 'Save',
     'hero.expires_in': 'EXPIRES IN',
     'hero.auto_delivery': 'Auto Delivery',

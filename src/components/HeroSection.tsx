@@ -36,23 +36,23 @@ export const HeroSection = () => {
 
           <div className="text-center lg:text-left">
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 leading-tight">
-              <span className="text-foreground">{hero.title} </span>
-              <span className="text-gradient">{hero.title_highlight}</span>
+              <span className="text-foreground">{language === 'en' ? t('hero.title') : hero.title} </span>
+              <span className="text-gradient">{language === 'en' ? t('hero.title_highlight') : hero.title_highlight}</span>
             </h1>
 
             <p className="text-base sm:text-lg text-muted-foreground mb-6 sm:mb-8 max-w-xl mx-auto lg:mx-0">
-              {hero.subtitle}
+              {language === 'en' ? t('hero.subtitle') : hero.subtitle}
             </p>
 
             <div className="mb-4 sm:mb-6">
               <Button variant="hero" size="xl" className="w-full sm:w-auto min-w-[200px]" onClick={() => navigate('/checkout')}>
-                {hero.cta_text}
+                {language === 'en' ? t('hero.cta_text') : hero.cta_text}
               </Button>
             </div>
 
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 sm:gap-4 mb-4 sm:mb-6">
               <span className="bg-primary text-primary-foreground text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-wide">
-                {hero.badge_text || t('hero.expires_in')}
+                {language === 'en' ? t('hero.badge_text') : (hero.badge_text || t('hero.expires_in'))}
               </span>
               
               <div className="flex items-baseline gap-2 sm:gap-3 flex-wrap justify-center lg:justify-start">
