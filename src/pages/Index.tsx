@@ -97,6 +97,7 @@ const Index = () => {
       <HeroSection />
       <PricingTiersSection 
         tiers={tiers} 
+        customPackageOptions={settings.custom_package_options}
         primaryColor="#8B5CF6" 
         accentColor="#22C55E"
         onBuyClick={handleBuyClick}

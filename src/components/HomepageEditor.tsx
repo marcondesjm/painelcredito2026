@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Plus, Trash2, Save, Loader2, Star, CreditCard, MessageSquare, ShoppingCart, Bell } from 'lucide-react';
 import { toast } from 'sonner';
-import { useHomepageSettings, HeroSettings, CheckoutSettings, SocialProofSettings, SocialProofCustomer } from '@/hooks/useHomepageSettings';
+import { useHomepageSettings, HeroSettings, CheckoutSettings, SocialProofSettings, SocialProofCustomer, CustomPackageOption } from '@/hooks/useHomepageSettings';
 import { PricingTier } from '@/components/PricingTiersSection';
 
 export const HomepageEditor = () => {
@@ -24,6 +24,7 @@ export const HomepageEditor = () => {
   const [whatsappNumber, setWhatsappNumber] = useState(settings.whatsapp_number);
   const [checkout, setCheckout] = useState<CheckoutSettings>(settings.checkout);
   const [socialProof, setSocialProof] = useState<SocialProofSettings>(settings.social_proof);
+  const [customPackageOptions, setCustomPackageOptions] = useState<CustomPackageOption[]>(settings.custom_package_options);
 
   useEffect(() => {
     setHero(settings.hero);
@@ -33,6 +34,7 @@ export const HomepageEditor = () => {
     setWhatsappNumber(settings.whatsapp_number);
     setCheckout(settings.checkout);
     setSocialProof(settings.social_proof);
+    setCustomPackageOptions(settings.custom_package_options);
   }, [settings]);
 
   const handleSaveHero = async () => {
@@ -49,6 +51,7 @@ export const HomepageEditor = () => {
   const handleSaveTiers = async () => {
     setSaving(true);
     const result = await updateSetting('pricing_tiers', tiers);
+    await updateSetting('custom_package_options', customPackageOptions);
     if (result.success) {
       toast.success('Pacotes atualizados com sucesso!');
     } else {
@@ -340,6 +343,69 @@ export const HomepageEditor = () => {
                   ))}
                 </div>
               )}
+
+              {/* Custom Package Options */}
+              <Card className="border-dashed">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-base flex items-center justify-between">
+                    <span>Pacote Personalizado (Opções)</span>
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      onClick={() => setCustomPackageOptions([...customPackageOptions, { credits: 100, price: 10 }])}
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      Adicionar Opção
+                    </Button>
+                  </CardTitle>
+                  <CardDescription>Configure os valores de créditos e preços disponíveis no card personalizado</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  {customPackageOptions.length === 0 ? (
+                    <p className="text-sm text-muted-foreground text-center py-4">Nenhuma opção configurada. O card personalizado não será exibido.</p>
+                  ) : (
+                    <div className="space-y-2">
+                      {customPackageOptions.map((opt, index) => (
+                        <div key={index} className="flex items-center gap-3">
+                          <div className="flex-1 space-y-1">
+                            <Label className="text-xs">Créditos</Label>
+                            <Input
+                              type="number"
+                              value={opt.credits}
+                              onChange={(e) => {
+                                const updated = [...customPackageOptions];
+                                updated[index] = { ...updated[index], credits: Number(e.target.value) };
+                                setCustomPackageOptions(updated);
+                              }}
+                            />
+                          </div>
+                          <div className="flex-1 space-y-1">
+                            <Label className="text-xs">Preço (R$)</Label>
+                            <Input
+                              type="number"
+                              step="0.01"
+                              value={opt.price}
+                              onChange={(e) => {
+                                const updated = [...customPackageOptions];
+                                updated[index] = { ...updated[index], price: Number(e.target.value) };
+                                setCustomPackageOptions(updated);
+                              }}
+                            />
+                          </div>
+                          <Button
+                            variant="destructive"
+                            size="icon"
+                            className="mt-5"
+                            onClick={() => setCustomPackageOptions(customPackageOptions.filter((_, i) => i !== index))}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
 
               <Button onClick={handleSaveTiers} disabled={saving} className="w-full">
                 {saving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}

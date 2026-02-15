@@ -5,19 +5,23 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Check, TrendingUp, Sparkles, MessageCircle, Package } from 'lucide-react';
 
+interface CustomPackageOption {
+  credits: number;
+  price: number;
+}
+
 interface CustomPackageCardProps {
   primaryColor: string;
   accentColor: string;
   onBuyClick: (tier: PricingTier) => void;
+  options: CustomPackageOption[];
 }
 
-const CREDIT_OPTIONS = [100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700, 750, 800, 850, 900, 950];
-
-const CustomPackageCard = ({ primaryColor, accentColor, onBuyClick }: CustomPackageCardProps) => {
+const CustomPackageCard = ({ primaryColor, accentColor, onBuyClick, options }: CustomPackageCardProps) => {
   const [selectedCredits, setSelectedCredits] = useState<number | null>(null);
   
-  const pricePerCredit = 0.07;
-  const totalPrice = selectedCredits ? selectedCredits * pricePerCredit : 0;
+  const selectedOption = options.find(o => o.credits === selectedCredits);
+  const totalPrice = selectedOption?.price || 0;
 
   const handleSubmit = () => {
     if (!selectedCredits) return;
@@ -57,19 +61,19 @@ const CustomPackageCard = ({ primaryColor, accentColor, onBuyClick }: CustomPack
         <div className="mb-3 flex-1">
           <label className="text-xs text-muted-foreground mb-1.5 block">Selecione os créditos</label>
           <div className="grid grid-cols-3 gap-1.5 max-h-[180px] overflow-y-auto pr-1">
-            {CREDIT_OPTIONS.map((opt) => (
+            {options.map((opt) => (
               <button
-                key={opt}
+                key={opt.credits}
                 type="button"
-                onClick={() => setSelectedCredits(opt)}
+                onClick={() => setSelectedCredits(opt.credits)}
                 className={`rounded-md px-2 py-1.5 text-xs font-medium border transition-all duration-200 ${
-                  selectedCredits === opt
+                  selectedCredits === opt.credits
                     ? 'text-white scale-105 shadow-md'
                     : 'bg-secondary/50 border-border/50 text-foreground hover:bg-secondary'
                 }`}
-                style={selectedCredits === opt ? { backgroundColor: primaryColor, borderColor: primaryColor } : undefined}
+                style={selectedCredits === opt.credits ? { backgroundColor: primaryColor, borderColor: primaryColor } : undefined}
               >
-                {opt}
+                {opt.credits}
               </button>
             ))}
           </div>
@@ -117,6 +121,7 @@ export interface PricingTier {
 
 interface PricingTiersSectionProps {
   tiers: PricingTier[];
+  customPackageOptions?: { credits: number; price: number }[];
   primaryColor?: string;
   accentColor?: string;
   isPreview?: boolean;
@@ -140,6 +145,7 @@ const formatCredits = (credits: number) => {
 
 export const PricingTiersSection = ({
   tiers,
+  customPackageOptions = [],
   primaryColor = '#8B5CF6',
   accentColor = '#22C55E',
   isPreview = false,
@@ -356,11 +362,12 @@ export const PricingTiersSection = ({
           })}
 
           {/* Custom Package Card */}
-          {onBuyClick && !isPreview && (
+          {onBuyClick && !isPreview && customPackageOptions.length > 0 && (
             <CustomPackageCard 
               primaryColor={primaryColor} 
               accentColor={accentColor} 
-              onBuyClick={onBuyClick} 
+              onBuyClick={onBuyClick}
+              options={customPackageOptions}
             />
           )}
         </div>
