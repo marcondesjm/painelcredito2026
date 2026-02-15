@@ -100,7 +100,7 @@ export const SocialProofNotification = ({
         {/* Content */}
         <div className="flex-1 min-w-0">
           <p className="text-xs sm:text-sm font-medium text-foreground">
-            <span className="text-primary">{currentCustomer.name}</span> adquiriu {currentCustomer.product === 'creditos' ? `${currentCredits} créditos` : productName}
+            <span className="text-primary">{currentCustomer.name}</span> adquiriu {currentCustomer.product === 'creditos' ? `${currentCredits} créditos` : (productName || 'o Gerador')}
           </p>
           <p className="text-[10px] sm:text-xs text-muted-foreground mt-0.5">
             {currentCustomer.city}, {currentCustomer.state} • {time}
