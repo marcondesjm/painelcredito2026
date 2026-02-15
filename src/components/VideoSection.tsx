@@ -29,13 +29,15 @@ export const VideoSection = () => {
               </div>
             </div>
           ) : (
-            <iframe
-              className="w-full aspect-video"
-              src="https://www.youtube.com/embed/ZMG1gklPEac?autoplay=1&modestbranding=1&showinfo=0&rel=0&controls=1&iv_load_policy=3"
-              title="Tutorial Completo"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
+            <div className="relative w-full aspect-video overflow-hidden">
+              <iframe
+                className="absolute inset-0 w-full h-full scale-[1.08]"
+                src="https://www.youtube-nocookie.com/embed/ZMG1gklPEac?autoplay=1&modestbranding=1&showinfo=0&rel=0&controls=0&iv_load_policy=3&disablekb=1&fs=0"
+                title="Tutorial Completo"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
           )}
         </div>
         
