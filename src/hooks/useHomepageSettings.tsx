@@ -95,7 +95,7 @@ const defaultSettings: HomepageSettings = {
     ],
   },
   faq: {
-    title: 'Por que escolher o painel?',
+    title: 'Como funciona a recarga de créditos?',
     subtitle: 'Tudo você precisa para usar a Lovable sem preocupações.',
     items: [
       { question: "Como funciona para gerar os créditos?", answer: "É bem simples! Você precisa copiar o link de convite da conta que deseja depositar os créditos e enviar esse link no nosso painel. Depois, selecione a quantidade de créditos desejada e seus créditos serão depositados automaticamente." },
