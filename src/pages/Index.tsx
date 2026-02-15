@@ -18,6 +18,7 @@ import { PricingTiersSection, PricingTier } from '@/components/PricingTiersSecti
 import { CheckoutModal } from '@/components/CheckoutModal';
 import backgroundHero from '@/assets/background-hero.png';
 import { useHomepageSettings } from '@/hooks/useHomepageSettings';
+import { TrackingScripts } from '@/components/TrackingScripts';
 
 // Fallback tiers when database is loading or empty
 const fallbackTiers: PricingTier[] = [
@@ -84,6 +85,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen relative overflow-x-hidden">
+      <TrackingScripts />
       {/* Fixed background for entire page */}
       <div 
         className="fixed inset-0 -z-20"

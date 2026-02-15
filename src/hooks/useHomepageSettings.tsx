@@ -71,6 +71,13 @@ interface SectionsVisibility {
   final_cta: boolean;
 }
 
+interface TrackingSettings {
+  google_tag_manager: string;
+  facebook_pixel: string;
+  google_analytics: string;
+  tiktok_pixel: string;
+}
+
 interface HomepageSettings {
   pricing_tiers: PricingTier[];
   custom_package_options: CustomPackageOption[];
@@ -83,6 +90,7 @@ interface HomepageSettings {
   pix_name: string;
   whatsapp_number: string;
   sections_visibility: SectionsVisibility;
+  tracking: TrackingSettings;
 }
 
 const defaultSettings: HomepageSettings = {
@@ -169,6 +177,12 @@ const defaultSettings: HomepageSettings = {
     faq: true,
     final_cta: true,
   },
+  tracking: {
+    google_tag_manager: '',
+    facebook_pixel: '',
+    google_analytics: '',
+    tiktok_pixel: '',
+  },
 };
 
 export const useHomepageSettings = () => {
@@ -210,6 +224,8 @@ export const useHomepageSettings = () => {
           newSettings.faq = item.value as FAQSettings;
         } else if (item.key === 'sections_visibility' && item.value) {
           newSettings.sections_visibility = { ...defaultSettings.sections_visibility, ...(item.value as Partial<SectionsVisibility>) };
+        } else if (item.key === 'tracking' && item.value) {
+          newSettings.tracking = { ...defaultSettings.tracking, ...(item.value as Partial<TrackingSettings>) };
         }
       });
 
@@ -266,4 +282,4 @@ export const useHomepageSettings = () => {
   };
 };
 
-export type { HeroSettings, CheckoutSettings, SocialProofSettings, SocialProofCustomer, HomepageSettings, CustomPackageOption, GuaranteeSettings, FAQSettings, FAQItem, SectionsVisibility };
+export type { HeroSettings, CheckoutSettings, SocialProofSettings, SocialProofCustomer, HomepageSettings, CustomPackageOption, GuaranteeSettings, FAQSettings, FAQItem, SectionsVisibility, TrackingSettings };

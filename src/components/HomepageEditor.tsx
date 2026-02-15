@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ExternalLink } from 'lucide-react';
+import { ExternalLink, BarChart3 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Plus, Trash2, Save, Loader2, Star, CreditCard, MessageSquare, ShoppingCart, Bell, Eye } from 'lucide-react';
 import { toast } from 'sonner';
-import { useHomepageSettings, HeroSettings, CheckoutSettings, SocialProofSettings, SocialProofCustomer, CustomPackageOption, GuaranteeSettings, FAQSettings, FAQItem, SectionsVisibility } from '@/hooks/useHomepageSettings';
+import { useHomepageSettings, HeroSettings, CheckoutSettings, SocialProofSettings, SocialProofCustomer, CustomPackageOption, GuaranteeSettings, FAQSettings, FAQItem, SectionsVisibility, TrackingSettings } from '@/hooks/useHomepageSettings';
 import { PricingTier } from '@/components/PricingTiersSection';
 
 export const HomepageEditor = () => {
@@ -28,6 +28,7 @@ export const HomepageEditor = () => {
   const [guarantee, setGuarantee] = useState<GuaranteeSettings>(settings.guarantee);
   const [faq, setFaq] = useState<FAQSettings>(settings.faq);
   const [sectionsVisibility, setSectionsVisibility] = useState<SectionsVisibility>(settings.sections_visibility);
+  const [tracking, setTracking] = useState<TrackingSettings>(settings.tracking);
 
   useEffect(() => {
     setHero(settings.hero);
@@ -41,6 +42,7 @@ export const HomepageEditor = () => {
     setGuarantee(settings.guarantee);
     setFaq(settings.faq);
     setSectionsVisibility(settings.sections_visibility);
+    setTracking(settings.tracking);
   }, [settings]);
 
   const handleSaveHero = async () => {
@@ -138,7 +140,7 @@ export const HomepageEditor = () => {
       </div>
 
       <Tabs defaultValue="hero" className="w-full">
-        <TabsList className="grid w-full grid-cols-8">
+        <TabsList className="grid w-full grid-cols-9">
           <TabsTrigger value="sections">Seções</TabsTrigger>
           <TabsTrigger value="hero">Hero</TabsTrigger>
           <TabsTrigger value="tiers">Pacotes</TabsTrigger>
@@ -147,6 +149,7 @@ export const HomepageEditor = () => {
           <TabsTrigger value="guarantee">Garantia</TabsTrigger>
           <TabsTrigger value="faq">FAQ</TabsTrigger>
           <TabsTrigger value="payment">Pagamento</TabsTrigger>
+          <TabsTrigger value="tracking">Rastreamento</TabsTrigger>
         </TabsList>
 
         {/* Sections Visibility Tab */}
@@ -957,6 +960,88 @@ export const HomepageEditor = () => {
               >
                 {saving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
                 Salvar FAQ
+              </Button>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Tracking Tab */}
+        <TabsContent value="tracking" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <BarChart3 className="w-5 h-5" />
+                Rastreamento e Pixels
+              </CardTitle>
+              <CardDescription>
+                Configure o Google Tag Manager (GTM) para centralizar todos os seus pixels de rastreamento. 
+                Com o GTM, você gerencia Meta/Facebook Pixel, Google Ads, TikTok Pixel e outros sem precisar editar o código.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="space-y-2">
+                <Label>Google Tag Manager (GTM ID)</Label>
+                <Input
+                  value={tracking.google_tag_manager}
+                  onChange={(e) => setTracking({ ...tracking, google_tag_manager: e.target.value })}
+                  placeholder="GTM-XXXXXXX"
+                />
+                <p className="text-xs text-muted-foreground">
+                  Recomendado: Use o GTM para gerenciar todos os pixels em um só lugar. Crie tags no GTM para Meta, Google Ads, TikTok, etc.
+                </p>
+              </div>
+
+              <div className="border-t border-border pt-4">
+                <p className="text-sm font-medium text-muted-foreground mb-4">
+                  Ou configure pixels individuais (caso não use GTM):
+                </p>
+
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label>Facebook / Meta Pixel ID</Label>
+                    <Input
+                      value={tracking.facebook_pixel}
+                      onChange={(e) => setTracking({ ...tracking, facebook_pixel: e.target.value })}
+                      placeholder="123456789012345"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>Google Analytics (GA4 Measurement ID)</Label>
+                    <Input
+                      value={tracking.google_analytics}
+                      onChange={(e) => setTracking({ ...tracking, google_analytics: e.target.value })}
+                      placeholder="G-XXXXXXXXXX"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>TikTok Pixel ID</Label>
+                    <Input
+                      value={tracking.tiktok_pixel}
+                      onChange={(e) => setTracking({ ...tracking, tiktok_pixel: e.target.value })}
+                      placeholder="CXXXXXXXXXXXXXXXXX"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <Button
+                onClick={async () => {
+                  setSaving(true);
+                  const result = await updateSetting('tracking', tracking);
+                  if (result.success) {
+                    toast.success('Configurações de rastreamento salvas!');
+                  } else {
+                    toast.error('Erro ao salvar: ' + result.error);
+                  }
+                  setSaving(false);
+                }}
+                disabled={saving}
+                className="w-full"
+              >
+                {saving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
+                Salvar Rastreamento
               </Button>
             </CardContent>
           </Card>
