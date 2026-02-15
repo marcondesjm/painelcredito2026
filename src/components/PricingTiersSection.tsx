@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -20,17 +20,40 @@ interface CustomPackageCardProps {
 
 const CustomPackageCard = ({ primaryColor, accentColor, onBuyClick, options }: CustomPackageCardProps) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const [userInteracted, setUserInteracted] = useState(false);
   
   const selectedOption = options[selectedIndex];
   const selectedCredits = selectedOption?.credits || 0;
   const totalPrice = selectedOption?.price || 0;
 
+  const goNext = useCallback(() => {
+    setSelectedIndex((prev) => (prev < options.length - 1 ? prev + 1 : 0));
+  }, [options.length]);
+
+  // Auto-rotate every 2s, pause on user interaction for 5s
+  useEffect(() => {
+    if (options.length <= 1) return;
+    intervalRef.current = setInterval(() => {
+      if (!userInteracted) goNext();
+    }, 2000);
+    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
+  }, [options.length, userInteracted, goNext]);
+
+  useEffect(() => {
+    if (!userInteracted) return;
+    const timeout = setTimeout(() => setUserInteracted(false), 5000);
+    return () => clearTimeout(timeout);
+  }, [userInteracted]);
+
   const handlePrev = () => {
+    setUserInteracted(true);
     setSelectedIndex((prev) => (prev > 0 ? prev - 1 : options.length - 1));
   };
 
   const handleNext = () => {
-    setSelectedIndex((prev) => (prev < options.length - 1 ? prev + 1 : 0));
+    setUserInteracted(true);
+    goNext();
   };
 
   const handleSubmit = () => {
