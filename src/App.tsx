@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
+import { LanguageProvider } from "@/hooks/useLanguage";
 import { useSecurityProtection } from "@/hooks/useSecurityProtection";
 import { InstallBanner } from "@/components/InstallBanner";
 import { GlobalWhatsAppButton } from "@/components/GlobalWhatsAppButton";
@@ -29,6 +30,7 @@ const SecurityWrapper = ({ children }: { children: React.ReactNode }) => {
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
+    <LanguageProvider>
     <TooltipProvider>
       <SecurityWrapper>
         <Toaster />
@@ -57,6 +59,7 @@ const App = () => (
         </BrowserRouter>
       </SecurityWrapper>
     </TooltipProvider>
+    </LanguageProvider>
   </QueryClientProvider>
 );
 
