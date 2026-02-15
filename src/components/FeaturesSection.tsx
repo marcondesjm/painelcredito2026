@@ -1,4 +1,5 @@
 import { Monitor, LayoutGrid, Infinity } from 'lucide-react';
+import { useLanguage } from '@/hooks/useLanguage';
 
 const FeatureCard = ({ icon: Icon, title, description }: { icon: any; title: string; description: string }) => {
   return (
@@ -13,46 +14,29 @@ const FeatureCard = ({ icon: Icon, title, description }: { icon: any; title: str
 };
 
 export const FeaturesSection = () => {
+  const { t } = useLanguage();
+
   const features = [
-    {
-      icon: Monitor,
-      title: "Interface Simples",
-      description: "Painel intuitivo, sem complicações. Qualquer pessoa consegue usar."
-    },
-    {
-      icon: LayoutGrid,
-      title: "100% Automatizado",
-      description: "O sistema faz todo o trabalho. Você só precisa clicar."
-    },
-    {
-      icon: Infinity,
-      title: "Créditos Ilimitados",
-      description: "Gere quantos créditos precisar, sem limites ou restrições."
-    }
+    { icon: Monitor, title: t('features.simple_interface'), description: t('features.simple_interface_desc') },
+    { icon: LayoutGrid, title: t('features.automated'), description: t('features.automated_desc') },
+    { icon: Infinity, title: t('features.unlimited'), description: t('features.unlimited_desc') },
   ];
 
   return (
     <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 relative">
       <div className="max-w-5xl mx-auto">
-        {/* Section Header */}
         <div className="text-center mb-8 sm:mb-12">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
-            O que é o <span className="text-primary">Painel</span>?
+            {t('features.section_title')} <span className="text-primary">{t('features.section_title_highlight')}</span>?
           </h2>
           <p className="text-sm sm:text-base text-muted-foreground max-w-xl mx-auto px-2">
-            Uma ferramenta automatizada que gera créditos para sua conta Lovable de forma simples e rápida.
+            {t('features.section_subtitle')}
           </p>
         </div>
 
-        {/* Feature Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
           {features.map((feature, index) => (
-            <FeatureCard
-              key={index}
-              icon={feature.icon}
-              title={feature.title}
-              description={feature.description}
-            />
+            <FeatureCard key={index} icon={feature.icon} title={feature.title} description={feature.description} />
           ))}
         </div>
       </div>
