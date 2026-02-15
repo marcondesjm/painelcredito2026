@@ -1,7 +1,7 @@
 import { Star, Clock, ThumbsUp, Zap } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguage';
 
-const testimonials = [
+const testimonials_pt = [
   { id: 1, email: "mn***@gmail.com", timeAgo: "há 2h", credits: 50, text: "Experiência incrível, recarrega de forma rápida os créditos. Parabéns a equipe que desenvolveu o Lovable Credits :)" },
   { id: 2, email: "ad***@leieimici.online", timeAgo: "há 3h", credits: 30, text: "Isso aqui é surreal de bom" },
   { id: 3, email: "bl***@gmail.com", timeAgo: "há 5h", credits: 400, text: "Muito obrigado pelo exelente trabalho" },
@@ -10,8 +10,18 @@ const testimonials = [
   { id: 6, email: "bu***@gmail.com", timeAgo: "há 13h", credits: 100, text: "os melhores do mercado de creditos do lovable...rapido e pratico" },
 ];
 
+const testimonials_en = [
+  { id: 1, email: "mn***@gmail.com", timeAgo: "2h ago", credits: 50, text: "Incredible experience, recharges credits quickly. Congrats to the team that developed Lovable Credits :)" },
+  { id: 2, email: "ad***@leieimici.online", timeAgo: "3h ago", credits: 30, text: "This is unbelievably good" },
+  { id: 3, email: "bl***@gmail.com", timeAgo: "5h ago", credits: 400, text: "Thank you so much for the excellent work" },
+  { id: 4, email: "co***@leigosacademy.site", timeAgo: "6h ago", credits: 100, text: "It was great 🔥 loved buying it cheaper" },
+  { id: 5, email: "bu***@gmail.com", timeAgo: "6h ago", credits: 300, text: "loved it, very fast and super practical, I recommend it" },
+  { id: 6, email: "bu***@gmail.com", timeAgo: "13h ago", credits: 100, text: "the best in the lovable credits market...fast and practical" },
+];
+
 export const TestimonialsSection = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const testimonials = language === 'en' ? testimonials_en : testimonials_pt;
 
   return (
     <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 relative">
