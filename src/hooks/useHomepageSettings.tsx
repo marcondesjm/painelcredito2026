@@ -45,6 +45,17 @@ interface GuaranteeSettings {
   items: string[];
 }
 
+interface FAQItem {
+  question: string;
+  answer: string;
+}
+
+interface FAQSettings {
+  title: string;
+  subtitle: string;
+  items: FAQItem[];
+}
+
 interface HomepageSettings {
   pricing_tiers: PricingTier[];
   custom_package_options: CustomPackageOption[];
@@ -52,6 +63,7 @@ interface HomepageSettings {
   checkout: CheckoutSettings;
   social_proof: SocialProofSettings;
   guarantee: GuaranteeSettings;
+  faq: FAQSettings;
   pix_key: string;
   pix_name: string;
   whatsapp_number: string;
@@ -64,6 +76,21 @@ const defaultSettings: HomepageSettings = {
       "Garantimos a entrega e funcionamento do produto no momento da liberação.",
       "Caso ocorra reset de créditos e a plataforma ainda permita novas adições, realizamos a reposição por até 15 dias após a recarga.",
       "O prazo de 15 dias refere-se à garantia de entrega e funcionamento inicial.",
+    ],
+  },
+  faq: {
+    title: 'Por que escolher o painel?',
+    subtitle: 'Tudo você precisa para usar a Lovable sem preocupações.',
+    items: [
+      { question: "Como funciona para gerar os créditos?", answer: "É bem simples! Você precisa copiar o link de convite da conta que deseja depositar os créditos e enviar esse link no nosso painel. Depois, selecione a quantidade de créditos desejada e seus créditos serão depositados automaticamente." },
+      { question: "Como eu sei se funciona mesmo e não é golpe?", answer: "Você pode pedir para nós enviarmos créditos para você para que você veja os resultados e o funcionamento por conta própria." },
+      { question: "Como funciona o acesso ao produto?", answer: "Após a confirmação do pagamento, será criado automaticamente um login utilizando o e-mail cadastrado na compra. Com esse login, você poderá acessar o painel diretamente pelo nosso site, na aba Painel. O acesso é liberado de forma automática e imediata." },
+      { question: "Tem tutorial por vídeo e manual de acesso?", answer: "Sim! Temos tutorial em vídeo e manual de acesso completo." },
+      { question: "Por quanto tempo terei acesso?", answer: "Você terá acesso vitalício ao painel, incluindo todas as atualizações futuras sem custo adicional." },
+      { question: "Quais sistemas operacionais o programa funciona?", answer: "O painel funciona 100% online, direto no navegador. Acesse de qualquer dispositivo (Windows, Mac, Linux, Android, iOS)." },
+      { question: "Tem limite de resgate de créditos?", answer: "Não há limite de resgates. Você pode gerar quantos créditos quiser, sem restrições." },
+      { question: "Está funcionando depois da atualização do Lovable?", answer: "Sim, está funcionando depois do fix que a Lovable deu no método antigo das extensões que clicavam publish ao mesmo tempo. Nosso painel utiliza métodos diferentes e atualizados." },
+      { question: "Funciona em uma conta que já indicou mais de 10 convites?", answer: "Sim! Você pode resgatar créditos em uma conta que já indicou mais de 10 pessoas, desde que você tenha acesso a uma conta que já resgatou créditos nessa conta, então você pode depositar na conta desejada." },
     ],
   },
   pricing_tiers: [],
@@ -149,6 +176,8 @@ export const useHomepageSettings = () => {
           newSettings.social_proof = item.value as SocialProofSettings;
         } else if (item.key === 'guarantee' && item.value) {
           newSettings.guarantee = item.value as GuaranteeSettings;
+        } else if (item.key === 'faq' && item.value) {
+          newSettings.faq = item.value as FAQSettings;
         }
       });
 
@@ -205,4 +234,4 @@ export const useHomepageSettings = () => {
   };
 };
 
-export type { HeroSettings, CheckoutSettings, SocialProofSettings, SocialProofCustomer, HomepageSettings, CustomPackageOption, GuaranteeSettings };
+export type { HeroSettings, CheckoutSettings, SocialProofSettings, SocialProofCustomer, HomepageSettings, CustomPackageOption, GuaranteeSettings, FAQSettings, FAQItem };

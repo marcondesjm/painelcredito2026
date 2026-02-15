@@ -111,7 +111,7 @@ const Index = () => {
       <TestimonialsSection />
       <GuaranteeSection title={settings.guarantee.title} items={settings.guarantee.items} />
       <StatsSection />
-      <FAQSection />
+      <FAQSection title={settings.faq.title} subtitle={settings.faq.subtitle} items={settings.faq.items} />
       <FinalCTASection />
       <Footer />
       <WhatsAppButton number={settings.whatsapp_number || '5548996029392'} message="Olá! Gostaria de mais informações sobre o painel." />
