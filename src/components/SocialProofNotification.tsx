@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ShoppingCart, X } from 'lucide-react';
+import { useLanguage } from '@/hooks/useLanguage';
 
 export interface SocialProofCustomer {
   name: string;
@@ -28,9 +29,9 @@ const defaultCustomers: SocialProofCustomer[] = [
 
 const defaultCreditOptions = [200, 500, 1000, 2000];
 
-const getRandomTime = () => {
+const getRandomTime = (lang: string) => {
   const minutes = Math.floor(Math.random() * 10) + 1;
-  return `${minutes} min atrás`;
+  return lang === 'en' ? `${minutes} min ago` : `${minutes} min atrás`;
 };
 
 const getRandomCredits = (options: number[]) => {
@@ -44,10 +45,11 @@ export const SocialProofNotification = ({
   customers = defaultCustomers,
   creditOptions = defaultCreditOptions
 }: SocialProofNotificationProps) => {
+  const { language } = useLanguage();
   const [isVisible, setIsVisible] = useState(false);
   const [currentCustomer, setCurrentCustomer] = useState(customers[0] || defaultCustomers[0]);
   const [currentCredits, setCurrentCredits] = useState(creditOptions[0] || 1000);
-  const [time, setTime] = useState(getRandomTime());
+  const [time, setTime] = useState(getRandomTime(language));
 
   const activeCustomers = customers && customers.length > 0 ? customers : defaultCustomers;
   const activeCreditOptions = creditOptions && creditOptions.length > 0 ? creditOptions : defaultCreditOptions;
@@ -70,7 +72,7 @@ export const SocialProofNotification = ({
     const randomCustomerIndex = Math.floor(Math.random() * activeCustomers.length);
     setCurrentCustomer(activeCustomers[randomCustomerIndex]);
     setCurrentCredits(getRandomCredits(activeCreditOptions));
-    setTime(getRandomTime());
+    setTime(getRandomTime(language));
     setIsVisible(true);
 
     // Hide after 5 seconds
@@ -100,7 +102,11 @@ export const SocialProofNotification = ({
         {/* Content */}
         <div className="flex-1 min-w-0">
           <p className="text-xs sm:text-sm font-medium text-foreground">
-            <span className="text-primary">{currentCustomer.name}</span> adquiriu {currentCustomer.product === 'creditos' ? `${currentCredits} créditos` : (productName || 'o Gerador')}
+            <span className="text-primary">{currentCustomer.name}</span>{' '}
+            {language === 'en' 
+              ? `purchased ${currentCustomer.product === 'creditos' ? `${currentCredits} credits` : (productName || 'the Generator')}`
+              : `adquiriu ${currentCustomer.product === 'creditos' ? `${currentCredits} créditos` : (productName || 'o Gerador')}`
+            }
           </p>
           <p className="text-[10px] sm:text-xs text-muted-foreground mt-0.5">
             {currentCustomer.city}, {currentCustomer.state} • {time}
