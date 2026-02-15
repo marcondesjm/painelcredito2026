@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { Check, TrendingUp, Sparkles, MessageCircle, Package } from 'lucide-react';
+import { Check, TrendingUp, Sparkles, MessageCircle, Package, Minus, Plus } from 'lucide-react';
 
 interface CustomPackageOption {
   credits: number;
@@ -19,13 +19,22 @@ interface CustomPackageCardProps {
 }
 
 const CustomPackageCard = ({ primaryColor, accentColor, onBuyClick, options }: CustomPackageCardProps) => {
-  const [selectedCredits, setSelectedCredits] = useState<number | null>(null);
+  const [selectedIndex, setSelectedIndex] = useState(0);
   
-  const selectedOption = options.find(o => o.credits === selectedCredits);
+  const selectedOption = options[selectedIndex];
+  const selectedCredits = selectedOption?.credits || 0;
   const totalPrice = selectedOption?.price || 0;
 
+  const handlePrev = () => {
+    setSelectedIndex((prev) => (prev > 0 ? prev - 1 : options.length - 1));
+  };
+
+  const handleNext = () => {
+    setSelectedIndex((prev) => (prev < options.length - 1 ? prev + 1 : 0));
+  };
+
   const handleSubmit = () => {
-    if (!selectedCredits) return;
+    if (!selectedOption) return;
     const customTier: PricingTier = {
       id: 'custom',
       name: 'Pacote Personalizado',
@@ -41,6 +50,8 @@ const CustomPackageCard = ({ primaryColor, accentColor, onBuyClick, options }: C
     onBuyClick(customTier);
   };
 
+  if (!options.length) return null;
+
   return (
     <Card className="relative overflow-hidden border border-dashed border-border/80 hover:scale-[1.02] hover:shadow-xl transition-all duration-500 group">
       <div 
@@ -50,64 +61,58 @@ const CustomPackageCard = ({ primaryColor, accentColor, onBuyClick, options }: C
         }}
       />
       <div className="p-5 relative z-10 flex flex-col h-full">
-        <div className="mb-3">
-          <div className="flex items-center gap-2 mb-1">
+        <div className="mb-4 text-center">
+          <div className="flex items-center justify-center gap-2 mb-1">
             <Package className="w-5 h-5" style={{ color: primaryColor }} />
-            <h3 className="font-bold text-lg leading-tight">Personalizado</h3>
+            <h3 className="font-bold text-lg leading-tight">Quantidade Personalizada</h3>
           </div>
-          <p className="text-sm text-muted-foreground">
-            Monte seu próprio pacote
-          </p>
         </div>
 
-        <div className="mb-3 flex-1">
-          <label className="text-xs text-muted-foreground mb-1.5 block">Selecione os créditos</label>
-          <div className="grid grid-cols-3 gap-1.5 max-h-[180px] overflow-y-auto pr-1">
-            {options.map((opt) => (
-              <button
-                key={opt.credits}
-                type="button"
-                onClick={() => setSelectedCredits(opt.credits)}
-                className={`rounded-md px-2 py-1.5 text-xs font-medium border transition-all duration-200 ${
-                  selectedCredits === opt.credits
-                    ? 'text-white scale-105 shadow-md'
-                    : 'bg-secondary/50 border-border/50 text-foreground hover:bg-secondary'
-                }`}
-                style={selectedCredits === opt.credits ? { backgroundColor: primaryColor, borderColor: primaryColor } : undefined}
-              >
-                {opt.credits}
-              </button>
-            ))}
+        {/* Stepper */}
+        <div className="flex items-center justify-center gap-3 mb-4">
+          <button
+            type="button"
+            onClick={handlePrev}
+            className="w-10 h-10 rounded-xl flex items-center justify-center border border-border/50 bg-secondary/50 text-foreground hover:bg-secondary transition-all"
+          >
+            <Minus className="w-4 h-4" />
+          </button>
+          
+          <div 
+            className="flex-1 max-w-[160px] rounded-xl border-2 py-3 text-center cursor-pointer transition-all duration-300"
+            style={{ borderColor: primaryColor, boxShadow: `0 0 20px ${primaryColor}30` }}
+            onClick={handleNext}
+          >
+            <span className="text-3xl font-bold text-foreground">{selectedCredits.toLocaleString('pt-BR')}</span>
+            <p className="text-[10px] text-muted-foreground mt-0.5 uppercase tracking-wider">Toque para escolher</p>
           </div>
-          {selectedCredits && (
-            <div className="mt-3 space-y-1">
-              <div className="flex justify-between text-xs text-muted-foreground">
-                <span>Créditos</span>
-                <span className="font-medium text-foreground">{formatCredits(selectedCredits)}</span>
-              </div>
-              {(selectedOption?.bonus_credits ?? 0) > 0 && (
-                <div className="flex justify-between text-xs">
-                  <span className="text-muted-foreground">Bônus</span>
-                  <span className="font-bold" style={{ color: accentColor }}>
-                    🎁 +{formatCredits(selectedOption!.bonus_credits!)}
-                  </span>
-                </div>
-              )}
-              <div className="flex justify-between text-xs">
-                <span className="text-muted-foreground">Valor</span>
-                <span className="font-bold text-lg" style={{ color: accentColor }}>
-                  {formatPrice(totalPrice)}
-                </span>
-              </div>
-            </div>
+
+          <button
+            type="button"
+            onClick={handleNext}
+            className="w-10 h-10 rounded-xl flex items-center justify-center border border-border/50 bg-secondary/50 text-foreground hover:bg-secondary transition-all"
+          >
+            <Plus className="w-4 h-4" />
+          </button>
+        </div>
+
+        {/* Price & Bonus */}
+        <div className="text-center mb-4 space-y-1">
+          <span className="text-xl font-bold" style={{ color: accentColor }}>
+            {formatPrice(totalPrice)}
+          </span>
+          {(selectedOption?.bonus_credits ?? 0) > 0 && (
+            <p className="text-xs font-semibold" style={{ color: accentColor }}>
+              🎁 +{formatCredits(selectedOption.bonus_credits!)} créditos bônus
+            </p>
           )}
+          <p className="text-xs text-muted-foreground">Toque para escolher esta quantidade</p>
         </div>
 
         <Button
           className="w-full text-white font-semibold hover:scale-105 transition-all duration-300 flex items-center gap-2"
           style={{ backgroundColor: primaryColor }}
           onClick={handleSubmit}
-          disabled={!selectedCredits}
         >
           <MessageCircle className="w-4 h-4" />
           Comprar Agora
