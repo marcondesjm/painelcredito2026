@@ -418,6 +418,19 @@ export const PricingTiersSection = ({
             />
           )}
         </div>
+
+        {/* Aviso de urgência */}
+        <div className="mt-8 text-center">
+          <div 
+            className="inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-border/50 bg-card/50 backdrop-blur-sm"
+            style={{ borderColor: `${primaryColor}30`, backgroundColor: `${primaryColor}08` }}
+          >
+            <span className="text-lg">⚡</span>
+            <p className="text-sm sm:text-base text-muted-foreground">
+              Enquanto a recarga de créditos está disponível, este é o <strong className="text-foreground">momento ideal</strong> para escalar seus projetos.
+            </p>
+          </div>
+        </div>
       </div>
     </section>
   );
