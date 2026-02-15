@@ -5,6 +5,7 @@ export interface SocialProofCustomer {
   name: string;
   city: string;
   state: string;
+  product?: 'gerador' | 'creditos';
 }
 
 interface SocialProofNotificationProps {
@@ -99,10 +100,11 @@ export const SocialProofNotification = ({
         {/* Content */}
         <div className="flex-1 min-w-0">
           <p className="text-xs sm:text-sm font-medium text-foreground">
-            <span className="text-primary">{currentCustomer.name}</span> adquiriu {productName}
+            <span className="text-primary">{currentCustomer.name}</span> adquiriu {currentCustomer.product === 'creditos' ? `${currentCredits} créditos` : productName}
           </p>
           <p className="text-[10px] sm:text-xs text-muted-foreground mt-0.5">
-            <span className="text-accent font-medium">{currentCredits} créditos</span> • {currentCustomer.city}, {currentCustomer.state} • {time}
+            {currentCustomer.product === 'creditos' && <><span className="text-accent font-medium">{currentCredits} créditos</span> • </>}
+            {currentCustomer.city}, {currentCustomer.state} • {time}
           </p>
         </div>
 
