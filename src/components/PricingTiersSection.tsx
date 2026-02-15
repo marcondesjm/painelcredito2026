@@ -1,7 +1,100 @@
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Check, TrendingUp, Sparkles } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Check, TrendingUp, Sparkles, MessageCircle, Package } from 'lucide-react';
+
+interface CustomPackageCardProps {
+  primaryColor: string;
+  accentColor: string;
+  onBuyClick: (tier: PricingTier) => void;
+}
+
+const CustomPackageCard = ({ primaryColor, accentColor, onBuyClick }: CustomPackageCardProps) => {
+  const [credits, setCredits] = useState('');
+  
+  const creditValue = parseInt(credits) || 0;
+  const pricePerCredit = 0.07;
+  const totalPrice = creditValue * pricePerCredit;
+
+  const handleSubmit = () => {
+    if (creditValue < 100) return;
+    const customTier: PricingTier = {
+      id: 'custom',
+      name: 'Pacote Personalizado',
+      credits: creditValue,
+      price_original: totalPrice * 1.5,
+      price_current: totalPrice,
+      available: 1,
+      sales: 0,
+      checkout_link: '',
+      highlight: false,
+    };
+    onBuyClick(customTier);
+  };
+
+  return (
+    <Card className="relative overflow-hidden border border-dashed border-border/80 hover:scale-[1.02] hover:shadow-xl transition-all duration-500 group">
+      <div 
+        className="absolute inset-0 opacity-5 group-hover:opacity-10 transition-opacity duration-500"
+        style={{
+          background: `radial-gradient(circle at 50% 100%, ${primaryColor}60 0%, transparent 70%)`
+        }}
+      />
+      <div className="p-5 relative z-10 flex flex-col h-full">
+        <div className="mb-4">
+          <div className="flex items-center gap-2 mb-1">
+            <Package className="w-5 h-5" style={{ color: primaryColor }} />
+            <h3 className="font-bold text-lg leading-tight">Personalizado</h3>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            Monte seu próprio pacote
+          </p>
+        </div>
+
+        <div className="mb-4 flex-1">
+          <label className="text-xs text-muted-foreground mb-1.5 block">Quantos créditos?</label>
+          <Input
+            type="number"
+            placeholder="Ex: 3000"
+            min={100}
+            value={credits}
+            onChange={(e) => setCredits(e.target.value)}
+            className="bg-secondary/50 border-border/50"
+          />
+          {creditValue >= 100 && (
+            <div className="mt-3 space-y-1">
+              <div className="flex justify-between text-xs text-muted-foreground">
+                <span>Créditos</span>
+                <span className="font-medium text-foreground">{formatCredits(creditValue)}</span>
+              </div>
+              <div className="flex justify-between text-xs">
+                <span className="text-muted-foreground">Valor</span>
+                <span className="font-bold text-lg" style={{ color: accentColor }}>
+                  {formatPrice(totalPrice)}
+                </span>
+              </div>
+            </div>
+          )}
+          {credits !== '' && creditValue < 100 && (
+            <p className="text-xs text-destructive mt-1">Mínimo de 100 créditos</p>
+          )}
+        </div>
+
+        <Button
+          className="w-full text-white font-semibold hover:scale-105 transition-all duration-300 flex items-center gap-2"
+          style={{ backgroundColor: primaryColor }}
+          onClick={handleSubmit}
+          disabled={creditValue < 100}
+        >
+          <MessageCircle className="w-4 h-4" />
+          Solicitar Orçamento
+        </Button>
+      </div>
+    </Card>
+  );
+};
 
 export interface PricingTier {
   id: string;
@@ -125,7 +218,7 @@ export const PricingTiersSection = ({
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+        <div className={`grid grid-cols-1 sm:grid-cols-2 ${tiers.length >= 4 ? 'lg:grid-cols-4 xl:grid-cols-5' : `lg:grid-cols-${tiers.length + 1}`} gap-4 md:gap-6`}>
           {tiers.map((tier) => {
             const savings = tier.price_original - tier.price_current;
             
@@ -254,6 +347,15 @@ export const PricingTiersSection = ({
               </Card>
             );
           })}
+
+          {/* Custom Package Card */}
+          {onBuyClick && !isPreview && (
+            <CustomPackageCard 
+              primaryColor={primaryColor} 
+              accentColor={accentColor} 
+              onBuyClick={onBuyClick} 
+            />
+          )}
         </div>
       </div>
     </section>
