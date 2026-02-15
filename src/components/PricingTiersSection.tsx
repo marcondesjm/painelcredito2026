@@ -111,6 +111,7 @@ export interface PricingTier {
   id: string;
   name: string;
   credits: number;
+  bonus_credits?: number;
   price_original: number;
   price_current: number;
   available: number;
