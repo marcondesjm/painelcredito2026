@@ -11,19 +11,20 @@ interface CustomPackageCardProps {
   onBuyClick: (tier: PricingTier) => void;
 }
 
+const CREDIT_OPTIONS = [100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700, 750, 800, 850, 900, 950];
+
 const CustomPackageCard = ({ primaryColor, accentColor, onBuyClick }: CustomPackageCardProps) => {
-  const [credits, setCredits] = useState('');
+  const [selectedCredits, setSelectedCredits] = useState<number | null>(null);
   
-  const creditValue = parseInt(credits) || 0;
   const pricePerCredit = 0.07;
-  const totalPrice = creditValue * pricePerCredit;
+  const totalPrice = selectedCredits ? selectedCredits * pricePerCredit : 0;
 
   const handleSubmit = () => {
-    if (creditValue < 100) return;
+    if (!selectedCredits) return;
     const customTier: PricingTier = {
       id: 'custom',
       name: 'Pacote Personalizado',
-      credits: creditValue,
+      credits: selectedCredits,
       price_original: totalPrice * 1.5,
       price_current: totalPrice,
       available: 1,
@@ -43,7 +44,7 @@ const CustomPackageCard = ({ primaryColor, accentColor, onBuyClick }: CustomPack
         }}
       />
       <div className="p-5 relative z-10 flex flex-col h-full">
-        <div className="mb-4">
+        <div className="mb-3">
           <div className="flex items-center gap-2 mb-1">
             <Package className="w-5 h-5" style={{ color: primaryColor }} />
             <h3 className="font-bold text-lg leading-tight">Personalizado</h3>
@@ -53,21 +54,30 @@ const CustomPackageCard = ({ primaryColor, accentColor, onBuyClick }: CustomPack
           </p>
         </div>
 
-        <div className="mb-4 flex-1">
-          <label className="text-xs text-muted-foreground mb-1.5 block">Quantos créditos?</label>
-          <Input
-            type="number"
-            placeholder="Ex: 3000"
-            min={100}
-            value={credits}
-            onChange={(e) => setCredits(e.target.value)}
-            className="bg-secondary/50 border-border/50"
-          />
-          {creditValue >= 100 && (
+        <div className="mb-3 flex-1">
+          <label className="text-xs text-muted-foreground mb-1.5 block">Selecione os créditos</label>
+          <div className="grid grid-cols-3 gap-1.5 max-h-[180px] overflow-y-auto pr-1">
+            {CREDIT_OPTIONS.map((opt) => (
+              <button
+                key={opt}
+                type="button"
+                onClick={() => setSelectedCredits(opt)}
+                className={`rounded-md px-2 py-1.5 text-xs font-medium border transition-all duration-200 ${
+                  selectedCredits === opt
+                    ? 'text-white scale-105 shadow-md'
+                    : 'bg-secondary/50 border-border/50 text-foreground hover:bg-secondary'
+                }`}
+                style={selectedCredits === opt ? { backgroundColor: primaryColor, borderColor: primaryColor } : undefined}
+              >
+                {opt}
+              </button>
+            ))}
+          </div>
+          {selectedCredits && (
             <div className="mt-3 space-y-1">
               <div className="flex justify-between text-xs text-muted-foreground">
                 <span>Créditos</span>
-                <span className="font-medium text-foreground">{formatCredits(creditValue)}</span>
+                <span className="font-medium text-foreground">{formatCredits(selectedCredits)}</span>
               </div>
               <div className="flex justify-between text-xs">
                 <span className="text-muted-foreground">Valor</span>
@@ -77,19 +87,16 @@ const CustomPackageCard = ({ primaryColor, accentColor, onBuyClick }: CustomPack
               </div>
             </div>
           )}
-          {credits !== '' && creditValue < 100 && (
-            <p className="text-xs text-destructive mt-1">Mínimo de 100 créditos</p>
-          )}
         </div>
 
         <Button
           className="w-full text-white font-semibold hover:scale-105 transition-all duration-300 flex items-center gap-2"
           style={{ backgroundColor: primaryColor }}
           onClick={handleSubmit}
-          disabled={creditValue < 100}
+          disabled={!selectedCredits}
         >
           <MessageCircle className="w-4 h-4" />
-          Solicitar Orçamento
+          Comprar Agora
         </Button>
       </div>
     </Card>
