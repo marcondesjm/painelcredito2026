@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { Check, TrendingUp, Sparkles, MessageCircle, Package, Minus, Plus } from 'lucide-react';
+import { Check, TrendingUp, Sparkles, MessageCircle, Package, Minus, Plus, HelpCircle } from 'lucide-react';
 
 interface CustomPackageOption {
   credits: number;
@@ -420,7 +420,7 @@ export const PricingTiersSection = ({
         </div>
 
         {/* Aviso de urgência */}
-        <div className="mt-8 text-center">
+        <div className="mt-8 text-center space-y-4">
           <div 
             className="inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-border/50 bg-card/50 backdrop-blur-sm"
             style={{ borderColor: `${primaryColor}30`, backgroundColor: `${primaryColor}08` }}
@@ -429,6 +429,20 @@ export const PricingTiersSection = ({
             <p className="text-sm sm:text-base text-muted-foreground">
               Enquanto a recarga de créditos está disponível, este é o <strong className="text-foreground">momento ideal</strong> para escalar seus projetos.
             </p>
+          </div>
+          
+          <div>
+            <Button
+              variant="ghost"
+              className="text-muted-foreground hover:text-foreground gap-2"
+              onClick={() => {
+                const faqEl = document.getElementById('faq');
+                if (faqEl) faqEl.scrollIntoView({ behavior: 'smooth' });
+              }}
+            >
+              <HelpCircle className="w-4 h-4" />
+              Como funciona a recarga de créditos?
+            </Button>
           </div>
         </div>
       </div>
