@@ -6,9 +6,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Plus, Trash2, Save, Loader2, Star, CreditCard, MessageSquare } from 'lucide-react';
+import { Plus, Trash2, Save, Loader2, Star, CreditCard, MessageSquare, ShoppingCart } from 'lucide-react';
 import { toast } from 'sonner';
-import { useHomepageSettings, HeroSettings } from '@/hooks/useHomepageSettings';
+import { useHomepageSettings, HeroSettings, CheckoutSettings } from '@/hooks/useHomepageSettings';
 import { PricingTier } from '@/components/PricingTiersSection';
 
 export const HomepageEditor = () => {
@@ -21,6 +21,7 @@ export const HomepageEditor = () => {
   const [pixKey, setPixKey] = useState(settings.pix_key);
   const [pixName, setPixName] = useState(settings.pix_name);
   const [whatsappNumber, setWhatsappNumber] = useState(settings.whatsapp_number);
+  const [checkout, setCheckout] = useState<CheckoutSettings>(settings.checkout);
 
   useEffect(() => {
     setHero(settings.hero);
@@ -28,6 +29,7 @@ export const HomepageEditor = () => {
     setPixKey(settings.pix_key);
     setPixName(settings.pix_name);
     setWhatsappNumber(settings.whatsapp_number);
+    setCheckout(settings.checkout);
   }, [settings]);
 
   const handleSaveHero = async () => {
@@ -118,9 +120,10 @@ export const HomepageEditor = () => {
       </div>
 
       <Tabs defaultValue="hero" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="hero">Hero (Topo)</TabsTrigger>
-          <TabsTrigger value="tiers">Pacotes de Créditos</TabsTrigger>
+          <TabsTrigger value="tiers">Pacotes</TabsTrigger>
+          <TabsTrigger value="checkout">Checkout</TabsTrigger>
           <TabsTrigger value="payment">Pagamento</TabsTrigger>
         </TabsList>
 
@@ -398,6 +401,89 @@ export const HomepageEditor = () => {
             {saving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
             Salvar Configurações de Pagamento
           </Button>
+        </TabsContent>
+
+        {/* Checkout Tab */}
+        <TabsContent value="checkout" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <ShoppingCart className="w-5 h-5" />
+                Página de Checkout
+              </CardTitle>
+              <CardDescription>Edite os textos e benefícios exibidos na página de checkout</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <Label>Subtítulo do Produto</Label>
+                  <Input
+                    value={checkout.product_subtitle}
+                    onChange={(e) => setCheckout({ ...checkout, product_subtitle: e.target.value })}
+                    placeholder="Acesso Completo"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Descrição do Produto</Label>
+                  <Input
+                    value={checkout.product_description}
+                    onChange={(e) => setCheckout({ ...checkout, product_description: e.target.value })}
+                    placeholder="Acesso vitalício • Sem mensalidades"
+                  />
+                </div>
+              </div>
+
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <Label>Texto do Badge</Label>
+                  <Input
+                    value={checkout.badge_text}
+                    onChange={(e) => setCheckout({ ...checkout, badge_text: e.target.value })}
+                    placeholder="Oferta Limitada"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Texto do Botão</Label>
+                  <Input
+                    value={checkout.button_text}
+                    onChange={(e) => setCheckout({ ...checkout, button_text: e.target.value })}
+                    placeholder="COMPRAR AGORA"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label>Benefícios (um por linha)</Label>
+                <Textarea
+                  value={checkout.benefits.join('\n')}
+                  onChange={(e) => setCheckout({ ...checkout, benefits: e.target.value.split('\n').filter(b => b.trim()) })}
+                  placeholder={"Acesso Vitalício ao Painel\nGerador de Créditos Ilimitado\nSuporte Premium 24/7"}
+                  rows={5}
+                />
+                <p className="text-xs text-muted-foreground">
+                  Cada linha será exibida como um item com ícone ✓
+                </p>
+              </div>
+
+              <Button 
+                onClick={async () => {
+                  setSaving(true);
+                  const result = await updateSetting('checkout', checkout);
+                  if (result.success) {
+                    toast.success('Checkout atualizado com sucesso!');
+                  } else {
+                    toast.error('Erro ao salvar: ' + result.error);
+                  }
+                  setSaving(false);
+                }} 
+                disabled={saving} 
+                className="w-full"
+              >
+                {saving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
+                Salvar Checkout
+              </Button>
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
     </div>
