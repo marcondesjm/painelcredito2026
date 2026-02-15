@@ -282,6 +282,14 @@ export const PricingTiersSection = ({
                     }`}>
                       {formatCredits(tier.credits)} de créditos
                     </h3>
+                    {(tier.bonus_credits ?? 0) > 0 && (
+                      <Badge 
+                        className="text-xs font-bold text-white mb-1"
+                        style={{ backgroundColor: accentColor }}
+                      >
+                        🎁 +{formatCredits(tier.bonus_credits!)} bônus
+                      </Badge>
+                    )}
                     <p className="text-sm text-muted-foreground line-clamp-1">
                       {tier.name}
                     </p>
