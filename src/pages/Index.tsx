@@ -80,6 +80,8 @@ const Index = () => {
     setCheckoutOpen(true);
   };
 
+  const vis = settings.sections_visibility;
+
   return (
     <div className="min-h-screen relative overflow-x-hidden">
       {/* Fixed background for entire page */}
@@ -95,24 +97,26 @@ const Index = () => {
       {/* Dark overlay */}
       <div className="fixed inset-0 bg-[hsl(240,10%,4%)]/70 -z-10" />
       <Header />
-      <HeroSection />
-      <PricingTiersSection 
-        tiers={tiers} 
-        customPackageOptions={settings.custom_package_options}
-        primaryColor="#8B5CF6" 
-        accentColor="#22C55E"
-        onBuyClick={handleBuyClick}
-      />
-      <FeaturesSection />
-      <WhyChooseSection />
-      <HowItWorksSection />
-      <VideoSection />
-      <SecurePurchaseSection />
-      <TestimonialsSection />
-      <GuaranteeSection title={settings.guarantee.title} items={settings.guarantee.items} />
-      <StatsSection />
-      <FAQSection title={settings.faq.title} subtitle={settings.faq.subtitle} items={settings.faq.items} />
-      <FinalCTASection />
+      {vis.hero && <HeroSection />}
+      {vis.pricing && (
+        <PricingTiersSection 
+          tiers={tiers} 
+          customPackageOptions={settings.custom_package_options}
+          primaryColor="#8B5CF6" 
+          accentColor="#22C55E"
+          onBuyClick={handleBuyClick}
+        />
+      )}
+      {vis.features && <FeaturesSection />}
+      {vis.why_choose && <WhyChooseSection />}
+      {vis.how_it_works && <HowItWorksSection />}
+      {vis.video && <VideoSection />}
+      {vis.secure_purchase && <SecurePurchaseSection />}
+      {vis.testimonials && <TestimonialsSection />}
+      {vis.guarantee && <GuaranteeSection title={settings.guarantee.title} items={settings.guarantee.items} />}
+      {vis.stats && <StatsSection />}
+      {vis.faq && <FAQSection title={settings.faq.title} subtitle={settings.faq.subtitle} items={settings.faq.items} />}
+      {vis.final_cta && <FinalCTASection />}
       <Footer />
       <WhatsAppButton number={settings.whatsapp_number || '5548996029392'} message="Olá! Gostaria de mais informações sobre o painel." />
       <SocialProofNotification 

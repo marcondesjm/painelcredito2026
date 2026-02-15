@@ -7,9 +7,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Plus, Trash2, Save, Loader2, Star, CreditCard, MessageSquare, ShoppingCart, Bell } from 'lucide-react';
+import { Plus, Trash2, Save, Loader2, Star, CreditCard, MessageSquare, ShoppingCart, Bell, Eye } from 'lucide-react';
 import { toast } from 'sonner';
-import { useHomepageSettings, HeroSettings, CheckoutSettings, SocialProofSettings, SocialProofCustomer, CustomPackageOption, GuaranteeSettings, FAQSettings, FAQItem } from '@/hooks/useHomepageSettings';
+import { useHomepageSettings, HeroSettings, CheckoutSettings, SocialProofSettings, SocialProofCustomer, CustomPackageOption, GuaranteeSettings, FAQSettings, FAQItem, SectionsVisibility } from '@/hooks/useHomepageSettings';
 import { PricingTier } from '@/components/PricingTiersSection';
 
 export const HomepageEditor = () => {
@@ -27,6 +27,7 @@ export const HomepageEditor = () => {
   const [customPackageOptions, setCustomPackageOptions] = useState<CustomPackageOption[]>(settings.custom_package_options);
   const [guarantee, setGuarantee] = useState<GuaranteeSettings>(settings.guarantee);
   const [faq, setFaq] = useState<FAQSettings>(settings.faq);
+  const [sectionsVisibility, setSectionsVisibility] = useState<SectionsVisibility>(settings.sections_visibility);
 
   useEffect(() => {
     setHero(settings.hero);
@@ -39,6 +40,7 @@ export const HomepageEditor = () => {
     setCustomPackageOptions(settings.custom_package_options);
     setGuarantee(settings.guarantee);
     setFaq(settings.faq);
+    setSectionsVisibility(settings.sections_visibility);
   }, [settings]);
 
   const handleSaveHero = async () => {
@@ -136,7 +138,8 @@ export const HomepageEditor = () => {
       </div>
 
       <Tabs defaultValue="hero" className="w-full">
-        <TabsList className="grid w-full grid-cols-7">
+        <TabsList className="grid w-full grid-cols-8">
+          <TabsTrigger value="sections">Seções</TabsTrigger>
           <TabsTrigger value="hero">Hero</TabsTrigger>
           <TabsTrigger value="tiers">Pacotes</TabsTrigger>
           <TabsTrigger value="checkout">Checkout</TabsTrigger>
@@ -145,6 +148,63 @@ export const HomepageEditor = () => {
           <TabsTrigger value="faq">FAQ</TabsTrigger>
           <TabsTrigger value="payment">Pagamento</TabsTrigger>
         </TabsList>
+
+        {/* Sections Visibility Tab */}
+        <TabsContent value="sections" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Eye className="w-5 h-5" />
+                Visibilidade das Seções
+              </CardTitle>
+              <CardDescription>Ative ou desative as seções exibidas na página principal</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {([
+                { key: 'hero' as const, label: 'Hero (Créditos Infinitos)' },
+                { key: 'pricing' as const, label: 'Pacotes de Preços' },
+                { key: 'features' as const, label: 'Funcionalidades' },
+                { key: 'why_choose' as const, label: 'Por que Escolher' },
+                { key: 'how_it_works' as const, label: 'Como Funciona' },
+                { key: 'video' as const, label: 'Vídeo' },
+                { key: 'secure_purchase' as const, label: 'Compra Segura' },
+                { key: 'testimonials' as const, label: 'Depoimentos' },
+                { key: 'guarantee' as const, label: 'Garantia' },
+                { key: 'stats' as const, label: 'Estatísticas' },
+                { key: 'faq' as const, label: 'FAQ' },
+                { key: 'final_cta' as const, label: 'CTA Final' },
+              ]).map(({ key, label }) => (
+                <div key={key} className="flex items-center justify-between py-2 border-b border-border last:border-0">
+                  <Label className="text-sm font-medium">{label}</Label>
+                  <Switch
+                    checked={sectionsVisibility[key]}
+                    onCheckedChange={(checked) =>
+                      setSectionsVisibility({ ...sectionsVisibility, [key]: checked })
+                    }
+                  />
+                </div>
+              ))}
+
+              <Button
+                onClick={async () => {
+                  setSaving(true);
+                  const result = await updateSetting('sections_visibility', sectionsVisibility);
+                  if (result.success) {
+                    toast.success('Visibilidade das seções salva!');
+                  } else {
+                    toast.error('Erro ao salvar: ' + result.error);
+                  }
+                  setSaving(false);
+                }}
+                disabled={saving}
+                className="w-full"
+              >
+                {saving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
+                Salvar Visibilidade
+              </Button>
+            </CardContent>
+          </Card>
+        </TabsContent>
 
         {/* Hero Tab */}
         <TabsContent value="hero" className="space-y-4">
