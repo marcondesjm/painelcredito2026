@@ -29,7 +29,7 @@ const defaultFaqs: FAQItem[] = [
 ];
 
 export const FAQSection = ({ title, subtitle, items }: FAQSectionProps) => {
-  const displayTitle = title || 'Por que escolher o painel?';
+  const displayTitle = title || 'Como funciona a recarga de créditos?';
   const displaySubtitle = subtitle || 'Tudo você precisa para usar a Lovable sem preocupações.';
   const faqs = items && items.length > 0 ? items : defaultFaqs;
 
