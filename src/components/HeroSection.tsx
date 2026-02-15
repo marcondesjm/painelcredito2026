@@ -66,7 +66,7 @@ export const HeroSection = () => {
             {/* Limited offer badge */}
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 sm:gap-4 mb-4 sm:mb-6">
               <span className="bg-primary text-primary-foreground text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-wide">
-                Oferta Limitada
+                {hero.badge_text || 'Oferta Limitada'}
               </span>
               
               {/* Price */}
