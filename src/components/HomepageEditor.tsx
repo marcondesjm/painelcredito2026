@@ -180,12 +180,20 @@ export const HomepageEditor = () => {
                     onChange={(e) => setHero({ ...hero, price_current: Number(e.target.value) })}
                   />
                 </div>
-                <div className="space-y-2">
+                 <div className="space-y-2">
                   <Label>Texto do Botão</Label>
                   <Input
                     value={hero.cta_text}
                     onChange={(e) => setHero({ ...hero, cta_text: e.target.value })}
                     placeholder="Comprar Agora"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Texto do Badge (ex: Oferta Limitada)</Label>
+                  <Input
+                    value={hero.badge_text || ''}
+                    onChange={(e) => setHero({ ...hero, badge_text: e.target.value })}
+                    placeholder="Oferta Limitada"
                   />
                 </div>
               </div>

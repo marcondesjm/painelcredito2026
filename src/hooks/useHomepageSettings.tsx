@@ -9,6 +9,7 @@ interface HeroSettings {
   price_original: number;
   price_current: number;
   cta_text: string;
+  badge_text: string;
 }
 
 interface HomepageSettings {
@@ -27,7 +28,8 @@ const defaultSettings: HomepageSettings = {
     subtitle: 'Use nosso painel exclusivo e gere créditos ilimitados para seus projetos Lovable e revenda créditos.',
     price_original: 600,
     price_current: 349.99,
-    cta_text: 'Comprar Agora'
+    cta_text: 'Comprar Agora',
+    badge_text: 'Oferta Limitada'
   },
   pix_key: '',
   pix_name: '',
