@@ -7,6 +7,7 @@ import { AuthProvider } from "@/hooks/useAuth";
 import { useSecurityProtection } from "@/hooks/useSecurityProtection";
 import { InstallBanner } from "@/components/InstallBanner";
 import { GlobalWhatsAppButton } from "@/components/GlobalWhatsAppButton";
+import { CookieConsentBanner } from "@/components/CookieConsentBanner";
 import Index from "./pages/Index";
 import Checkout from "./pages/Checkout";
 import Auth from "./pages/Auth";
@@ -51,6 +52,7 @@ const App = () => (
             </Routes>
             <InstallBanner />
             <GlobalWhatsAppButton />
+            <CookieConsentBanner />
           </AuthProvider>
         </BrowserRouter>
       </SecurityWrapper>
