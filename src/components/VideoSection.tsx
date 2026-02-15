@@ -31,7 +31,7 @@ export const VideoSection = () => {
           ) : (
             <iframe
               className="w-full aspect-video"
-              src="https://www.youtube.com/embed/ZMG1gklPEac?autoplay=1"
+              src="https://www.youtube.com/embed/ZMG1gklPEac?autoplay=1&modestbranding=1&showinfo=0&rel=0&controls=1&iv_load_policy=3"
               title="Tutorial Completo"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
