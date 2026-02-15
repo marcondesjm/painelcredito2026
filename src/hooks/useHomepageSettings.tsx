@@ -40,18 +40,32 @@ interface CustomPackageOption {
   bonus_credits?: number;
 }
 
+interface GuaranteeSettings {
+  title: string;
+  items: string[];
+}
+
 interface HomepageSettings {
   pricing_tiers: PricingTier[];
   custom_package_options: CustomPackageOption[];
   hero: HeroSettings;
   checkout: CheckoutSettings;
   social_proof: SocialProofSettings;
+  guarantee: GuaranteeSettings;
   pix_key: string;
   pix_name: string;
   whatsapp_number: string;
 }
 
 const defaultSettings: HomepageSettings = {
+  guarantee: {
+    title: 'Garantia',
+    items: [
+      "Garantimos a entrega e funcionamento do produto no momento da liberação.",
+      "Caso ocorra reset de créditos e a plataforma ainda permita novas adições, realizamos a reposição por até 15 dias após a recarga.",
+      "O prazo de 15 dias refere-se à garantia de entrega e funcionamento inicial.",
+    ],
+  },
   pricing_tiers: [],
   custom_package_options: [
     { credits: 100, price: 10 },
@@ -133,6 +147,8 @@ export const useHomepageSettings = () => {
           newSettings.checkout = item.value as CheckoutSettings;
         } else if (item.key === 'social_proof' && item.value) {
           newSettings.social_proof = item.value as SocialProofSettings;
+        } else if (item.key === 'guarantee' && item.value) {
+          newSettings.guarantee = item.value as GuaranteeSettings;
         }
       });
 
@@ -189,4 +205,4 @@ export const useHomepageSettings = () => {
   };
 };
 
-export type { HeroSettings, CheckoutSettings, SocialProofSettings, SocialProofCustomer, HomepageSettings, CustomPackageOption };
+export type { HeroSettings, CheckoutSettings, SocialProofSettings, SocialProofCustomer, HomepageSettings, CustomPackageOption, GuaranteeSettings };
