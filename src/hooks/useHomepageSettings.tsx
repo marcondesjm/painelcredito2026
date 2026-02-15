@@ -20,10 +20,24 @@ interface CheckoutSettings {
   button_text: string;
 }
 
+interface SocialProofCustomer {
+  name: string;
+  city: string;
+  state: string;
+}
+
+interface SocialProofSettings {
+  enabled: boolean;
+  product_name: string;
+  customers: SocialProofCustomer[];
+  credit_options: number[];
+}
+
 interface HomepageSettings {
   pricing_tiers: PricingTier[];
   hero: HeroSettings;
   checkout: CheckoutSettings;
+  social_proof: SocialProofSettings;
   pix_key: string;
   pix_name: string;
   whatsapp_number: string;
@@ -52,6 +66,21 @@ const defaultSettings: HomepageSettings = {
       'Comunidade Exclusiva'
     ],
     button_text: 'COMPRAR AGORA'
+  },
+  social_proof: {
+    enabled: true,
+    product_name: 'o Gerador',
+    customers: [
+      { name: "Carlos M.", city: "São Paulo", state: "SP" },
+      { name: "Ana Paula S.", city: "Rio de Janeiro", state: "RJ" },
+      { name: "Roberto F.", city: "Belo Horizonte", state: "MG" },
+      { name: "Juliana C.", city: "Curitiba", state: "PR" },
+      { name: "Fernando L.", city: "Salvador", state: "BA" },
+      { name: "Mariana R.", city: "Brasília", state: "DF" },
+      { name: "Pedro H.", city: "Porto Alegre", state: "RS" },
+      { name: "Thiago N.", city: "Florianópolis", state: "SC" },
+    ],
+    credit_options: [200, 500, 1000, 2000]
   },
   pix_key: '',
   pix_name: '',
@@ -87,6 +116,8 @@ export const useHomepageSettings = () => {
           newSettings.whatsapp_number = item.value;
         } else if (item.key === 'checkout' && item.value) {
           newSettings.checkout = item.value as CheckoutSettings;
+        } else if (item.key === 'social_proof' && item.value) {
+          newSettings.social_proof = item.value as SocialProofSettings;
         }
       });
 
@@ -143,4 +174,4 @@ export const useHomepageSettings = () => {
   };
 };
 
-export type { HeroSettings, CheckoutSettings, HomepageSettings };
+export type { HeroSettings, CheckoutSettings, SocialProofSettings, SocialProofCustomer, HomepageSettings };

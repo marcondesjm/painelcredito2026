@@ -112,7 +112,12 @@ const Index = () => {
       <FinalCTASection />
       <Footer />
       <WhatsAppButton number={settings.whatsapp_number || '5548996029392'} message="Olá! Gostaria de mais informações sobre o painel." />
-      <SocialProofNotification />
+      <SocialProofNotification 
+        enabled={settings.social_proof.enabled}
+        productName={settings.social_proof.product_name}
+        customers={settings.social_proof.customers}
+        creditOptions={settings.social_proof.credit_options}
+      />
       
       {/* Checkout Modal */}
       <CheckoutModal
