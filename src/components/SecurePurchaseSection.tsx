@@ -1,5 +1,6 @@
 import { Shield, Zap, Headphones, RefreshCw } from 'lucide-react';
 import { LucideIcon } from 'lucide-react';
+import { useLanguage } from '@/hooks/useLanguage';
 
 interface TrustItemProps {
   icon: LucideIcon;
@@ -22,51 +23,30 @@ const TrustItem = ({ icon: Icon, title, description }: TrustItemProps) => {
 };
 
 export const SecurePurchaseSection = () => {
+  const { t } = useLanguage();
+
   const trustItems: TrustItemProps[] = [
-    {
-      icon: Shield,
-      title: "Produto Testado",
-      description: "Ferramenta validada e funcionando perfeitamente."
-    },
-    {
-      icon: Zap,
-      title: "Entrega Automática",
-      description: "Receba acesso imediato após a confirmação do pagamento."
-    },
-    {
-      icon: Headphones,
-      title: "Suporte Disponível",
-      description: "Equipe pronta para ajudar sempre que precisar."
-    },
-    {
-      icon: RefreshCw,
-      title: "Atualizações Gratuitas",
-      description: "Melhorias constantes sem custo adicional."
-    }
+    { icon: Shield, title: t('secure.item1_title'), description: t('secure.item1_desc') },
+    { icon: Zap, title: t('secure.item2_title'), description: t('secure.item2_desc') },
+    { icon: Headphones, title: t('secure.item3_title'), description: t('secure.item3_desc') },
+    { icon: RefreshCw, title: t('secure.item4_title'), description: t('secure.item4_desc') },
   ];
 
   return (
     <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 relative">
       <div className="max-w-4xl mx-auto">
-        {/* Section Header */}
         <div className="text-center mb-8 sm:mb-12">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
-            Compra <span className="text-primary">Segura</span>
+            {t('secure.title_pre')} <span className="text-primary">{t('secure.title_highlight')}</span>
           </h2>
           <p className="text-sm sm:text-base text-muted-foreground">
-            Sua confiança é nossa prioridade.
+            {t('secure.subtitle')}
           </p>
         </div>
 
-        {/* Trust Items Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
           {trustItems.map((item, index) => (
-            <TrustItem
-              key={index}
-              icon={item.icon}
-              title={item.title}
-              description={item.description}
-            />
+            <TrustItem key={index} icon={item.icon} title={item.title} description={item.description} />
           ))}
         </div>
       </div>
