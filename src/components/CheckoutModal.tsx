@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { ShoppingCart, Shield, Wallet, Link as LinkIcon, Tag, Loader2, CheckCircle, Eye, EyeOff, RefreshCw, X, Sparkles, Copy, Send, Phone } from 'lucide-react';
+import { ShoppingCart, Shield, Wallet, Link as LinkIcon, Tag, Loader2, CheckCircle, Eye, EyeOff, RefreshCw, X, Sparkles, Copy, Send, Phone, Globe, UserCircle, ChevronRight } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -37,7 +37,7 @@ interface CheckoutModalProps {
   pixQrBase?: string;
 }
 
-type Step = 'checkout' | 'signup' | 'success';
+type Step = 'delivery' | 'checkout' | 'signup' | 'success';
 
 export const CheckoutModal = ({
   isOpen,
@@ -151,7 +151,7 @@ export const CheckoutModal = ({
   useEffect(() => {
     if (isOpen) {
       refreshUserContext();
-      setStep('checkout');
+      setStep('delivery');
 
       // Keep in sync if auth state changes while the modal is open
       const { data: { subscription } } = supabase.auth.onAuthStateChange(
@@ -397,7 +397,7 @@ ${cupomText}
   };
 
   const handleClose = () => {
-    setStep('checkout');
+    setStep('delivery');
     setName('');
     setWhatsapp('');
     setEmail('');
@@ -413,6 +413,106 @@ ${cupomText}
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto p-0 gap-0 border-0">
+        {step === 'delivery' && (
+          <div className="flex flex-col">
+            {/* Progress Steps */}
+            <div className="flex items-center justify-center gap-0 pt-6 pb-2 px-4">
+              <div className="flex flex-col items-center">
+                <div className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold" style={{ backgroundColor: `${primaryColor}30`, color: primaryColor }}>
+                  <CheckCircle className="w-4 h-4" />
+                </div>
+                <span className="text-xs mt-1 text-muted-foreground">Pacote</span>
+              </div>
+              <div className="w-10 h-0.5 mt-[-12px]" style={{ backgroundColor: primaryColor }} />
+              <div className="flex flex-col items-center">
+                <div className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold text-white" style={{ backgroundColor: primaryColor }}>
+                  2
+                </div>
+                <span className="text-xs mt-1 font-semibold" style={{ color: primaryColor }}>Entrega</span>
+              </div>
+              <div className="w-10 h-0.5 mt-[-12px] bg-border" />
+              <div className="flex flex-col items-center">
+                <div className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold bg-muted text-muted-foreground">
+                  3
+                </div>
+                <span className="text-xs mt-1 text-muted-foreground">Dados</span>
+              </div>
+            </div>
+
+            <div className="p-5 space-y-5">
+              {/* Icon & Title */}
+              <div className="text-center space-y-1">
+                <div className="flex justify-center mb-3">
+                  <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: `${primaryColor}20` }}>
+                    <Sparkles className="w-6 h-6" style={{ color: primaryColor }} />
+                  </div>
+                </div>
+                <h2 className="text-xl font-bold text-foreground">Como Você Vai Receber</h2>
+                <p className="text-sm text-muted-foreground">Duas opções para entregar seus créditos</p>
+              </div>
+
+              {/* Option 1: Workspace Novo */}
+              <div 
+                className="p-4 rounded-xl border-2 space-y-2 cursor-pointer transition-all hover:shadow-md"
+                style={{ borderColor: `${primaryColor}50`, backgroundColor: `${primaryColor}08` }}
+                onClick={() => setStep('checkout')}
+              >
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: `${primaryColor}20` }}>
+                    <Globe className="w-5 h-5" style={{ color: primaryColor }} />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-bold text-foreground">Workspace Novo</h3>
+                    <p className="text-xs font-medium" style={{ color: primaryColor }}>Recomendado para iniciantes</p>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Criamos um workspace novo, carregamos com seus créditos e <strong>transferimos para você</strong>. Você recebe um workspace pronto para usar!
+                    </p>
+                    <div className="flex items-center gap-1.5 mt-2 text-xs text-muted-foreground">
+                      <CheckCircle className="w-3.5 h-3.5" style={{ color: accentColor }} />
+                      <span>Simples e rápido</span>
+                    </div>
+                  </div>
+                  <ChevronRight className="w-5 h-5 text-muted-foreground flex-shrink-0 mt-2" />
+                </div>
+              </div>
+
+              {/* Option 2: Workspace Próprio */}
+              <div 
+                className="p-4 rounded-xl border-2 space-y-2 cursor-pointer transition-all hover:shadow-md"
+                style={{ borderColor: `${primaryColor}30`, backgroundColor: `${primaryColor}05` }}
+                onClick={() => setStep('checkout')}
+              >
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: `${primaryColor}15` }}>
+                    <UserCircle className="w-5 h-5" style={{ color: primaryColor }} />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-bold text-foreground">Workspace Próprio</h3>
+                    <p className="text-xs font-medium text-muted-foreground">Para quem já tem projetos</p>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Quer os créditos direto no seu workspace existente? <strong>Você nos convida</strong> para seu workspace e fazemos a entrega lá.
+                    </p>
+                    <div className="flex items-center gap-1.5 mt-2 text-xs text-muted-foreground">
+                      <CheckCircle className="w-3.5 h-3.5" style={{ color: accentColor }} />
+                      <span>Mantém seus projetos atuais</span>
+                    </div>
+                  </div>
+                  <ChevronRight className="w-5 h-5 text-muted-foreground flex-shrink-0 mt-2" />
+                </div>
+              </div>
+
+              {/* Footer note */}
+              <div 
+                className="text-center p-3 rounded-lg border"
+                style={{ borderColor: `${primaryColor}30`, backgroundColor: `${primaryColor}08` }}
+              >
+                <p className="text-sm font-semibold text-foreground">Você escolhe após o pagamento!</p>
+                <p className="text-xs text-muted-foreground">Na página do pedido você decide qual opção prefere</p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {step === 'checkout' && (
           <div className="flex flex-col">
             {/* Header */}
