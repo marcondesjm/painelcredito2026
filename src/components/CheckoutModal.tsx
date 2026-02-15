@@ -37,7 +37,7 @@ interface CheckoutModalProps {
   pixQrBase?: string;
 }
 
-type Step = 'delivery' | 'checkout' | 'warning' | 'signup' | 'success';
+type Step = 'delivery' | 'checkout' | 'warning' | 'pix' | 'signup' | 'success';
 
 export const CheckoutModal = ({
   isOpen,
@@ -776,22 +776,158 @@ ${cupomText}
                 <Button
                   className="flex-1 h-12 text-white font-semibold"
                   style={{ background: `linear-gradient(90deg, ${primaryColor}, ${accentColor})` }}
-                  onClick={handleSubmitOrder}
+                  onClick={() => setStep('pix')}
                   disabled={loading}
                 >
-                  {loading ? (
-                    <>
-                      <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                      Processando...
-                    </>
-                  ) : (
-                    'Entendi e Concordo'
-                  )}
+                  Entendi e Concordo
                 </Button>
               </div>
             </div>
           </div>
         )}
+
+        {step === 'pix' && (() => {
+          const pixPayload = pixEnabled && pixKey && pixName
+            ? generatePixPayload({
+                pixKey,
+                merchantName: pixName,
+                amount: finalPrice,
+                txId: `PED${Date.now().toString(36).toUpperCase()}`,
+              })
+            : null;
+          const qrCodeUrl = pixPayload
+            ? generatePixQRCodeUrl(pixPayload, 250)
+            : null;
+
+          return (
+            <div className="flex flex-col">
+              <div className="flex items-center justify-end p-4">
+                <button
+                  onClick={handleClose}
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <div className="px-6 pb-6 space-y-5">
+                {/* Title */}
+                <div className="text-center space-y-2">
+                  <div className="flex justify-center mb-3">
+                    <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: `${accentColor}20` }}>
+                      <Wallet className="w-6 h-6" style={{ color: accentColor }} />
+                    </div>
+                  </div>
+                  <h2 className="text-xl font-bold text-foreground">Pagamento via PIX</h2>
+                  <p className="text-sm text-muted-foreground">
+                    Escaneie o QR Code ou copie o código para pagar <strong style={{ color: accentColor }}>{formatPrice(finalPrice)}</strong>
+                  </p>
+                </div>
+
+                {/* QR Code */}
+                {qrCodeUrl ? (
+                  <div className="flex flex-col items-center gap-4">
+                    <div className="bg-white p-3 rounded-xl">
+                      <img
+                        src={qrCodeUrl}
+                        alt="QR Code PIX"
+                        className="w-[220px] h-[220px]"
+                      />
+                    </div>
+
+                    {/* Copia e Cola */}
+                    <div className="w-full space-y-2">
+                      <Label className="text-sm font-medium text-muted-foreground">PIX Copia e Cola</Label>
+                      <div className="flex gap-2">
+                        <Input
+                          readOnly
+                          value={pixPayload || ''}
+                          className="bg-background border-2 h-11 text-xs font-mono flex-1"
+                        />
+                        <Button
+                          variant="outline"
+                          className="h-11 px-4 gap-2"
+                          onClick={() => {
+                            if (pixPayload) {
+                              navigator.clipboard.writeText(pixPayload);
+                              toast.success('Código PIX copiado!');
+                            }
+                          }}
+                        >
+                          <Copy className="w-4 h-4" />
+                          Copiar
+                        </Button>
+                      </div>
+                    </div>
+
+                    {/* Beneficiário */}
+                    <div className="w-full p-3 rounded-lg border border-border/50 text-sm text-muted-foreground">
+                      <div className="flex justify-between">
+                        <span>Beneficiário:</span>
+                        <span className="font-medium text-foreground">{pixName}</span>
+                      </div>
+                      <div className="flex justify-between mt-1">
+                        <span>Valor:</span>
+                        <span className="font-bold" style={{ color: accentColor }}>{formatPrice(finalPrice)}</span>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="text-center p-6 rounded-xl border border-destructive/30 bg-destructive/5">
+                    <p className="text-sm text-destructive">PIX não configurado. Entre em contato com o vendedor.</p>
+                  </div>
+                )}
+
+                {/* Action Buttons */}
+                <div className="flex gap-3">
+                  <Button
+                    variant="outline"
+                    className="flex-1 h-12"
+                    onClick={() => setStep('warning')}
+                  >
+                    <ArrowLeft className="w-4 h-4 mr-2" />
+                    Voltar
+                  </Button>
+                  <Button
+                    className="flex-1 h-12 text-white font-semibold text-base"
+                    style={{ background: `linear-gradient(90deg, ${primaryColor}, ${accentColor})` }}
+                    onClick={handleSubmitOrder}
+                    disabled={loading}
+                  >
+                    {loading ? (
+                      <>
+                        <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                        Processando...
+                      </>
+                    ) : (
+                      <>
+                        <CheckCircle className="w-5 h-5 mr-1" />
+                        Já Paguei
+                      </>
+                    )}
+                  </Button>
+                </div>
+
+                {/* WhatsApp support */}
+                {whatsappNumber && (
+                  <div className="text-center">
+                    <button
+                      className="text-sm underline text-muted-foreground hover:text-foreground inline-flex items-center gap-1"
+                      onClick={() => {
+                        const cleanNumber = whatsappNumber.replace(/\D/g, '');
+                        window.open(`https://wa.me/${cleanNumber}?text=${encodeURIComponent('Olá! Acabei de fazer um pagamento PIX e gostaria de confirmar.')}`, '_blank');
+                      }}
+                    >
+                      <Phone className="w-3.5 h-3.5" />
+                      Enviar comprovante via WhatsApp
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })()
+        }
 
         {step === 'signup' && (
           <div className="flex flex-col">
