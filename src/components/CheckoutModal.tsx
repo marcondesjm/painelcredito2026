@@ -37,7 +37,7 @@ interface CheckoutModalProps {
   pixQrBase?: string;
 }
 
-type Step = 'delivery' | 'checkout' | 'signup' | 'success';
+type Step = 'delivery' | 'checkout' | 'warning' | 'signup' | 'success';
 
 export const CheckoutModal = ({
   isOpen,
@@ -691,7 +691,14 @@ ${cupomText}
                 <Button
                   className="flex-1 h-12 text-white font-semibold text-base"
                   style={{ background: `linear-gradient(90deg, ${primaryColor}, ${accentColor})` }}
-                  onClick={handleSubmitOrder}
+                  onClick={() => {
+                    if (!tier) return;
+                    if (!name || !whatsapp || !email) {
+                      toast.error('Preencha todos os campos obrigatórios');
+                      return;
+                    }
+                    setStep('warning');
+                  }}
                   disabled={loading}
                 >
                   {loading ? (
@@ -701,6 +708,84 @@ ${cupomText}
                     </>
                   ) : (
                     'Gerar PIX'
+                  )}
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {step === 'warning' && (
+          <div className="flex flex-col">
+            <div className="flex items-center justify-end p-4">
+              <button 
+                onClick={handleClose}
+                className="text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="px-6 pb-6 space-y-5">
+              {/* Warning Icon & Title */}
+              <div className="text-center space-y-2">
+                <div className="flex justify-center mb-3">
+                  <div className="w-12 h-12 rounded-full flex items-center justify-center bg-amber-500/20">
+                    <Shield className="w-6 h-6 text-amber-500" />
+                  </div>
+                </div>
+                <h2 className="text-xl font-bold text-foreground">Recomendação Importante</h2>
+                <p className="text-sm text-muted-foreground">
+                  O uso mais seguro é em <strong className="text-foreground">conta nova</strong>. Contas que abusaram de recargas ou acumularam volumes elevados já foram desativadas pela plataforma.
+                </p>
+              </div>
+
+              {/* Warning Card */}
+              <div className="p-4 rounded-xl border border-border/50 bg-card/50 space-y-2">
+                <p className="text-sm font-semibold text-foreground">Se optar por recarregar na conta principal:</p>
+                <p className="text-sm text-muted-foreground">
+                  Você assume o risco. A alternativa recomendada é usar uma conta nova, dedicada aos projetos.
+                </p>
+              </div>
+
+              {/* Support Card */}
+              <div className="p-4 rounded-xl border-2 space-y-2" style={{ borderColor: `${primaryColor}40`, backgroundColor: `${primaryColor}08` }}>
+                <div className="flex items-center gap-2">
+                  <RefreshCw className="w-4 h-4" style={{ color: primaryColor }} />
+                  <span className="text-sm font-semibold text-foreground">Suporte incluso</span>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Envio um vídeo passo a passo ensinando como migrar seu projeto para uma conta nova com créditos, para você evoluir sem preocupação.
+                </p>
+              </div>
+
+              {/* Disclaimer */}
+              <p className="text-xs text-center text-muted-foreground">
+                A Lovable pode alterar regras internas sem aviso prévio. Essas decisões não estão sob nosso controle.
+              </p>
+
+              {/* Action Buttons */}
+              <div className="flex gap-3">
+                <Button
+                  variant="outline"
+                  className="flex-1 h-12"
+                  onClick={() => setStep('checkout')}
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  className="flex-1 h-12 text-white font-semibold"
+                  style={{ background: `linear-gradient(90deg, ${primaryColor}, ${accentColor})` }}
+                  onClick={handleSubmitOrder}
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                      Processando...
+                    </>
+                  ) : (
+                    'Entendi e Concordo'
                   )}
                 </Button>
               </div>
