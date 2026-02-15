@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Plus, Trash2, Save, Loader2, Star, CreditCard, MessageSquare, ShoppingCart, Bell } from 'lucide-react';
 import { toast } from 'sonner';
-import { useHomepageSettings, HeroSettings, CheckoutSettings, SocialProofSettings, SocialProofCustomer, CustomPackageOption, GuaranteeSettings } from '@/hooks/useHomepageSettings';
+import { useHomepageSettings, HeroSettings, CheckoutSettings, SocialProofSettings, SocialProofCustomer, CustomPackageOption, GuaranteeSettings, FAQSettings, FAQItem } from '@/hooks/useHomepageSettings';
 import { PricingTier } from '@/components/PricingTiersSection';
 
 export const HomepageEditor = () => {
@@ -26,6 +26,7 @@ export const HomepageEditor = () => {
   const [socialProof, setSocialProof] = useState<SocialProofSettings>(settings.social_proof);
   const [customPackageOptions, setCustomPackageOptions] = useState<CustomPackageOption[]>(settings.custom_package_options);
   const [guarantee, setGuarantee] = useState<GuaranteeSettings>(settings.guarantee);
+  const [faq, setFaq] = useState<FAQSettings>(settings.faq);
 
   useEffect(() => {
     setHero(settings.hero);
@@ -37,6 +38,7 @@ export const HomepageEditor = () => {
     setSocialProof(settings.social_proof);
     setCustomPackageOptions(settings.custom_package_options);
     setGuarantee(settings.guarantee);
+    setFaq(settings.faq);
   }, [settings]);
 
   const handleSaveHero = async () => {
@@ -134,12 +136,13 @@ export const HomepageEditor = () => {
       </div>
 
       <Tabs defaultValue="hero" className="w-full">
-        <TabsList className="grid w-full grid-cols-6">
+        <TabsList className="grid w-full grid-cols-7">
           <TabsTrigger value="hero">Hero</TabsTrigger>
           <TabsTrigger value="tiers">Pacotes</TabsTrigger>
           <TabsTrigger value="checkout">Checkout</TabsTrigger>
           <TabsTrigger value="social">Prova Social</TabsTrigger>
           <TabsTrigger value="guarantee">Garantia</TabsTrigger>
+          <TabsTrigger value="faq">FAQ</TabsTrigger>
           <TabsTrigger value="payment">Pagamento</TabsTrigger>
         </TabsList>
 
@@ -795,6 +798,105 @@ export const HomepageEditor = () => {
               >
                 {saving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
                 Salvar Garantia
+              </Button>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* FAQ Tab */}
+        <TabsContent value="faq" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Seção FAQ</CardTitle>
+              <CardDescription>Configure as perguntas e respostas frequentes</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <Label>Título da Seção</Label>
+                  <Input
+                    value={faq.title}
+                    onChange={(e) => setFaq({ ...faq, title: e.target.value })}
+                    placeholder="Por que escolher o painel?"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Subtítulo</Label>
+                  <Input
+                    value={faq.subtitle}
+                    onChange={(e) => setFaq({ ...faq, subtitle: e.target.value })}
+                    placeholder="Tudo você precisa..."
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <Label>Perguntas e Respostas</Label>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setFaq({ ...faq, items: [...faq.items, { question: '', answer: '' }] })}
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Adicionar FAQ
+                  </Button>
+                </div>
+                {faq.items.map((item, index) => (
+                  <Card key={index} className="p-4 space-y-3">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex-1 space-y-2">
+                        <Input
+                          value={item.question}
+                          onChange={(e) => {
+                            const updated = [...faq.items];
+                            updated[index] = { ...updated[index], question: e.target.value };
+                            setFaq({ ...faq, items: updated });
+                          }}
+                          placeholder="Pergunta..."
+                        />
+                        <Textarea
+                          value={item.answer}
+                          onChange={(e) => {
+                            const updated = [...faq.items];
+                            updated[index] = { ...updated[index], answer: e.target.value };
+                            setFaq({ ...faq, items: updated });
+                          }}
+                          placeholder="Resposta..."
+                          rows={2}
+                        />
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => {
+                          const updated = faq.items.filter((_, i) => i !== index);
+                          setFaq({ ...faq, items: updated });
+                        }}
+                      >
+                        <Trash2 className="w-4 h-4 text-destructive" />
+                      </Button>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+
+              <Button
+                onClick={async () => {
+                  setSaving(true);
+                  const result = await updateSetting('faq', faq);
+                  if (result.success) {
+                    toast.success('FAQ atualizado com sucesso!');
+                  } else {
+                    toast.error('Erro ao salvar: ' + result.error);
+                  }
+                  setSaving(false);
+                }}
+                disabled={saving}
+                className="w-full"
+              >
+                {saving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
+                Salvar FAQ
               </Button>
             </CardContent>
           </Card>
