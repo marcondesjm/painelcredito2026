@@ -1,24 +1,47 @@
-import { Card } from '@/components/ui/card';
-import { MessageCircle, Star } from 'lucide-react';
+import { Star, Clock, ThumbsUp, Zap } from 'lucide-react';
 
 const testimonials = [
   {
     id: 1,
-    name: "Carlos M.",
-    text: "Consegui mais de 500 créditos em uma semana! O painel é muito fácil de usar.",
-    rating: 5,
+    email: "mn***@gmail.com",
+    timeAgo: "há 2h",
+    credits: 50,
+    text: "Experiência incrível, recarrega de forma rápida os créditos. Parabéns a equipe que desenvolveu o Lovable Credits :)",
   },
   {
     id: 2,
-    name: "Ana Paula S.",
-    text: "Melhor investimento que fiz. O suporte é excelente e os créditos chegam rápido.",
-    rating: 5,
+    email: "ad***@leieimici.online",
+    timeAgo: "há 3h",
+    credits: 30,
+    text: "Isso aqui é surreal de bom",
   },
   {
     id: 3,
-    name: "Roberto F.",
-    text: "Estava cético no início, mas funcionou perfeitamente. Recomendo a todos!",
-    rating: 5,
+    email: "bl***@gmail.com",
+    timeAgo: "há 5h",
+    credits: 400,
+    text: "Muito obrigado pelo exelente trabalho",
+  },
+  {
+    id: 4,
+    email: "co***@leigosacademy.site",
+    timeAgo: "há 6h",
+    credits: 100,
+    text: "Foi top 🔥 gostei de compra mais barato",
+  },
+  {
+    id: 5,
+    email: "bu***@gmail.com",
+    timeAgo: "há 6h",
+    credits: 300,
+    text: "gostei foi bem rapido e super pratico recomendo",
+  },
+  {
+    id: 6,
+    email: "bu***@gmail.com",
+    timeAgo: "há 13h",
+    credits: 100,
+    text: "os melhores do mercado de creditos do lovable...rapido e pratico",
   },
 ];
 
@@ -29,43 +52,49 @@ export const TestimonialsSection = () => {
         {/* Header */}
         <div className="text-center mb-8 sm:mb-12">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
-            O que nossa <span className="text-gradient">comunidade</span> diz
+            O que nossos clientes dizem
           </h2>
-          <p className="text-sm sm:text-base md:text-lg text-muted-foreground max-w-2xl mx-auto px-2">
-            Veja o que os clientes da nossa comunidade estão achando do painel
-          </p>
+          <div className="flex items-center justify-center gap-2 text-sm sm:text-base">
+            <Star className="w-5 h-5 fill-yellow-500 text-yellow-500" />
+            <span className="font-bold text-foreground">100%</span>
+            <span className="text-muted-foreground">de avaliações positivas</span>
+            <span className="text-muted-foreground">(235 avaliações)</span>
+          </div>
         </div>
 
         {/* Testimonials Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
           {testimonials.map((testimonial) => (
-            <Card 
+            <div
               key={testimonial.id}
-              className="bg-card/50 backdrop-blur-sm border-border/50 p-4 sm:p-6 hover:border-primary/50 transition-all duration-300"
+              className="rounded-xl border border-border/50 bg-card/30 backdrop-blur-sm p-4 hover:border-primary/40 transition-all duration-300"
             >
-              {/* Rating */}
-              <div className="flex gap-1 mb-3 sm:mb-4">
-                {[...Array(testimonial.rating)].map((_, i) => (
-                  <Star key={i} className="w-3 h-3 sm:w-4 sm:h-4 fill-yellow-500 text-yellow-500" />
-                ))}
+              {/* Top row: email + badge */}
+              <div className="flex items-start justify-between gap-2 mb-2">
+                <div>
+                  <span className="text-sm font-medium text-foreground">{testimonial.email}</span>
+                  <div className="flex items-center gap-1 mt-0.5 text-xs text-muted-foreground">
+                    <Clock className="w-3 h-3" />
+                    <span>{testimonial.timeAgo}</span>
+                  </div>
+                </div>
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 whitespace-nowrap">
+                  <ThumbsUp className="w-3 h-3" />
+                  Recomenda
+                </span>
               </div>
 
-              {/* Quote */}
-              <p className="text-sm sm:text-base text-foreground/90 mb-4 sm:mb-6 leading-relaxed">
+              {/* Credits */}
+              <div className="flex items-center gap-1.5 mb-2">
+                <Zap className="w-4 h-4 text-emerald-400" />
+                <span className="text-sm font-bold text-foreground">{testimonial.credits} créditos</span>
+              </div>
+
+              {/* Text */}
+              <p className="text-sm text-muted-foreground italic leading-relaxed">
                 "{testimonial.text}"
               </p>
-
-              {/* Author */}
-              <div className="flex items-center gap-2 sm:gap-3">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-primary/20 flex items-center justify-center">
-                  <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
-                </div>
-                <div>
-                  <p className="text-sm sm:text-base font-semibold text-foreground">{testimonial.name}</p>
-                  <p className="text-xs sm:text-sm text-muted-foreground">Cliente verificado</p>
-                </div>
-              </div>
-            </Card>
+            </div>
           ))}
         </div>
       </div>
