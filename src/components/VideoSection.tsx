@@ -7,9 +7,6 @@ export const VideoSection = () => {
   return (
     <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6">
       <div className="max-w-4xl mx-auto">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 sm:mb-12">
-          <span className="text-gradient">🎬 Como Funciona</span>
-        </h2>
         
         <div className="relative rounded-xl sm:rounded-2xl overflow-hidden border border-border/50 bg-card/30 backdrop-blur-sm group">
           {!isPlaying ? (
@@ -42,9 +39,6 @@ export const VideoSection = () => {
           )}
         </div>
         
-        <p className="text-center text-xs sm:text-sm text-muted-foreground mt-3 sm:mt-4">
-          Tutorial Completo - Veja como é fácil usar o painel
-        </p>
       </div>
     </section>
   );
