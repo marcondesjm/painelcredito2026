@@ -7,23 +7,24 @@ import productPainel from '@/assets/product-painel.png';
 import { PricingTier } from '@/components/PricingTiersSection';
 import { useHomepageSettings } from '@/hooks/useHomepageSettings';
 
-// Default tier when accessing /checkout directly (without selecting a package)
-const defaultTier: PricingTier = {
-  id: 'default',
-  name: 'Painel Gerador de Créditos',
-  credits: 5000,
-  price_original: 600,
-  price_current: 349.99,
-  available: 30,
-  sales: 243,
-  checkout_link: '',
-  highlight: false
-};
-
 const Checkout = () => {
   const location = useLocation();
-  const selectedTier = (location.state as { selectedTier?: PricingTier })?.selectedTier || defaultTier;
   const { settings } = useHomepageSettings();
+  
+  // Default tier when accessing /checkout directly (without selecting a package)
+  const defaultTier: PricingTier = {
+    id: 'default',
+    name: 'Painel Gerador de Créditos',
+    credits: 5000,
+    price_original: settings.hero.price_original,
+    price_current: settings.hero.price_current,
+    available: 30,
+    sales: 243,
+    checkout_link: '',
+    highlight: false
+  };
+
+  const selectedTier = (location.state as { selectedTier?: PricingTier })?.selectedTier || defaultTier;
   const { checkout } = settings;
   
   const [email, setEmail] = useState('');
