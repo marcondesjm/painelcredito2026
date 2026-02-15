@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Plus, Trash2, Save, Loader2, Star, CreditCard, MessageSquare, ShoppingCart, Bell } from 'lucide-react';
 import { toast } from 'sonner';
-import { useHomepageSettings, HeroSettings, CheckoutSettings, SocialProofSettings, SocialProofCustomer, CustomPackageOption } from '@/hooks/useHomepageSettings';
+import { useHomepageSettings, HeroSettings, CheckoutSettings, SocialProofSettings, SocialProofCustomer, CustomPackageOption, GuaranteeSettings } from '@/hooks/useHomepageSettings';
 import { PricingTier } from '@/components/PricingTiersSection';
 
 export const HomepageEditor = () => {
@@ -25,6 +25,7 @@ export const HomepageEditor = () => {
   const [checkout, setCheckout] = useState<CheckoutSettings>(settings.checkout);
   const [socialProof, setSocialProof] = useState<SocialProofSettings>(settings.social_proof);
   const [customPackageOptions, setCustomPackageOptions] = useState<CustomPackageOption[]>(settings.custom_package_options);
+  const [guarantee, setGuarantee] = useState<GuaranteeSettings>(settings.guarantee);
 
   useEffect(() => {
     setHero(settings.hero);
@@ -35,6 +36,7 @@ export const HomepageEditor = () => {
     setCheckout(settings.checkout);
     setSocialProof(settings.social_proof);
     setCustomPackageOptions(settings.custom_package_options);
+    setGuarantee(settings.guarantee);
   }, [settings]);
 
   const handleSaveHero = async () => {
@@ -132,11 +134,12 @@ export const HomepageEditor = () => {
       </div>
 
       <Tabs defaultValue="hero" className="w-full">
-        <TabsList className="grid w-full grid-cols-5">
+        <TabsList className="grid w-full grid-cols-6">
           <TabsTrigger value="hero">Hero</TabsTrigger>
           <TabsTrigger value="tiers">Pacotes</TabsTrigger>
           <TabsTrigger value="checkout">Checkout</TabsTrigger>
           <TabsTrigger value="social">Prova Social</TabsTrigger>
+          <TabsTrigger value="guarantee">Garantia</TabsTrigger>
           <TabsTrigger value="payment">Pagamento</TabsTrigger>
         </TabsList>
 
@@ -717,6 +720,81 @@ export const HomepageEditor = () => {
               >
                 {saving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
                 Salvar Checkout
+              </Button>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Guarantee Tab */}
+        <TabsContent value="guarantee" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Seção de Garantia</CardTitle>
+              <CardDescription>Configure o título e os itens da seção de garantia</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label>Título</Label>
+                <Input
+                  value={guarantee.title}
+                  onChange={(e) => setGuarantee({ ...guarantee, title: e.target.value })}
+                  placeholder="Garantia"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label>Itens da Garantia</Label>
+                <p className="text-xs text-muted-foreground">Cada item será exibido como um bullet point na seção</p>
+                {guarantee.items.map((item, index) => (
+                  <div key={index} className="flex items-start gap-2">
+                    <Textarea
+                      value={item}
+                      onChange={(e) => {
+                        const updated = [...guarantee.items];
+                        updated[index] = e.target.value;
+                        setGuarantee({ ...guarantee, items: updated });
+                      }}
+                      rows={2}
+                      className="flex-1"
+                    />
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => {
+                        const updated = guarantee.items.filter((_, i) => i !== index);
+                        setGuarantee({ ...guarantee, items: updated });
+                      }}
+                    >
+                      <Trash2 className="w-4 h-4 text-destructive" />
+                    </Button>
+                  </div>
+                ))}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setGuarantee({ ...guarantee, items: [...guarantee.items, ''] })}
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Adicionar Item
+                </Button>
+              </div>
+
+              <Button
+                onClick={async () => {
+                  setSaving(true);
+                  const result = await updateSetting('guarantee', guarantee);
+                  if (result.success) {
+                    toast.success('Garantia atualizada com sucesso!');
+                  } else {
+                    toast.error('Erro ao salvar: ' + result.error);
+                  }
+                  setSaving(false);
+                }}
+                disabled={saving}
+                className="w-full"
+              >
+                {saving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
+                Salvar Garantia
               </Button>
             </CardContent>
           </Card>

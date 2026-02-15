@@ -109,7 +109,7 @@ const Index = () => {
       <VideoSection />
       <SecurePurchaseSection />
       <TestimonialsSection />
-      <GuaranteeSection />
+      <GuaranteeSection title={settings.guarantee.title} items={settings.guarantee.items} />
       <StatsSection />
       <FAQSection />
       <FinalCTASection />
