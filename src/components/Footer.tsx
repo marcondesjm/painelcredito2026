@@ -3,29 +3,23 @@ import { Button } from '@/components/ui/button';
 import { APP_VERSION, LAST_UPDATE } from '@/config/version';
 import { toast } from 'sonner';
 import { useState } from 'react';
+import { useLanguage } from '@/hooks/useLanguage';
 
 export const Footer = () => {
   const [clearing, setClearing] = useState(false);
+  const { t } = useLanguage();
 
   const handleClearCache = async () => {
     setClearing(true);
     try {
-      // Limpa o cache do navegador
       if ('caches' in window) {
         const cacheNames = await caches.keys();
         await Promise.all(cacheNames.map(name => caches.delete(name)));
       }
-      
-      // Limpa localStorage e sessionStorage
       localStorage.clear();
       sessionStorage.clear();
-      
       toast.success('Cache limpo com sucesso! Recarregando...');
-      
-      // Força recarregar a página ignorando o cache
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
+      setTimeout(() => { window.location.reload(); }, 1000);
     } catch (error) {
       console.error('Erro ao limpar cache:', error);
       toast.error('Erro ao limpar cache');
@@ -40,32 +34,25 @@ export const Footer = () => {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-6 sm:mb-8">
           <Button variant="outline" size="default" className="gap-2 w-full sm:w-auto">
             <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5" />
-            Suporte via WhatsApp
+            {t('footer.support')}
           </Button>
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            onClick={handleClearCache}
-            disabled={clearing}
-            className="gap-2 text-muted-foreground hover:text-foreground"
-          >
+          <Button variant="ghost" size="sm" onClick={handleClearCache} disabled={clearing} className="gap-2 text-muted-foreground hover:text-foreground">
             <RefreshCw className={`w-4 h-4 ${clearing ? 'animate-spin' : ''}`} />
-            {clearing ? 'Limpando...' : 'Limpar Cache'}
+            {clearing ? t('footer.clearing') : t('footer.clear_cache')}
           </Button>
         </div>
         
         <p className="text-muted-foreground text-xs sm:text-sm mb-3 sm:mb-4">
-          © 2026 Painel Gerador de Créditos. Todos os direitos reservados.
+          {t('footer.rights')}
         </p>
 
-        {/* Versão e Data de Atualização */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 md:gap-4 text-xs text-muted-foreground/70">
           <div className="flex items-center gap-1">
             <Info className="w-3 h-3" />
-            <span>Versão {APP_VERSION}</span>
+            <span>{t('footer.version')} {APP_VERSION}</span>
           </div>
           <span className="hidden sm:inline">•</span>
-          <span>Atualizado em {LAST_UPDATE}</span>
+          <span>{t('footer.updated')} {LAST_UPDATE}</span>
         </div>
       </div>
     </footer>
