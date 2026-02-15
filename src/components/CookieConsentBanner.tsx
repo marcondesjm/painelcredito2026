@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Shield, Cookie, X } from 'lucide-react';
+import { Shield, Cookie, Wifi } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 
@@ -7,12 +7,17 @@ const COOKIE_CONSENT_KEY = 'cookie_consent_accepted';
 
 export const CookieConsentBanner = () => {
   const [visible, setVisible] = useState(false);
+  const [userIp, setUserIp] = useState<string>('');
 
   useEffect(() => {
     const accepted = localStorage.getItem(COOKIE_CONSENT_KEY);
     if (!accepted) {
-      // Small delay for better UX
       const timer = setTimeout(() => setVisible(true), 1500);
+      // Fetch user IP
+      fetch('https://api.ipify.org?format=json')
+        .then(res => res.json())
+        .then(data => setUserIp(data.ip))
+        .catch(() => setUserIp('Não identificado'));
       return () => clearTimeout(timer);
     }
   }, []);
@@ -61,6 +66,12 @@ export const CookieConsentBanner = () => {
                     Termos de Uso
                   </Link>.
                 </p>
+                {userIp && (
+                  <p className="text-[10px] text-muted-foreground/70 flex items-center gap-1 mt-1">
+                    <Wifi className="w-3 h-3" />
+                    Seu IP: <span className="font-mono">{userIp}</span>
+                  </p>
+                )}
               </div>
             </div>
 
