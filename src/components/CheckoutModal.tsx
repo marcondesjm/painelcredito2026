@@ -78,7 +78,7 @@ export const CheckoutModal = ({
   const [inviteLink, setInviteLink] = useState('');
   const [sendLinkNow, setSendLinkNow] = useState(true);
   const [couponCode, setCouponCode] = useState('');
-
+  const [cpf, setCpf] = useState('');
   // Calculate discount and final price
   const calculateDiscount = () => {
     if (!tier || !useBalanceAsDiscount || userBalance <= 0) return { discount: 0, finalPrice: tier?.price_current || 0, creditsUsed: 0 };
@@ -404,7 +404,7 @@ ${cupomText}
     setPassword('');
     setInviteLink('');
     setCouponCode('');
-    setUseBalanceAsDiscount(false);
+    setCpf('');
     onClose();
   };
 
@@ -575,6 +575,23 @@ ${cupomText}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="João Silva"
                     className="bg-background border-2 h-11"
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <Label className="text-sm font-medium">CPF</Label>
+                  <Input
+                    value={cpf}
+                    onChange={(e) => {
+                      const digits = e.target.value.replace(/\D/g, '');
+                      if (digits.length <= 3) setCpf(digits);
+                      else if (digits.length <= 6) setCpf(`${digits.slice(0, 3)}.${digits.slice(3)}`);
+                      else if (digits.length <= 9) setCpf(`${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6)}`);
+                      else setCpf(`${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6, 9)}-${digits.slice(9, 11)}`);
+                    }}
+                    placeholder="000.000.000-00"
+                    className="bg-background border-2 h-11"
+                    maxLength={14}
                   />
                 </div>
 
