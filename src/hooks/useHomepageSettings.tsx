@@ -56,6 +56,21 @@ interface FAQSettings {
   items: FAQItem[];
 }
 
+interface SectionsVisibility {
+  hero: boolean;
+  pricing: boolean;
+  features: boolean;
+  why_choose: boolean;
+  how_it_works: boolean;
+  video: boolean;
+  secure_purchase: boolean;
+  testimonials: boolean;
+  guarantee: boolean;
+  stats: boolean;
+  faq: boolean;
+  final_cta: boolean;
+}
+
 interface HomepageSettings {
   pricing_tiers: PricingTier[];
   custom_package_options: CustomPackageOption[];
@@ -67,6 +82,7 @@ interface HomepageSettings {
   pix_key: string;
   pix_name: string;
   whatsapp_number: string;
+  sections_visibility: SectionsVisibility;
 }
 
 const defaultSettings: HomepageSettings = {
@@ -138,7 +154,21 @@ const defaultSettings: HomepageSettings = {
   },
   pix_key: '',
   pix_name: '',
-  whatsapp_number: '5548996029392'
+  whatsapp_number: '5548996029392',
+  sections_visibility: {
+    hero: true,
+    pricing: true,
+    features: true,
+    why_choose: true,
+    how_it_works: true,
+    video: true,
+    secure_purchase: true,
+    testimonials: true,
+    guarantee: true,
+    stats: true,
+    faq: true,
+    final_cta: true,
+  },
 };
 
 export const useHomepageSettings = () => {
@@ -178,6 +208,8 @@ export const useHomepageSettings = () => {
           newSettings.guarantee = item.value as GuaranteeSettings;
         } else if (item.key === 'faq' && item.value) {
           newSettings.faq = item.value as FAQSettings;
+        } else if (item.key === 'sections_visibility' && item.value) {
+          newSettings.sections_visibility = { ...defaultSettings.sections_visibility, ...(item.value as Partial<SectionsVisibility>) };
         }
       });
 
@@ -234,4 +266,4 @@ export const useHomepageSettings = () => {
   };
 };
 
-export type { HeroSettings, CheckoutSettings, SocialProofSettings, SocialProofCustomer, HomepageSettings, CustomPackageOption, GuaranteeSettings, FAQSettings, FAQItem };
+export type { HeroSettings, CheckoutSettings, SocialProofSettings, SocialProofCustomer, HomepageSettings, CustomPackageOption, GuaranteeSettings, FAQSettings, FAQItem, SectionsVisibility };
