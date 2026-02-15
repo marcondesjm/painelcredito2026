@@ -4,6 +4,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Check, TrendingUp, Sparkles, MessageCircle, Package, Minus, Plus, HelpCircle } from 'lucide-react';
+import { useLanguage } from '@/hooks/useLanguage';
 
 interface CustomPackageOption {
   credits: number;
@@ -22,6 +23,7 @@ const CustomPackageCard = ({ primaryColor, accentColor, onBuyClick, options }: C
   const [selectedIndex, setSelectedIndex] = useState(0);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const [userInteracted, setUserInteracted] = useState(false);
+  const { t, language } = useLanguage();
   
   const selectedOption = options[selectedIndex];
   const selectedCredits = selectedOption?.credits || 0;
@@ -60,7 +62,7 @@ const CustomPackageCard = ({ primaryColor, accentColor, onBuyClick, options }: C
     if (!selectedOption) return;
     const customTier: PricingTier = {
       id: 'custom',
-      name: 'Pacote Personalizado',
+      name: language === 'en' ? 'Custom Package' : 'Pacote Personalizado',
       credits: selectedCredits,
       bonus_credits: selectedOption?.bonus_credits || 0,
       price_original: totalPrice * 1.5,
@@ -87,7 +89,7 @@ const CustomPackageCard = ({ primaryColor, accentColor, onBuyClick, options }: C
         <div className="mb-4 text-center">
           <div className="flex items-center justify-center gap-2 mb-1">
             <Package className="w-5 h-5" style={{ color: primaryColor }} />
-            <h3 className="font-bold text-lg leading-tight">Quantidade Personalizada</h3>
+            <h3 className="font-bold text-lg leading-tight">{t('pricing.custom_title')}</h3>
           </div>
         </div>
 
@@ -106,8 +108,8 @@ const CustomPackageCard = ({ primaryColor, accentColor, onBuyClick, options }: C
             style={{ borderColor: primaryColor, boxShadow: `0 0 20px ${primaryColor}30` }}
             onClick={handleNext}
           >
-            <span className="text-3xl font-bold text-foreground">{selectedCredits.toLocaleString('pt-BR')}</span>
-            <p className="text-[10px] text-muted-foreground mt-0.5 uppercase tracking-wider">Toque para escolher</p>
+            <span className="text-3xl font-bold text-foreground">{selectedCredits.toLocaleString(language === 'pt' ? 'pt-BR' : 'en-US')}</span>
+            <p className="text-[10px] text-muted-foreground mt-0.5 uppercase tracking-wider">{t('pricing.tap_to_choose')}</p>
           </div>
 
           <button
@@ -122,14 +124,14 @@ const CustomPackageCard = ({ primaryColor, accentColor, onBuyClick, options }: C
         {/* Price & Bonus */}
         <div className="text-center mb-4 space-y-1">
           <span className="text-xl font-bold" style={{ color: accentColor }}>
-            {formatPrice(totalPrice)}
+            {formatPriceLocale(totalPrice, language)}
           </span>
           {(selectedOption?.bonus_credits ?? 0) > 0 && (
             <p className="text-xs font-semibold" style={{ color: accentColor }}>
-              🎁 +{formatCredits(selectedOption.bonus_credits!)} créditos bônus
+              🎁 +{formatCredits(selectedOption.bonus_credits!)} {t('pricing.bonus_credits')}
             </p>
           )}
-          <p className="text-xs text-muted-foreground">Toque para escolher esta quantidade</p>
+          <p className="text-xs text-muted-foreground">{t('pricing.tap_desc')}</p>
         </div>
 
         <Button
@@ -138,7 +140,7 @@ const CustomPackageCard = ({ primaryColor, accentColor, onBuyClick, options }: C
           onClick={handleSubmit}
         >
           <MessageCircle className="w-4 h-4" />
-          Comprar Agora
+          {t('pricing.buy_now')}
         </Button>
       </div>
     </Card>
@@ -168,6 +170,13 @@ interface PricingTiersSectionProps {
   onBuyClick?: (tier: PricingTier) => void;
 }
 
+const formatPriceLocale = (value: number, language: string) => {
+  return new Intl.NumberFormat(language === 'pt' ? 'pt-BR' : 'en-US', {
+    style: 'currency',
+    currency: language === 'pt' ? 'BRL' : 'USD',
+  }).format(value);
+};
+
 const formatPrice = (value: number) => {
   return new Intl.NumberFormat('pt-BR', {
     style: 'currency',
@@ -191,6 +200,7 @@ export const PricingTiersSection = ({
   onTierClick,
   onBuyClick
 }: PricingTiersSectionProps) => {
+  const { t, language } = useLanguage();
   const handleTierSelect = (tier: PricingTier) => {
     if (isPreview) {
       onTierClick?.(tier);
@@ -263,10 +273,10 @@ export const PricingTiersSection = ({
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-10">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3">
-            Escolha seu <span style={{ color: primaryColor }}>Pacote de Créditos</span>
+            {t('pricing.title_pre')} <span style={{ color: primaryColor }}>{t('pricing.title_highlight')}</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Selecione a quantidade de créditos ideal para você. Quanto mais créditos, maior a economia!
+            {t('pricing.subtitle')}
           </p>
         </div>
 
@@ -306,7 +316,7 @@ export const PricingTiersSection = ({
                     <div className="absolute inset-0 shimmer-badge" />
                     <span className="relative z-10 flex items-center justify-center gap-1">
                       <Sparkles className="w-3 h-3 animate-pulse" />
-                      MAIS POPULAR
+                      {t('pricing.most_popular')}
                       <Sparkles className="w-3 h-3 animate-pulse" />
                     </span>
                   </div>
@@ -318,14 +328,14 @@ export const PricingTiersSection = ({
                     <h3 className={`font-bold text-lg leading-tight mb-1 transition-colors duration-300 ${
                       tier.highlight ? 'group-hover:text-white' : ''
                     }`}>
-                      {formatCredits(tier.credits)} de créditos
+                      {formatCredits(tier.credits)} {t('pricing.credits')}
                     </h3>
                     {(tier.bonus_credits ?? 0) > 0 && (
                       <Badge 
                         className="text-xs font-bold text-white mb-1"
                         style={{ backgroundColor: accentColor }}
                       >
-                        🎁 +{formatCredits(tier.bonus_credits!)} bônus
+                        🎁 +{formatCredits(tier.bonus_credits!)} {t('pricing.bonus')}
                       </Badge>
                     )}
                     <p className="text-sm text-muted-foreground line-clamp-1">
@@ -335,12 +345,12 @@ export const PricingTiersSection = ({
 
                   {/* Pricing */}
                   <div className="mb-4">
-                    <div className="text-xs text-muted-foreground mb-1">Preço oficial</div>
+                    <div className="text-xs text-muted-foreground mb-1">{t('pricing.official_price')}</div>
                     <div className="text-sm text-muted-foreground line-through">
-                      {formatPrice(tier.price_original)}
+                      {formatPriceLocale(tier.price_original, language)}
                     </div>
                     
-                    <div className="text-xs text-muted-foreground mt-2 mb-1">Nosso preço</div>
+                    <div className="text-xs text-muted-foreground mt-2 mb-1">{t('pricing.our_price')}</div>
                     <div className="flex items-center gap-2 flex-wrap">
                       <span 
                         className={`text-2xl font-bold transition-all duration-300 ${
@@ -348,7 +358,7 @@ export const PricingTiersSection = ({
                         }`}
                         style={{ color: accentColor }}
                       >
-                        {formatPrice(tier.price_current)}
+                        {formatPriceLocale(tier.price_current, language)}
                       </span>
                       {tier.available > 0 && (
                         <Badge 
@@ -359,7 +369,7 @@ export const PricingTiersSection = ({
                             color: accentColor 
                           }}
                         >
-                          {tier.available} disp.
+                          {tier.available} {t('pricing.available')}
                         </Badge>
                       )}
                     </div>
@@ -368,7 +378,7 @@ export const PricingTiersSection = ({
                       className="text-sm font-medium mt-2"
                       style={{ color: accentColor }}
                     >
-                      Economia de {formatPrice(savings)}
+                      {t('pricing.savings')} {formatPriceLocale(savings, language)}
                     </div>
                   </div>
 
@@ -377,13 +387,13 @@ export const PricingTiersSection = ({
                     {tier.sales > 0 && (
                       <div className="flex items-center gap-1">
                         <TrendingUp className="w-3 h-3" />
-                        +{tier.sales} vendas
+                        +{tier.sales} {t('pricing.sales')}
                       </div>
                     )}
                     {tier.available > 0 && (
                       <div className="flex items-center gap-1">
                         <Check className="w-3 h-3" style={{ color: accentColor }} />
-                        Disponível
+                        {t('pricing.available_label')}
                       </div>
                     )}
                   </div>
@@ -401,7 +411,7 @@ export const PricingTiersSection = ({
                     }}
                     onClick={() => handleTierSelect(tier)}
                   >
-                    Comprar Agora
+                    {t('pricing.buy_now')}
                   </Button>
                 </div>
               </Card>
@@ -427,7 +437,7 @@ export const PricingTiersSection = ({
           >
             <span className="text-lg">⚡</span>
             <p className="text-sm sm:text-base text-muted-foreground">
-              Enquanto a recarga de créditos está disponível, este é o <strong className="text-foreground">momento ideal</strong> para escalar seus projetos.
+              {t('pricing.urgency')} <strong className="text-foreground">{t('pricing.urgency_bold')}</strong> {t('pricing.urgency_end')}
             </p>
           </div>
           
@@ -441,7 +451,7 @@ export const PricingTiersSection = ({
               }}
             >
               <HelpCircle className="w-4 h-4" />
-              Como funciona a recarga de créditos?
+              {t('pricing.faq_link')}
             </Button>
           </div>
         </div>
