@@ -24,6 +24,7 @@ interface SocialProofCustomer {
   name: string;
   city: string;
   state: string;
+  product?: 'gerador' | 'creditos';
 }
 
 interface SocialProofSettings {

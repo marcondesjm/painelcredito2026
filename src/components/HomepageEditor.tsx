@@ -466,7 +466,7 @@ export const HomepageEditor = () => {
                     variant="outline"
                     onClick={() => setSocialProof({
                       ...socialProof,
-                      customers: [...socialProof.customers, { name: '', city: '', state: '' }]
+                      customers: [...socialProof.customers, { name: '', city: '', state: '', product: 'gerador' }]
                     })}
                   >
                     <Plus className="w-4 h-4 mr-1" />
@@ -474,7 +474,7 @@ export const HomepageEditor = () => {
                   </Button>
                 </div>
                 {socialProof.customers.map((customer, index) => (
-                  <div key={index} className="grid grid-cols-[1fr_1fr_80px_auto] gap-2 items-center">
+                  <div key={index} className="grid grid-cols-[1fr_1fr_80px_100px_auto] gap-2 items-center">
                     <Input
                       value={customer.name}
                       onChange={(e) => {
@@ -502,6 +502,18 @@ export const HomepageEditor = () => {
                       }}
                       placeholder="UF"
                     />
+                    <select
+                      value={customer.product || 'gerador'}
+                      onChange={(e) => {
+                        const updated = [...socialProof.customers];
+                        updated[index] = { ...updated[index], product: e.target.value as 'gerador' | 'creditos' };
+                        setSocialProof({ ...socialProof, customers: updated });
+                      }}
+                      className="h-10 rounded-md border border-input bg-background px-2 text-sm"
+                    >
+                      <option value="gerador">Gerador</option>
+                      <option value="creditos">Créditos</option>
+                    </select>
                     <Button
                       variant="ghost"
                       size="icon"
