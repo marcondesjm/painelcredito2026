@@ -34,8 +34,14 @@ interface SocialProofSettings {
   credit_options: number[];
 }
 
+interface CustomPackageOption {
+  credits: number;
+  price: number;
+}
+
 interface HomepageSettings {
   pricing_tiers: PricingTier[];
+  custom_package_options: CustomPackageOption[];
   hero: HeroSettings;
   checkout: CheckoutSettings;
   social_proof: SocialProofSettings;
@@ -46,6 +52,11 @@ interface HomepageSettings {
 
 const defaultSettings: HomepageSettings = {
   pricing_tiers: [],
+  custom_package_options: [
+    { credits: 100, price: 10 },
+    { credits: 200, price: 18 },
+    { credits: 500, price: 40 },
+  ],
   hero: {
     title: 'Créditos Infinitos na Lovable.',
     title_highlight: 'Simples. Rápido. Automático.',
@@ -109,6 +120,8 @@ export const useHomepageSettings = () => {
           newSettings.pricing_tiers = item.value as PricingTier[];
         } else if (item.key === 'hero' && item.value) {
           newSettings.hero = item.value as HeroSettings;
+        } else if (item.key === 'custom_package_options' && Array.isArray(item.value)) {
+          newSettings.custom_package_options = item.value as CustomPackageOption[];
         } else if (item.key === 'pix_key' && typeof item.value === 'string') {
           newSettings.pix_key = item.value;
         } else if (item.key === 'pix_name' && typeof item.value === 'string') {
@@ -175,4 +188,4 @@ export const useHomepageSettings = () => {
   };
 };
 
-export type { HeroSettings, CheckoutSettings, SocialProofSettings, SocialProofCustomer, HomepageSettings };
+export type { HeroSettings, CheckoutSettings, SocialProofSettings, SocialProofCustomer, HomepageSettings, CustomPackageOption };
