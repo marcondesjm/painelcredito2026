@@ -7,9 +7,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Plus, Trash2, Save, Loader2, Star, CreditCard, MessageSquare, ShoppingCart } from 'lucide-react';
+import { Plus, Trash2, Save, Loader2, Star, CreditCard, MessageSquare, ShoppingCart, Bell } from 'lucide-react';
 import { toast } from 'sonner';
-import { useHomepageSettings, HeroSettings, CheckoutSettings } from '@/hooks/useHomepageSettings';
+import { useHomepageSettings, HeroSettings, CheckoutSettings, SocialProofSettings, SocialProofCustomer } from '@/hooks/useHomepageSettings';
 import { PricingTier } from '@/components/PricingTiersSection';
 
 export const HomepageEditor = () => {
@@ -23,6 +23,7 @@ export const HomepageEditor = () => {
   const [pixName, setPixName] = useState(settings.pix_name);
   const [whatsappNumber, setWhatsappNumber] = useState(settings.whatsapp_number);
   const [checkout, setCheckout] = useState<CheckoutSettings>(settings.checkout);
+  const [socialProof, setSocialProof] = useState<SocialProofSettings>(settings.social_proof);
 
   useEffect(() => {
     setHero(settings.hero);
@@ -31,6 +32,7 @@ export const HomepageEditor = () => {
     setPixName(settings.pix_name);
     setWhatsappNumber(settings.whatsapp_number);
     setCheckout(settings.checkout);
+    setSocialProof(settings.social_proof);
   }, [settings]);
 
   const handleSaveHero = async () => {
@@ -127,10 +129,11 @@ export const HomepageEditor = () => {
       </div>
 
       <Tabs defaultValue="hero" className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="hero">Hero (Topo)</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-5">
+          <TabsTrigger value="hero">Hero</TabsTrigger>
           <TabsTrigger value="tiers">Pacotes</TabsTrigger>
           <TabsTrigger value="checkout">Checkout</TabsTrigger>
+          <TabsTrigger value="social">Prova Social</TabsTrigger>
           <TabsTrigger value="payment">Pagamento</TabsTrigger>
         </TabsList>
 
@@ -408,6 +411,132 @@ export const HomepageEditor = () => {
             {saving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
             Salvar Configurações de Pagamento
           </Button>
+        </TabsContent>
+
+        {/* Social Proof Tab */}
+        <TabsContent value="social" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Bell className="w-5 h-5" />
+                Prova Social
+              </CardTitle>
+              <CardDescription>Configure as notificações de compras recentes exibidas na página</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label>Ativar Prova Social</Label>
+                  <p className="text-xs text-muted-foreground">Exibir notificações de compras recentes</p>
+                </div>
+                <Switch
+                  checked={socialProof.enabled}
+                  onCheckedChange={(checked) => setSocialProof({ ...socialProof, enabled: checked })}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label>Nome do Produto</Label>
+                <Input
+                  value={socialProof.product_name}
+                  onChange={(e) => setSocialProof({ ...socialProof, product_name: e.target.value })}
+                  placeholder="o Gerador"
+                />
+                <p className="text-xs text-muted-foreground">Ex: "Carlos M. adquiriu <strong>o Gerador</strong>"</p>
+              </div>
+
+              <div className="space-y-2">
+                <Label>Opções de Créditos (separados por vírgula)</Label>
+                <Input
+                  value={socialProof.credit_options.join(', ')}
+                  onChange={(e) => setSocialProof({ 
+                    ...socialProof, 
+                    credit_options: e.target.value.split(',').map(v => Number(v.trim())).filter(v => !isNaN(v) && v > 0)
+                  })}
+                  placeholder="200, 500, 1000, 2000"
+                />
+                <p className="text-xs text-muted-foreground">Valores que aparecerão aleatoriamente nas notificações</p>
+              </div>
+
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <Label>Clientes (Nomes Fictícios)</Label>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => setSocialProof({
+                      ...socialProof,
+                      customers: [...socialProof.customers, { name: '', city: '', state: '' }]
+                    })}
+                  >
+                    <Plus className="w-4 h-4 mr-1" />
+                    Adicionar
+                  </Button>
+                </div>
+                {socialProof.customers.map((customer, index) => (
+                  <div key={index} className="grid grid-cols-[1fr_1fr_80px_auto] gap-2 items-center">
+                    <Input
+                      value={customer.name}
+                      onChange={(e) => {
+                        const updated = [...socialProof.customers];
+                        updated[index] = { ...updated[index], name: e.target.value };
+                        setSocialProof({ ...socialProof, customers: updated });
+                      }}
+                      placeholder="Nome"
+                    />
+                    <Input
+                      value={customer.city}
+                      onChange={(e) => {
+                        const updated = [...socialProof.customers];
+                        updated[index] = { ...updated[index], city: e.target.value };
+                        setSocialProof({ ...socialProof, customers: updated });
+                      }}
+                      placeholder="Cidade"
+                    />
+                    <Input
+                      value={customer.state}
+                      onChange={(e) => {
+                        const updated = [...socialProof.customers];
+                        updated[index] = { ...updated[index], state: e.target.value };
+                        setSocialProof({ ...socialProof, customers: updated });
+                      }}
+                      placeholder="UF"
+                    />
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => {
+                        setSocialProof({
+                          ...socialProof,
+                          customers: socialProof.customers.filter((_, i) => i !== index)
+                        });
+                      }}
+                    >
+                      <Trash2 className="w-4 h-4 text-destructive" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+
+              <Button 
+                onClick={async () => {
+                  setSaving(true);
+                  const result = await updateSetting('social_proof', socialProof);
+                  if (result.success) {
+                    toast.success('Prova social atualizada com sucesso!');
+                  } else {
+                    toast.error('Erro ao salvar: ' + result.error);
+                  }
+                  setSaving(false);
+                }} 
+                disabled={saving} 
+                className="w-full"
+              >
+                {saving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
+                Salvar Prova Social
+              </Button>
+            </CardContent>
+          </Card>
         </TabsContent>
 
         {/* Checkout Tab */}
