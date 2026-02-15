@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
+import { getLandingPageUrl, getDisplayUrl } from '@/lib/urls';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
@@ -882,7 +883,7 @@ const LandingPageEditor = () => {
             </Link>
             <div className="hidden md:block">
               <h1 className="font-semibold text-sm">{isEditing ? 'Editar' : 'Nova'} Landing Page</h1>
-              <p className="text-xs text-muted-foreground">{data.slug ? `/p/${data.slug}` : 'Configure a URL'}</p>
+              <p className="text-xs text-muted-foreground">{data.slug ? getDisplayUrl(data.slug) : 'Configure a URL'}</p>
             </div>
           </div>
           
@@ -945,7 +946,7 @@ const LandingPageEditor = () => {
               <nav className="flex flex-col gap-4 mt-8">
                 <div className="text-center mb-4">
                   <h2 className="font-semibold">{isEditing ? 'Editar' : 'Nova'} Landing Page</h2>
-                  <p className="text-xs text-muted-foreground">{data.slug ? `/p/${data.slug}` : 'Configure a URL'}</p>
+                  <p className="text-xs text-muted-foreground">{data.slug ? getDisplayUrl(data.slug) : 'Configure a URL'}</p>
                 </div>
                 <Button 
                   variant="hero" 
@@ -1061,13 +1062,13 @@ const LandingPageEditor = () => {
                       {data.slug && (
                         <div className="flex items-center gap-2 p-2 rounded-md bg-primary/10 border border-primary/20">
                           <span className="text-xs text-muted-foreground">Link:</span>
-                          <code className="text-xs text-primary font-medium truncate">painelcredito2026.lovable.app/p/{data.slug}</code>
+                          <code className="text-xs text-primary font-medium truncate">{getDisplayUrl(data.slug)}</code>
                           <Button 
                             variant="ghost" 
                             size="sm" 
                             className="h-5 text-xs ml-auto shrink-0"
                             onClick={() => {
-                              navigator.clipboard.writeText(`https://painelcredito2026.lovable.app/p/${data.slug}`);
+                              navigator.clipboard.writeText(getLandingPageUrl(data.slug));
                               toast.success('Link copiado!');
                             }}
                           >

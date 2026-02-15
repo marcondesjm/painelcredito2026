@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { getDisplayUrl } from '@/lib/urls';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { useAppSettings } from '@/hooks/useAppSettings';
@@ -1005,8 +1006,8 @@ const AdminDashboard = () => {
                           <TableRow key={page.id}>
                             <TableCell className="font-medium">{page.title}</TableCell>
                             <TableCell>
-                              <code className="text-xs bg-muted px-2 py-1 rounded">
-                                /p/{page.slug}
+                              <code className="text-xs bg-muted px-2 py-1 rounded truncate max-w-[200px] inline-block">
+                                {getDisplayUrl(page.slug)}
                               </code>
                             </TableCell>
                             <TableCell>{page.user_name}</TableCell>

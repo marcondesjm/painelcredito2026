@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { getLandingPageUrl } from '@/lib/urls';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
@@ -424,8 +425,7 @@ const Dashboard = () => {
                                 size="sm"
                                 className="justify-start text-left h-auto py-2"
                                 onClick={() => {
-                                  const url = `https://painelcredito2026.lovable.app/p/${page.slug}`;
-                                  navigator.clipboard.writeText(url);
+                                  navigator.clipboard.writeText(getLandingPageUrl(page.slug));
                                   toast.success('Link copiado!', {
                                     description: 'Link completo com barra de navegação'
                                   });
@@ -442,8 +442,7 @@ const Dashboard = () => {
                                 size="sm"
                                 className="justify-start text-left h-auto py-2"
                                 onClick={() => {
-                                  const cleanUrl = `https://painelcredito2026.lovable.app/p/${page.slug}?clean=true`;
-                                  navigator.clipboard.writeText(cleanUrl);
+                                  navigator.clipboard.writeText(getLandingPageUrl(page.slug, true));
                                   toast.success('Link limpo copiado!', {
                                     description: 'Perfeito para divulgar para visitantes!'
                                   });
@@ -463,7 +462,7 @@ const Dashboard = () => {
                                 variant="ghost"
                                 size="sm"
                                 className="justify-start text-left h-auto py-2"
-                                onClick={() => window.open(`https://painelcredito2026.lovable.app/p/${page.slug}`, '_blank')}
+                                onClick={() => window.open(getLandingPageUrl(page.slug), '_blank')}
                               >
                                 <ExternalLink className="w-4 h-4 mr-2 shrink-0" />
                                 <div className="flex flex-col">
@@ -475,7 +474,7 @@ const Dashboard = () => {
                                 variant="ghost"
                                 size="sm"
                                 className="justify-start text-left h-auto py-2 text-blue-500 hover:text-blue-400"
-                                onClick={() => window.open(`https://painelcredito2026.lovable.app/p/${page.slug}?clean=true`, '_blank')}
+                                onClick={() => window.open(getLandingPageUrl(page.slug, true), '_blank')}
                               >
                                 <Eye className="w-4 h-4 mr-2 shrink-0" />
                                 <div className="flex flex-col">
