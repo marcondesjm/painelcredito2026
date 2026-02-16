@@ -47,25 +47,7 @@ export const HeroSection = () => {
               {(() => {
                 const text = language === 'en' ? t('hero.subtitle') : hero.subtitle;
                 const parts = text.split(/\n+/);
-                if (parts.length > 1) {
-                  return (
-                    <>
-                      {parts[0]}
-                      <br />
-                      <span 
-                        className="text-primary font-bold text-lg sm:text-xl mt-2 inline-flex items-center gap-2 drop-shadow-[0_0_8px_hsl(var(--primary)/0.5)] cursor-pointer hover:opacity-80 transition-opacity"
-                        onClick={() => document.getElementById('pacotes')?.scrollIntoView({ behavior: 'smooth' })}
-                      >
-                        {parts.slice(1).join(' ')}
-                      </span>
-                      <ChevronDown 
-                        className="w-10 h-10 text-primary animate-bounce cursor-pointer hover:opacity-80 transition-opacity mx-auto mt-2 drop-shadow-[0_0_12px_hsl(var(--primary)/0.6)]" 
-                        onClick={() => document.getElementById('pacotes')?.scrollIntoView({ behavior: 'smooth' })}
-                      />
-                    </>
-                  );
-                }
-                return text;
+                return parts[0];
               })()}
             </p>
 
@@ -106,9 +88,31 @@ export const HeroSection = () => {
               <TrustBadge icon={Headphones} text={t('hero.support_available')} />
             </div>
 
-            <div className="flex justify-center lg:justify-start">
+            <div className="flex justify-center lg:justify-start mb-4">
               <CountdownTimer />
             </div>
+
+            {(() => {
+              const text = language === 'en' ? t('hero.subtitle') : hero.subtitle;
+              const parts = text.split(/\n+/);
+              if (parts.length > 1) {
+                return (
+                  <div className="text-center lg:text-left">
+                    <span 
+                      className="text-primary font-bold text-lg sm:text-xl inline-flex items-center gap-2 drop-shadow-[0_0_8px_hsl(var(--primary)/0.5)] cursor-pointer hover:opacity-80 transition-opacity"
+                      onClick={() => document.getElementById('pacotes')?.scrollIntoView({ behavior: 'smooth' })}
+                    >
+                      {parts.slice(1).join(' ')}
+                    </span>
+                    <ChevronDown 
+                      className="w-10 h-10 text-primary animate-bounce cursor-pointer hover:opacity-80 transition-opacity mx-auto lg:mx-0 mt-2 drop-shadow-[0_0_12px_hsl(var(--primary)/0.6)]" 
+                      onClick={() => document.getElementById('pacotes')?.scrollIntoView({ behavior: 'smooth' })}
+                    />
+                  </div>
+                );
+              }
+              return null;
+            })()}
           </div>
         </div>
       </div>
