@@ -29,8 +29,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       }
     }
 
-    // Facebook/Meta Pixel
-    if (tracking.facebook_pixel && !tracking.google_tag_manager) {
+    // Facebook/Meta Pixel (always inject independently)
+    if (tracking.facebook_pixel) {
       const pixelId = tracking.facebook_pixel.replace(/\D/g, '');
       if (pixelId && !document.getElementById('fb-pixel-script')) {
         const script = document.createElement('script');
