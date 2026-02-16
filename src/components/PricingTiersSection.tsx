@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Check, TrendingUp, Sparkles, MessageCircle, Package, Minus, Plus, HelpCircle } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguage';
+import { useHomepageSettings } from '@/hooks/useHomepageSettings';
 
 interface CustomPackageOption {
   credits: number;
@@ -217,6 +218,7 @@ export const PricingTiersSection = ({
   onBuyClick
 }: PricingTiersSectionProps) => {
   const { t, language } = useLanguage();
+  const { settings } = useHomepageSettings();
   const handleTierSelect = (tier: PricingTier) => {
     if (isPreview) {
       onTierClick?.(tier);
@@ -443,6 +445,18 @@ export const PricingTiersSection = ({
               options={customPackageOptions}
             />
           )}
+        </div>
+
+        {/* Link 10k credits */}
+        <div className="mt-6 text-center">
+          <a 
+            href={`https://wa.me/${settings.whatsapp_number}?text=${encodeURIComponent(language === 'en' ? 'Hi! I want to know more about the 10k credits accounts.' : 'Olá! Quero saber mais sobre as contas com 10k de créditos.')}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary font-semibold text-sm sm:text-base cursor-pointer hover:underline hover:opacity-80 transition-all inline-flex items-center gap-1 drop-shadow-[0_0_8px_hsl(var(--primary)/0.4)]"
+          >
+            {language === 'en' ? '🔥 We also have accounts with 10k credits' : '🔥 Temos também contas com 10k de créditos'}
+          </a>
         </div>
 
         {/* Aviso de urgência */}
