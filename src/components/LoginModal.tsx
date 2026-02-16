@@ -20,7 +20,7 @@ export const LoginModal = ({ open, onOpenChange }: LoginModalProps) => {
   const [fullName, setFullName] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isSignUp, setIsSignUp] = useState(true);
+  const [isSignUp, setIsSignUp] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -117,30 +117,14 @@ export const LoginModal = ({ open, onOpenChange }: LoginModalProps) => {
         {/* Title */}
         <div className="text-center mb-3">
           <h2 className="text-xl font-bold text-foreground">
-            {isSignUp ? 'Criar nova conta' : 'Entrar na conta'}
+            Entrar na conta
           </h2>
           <p className="text-xs text-muted-foreground mt-0.5">
-            {isSignUp 
-              ? 'Cadastre-se para criar suas landing pages' 
-              : 'Acesse o painel de gerenciamento'}
+            Acesse o painel de gerenciamento
           </p>
         </div>
         
         <form onSubmit={handleSubmit} className="space-y-3">
-          {/* Full Name - only for signup */}
-          {isSignUp && (
-            <div className="space-y-1">
-              <Label htmlFor="fullName" className="text-foreground text-sm">Nome completo</Label>
-              <Input
-                id="fullName"
-                type="text"
-                placeholder="Seu nome"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-                className="bg-background border-border h-9"
-              />
-            </div>
-          )}
 
           {/* Email */}
           <div className="space-y-1">
@@ -187,19 +171,9 @@ export const LoginModal = ({ open, onOpenChange }: LoginModalProps) => {
             disabled={isLoading}
           >
             {isLoading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-            {isSignUp ? 'Criar conta' : 'Entrar'}
+            Entrar
           </Button>
 
-          <p className="text-center text-xs text-muted-foreground pt-1">
-            {isSignUp ? 'Já tem conta?' : 'Não tem uma conta?'}{' '}
-            <button
-              type="button"
-              onClick={() => setIsSignUp(!isSignUp)}
-              className="text-primary hover:underline"
-            >
-              {isSignUp ? 'Entre aqui' : 'Cadastre-se'}
-            </button>
-          </p>
         </form>
       </DialogContent>
     </Dialog>
