@@ -102,7 +102,7 @@ const Index = () => {
       <Header />
       {vis.hero && <HeroSection />}
       {vis.pricing && (
-        <>
+        <div id="pacotes">
           <PricingTiersSection 
             tiers={tiers} 
             customPackageOptions={settings.custom_package_options}
@@ -111,7 +111,7 @@ const Index = () => {
             onBuyClick={handleBuyClick}
           />
           <RechargeInfoSection />
-        </>
+        </div>
       )}
       {vis.features && <FeaturesSection />}
       {vis.why_choose && <WhyChooseSection />}
