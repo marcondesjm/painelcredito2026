@@ -95,24 +95,24 @@ export const HeroSection = () => {
               </div>
             </div>
 
-            <div className="flex justify-center lg:justify-start mb-6 sm:mb-8">
+            <div className="flex justify-center lg:justify-start mb-4">
               <CountdownTimer />
-            </div>
-
-            <div className="flex flex-wrap justify-center lg:justify-start gap-2 sm:gap-3">
-              <TrustBadge icon={Zap} text={t('hero.auto_delivery')} />
-              <TrustBadge icon={Shield} text={t('hero.secure_payment')} />
-              <TrustBadge icon={Headphones} text={t('hero.support_available')} />
             </div>
 
             <a 
               href={`https://wa.me/${settings.whatsapp_number}?text=${encodeURIComponent(language === 'en' ? 'Hi! I want to know more about the 10k credits accounts.' : 'Olá! Quero saber mais sobre as contas com 10k de créditos.')}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-primary font-semibold text-sm sm:text-base mt-4 text-center lg:text-left cursor-pointer hover:underline hover:opacity-80 transition-all inline-flex items-center gap-1 drop-shadow-[0_0_8px_hsl(var(--primary)/0.4)]"
+              className="text-primary font-semibold text-sm sm:text-base mb-6 text-center lg:text-left cursor-pointer hover:underline hover:opacity-80 transition-all inline-flex items-center gap-1 drop-shadow-[0_0_8px_hsl(var(--primary)/0.4)]"
             >
               {language === 'en' ? '🔥 We also have accounts with 10k credits' : '🔥 Temos também contas com 10k de créditos'}
             </a>
+
+            <div className="flex flex-wrap justify-center lg:justify-start gap-2 sm:gap-3">
+              <TrustBadge icon={Zap} text={t('hero.auto_delivery')} />
+              <TrustBadge icon={Shield} text={t('hero.secure_payment')} />
+              <TrustBadge icon={Headphones} text={t('hero.support_available')} />
+            </div>
           </div>
         </div>
       </div>
