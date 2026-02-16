@@ -13,11 +13,14 @@ export const HeroSection = () => {
   const { hero } = settings;
   const { t, language } = useLanguage();
 
+  const BRL_TO_USD_RATE = 0.18;
+
   const formatPrice = (value: number) => {
+    const displayValue = language === 'en' ? value * BRL_TO_USD_RATE : value;
     return new Intl.NumberFormat(language === 'pt' ? 'pt-BR' : 'en-US', {
       style: 'currency',
       currency: language === 'pt' ? 'BRL' : 'USD',
-    }).format(value);
+    }).format(displayValue);
   };
 
   const savings = hero.price_original > hero.price_current
