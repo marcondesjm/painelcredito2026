@@ -21,7 +21,22 @@ export const HomepageEditor = () => {
   const [tiers, setTiers] = useState<PricingTier[]>(settings.pricing_tiers);
   const [pixKey, setPixKey] = useState(settings.pix_key);
   const [pixName, setPixName] = useState(settings.pix_name);
-  const [whatsappNumber, setWhatsappNumber] = useState(settings.whatsapp_number);
+  const [whatsappNumber, setWhatsappNumber] = useState(() => {
+    const num = settings.whatsapp_number;
+    const codes = ['55','1','44','351','34','49','33','39','81','91','61','52','54','56','57'];
+    for (const c of codes.sort((a, b) => b.length - a.length)) {
+      if (num.startsWith(c)) return num.slice(c.length);
+    }
+    return num;
+  });
+  const [whatsappCountryCode, setWhatsappCountryCode] = useState(() => {
+    const num = settings.whatsapp_number;
+    const codes = ['55','1','44','351','34','49','33','39','81','91','61','52','54','56','57'];
+    for (const c of codes.sort((a, b) => b.length - a.length)) {
+      if (num.startsWith(c)) return `+${c}`;
+    }
+    return '+55';
+  });
   const [checkout, setCheckout] = useState<CheckoutSettings>(settings.checkout);
   const [socialProof, setSocialProof] = useState<SocialProofSettings>(settings.social_proof);
   const [customPackageOptions, setCustomPackageOptions] = useState<CustomPackageOption[]>(settings.custom_package_options);
@@ -35,7 +50,23 @@ export const HomepageEditor = () => {
     setTiers(settings.pricing_tiers);
     setPixKey(settings.pix_key);
     setPixName(settings.pix_name);
-    setWhatsappNumber(settings.whatsapp_number);
+    {
+      const num = settings.whatsapp_number;
+      const codes = ['55','1','44','351','34','49','33','39','81','91','61','52','54','56','57'];
+      let found = false;
+      for (const c of codes.sort((a, b) => b.length - a.length)) {
+        if (num.startsWith(c)) {
+          setWhatsappCountryCode(`+${c}`);
+          setWhatsappNumber(num.slice(c.length));
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        setWhatsappCountryCode('+55');
+        setWhatsappNumber(num);
+      }
+    }
     setCheckout(settings.checkout);
     setSocialProof(settings.social_proof);
     setCustomPackageOptions(settings.custom_package_options);
@@ -72,7 +103,8 @@ export const HomepageEditor = () => {
     setSaving(true);
     await updateSetting('pix_key', pixKey);
     await updateSetting('pix_name', pixName);
-    const result = await updateSetting('whatsapp_number', whatsappNumber);
+    const fullNumber = `${whatsappCountryCode.replace('+', '')}${whatsappNumber}`;
+    const result = await updateSetting('whatsapp_number', fullNumber);
     if (result.success) {
       toast.success('Configurações de pagamento salvas!');
     } else {
@@ -551,14 +583,42 @@ export const HomepageEditor = () => {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label>Número do WhatsApp (com DDD)</Label>
-                <Input
-                  value={whatsappNumber}
-                  onChange={(e) => setWhatsappNumber(e.target.value)}
-                  placeholder="5511999999999"
-                />
+                <Label>Número do WhatsApp</Label>
+                <div className="flex gap-2">
+                  <select
+                    value={whatsappCountryCode}
+                    onChange={(e) => setWhatsappCountryCode(e.target.value)}
+                    className="bg-background border border-border rounded-md px-2 py-2 text-sm text-foreground w-[110px] flex-shrink-0"
+                  >
+                    {[
+                      { code: '+55', flag: '🇧🇷' },
+                      { code: '+1', flag: '🇺🇸' },
+                      { code: '+44', flag: '🇬🇧' },
+                      { code: '+351', flag: '🇵🇹' },
+                      { code: '+34', flag: '🇪🇸' },
+                      { code: '+49', flag: '🇩🇪' },
+                      { code: '+33', flag: '🇫🇷' },
+                      { code: '+39', flag: '🇮🇹' },
+                      { code: '+81', flag: '🇯🇵' },
+                      { code: '+91', flag: '🇮🇳' },
+                      { code: '+61', flag: '🇦🇺' },
+                      { code: '+52', flag: '🇲🇽' },
+                      { code: '+54', flag: '🇦🇷' },
+                      { code: '+56', flag: '🇨🇱' },
+                      { code: '+57', flag: '🇨🇴' },
+                    ].map((c) => (
+                      <option key={c.code} value={c.code}>{c.flag} {c.code}</option>
+                    ))}
+                  </select>
+                  <Input
+                    value={whatsappNumber}
+                    onChange={(e) => setWhatsappNumber(e.target.value.replace(/\D/g, ''))}
+                    placeholder="48999999999"
+                    className="flex-1"
+                  />
+                </div>
                 <p className="text-xs text-muted-foreground">
-                  Formato: código do país + DDD + número (sem espaços ou traços)
+                  Selecione o país e digite o número sem o código do país
                 </p>
               </div>
             </CardContent>
