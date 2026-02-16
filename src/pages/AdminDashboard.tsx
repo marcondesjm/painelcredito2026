@@ -128,6 +128,7 @@ const AdminDashboard = () => {
 
   // Settings form
   const [whatsappNumber, setWhatsappNumber] = useState('');
+  const [whatsappCountryCode, setWhatsappCountryCode] = useState('+55');
   const [whatsappMessage, setWhatsappMessage] = useState('');
   const [savingSettings, setSavingSettings] = useState(false);
   
@@ -151,7 +152,20 @@ const AdminDashboard = () => {
   // Sync settings form when loaded
   useEffect(() => {
     if (!settingsLoading) {
-      setWhatsappNumber(appSettings.whatsapp_number || '');
+      const num = appSettings.whatsapp_number || '';
+      // Detect country code from stored number
+      const knownCodes = ['55','1','44','351','34','49','33','39','81','91','61','52','54','56','57'];
+      let detectedCode = '+55';
+      let localNum = num;
+      for (const c of knownCodes.sort((a, b) => b.length - a.length)) {
+        if (num.startsWith(c)) {
+          detectedCode = `+${c}`;
+          localNum = num.slice(c.length);
+          break;
+        }
+      }
+      setWhatsappCountryCode(detectedCode);
+      setWhatsappNumber(localNum);
       setWhatsappMessage(appSettings.whatsapp_message || '');
     }
   }, [appSettings, settingsLoading]);
@@ -1091,15 +1105,42 @@ const AdminDashboard = () => {
                 <div className="grid gap-4 max-w-lg">
                   <div className="space-y-2">
                     <Label htmlFor="whatsapp-number">Número do WhatsApp</Label>
-                    <Input
-                      id="whatsapp-number"
-                      placeholder="5548999999999"
-                      value={whatsappNumber}
-                      onChange={(e) => setWhatsappNumber(e.target.value)}
-                      className="bg-background/50"
-                    />
+                    <div className="flex gap-2">
+                      <select
+                        value={whatsappCountryCode}
+                        onChange={(e) => setWhatsappCountryCode(e.target.value)}
+                        className="bg-background/50 border border-border rounded-md px-2 py-2 text-sm text-foreground w-[110px] flex-shrink-0"
+                      >
+                        {[
+                          { code: '+55', flag: '🇧🇷' },
+                          { code: '+1', flag: '🇺🇸' },
+                          { code: '+44', flag: '🇬🇧' },
+                          { code: '+351', flag: '🇵🇹' },
+                          { code: '+34', flag: '🇪🇸' },
+                          { code: '+49', flag: '🇩🇪' },
+                          { code: '+33', flag: '🇫🇷' },
+                          { code: '+39', flag: '🇮🇹' },
+                          { code: '+81', flag: '🇯🇵' },
+                          { code: '+91', flag: '🇮🇳' },
+                          { code: '+61', flag: '🇦🇺' },
+                          { code: '+52', flag: '🇲🇽' },
+                          { code: '+54', flag: '🇦🇷' },
+                          { code: '+56', flag: '🇨🇱' },
+                          { code: '+57', flag: '🇨🇴' },
+                        ].map((c) => (
+                          <option key={c.code} value={c.code}>{c.flag} {c.code}</option>
+                        ))}
+                      </select>
+                      <Input
+                        id="whatsapp-number"
+                        placeholder="48999999999"
+                        value={whatsappNumber}
+                        onChange={(e) => setWhatsappNumber(e.target.value.replace(/\D/g, ''))}
+                        className="bg-background/50 flex-1"
+                      />
+                    </div>
                     <p className="text-xs text-muted-foreground">
-                      Formato: código do país + DDD + número (ex: 5548999999999)
+                      Selecione o país e digite o número sem o código do país
                     </p>
                   </div>
 
@@ -1121,7 +1162,8 @@ const AdminDashboard = () => {
                     onClick={async () => {
                       setSavingSettings(true);
                       try {
-                        const result1 = await updateSetting('whatsapp_number', whatsappNumber);
+                        const fullNumber = `${whatsappCountryCode.replace('+', '')}${whatsappNumber}`;
+                        const result1 = await updateSetting('whatsapp_number', fullNumber);
                         const result2 = await updateSetting('whatsapp_message', whatsappMessage);
                         
                         if (result1.success && result2.success) {
