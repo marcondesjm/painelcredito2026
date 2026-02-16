@@ -17,6 +17,7 @@ const translations: Record<Language, Record<string, string>> = {
     'header.how_it_works': 'Como Funciona',
     'header.faq': 'FAQ',
     'header.install': 'Instalar App',
+    'header.buy_credits': 'Compra de Créditos',
     // Cookie Banner
     'cookie.title': 'Proteção de Dados & Cookies',
     'cookie.description': 'Utilizamos cookies essenciais para o funcionamento do site e cookies analíticos para melhorar sua experiência. Seus dados são protegidos conforme a',
@@ -178,6 +179,7 @@ const translations: Record<Language, Record<string, string>> = {
     'header.how_it_works': 'How It Works',
     'header.faq': 'FAQ',
     'header.install': 'Install App',
+    'header.buy_credits': 'Buy Credits',
     // Cookie Banner
     'cookie.title': 'Data Protection & Cookies',
     'cookie.description': 'We use essential cookies for site functionality and analytics cookies to improve your experience. Your data is protected according to the',

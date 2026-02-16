@@ -101,6 +101,14 @@ export const Header = () => {
               variant="ghost" 
               size="sm" 
               className="text-muted-foreground hover:text-foreground"
+              onClick={() => scrollToSection('pacotes')}
+            >
+              {t('header.buy_credits')}
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="text-muted-foreground hover:text-foreground"
               onClick={() => scrollToSection('how-it-works')}
             >
               {t('header.how_it_works')}
@@ -159,6 +167,9 @@ export const Header = () => {
                 {t('header.create_account')}
               </Button>
             )}
+            <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground" onClick={() => scrollToSection('pacotes')}>
+              {t('header.buy_credits')}
+            </Button>
             <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground" onClick={() => scrollToSection('how-it-works')}>
               {t('header.how_it_works')}
             </Button>
@@ -207,6 +218,9 @@ export const Header = () => {
                     {t('header.create_account')}
                   </Button>
                 )}
+                <Button variant="ghost" className="w-full justify-start text-muted-foreground hover:text-foreground" onClick={() => scrollToSection('pacotes')}>
+                  {t('header.buy_credits')}
+                </Button>
                 <Button variant="ghost" className="w-full justify-start text-muted-foreground hover:text-foreground" onClick={() => scrollToSection('how-it-works')}>
                   {t('header.how_it_works')}
                 </Button>
