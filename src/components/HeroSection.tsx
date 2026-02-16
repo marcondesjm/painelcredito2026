@@ -51,12 +51,6 @@ export const HeroSection = () => {
               })()}
             </p>
 
-            <div className="mb-4 sm:mb-6">
-              <Button variant="hero" size="xl" className="w-full sm:w-auto min-w-[200px]" onClick={() => navigate('/checkout')}>
-                {language === 'en' ? t('hero.cta_text') : hero.cta_text}
-              </Button>
-            </div>
-
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 sm:gap-4 mb-4 sm:mb-6">
               <div className="flex items-baseline gap-2 sm:gap-3 flex-wrap justify-center lg:justify-start">
                 <span className="text-lg sm:text-xl text-muted-foreground line-through">
@@ -71,6 +65,12 @@ export const HeroSection = () => {
                   </span>
                 )}
               </div>
+            </div>
+
+            <div className="mb-4 sm:mb-6">
+              <Button variant="hero" size="xl" className="w-full sm:w-auto min-w-[200px]" onClick={() => navigate('/checkout')}>
+                {language === 'en' ? t('hero.cta_text') : hero.cta_text}
+              </Button>
             </div>
 
             <a 
