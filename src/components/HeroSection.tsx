@@ -104,6 +104,14 @@ export const HeroSection = () => {
               <TrustBadge icon={Shield} text={t('hero.secure_payment')} />
               <TrustBadge icon={Headphones} text={t('hero.support_available')} />
             </div>
+
+            <p 
+              className="text-primary font-semibold text-sm sm:text-base mt-4 text-center lg:text-left cursor-pointer hover:opacity-80 transition-opacity inline-flex items-center gap-1 drop-shadow-[0_0_8px_hsl(var(--primary)/0.4)]"
+              onClick={() => document.getElementById('pacotes')?.scrollIntoView({ behavior: 'smooth' })}
+            >
+              {language === 'en' ? '🔥 We also have accounts with 10k credits' : '🔥 Temos também contas com 10k de créditos'}
+              <ChevronDown className="w-4 h-4 animate-bounce" />
+            </p>
           </div>
         </div>
       </div>
