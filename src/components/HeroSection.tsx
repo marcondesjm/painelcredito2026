@@ -44,7 +44,22 @@ export const HeroSection = () => {
             </h1>
 
             <p className="text-base sm:text-lg text-muted-foreground mb-6 sm:mb-8 max-w-xl mx-auto lg:mx-0">
-              {language === 'en' ? t('hero.subtitle') : hero.subtitle}
+              {(() => {
+                const text = language === 'en' ? t('hero.subtitle') : hero.subtitle;
+                const parts = text.split(/\n+/);
+                if (parts.length > 1) {
+                  return (
+                    <>
+                      {parts[0]}
+                      <br />
+                      <span className="text-primary font-bold text-lg sm:text-xl mt-2 inline-block drop-shadow-[0_0_8px_hsl(var(--primary)/0.5)]">
+                        {parts.slice(1).join(' ')}
+                      </span>
+                    </>
+                  );
+                }
+                return text;
+              })()}
             </p>
 
             <div className="mb-4 sm:mb-6">
