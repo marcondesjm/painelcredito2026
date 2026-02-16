@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { ShoppingCart, Shield, Wallet, Link as LinkIcon, Tag, Loader2, CheckCircle, Eye, EyeOff, RefreshCw, X, Sparkles, Copy, Send, Phone, Globe, UserCircle, ChevronRight, ArrowLeft } from 'lucide-react';
+import { ShoppingCart, Shield, Wallet, Link as LinkIcon, Tag, Loader2, CheckCircle, Eye, EyeOff, RefreshCw, X, Sparkles, Copy, Send, Phone, Globe, UserCircle, ChevronRight, ArrowLeft, CreditCard } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -37,7 +37,7 @@ interface CheckoutModalProps {
   pixQrBase?: string;
 }
 
-type Step = 'delivery' | 'checkout' | 'warning' | 'pix' | 'signup' | 'success';
+type Step = 'delivery' | 'checkout' | 'warning' | 'payment-method' | 'pix' | 'signup' | 'success';
 
 export const CheckoutModal = ({
   isOpen,
@@ -776,12 +776,146 @@ ${cupomText}
                 <Button
                   className="flex-1 h-12 text-white font-semibold"
                   style={{ background: `linear-gradient(90deg, ${primaryColor}, ${accentColor})` }}
-                  onClick={() => setStep('pix')}
+                  onClick={() => setStep('payment-method')}
                   disabled={loading}
                 >
                   Entendi e Concordo
                 </Button>
               </div>
+            </div>
+          </div>
+        )}
+
+        {step === 'payment-method' && (
+          <div className="flex flex-col">
+            <div className="flex items-center justify-end p-4">
+              <button onClick={handleClose} className="text-muted-foreground hover:text-foreground transition-colors">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="px-6 pb-6 space-y-5">
+              <div className="text-center space-y-2">
+                <div className="flex justify-center mb-3">
+                  <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: `${primaryColor}20` }}>
+                    <Wallet className="w-6 h-6" style={{ color: primaryColor }} />
+                  </div>
+                </div>
+                <h2 className="text-xl font-bold text-foreground">Escolha o Pagamento</h2>
+                <p className="text-sm text-muted-foreground">
+                  Valor: <strong style={{ color: accentColor }}>{formatPrice(finalPrice)}</strong>
+                </p>
+              </div>
+
+              {/* PIX Option */}
+              {pixEnabled && pixKey && (
+                <div
+                  className="p-4 rounded-xl border-2 cursor-pointer transition-all hover:shadow-md"
+                  style={{ borderColor: `${accentColor}50`, backgroundColor: `${accentColor}08` }}
+                  onClick={() => setStep('pix')}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: `${accentColor}20` }}>
+                      <Wallet className="w-5 h-5" style={{ color: accentColor }} />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-bold text-foreground">PIX</h3>
+                      <p className="text-xs text-muted-foreground">Pagamento instantâneo • Só Brasil</p>
+                    </div>
+                    <ChevronRight className="w-5 h-5 text-muted-foreground flex-shrink-0" />
+                  </div>
+                </div>
+              )}
+
+              {/* Card Option (Stripe) */}
+              <div
+                className="p-4 rounded-xl border-2 cursor-pointer transition-all hover:shadow-md"
+                style={{ borderColor: `${primaryColor}50`, backgroundColor: `${primaryColor}08` }}
+                onClick={async () => {
+                  if (!tier) return;
+                  setLoading(true);
+                  try {
+                    const { data: { session } } = await supabase.auth.getSession();
+                    const response = await fetch(
+                      `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/create-stripe-checkout`,
+                      {
+                        method: 'POST',
+                        headers: {
+                          'Content-Type': 'application/json',
+                          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+                        },
+                        body: JSON.stringify({
+                          tierName: tier.name,
+                          credits: tier.credits,
+                          price: finalPrice,
+                          customerEmail: email,
+                          customerName: name,
+                          customerWhatsapp: whatsapp.replace(/\D/g, ''),
+                          landingPageId,
+                          bonusCredits: tier.bonus_credits || 0,
+                          successUrl: `${window.location.origin}/`,
+                          cancelUrl: `${window.location.origin}/`,
+                        }),
+                      }
+                    );
+
+                    const data = await response.json();
+                    if (data.url) {
+                      // Also register order as pending before redirect
+                      if (user) {
+                        await supabase.from('orders').insert({
+                          user_id: user.id,
+                          landing_page_id: landingPageId,
+                          tier_id: tier.id,
+                          tier_name: tier.name,
+                          credits: tier.credits,
+                          price: finalPrice,
+                          customer_name: name,
+                          customer_whatsapp: whatsapp.replace(/\D/g, ''),
+                          customer_email: email,
+                          invite_link: null,
+                          coupon_code: couponCode || null,
+                          status: 'pending',
+                        });
+                      }
+                      window.location.href = data.url;
+                    } else {
+                      throw new Error(data.error || 'Erro ao criar sessão de pagamento');
+                    }
+                  } catch (error: any) {
+                    console.error('Stripe checkout error:', error);
+                    toast.error(error.message || 'Erro ao processar pagamento com cartão');
+                  } finally {
+                    setLoading(false);
+                  }
+                }}
+                aria-disabled={loading}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: `${primaryColor}20` }}>
+                    <CreditCard className="w-5 h-5" style={{ color: primaryColor }} />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-bold text-foreground">Cartão de Crédito</h3>
+                    <p className="text-xs text-muted-foreground">Visa, Mastercard, Apple Pay, Google Pay</p>
+                  </div>
+                  {loading ? (
+                    <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
+                  ) : (
+                    <ChevronRight className="w-5 h-5 text-muted-foreground flex-shrink-0" />
+                  )}
+                </div>
+              </div>
+
+              {/* Back button */}
+              <Button
+                variant="outline"
+                className="w-full h-12"
+                onClick={() => setStep('warning')}
+              >
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Voltar
+              </Button>
             </div>
           </div>
         )}
@@ -883,7 +1017,7 @@ ${cupomText}
                   <Button
                     variant="outline"
                     className="flex-1 h-12"
-                    onClick={() => setStep('warning')}
+                    onClick={() => setStep('payment-method')}
                   >
                     <ArrowLeft className="w-4 h-4 mr-2" />
                     Voltar
