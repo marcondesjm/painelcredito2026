@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useLanguage } from '@/hooks/useLanguage';
 import logoPainel from '@/assets/logo-dashboard.png';
 
 interface LoginModalProps {
@@ -22,6 +23,7 @@ export const LoginModal = ({ open, onOpenChange }: LoginModalProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
   const { toast } = useToast();
+  const { t } = useLanguage();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -117,10 +119,10 @@ export const LoginModal = ({ open, onOpenChange }: LoginModalProps) => {
         {/* Title */}
         <div className="text-center mb-3">
           <h2 className="text-xl font-bold text-foreground">
-            Entrar na conta
+            {t('login.title')}
           </h2>
           <p className="text-xs text-muted-foreground mt-0.5">
-            Acesse o painel de gerenciamento
+            {t('login.subtitle')}
           </p>
         </div>
         
@@ -128,7 +130,7 @@ export const LoginModal = ({ open, onOpenChange }: LoginModalProps) => {
 
           {/* Email */}
           <div className="space-y-1">
-            <Label htmlFor="email" className="text-foreground text-sm">Email</Label>
+            <Label htmlFor="email" className="text-foreground text-sm">{t('login.email')}</Label>
             <Input
               id="email"
               type="email"
@@ -142,7 +144,7 @@ export const LoginModal = ({ open, onOpenChange }: LoginModalProps) => {
 
           {/* Password */}
           <div className="space-y-1">
-            <Label htmlFor="password" className="text-foreground text-sm">Senha</Label>
+            <Label htmlFor="password" className="text-foreground text-sm">{t('login.password')}</Label>
             <div className="relative">
               <Input
                 id="password"
@@ -171,7 +173,7 @@ export const LoginModal = ({ open, onOpenChange }: LoginModalProps) => {
             disabled={isLoading}
           >
             {isLoading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-            Entrar
+            {t('login.submit')}
           </Button>
 
         </form>
