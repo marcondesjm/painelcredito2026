@@ -79,6 +79,72 @@ export type Database = {
           },
         ]
       }
+      customers: {
+        Row: {
+          created_at: string
+          created_by: string
+          credits_purchased: number
+          email: string | null
+          id: string
+          landing_page_id: string | null
+          name: string
+          notes: string | null
+          order_id: string | null
+          purchase_type: string
+          purchased_at: string
+          status: string
+          updated_at: string
+          whatsapp: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          credits_purchased?: number
+          email?: string | null
+          id?: string
+          landing_page_id?: string | null
+          name: string
+          notes?: string | null
+          order_id?: string | null
+          purchase_type?: string
+          purchased_at?: string
+          status?: string
+          updated_at?: string
+          whatsapp: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          credits_purchased?: number
+          email?: string | null
+          id?: string
+          landing_page_id?: string | null
+          name?: string
+          notes?: string | null
+          order_id?: string | null
+          purchase_type?: string
+          purchased_at?: string
+          status?: string
+          updated_at?: string
+          whatsapp?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "customers_landing_page_id_fkey"
+            columns: ["landing_page_id"]
+            isOneToOne: false
+            referencedRelation: "landing_pages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "customers_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       homepage_settings: {
         Row: {
           created_at: string
