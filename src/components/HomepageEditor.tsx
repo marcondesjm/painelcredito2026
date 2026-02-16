@@ -172,7 +172,7 @@ export const HomepageEditor = () => {
       </div>
 
       <Tabs defaultValue="hero" className="w-full">
-        <TabsList className="grid w-full grid-cols-9">
+        <TabsList className="grid w-full grid-cols-10">
           <TabsTrigger value="sections">Seções</TabsTrigger>
           <TabsTrigger value="hero">Hero</TabsTrigger>
           <TabsTrigger value="tiers">Pacotes</TabsTrigger>
@@ -182,6 +182,7 @@ export const HomepageEditor = () => {
           <TabsTrigger value="faq">FAQ</TabsTrigger>
           <TabsTrigger value="payment">Pagamento</TabsTrigger>
           <TabsTrigger value="tracking">Rastreamento</TabsTrigger>
+          <TabsTrigger value="meta-pixel">Meta Pixel</TabsTrigger>
         </TabsList>
 
         {/* Sections Visibility Tab */}
@@ -1102,6 +1103,80 @@ export const HomepageEditor = () => {
               >
                 {saving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
                 Salvar Rastreamento
+              </Button>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Meta Pixel Tab */}
+        <TabsContent value="meta-pixel" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <BarChart3 className="w-5 h-5" />
+                Meta Pixel (Facebook)
+              </CardTitle>
+              <CardDescription>
+                O Pixel da Meta é um trecho de código que permite rastrear conversões, criar públicos e otimizar anúncios no Facebook e Instagram.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="space-y-2">
+                <Label>Meta Pixel ID</Label>
+                <Input
+                  value={tracking.facebook_pixel}
+                  onChange={(e) => setTracking({ ...tracking, facebook_pixel: e.target.value })}
+                  placeholder="882765034647458"
+                />
+                <p className="text-xs text-muted-foreground">
+                  Encontre seu Pixel ID no Gerenciador de Eventos da Meta: business.facebook.com
+                </p>
+              </div>
+
+              {tracking.facebook_pixel && (
+                <div className="space-y-3">
+                  <Label className="text-sm font-medium">Código instalado automaticamente</Label>
+                  <div className="bg-muted/50 rounded-lg p-4 overflow-x-auto">
+                    <pre className="text-xs text-muted-foreground whitespace-pre-wrap font-mono">{`<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '${tracking.facebook_pixel}');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=${tracking.facebook_pixel}&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->`}</pre>
+                  </div>
+                  <div className="flex items-center gap-2 p-3 rounded-lg bg-accent/10 border border-accent/20">
+                    <span className="text-accent text-sm">✅ Pixel ativo — o código acima é injetado automaticamente em todas as páginas do site.</span>
+                  </div>
+                </div>
+              )}
+
+              <Button
+                onClick={async () => {
+                  setSaving(true);
+                  const result = await updateSetting('tracking', tracking);
+                  if (result.success) {
+                    toast.success('Meta Pixel salvo com sucesso!');
+                  } else {
+                    toast.error('Erro ao salvar: ' + result.error);
+                  }
+                  setSaving(false);
+                }}
+                disabled={saving}
+                className="w-full"
+              >
+                {saving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
+                Salvar Meta Pixel
               </Button>
             </CardContent>
           </Card>
