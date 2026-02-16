@@ -105,13 +105,14 @@ export const HeroSection = () => {
               <TrustBadge icon={Headphones} text={t('hero.support_available')} />
             </div>
 
-            <p 
-              className="text-primary font-semibold text-sm sm:text-base mt-4 text-center lg:text-left cursor-pointer hover:opacity-80 transition-opacity inline-flex items-center gap-1 drop-shadow-[0_0_8px_hsl(var(--primary)/0.4)]"
-              onClick={() => document.getElementById('pacotes')?.scrollIntoView({ behavior: 'smooth' })}
+            <a 
+              href={`https://wa.me/${settings.whatsapp_number}?text=${encodeURIComponent(language === 'en' ? 'Hi! I want to know more about the 10k credits accounts.' : 'Olá! Quero saber mais sobre as contas com 10k de créditos.')}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary font-semibold text-sm sm:text-base mt-4 text-center lg:text-left cursor-pointer hover:underline hover:opacity-80 transition-all inline-flex items-center gap-1 drop-shadow-[0_0_8px_hsl(var(--primary)/0.4)]"
             >
               {language === 'en' ? '🔥 We also have accounts with 10k credits' : '🔥 Temos também contas com 10k de créditos'}
-              <ChevronDown className="w-4 h-4 animate-bounce" />
-            </p>
+            </a>
           </div>
         </div>
       </div>
