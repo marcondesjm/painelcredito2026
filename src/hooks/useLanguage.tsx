@@ -12,7 +12,7 @@ const translations: Record<Language, Record<string, string>> = {
   pt: {
     // Header
     'header.generator': 'Painel Gerador',
-    'header.create_account': 'Criar conta',
+    'header.create_account': 'Entrar na conta',
     'header.logout': 'Sair',
     'header.how_it_works': 'Como Funciona',
     'header.faq': 'FAQ',
