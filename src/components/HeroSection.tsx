@@ -76,10 +76,6 @@ export const HeroSection = () => {
             </div>
 
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 sm:gap-4 mb-4 sm:mb-6">
-              <span className="bg-primary text-primary-foreground text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-wide">
-                {language === 'en' ? t('hero.badge_text') : (hero.badge_text || t('hero.expires_in'))}
-              </span>
-              
               <div className="flex items-baseline gap-2 sm:gap-3 flex-wrap justify-center lg:justify-start">
                 <span className="text-lg sm:text-xl text-muted-foreground line-through">
                   {formatPrice(hero.price_original)}
