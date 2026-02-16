@@ -59,6 +59,7 @@ import {
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { HomepageEditor } from '@/components/HomepageEditor';
+import { CustomersTab } from '@/components/CustomersTab';
 import logoPainel from '@/assets/logo-dashboard.png';
 
 interface UserProfile {
@@ -639,6 +640,10 @@ const AdminDashboard = () => {
               <Eye className="w-4 h-4" />
               Página Principal
             </TabsTrigger>
+            <TabsTrigger value="customers" className="gap-2">
+              <Phone className="w-4 h-4" />
+              Clientes
+            </TabsTrigger>
             <TabsTrigger value="settings" className="gap-2">
               <Settings className="w-4 h-4" />
               Configurações
@@ -1061,6 +1066,11 @@ const AdminDashboard = () => {
                 </div>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          {/* Customers Tab */}
+          <TabsContent value="customers">
+            <CustomersTab userId={user?.id || ''} pages={pages.map(p => ({ id: p.id, title: p.title }))} />
           </TabsContent>
 
           {/* Settings Tab */}
