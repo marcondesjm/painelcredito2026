@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { CountdownTimer } from './CountdownTimer';
 import { TrustBadge } from './TrustBadge';
-import { Zap, Shield, Headphones } from 'lucide-react';
+import { Zap, Shield, Headphones, ChevronDown } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import productPainel from '@/assets/product-painel.png';
 import { useHomepageSettings } from '@/hooks/useHomepageSettings';
@@ -52,8 +52,9 @@ export const HeroSection = () => {
                     <>
                       {parts[0]}
                       <br />
-                      <span className="text-primary font-bold text-lg sm:text-xl mt-2 inline-block drop-shadow-[0_0_8px_hsl(var(--primary)/0.5)]">
+                      <span className="text-primary font-bold text-lg sm:text-xl mt-2 inline-flex items-center gap-2 drop-shadow-[0_0_8px_hsl(var(--primary)/0.5)]">
                         {parts.slice(1).join(' ')}
+                        <ChevronDown className="w-5 h-5 animate-bounce" />
                       </span>
                     </>
                   );
