@@ -57,8 +57,11 @@ export const HeroSection = () => {
                         onClick={() => document.getElementById('pacotes')?.scrollIntoView({ behavior: 'smooth' })}
                       >
                         {parts.slice(1).join(' ')}
-                        <ChevronDown className="w-5 h-5 animate-bounce" />
                       </span>
+                      <ChevronDown 
+                        className="w-10 h-10 text-primary animate-bounce cursor-pointer hover:opacity-80 transition-opacity mx-auto mt-2 drop-shadow-[0_0_12px_hsl(var(--primary)/0.6)]" 
+                        onClick={() => document.getElementById('pacotes')?.scrollIntoView({ behavior: 'smooth' })}
+                      />
                     </>
                   );
                 }
