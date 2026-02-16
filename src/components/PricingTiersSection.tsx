@@ -170,11 +170,16 @@ interface PricingTiersSectionProps {
   onBuyClick?: (tier: PricingTier) => void;
 }
 
+const BRL_TO_USD_RATE = 0.18;
+
+const convertToUsd = (brlValue: number) => brlValue * BRL_TO_USD_RATE;
+
 const formatPriceLocale = (value: number, language: string) => {
+  const displayValue = language === 'en' ? convertToUsd(value) : value;
   return new Intl.NumberFormat(language === 'pt' ? 'pt-BR' : 'en-US', {
     style: 'currency',
     currency: language === 'pt' ? 'BRL' : 'USD',
-  }).format(value);
+  }).format(displayValue);
 };
 
 const formatPrice = (value: number) => {
