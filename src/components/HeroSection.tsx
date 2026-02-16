@@ -91,10 +91,6 @@ export const HeroSection = () => {
               </div>
             </div>
 
-            <div className="flex justify-center lg:justify-start mb-4">
-              <CountdownTimer />
-            </div>
-
             <a 
               href={`https://wa.me/${settings.whatsapp_number}?text=${encodeURIComponent(language === 'en' ? 'Hi! I want to know more about the 10k credits accounts.' : 'Olá! Quero saber mais sobre as contas com 10k de créditos.')}`}
               target="_blank"
@@ -104,10 +100,14 @@ export const HeroSection = () => {
               {language === 'en' ? '🔥 We also have accounts with 10k credits' : '🔥 Temos também contas com 10k de créditos'}
             </a>
 
-            <div className="flex flex-wrap justify-center lg:justify-start gap-2 sm:gap-3">
+            <div className="flex flex-wrap justify-center lg:justify-start gap-2 sm:gap-3 mb-4">
               <TrustBadge icon={Zap} text={t('hero.auto_delivery')} />
               <TrustBadge icon={Shield} text={t('hero.secure_payment')} />
               <TrustBadge icon={Headphones} text={t('hero.support_available')} />
+            </div>
+
+            <div className="flex justify-center lg:justify-start">
+              <CountdownTimer />
             </div>
           </div>
         </div>
