@@ -98,9 +98,8 @@ export const Header = () => {
               </Button>
             )}
             <Button 
-              variant="ghost" 
-              size="sm" 
-              className="text-muted-foreground hover:text-foreground"
+              variant="accent" 
+              size="sm"
               onClick={() => scrollToSection('pacotes')}
             >
               {t('header.buy_credits')}
@@ -167,7 +166,7 @@ export const Header = () => {
                 {t('header.create_account')}
               </Button>
             )}
-            <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground" onClick={() => scrollToSection('pacotes')}>
+            <Button variant="accent" size="sm" onClick={() => scrollToSection('pacotes')}>
               {t('header.buy_credits')}
             </Button>
             <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground" onClick={() => scrollToSection('how-it-works')}>
@@ -218,7 +217,7 @@ export const Header = () => {
                     {t('header.create_account')}
                   </Button>
                 )}
-                <Button variant="ghost" className="w-full justify-start text-muted-foreground hover:text-foreground" onClick={() => scrollToSection('pacotes')}>
+                <Button variant="accent" className="w-full" onClick={() => scrollToSection('pacotes')}>
                   {t('header.buy_credits')}
                 </Button>
                 <Button variant="ghost" className="w-full justify-start text-muted-foreground hover:text-foreground" onClick={() => scrollToSection('how-it-works')}>
