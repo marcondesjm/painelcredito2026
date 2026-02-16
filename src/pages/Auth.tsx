@@ -10,7 +10,7 @@ import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import logoPainel from '@/assets/logo-dashboard.png';
 
 const Auth = () => {
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
@@ -87,30 +87,14 @@ const Auth = () => {
           {/* Title */}
           <div className="text-center mb-4">
             <h1 className="text-2xl font-bold text-foreground">
-              {isLogin ? 'Entrar na conta' : 'Criar nova conta'}
+              Entrar na conta
             </h1>
             <p className="text-sm text-muted-foreground mt-1">
-              {isLogin 
-                ? 'Acesse o painel de gerenciamento' 
-                : 'Cadastre-se para criar suas landing pages'}
+              Acesse o painel de gerenciamento
             </p>
           </div>
           
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Full Name - only for signup */}
-            {!isLogin && (
-              <div className="space-y-2">
-                <Label htmlFor="fullName" className="text-foreground">Nome completo</Label>
-                <Input
-                  id="fullName"
-                  type="text"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  placeholder="Seu nome"
-                  className="bg-background/50"
-                />
-              </div>
-            )}
             
             <div className="space-y-2">
               <Label htmlFor="email" className="text-foreground">Email</Label>
@@ -155,22 +139,10 @@ const Auth = () => {
               disabled={isSubmitting}
             >
               {isSubmitting && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
-              {isLogin ? 'Entrar' : 'Criar conta'}
+              Entrar
             </Button>
           </form>
           
-          <div className="mt-6 text-center">
-            <p className="text-sm text-muted-foreground">
-              {isLogin ? 'Não tem conta?' : 'Já tem conta?'}{' '}
-              <button
-                type="button"
-                onClick={() => setIsLogin(!isLogin)}
-                className="text-primary hover:underline"
-              >
-                {isLogin ? 'Cadastre-se' : 'Entre aqui'}
-              </button>
-            </p>
-          </div>
         </CardContent>
       </Card>
     </div>
