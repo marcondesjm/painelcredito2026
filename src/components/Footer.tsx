@@ -35,7 +35,7 @@ export const Footer = () => {
       <div className="max-w-4xl mx-auto text-center">
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-6 sm:mb-8">
           <a
-            href={`https://wa.me/${appSettings?.whatsapp_number || '5511999999999'}?text=${encodeURIComponent(language === 'en' ? 'Hi! I need support.' : 'Olá! Preciso de suporte.')}`}
+            href={`https://wa.me/${appSettings?.whatsapp_number || '5548996029392'}?text=${encodeURIComponent(language === 'en' ? 'Hi! I need support.' : 'Olá! Preciso de suporte.')}`}
             target="_blank"
             rel="noopener noreferrer"
           >
