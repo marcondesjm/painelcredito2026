@@ -123,6 +123,15 @@ const translations: Record<Language, Record<string, string>> = {
     'cta.title_highlight': 'créditos infinitos',
     'cta.subtitle': 'Junte-se aos usuários que já estão aproveitando a Lovable sem limites.',
     'cta.button': 'Comprar Agora',
+    // Recharge Info
+    'recharge.title_pre': 'Recarregue em menos de',
+    'recharge.title_post': 'minuto',
+    'recharge.secure': 'Seguro',
+    'recharge.no_ban': 'Sem risco de banimento',
+    'recharge.bonus': 'Bônus',
+    'recharge.bonus_suffix': 'em todos os pacotes',
+    'recharge.credit_active_pre': 'O crédito permanece ativo até a',
+    'recharge.credit_active_bold': 'próxima recarga.',
     // Footer
     'footer.support': 'Suporte via WhatsApp',
     'footer.clear_cache': 'Limpar Cache',
@@ -248,6 +257,15 @@ const translations: Record<Language, Record<string, string>> = {
     'cta.title_highlight': 'unlimited credits',
     'cta.subtitle': 'Join the users who are already enjoying Lovable without limits.',
     'cta.button': 'Buy Now',
+    // Recharge Info
+    'recharge.title_pre': 'Recharge in less than',
+    'recharge.title_post': 'minute',
+    'recharge.secure': 'Secure',
+    'recharge.no_ban': 'No risk of ban',
+    'recharge.bonus': 'Bonus',
+    'recharge.bonus_suffix': 'on all packages',
+    'recharge.credit_active_pre': 'Credits remain active until the',
+    'recharge.credit_active_bold': 'next recharge.',
     // Footer
     'footer.support': 'WhatsApp Support',
     'footer.clear_cache': 'Clear Cache',

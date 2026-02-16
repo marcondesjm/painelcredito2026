@@ -15,6 +15,7 @@ import { Footer } from '@/components/Footer';
 import { WhatsAppButton } from '@/components/WhatsAppButton';
 import { SocialProofNotification } from '@/components/SocialProofNotification';
 import { PricingTiersSection, PricingTier } from '@/components/PricingTiersSection';
+import { RechargeInfoSection } from '@/components/RechargeInfoSection';
 import { CheckoutModal } from '@/components/CheckoutModal';
 import backgroundHero from '@/assets/background-hero.png';
 import { useHomepageSettings } from '@/hooks/useHomepageSettings';
@@ -101,13 +102,16 @@ const Index = () => {
       <Header />
       {vis.hero && <HeroSection />}
       {vis.pricing && (
-        <PricingTiersSection 
-          tiers={tiers} 
-          customPackageOptions={settings.custom_package_options}
-          primaryColor="#8B5CF6" 
-          accentColor="#22C55E"
-          onBuyClick={handleBuyClick}
-        />
+        <>
+          <PricingTiersSection 
+            tiers={tiers} 
+            customPackageOptions={settings.custom_package_options}
+            primaryColor="#8B5CF6" 
+            accentColor="#22C55E"
+            onBuyClick={handleBuyClick}
+          />
+          <RechargeInfoSection />
+        </>
       )}
       {vis.features && <FeaturesSection />}
       {vis.why_choose && <WhyChooseSection />}
