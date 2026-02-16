@@ -163,11 +163,17 @@ const translations: Record<Language, Record<string, string>> = {
     // Language
     'lang.pt': 'Português',
     'lang.en': 'English',
+    // Login Modal
+    'login.title': 'Entrar na conta',
+    'login.subtitle': 'Acesse o painel de gerenciamento',
+    'login.email': 'Email',
+    'login.password': 'Senha',
+    'login.submit': 'Entrar',
   },
   en: {
     // Header
     'header.generator': 'Generator Panel',
-    'header.create_account': 'Create Account',
+    'header.create_account': 'Sign In',
     'header.logout': 'Logout',
     'header.how_it_works': 'How It Works',
     'header.faq': 'FAQ',
@@ -318,6 +324,12 @@ const translations: Record<Language, Record<string, string>> = {
     // Language
     'lang.pt': 'Português',
     'lang.en': 'English',
+    // Login Modal
+    'login.title': 'Sign In',
+    'login.subtitle': 'Access the management panel',
+    'login.email': 'Email',
+    'login.password': 'Password',
+    'login.submit': 'Sign In',
   },
 };
 
