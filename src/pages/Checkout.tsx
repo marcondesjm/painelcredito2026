@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ArrowLeft, Shield, Zap, Headphones, Check, Mail, Lock } from 'lucide-react';
+import { ArrowLeft, Shield, Zap, Headphones, Check, Mail, Lock, Phone } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import productPainel from '@/assets/product-painel.png';
 import { PricingTier } from '@/components/PricingTiersSection';
@@ -9,6 +9,24 @@ import { useHomepageSettings } from '@/hooks/useHomepageSettings';
 import { useLanguage } from '@/hooks/useLanguage';
 
 const USD_RATE = 0.18;
+
+const countryCodes = [
+  { code: '+55', flag: '🇧🇷', name: 'Brasil' },
+  { code: '+1', flag: '🇺🇸', name: 'USA' },
+  { code: '+44', flag: '🇬🇧', name: 'UK' },
+  { code: '+351', flag: '🇵🇹', name: 'Portugal' },
+  { code: '+34', flag: '🇪🇸', name: 'España' },
+  { code: '+49', flag: '🇩🇪', name: 'Deutschland' },
+  { code: '+33', flag: '🇫🇷', name: 'France' },
+  { code: '+39', flag: '🇮🇹', name: 'Italia' },
+  { code: '+81', flag: '🇯🇵', name: 'Japan' },
+  { code: '+91', flag: '🇮🇳', name: 'India' },
+  { code: '+61', flag: '🇦🇺', name: 'Australia' },
+  { code: '+52', flag: '🇲🇽', name: 'México' },
+  { code: '+54', flag: '🇦🇷', name: 'Argentina' },
+  { code: '+56', flag: '🇨🇱', name: 'Chile' },
+  { code: '+57', flag: '🇨🇴', name: 'Colombia' },
+];
 
 const Checkout = () => {
   const location = useLocation();
@@ -34,6 +52,8 @@ const Checkout = () => {
   const { checkout } = settings;
   
   const [email, setEmail] = useState('');
+  const [whatsapp, setWhatsapp] = useState('');
+  const [countryCode, setCountryCode] = useState(isEN ? '+1' : '+55');
 
   const convertPrice = (value: number) => isEN ? value * USD_RATE : value;
 
@@ -56,8 +76,11 @@ const Checkout = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const fullWhatsapp = `${countryCode.replace('+', '')}${whatsapp.replace(/\D/g, '')}`;
     const whatsappMessage = encodeURIComponent(
-      `Olá! Gostaria de comprar o ${selectedTier.name} (${selectedTier.credits.toLocaleString(isEN ? 'en-US' : 'pt-BR')} créditos) por ${formatPrice(selectedTier.price_current)}. Meu email: ${email}`
+      isEN
+        ? `Hi! I'd like to buy ${selectedTier.name} (${selectedTier.credits.toLocaleString('en-US')} credits) for ${formatPrice(selectedTier.price_current)}. Email: ${email}, WhatsApp: +${fullWhatsapp}`
+        : `Olá! Gostaria de comprar o ${selectedTier.name} (${selectedTier.credits.toLocaleString('pt-BR')} créditos) por ${formatPrice(selectedTier.price_current)}. Meu email: ${email}, WhatsApp: +${fullWhatsapp}`
     );
     window.open(`https://wa.me/${settings.whatsapp_number || '5548996029392'}?text=${whatsappMessage}`, '_blank');
   };
@@ -166,6 +189,34 @@ const Checkout = () => {
                 <p className="text-xs text-muted-foreground">
                   {t('checkout.email_hint')}
                 </p>
+              </div>
+
+              <div className="space-y-2">
+                <label className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Phone className="w-4 h-4" />
+                  WhatsApp
+                </label>
+                <div className="flex gap-2">
+                  <select
+                    value={countryCode}
+                    onChange={(e) => setCountryCode(e.target.value)}
+                    className="bg-background border border-border rounded-md px-2 py-2 text-sm text-foreground w-[100px] flex-shrink-0"
+                  >
+                    {countryCodes.map((c) => (
+                      <option key={c.code} value={c.code}>
+                        {c.flag} {c.code}
+                      </option>
+                    ))}
+                  </select>
+                  <Input
+                    type="tel"
+                    placeholder={isEN ? '(000) 000-0000' : '(00) 00000-0000'}
+                    value={whatsapp}
+                    onChange={(e) => setWhatsapp(e.target.value)}
+                    className="bg-background border-border flex-1"
+                    required
+                  />
+                </div>
               </div>
 
               <div className="flex items-start gap-2 text-xs text-muted-foreground bg-background/50 p-3 rounded-lg">
