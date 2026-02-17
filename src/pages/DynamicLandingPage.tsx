@@ -19,7 +19,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Loader2, Star, Check, Shield, Clock, ArrowRight, MessageCircle, Zap, Headphones, UserPlus, LogOut, Menu, RefreshCw, Heart, Award } from 'lucide-react';
+import { Loader2, Star, Check, Shield, Clock, ArrowRight, MessageCircle, Zap, Headphones, UserPlus, LogOut, Menu, RefreshCw, Heart, Award, Mail, Phone, LockKeyhole } from 'lucide-react';
 import { CountdownTimer } from '@/components/CountdownTimer';
 import { SocialProofNotification } from '@/components/SocialProofNotification';
 import { WhatsAppButton } from '@/components/WhatsAppButton';
@@ -30,7 +30,7 @@ import { APP_VERSION, LAST_UPDATE } from '@/config/version';
 import backgroundHero from '@/assets/background-hero.png';
 import dashboardMockup from '@/assets/dashboard-mockup.png';
 
-type SectionId = 'hero' | 'video' | 'features' | 'about' | 'how-it-works' | 'secure-purchase' | 'testimonials' | 'faq' | 'cta' | 'donation' | 'pacotes' | 'recharge-info' | 'why-choose';
+type SectionId = 'hero' | 'video' | 'features' | 'about' | 'how-it-works' | 'secure-purchase' | 'testimonials' | 'faq' | 'cta' | 'donation' | 'pacotes' | 'recharge-info' | 'why-choose' | 'checkout';
 
 const defaultSectionOrder: SectionId[] = [
   'hero',
@@ -46,6 +46,7 @@ const defaultSectionOrder: SectionId[] = [
   'faq',
   'cta',
   'donation',
+  'checkout',
 ];
 
 interface LandingPageData {
@@ -125,6 +126,12 @@ interface LandingPageData {
   hero_extra_renewals: { text: string }[] | null;
   custom_package_options: { credits: number; price: number; bonus_credits?: number }[] | null;
   why_choose_items: string[] | null;
+  // Checkout page fields
+  checkout_product_subtitle: string | null;
+  checkout_product_description: string | null;
+  checkout_badge_text: string | null;
+  checkout_benefits: string[] | null;
+  checkout_enabled: boolean | null;
 }
 
 type BoundaryState = {
@@ -1477,6 +1484,220 @@ const DynamicLandingPageInner = () => {
     'faq': renderFaqSection,
     'cta': renderCtaSection,
     'donation': renderDonationSection,
+    'checkout': () => {
+      if (!page.checkout_enabled) return null;
+      const benefits = (page.checkout_benefits as string[]) || ['Acesso Vitalício ao Painel', 'Gerador de Créditos Ilimitado', 'Suporte Premium 24/7', 'Atualizações Gratuitas', 'Comunidade Exclusiva'];
+      const tiers = (page.pricing_tiers as PricingTier[]) || [];
+      const mainTier = tiers[0] || { id: 'default', name: 'Painel Gerador', credits: 5000, price_original: 150, price_current: 99.99, available: 30, sales: 243, checkout_link: '' };
+      const extraTiers = tiers.slice(1);
+
+      const calculateSavings = (original: number, current: number) => {
+        if (!original || original <= current) return null;
+        return Math.round(((original - current) / original) * 100);
+      };
+
+      return (
+        <section
+          key="checkout"
+          id="checkout"
+          data-section-id="checkout"
+          className={`py-12 px-4 ${isPreview ? 'cursor-pointer' : ''} ${hoveredSection === 'checkout' ? 'ring-2 ring-primary ring-inset' : ''}`}
+          onMouseEnter={() => handleSectionHover('checkout')}
+          onClick={() => handleSectionClick('checkout')}
+        >
+          <div className="max-w-4xl mx-auto">
+            <div className="grid md:grid-cols-2 gap-8">
+              {/* Product Info */}
+              <div className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-2xl p-6">
+                <div className="flex gap-4 mb-6">
+                  <img
+                    src={page.product_image || page.logo_image || '/defaults/product.png'}
+                    alt="Produto"
+                    className="w-40 h-28 object-cover rounded-xl border border-border/50"
+                  />
+                  <div>
+                    <h2 className="text-xl font-bold text-foreground" style={{ fontFamily: fontHeading }}>
+                      {mainTier.name || 'Painel Gerador de Créditos'}
+                    </h2>
+                    <p className="text-lg font-semibold text-foreground">{page.checkout_product_subtitle || 'Acesso Completo'}</p>
+                    <p className="text-sm text-muted-foreground">{page.checkout_product_description || 'Acesso vitalício • Sem mensalidades'}</p>
+                  </div>
+                </div>
+
+                {/* Pricing cards */}
+                <div className={`grid gap-3 ${extraTiers.length > 0 ? 'grid-cols-2' : 'grid-cols-1'}`}>
+                  {/* Main offer */}
+                  <div className="rounded-xl border p-4 flex flex-col gap-2" style={{ borderColor: `hsl(${primaryHsl} / 0.3)`, backgroundColor: `hsl(${primaryHsl} / 0.05)` }}>
+                    <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wide self-start text-white" style={{ backgroundColor: `hsl(${primaryHsl})` }}>
+                      {page.checkout_badge_text || 'OFERTA LIMITADA'}
+                    </span>
+                    {mainTier.price_original > mainTier.price_current && (
+                      <span className="text-muted-foreground line-through text-sm">R$ {mainTier.price_original.toFixed(2).replace('.', ',')}</span>
+                    )}
+                    <span className="text-2xl font-bold" style={{ color: `hsl(${accentHsl})` }}>
+                      R$ {mainTier.price_current.toFixed(2).replace('.', ',')}
+                    </span>
+                    {(() => {
+                      const s = calculateSavings(mainTier.price_original, mainTier.price_current);
+                      return s ? (
+                        <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full self-start" style={{ backgroundColor: `hsl(${accentHsl} / 0.2)`, color: `hsl(${accentHsl})` }}>
+                          Economia de {s}%
+                        </span>
+                      ) : null;
+                    })()}
+                    {mainTier.daily_renewal && mainTier.daily_renewal > 0 && (
+                      <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border mt-1 self-start" style={{ borderColor: `hsl(${primaryHsl} / 0.3)`, backgroundColor: `hsl(${primaryHsl} / 0.1)` }}>
+                        <RefreshCw className="w-3 h-3" style={{ color: `hsl(${primaryHsl})` }} />
+                        <span className="text-[10px] font-bold" style={{ color: `hsl(${primaryHsl})` }}>Renovação diária de {mainTier.daily_renewal.toLocaleString('pt-BR')} créditos/dia !</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Extra tiers */}
+                  {extraTiers.map((tier, idx) => {
+                    const s = calculateSavings(tier.price_original, tier.price_current);
+                    return (
+                      <div key={idx} className="rounded-xl border border-border/50 bg-card/50 p-4 flex flex-col gap-2">
+                        {tier.name && <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wide">{tier.name}</span>}
+                        {tier.price_original > tier.price_current && (
+                          <span className="text-muted-foreground line-through text-sm">R$ {tier.price_original.toFixed(2).replace('.', ',')}</span>
+                        )}
+                        <span className="text-2xl font-bold" style={{ color: `hsl(${accentHsl})` }}>
+                          R$ {tier.price_current.toFixed(2).replace('.', ',')}
+                        </span>
+                        {s && (
+                          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full self-start" style={{ backgroundColor: `hsl(${accentHsl} / 0.2)`, color: `hsl(${accentHsl})` }}>
+                            Economia de {s}%
+                          </span>
+                        )}
+                        {tier.daily_renewal && tier.daily_renewal > 0 && (
+                          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border mt-1 self-start" style={{ borderColor: `hsl(${primaryHsl} / 0.3)`, backgroundColor: `hsl(${primaryHsl} / 0.1)` }}>
+                            <RefreshCw className="w-3 h-3" style={{ color: `hsl(${primaryHsl})` }} />
+                            <span className="text-[10px] font-bold" style={{ color: `hsl(${primaryHsl})` }}>Renovação diária de {tier.daily_renewal.toLocaleString('pt-BR')} créditos/dia !</span>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Trust badges */}
+                <div className="flex flex-wrap gap-4 text-sm text-muted-foreground mt-4 mb-6">
+                  <div className="flex items-center gap-1">
+                    <Shield className="w-4 h-4" style={{ color: `hsl(${primaryHsl})` }} />
+                    Compra Segura
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Zap className="w-4 h-4" style={{ color: `hsl(${primaryHsl})` }} />
+                    Entrega Automática
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Headphones className="w-4 h-4" style={{ color: `hsl(${primaryHsl})` }} />
+                    Suporte 24h
+                  </div>
+                </div>
+
+                {/* Benefits */}
+                <div>
+                  <h3 className="font-semibold text-foreground mb-3">O que você vai receber:</h3>
+                  <ul className="space-y-2">
+                    {benefits.map((benefit, index) => (
+                      <li key={index} className="flex items-center gap-2 text-muted-foreground">
+                        <Check className="w-4 h-4" style={{ color: `hsl(${accentHsl})` }} />
+                        {benefit}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+
+              {/* Checkout Form */}
+              <div className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-2xl p-6">
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    if (isPreview) return;
+                    const formData = new FormData(e.currentTarget);
+                    const email = formData.get('email') as string;
+                    const whatsappVal = formData.get('whatsapp') as string;
+                    const countryCodeVal = formData.get('countryCode') as string || '+55';
+                    const fullWhatsapp = `${countryCodeVal.replace('+', '')}${whatsappVal.replace(/\\D/g, '')}`;
+                    const whatsappMessage = encodeURIComponent(
+                      `Olá! Gostaria de comprar o ${mainTier.name} (${mainTier.credits.toLocaleString('pt-BR')} créditos) por R$ ${mainTier.price_current.toFixed(2).replace('.', ',')}. Meu email: ${email}, WhatsApp: +${fullWhatsapp}`
+                    );
+                    window.open(`https://wa.me/${page.whatsapp_number || '5548996029392'}?text=${whatsappMessage}`, '_blank');
+                  }}
+                  className="space-y-6"
+                >
+                  <div className="space-y-2">
+                    <label className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <Mail className="w-4 h-4" />
+                      Seu Email
+                    </label>
+                    <input
+                      type="email"
+                      name="email"
+                      placeholder="seu@email.com"
+                      className="w-full bg-background border border-border rounded-md px-3 py-2 text-sm text-foreground"
+                      required
+                    />
+                    <p className="text-xs text-muted-foreground">O acesso será enviado para este email</p>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <Phone className="w-4 h-4" />
+                      WhatsApp
+                    </label>
+                    <div className="flex gap-2">
+                      <select name="countryCode" defaultValue="+55" className="bg-background border border-border rounded-md px-2 py-2 text-sm text-foreground w-[100px] flex-shrink-0">
+                        <option value="+55">🇧🇷 +55</option>
+                        <option value="+1">🇺🇸 +1</option>
+                        <option value="+351">🇵🇹 +351</option>
+                      </select>
+                      <input
+                        type="tel"
+                        name="whatsapp"
+                        placeholder="(00) 00000-0000"
+                        className="w-full bg-background border border-border rounded-md px-3 py-2 text-sm text-foreground"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-2 text-xs text-muted-foreground bg-background/50 p-3 rounded-lg">
+                    <LockKeyhole className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                    <span>Seus dados estão protegidos • Acesso liberado automaticamente</span>
+                  </div>
+
+                  <Button type="submit" variant="hero" size="xl" className="w-full" style={{ backgroundColor: `hsl(${primaryHsl})` }}>
+                    COMPRAR AGORA
+                  </Button>
+
+                  <p className="text-center text-sm text-muted-foreground">
+                    Já é cliente?{' '}
+                    <a href="/auth" className="hover:underline" style={{ color: `hsl(${primaryHsl})` }}>
+                      Clique aqui para acessar o painel
+                    </a>
+                  </p>
+
+                  <p className="text-center text-xs text-muted-foreground">
+                    Ao comprar, você concorda com nossos{' '}
+                    <a href="/termos" className="hover:underline" style={{ color: `hsl(${primaryHsl})` }}>Termos de Uso</a>
+                    {' '}e{' '}
+                    <a href="/privacidade" className="hover:underline" style={{ color: `hsl(${primaryHsl})` }}>Política de Privacidade</a>
+                  </p>
+
+                  <div className="flex justify-center mt-4">
+                    <img src={page.logo_image || '/defaults/logo.png'} alt="Logo" className="h-10 opacity-70" />
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </section>
+      );
+    },
   };
   return (
     <div 

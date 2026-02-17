@@ -219,13 +219,18 @@ export type Database = {
           about_title: string | null
           access_key: string | null
           background_image: string | null
+          checkout_badge_text: string | null
           checkout_balance_label: string | null
+          checkout_benefits: Json | null
           checkout_button_text: string | null
           checkout_coupon_enabled: boolean | null
           checkout_coupon_label: string | null
+          checkout_enabled: boolean | null
           checkout_invite_enabled: boolean | null
           checkout_invite_label: string | null
           checkout_invite_placeholder: string | null
+          checkout_product_description: string | null
+          checkout_product_subtitle: string | null
           checkout_security_text: string | null
           checkout_show_balance: boolean | null
           checkout_whatsapp_message: string | null
@@ -306,13 +311,18 @@ export type Database = {
           about_title?: string | null
           access_key?: string | null
           background_image?: string | null
+          checkout_badge_text?: string | null
           checkout_balance_label?: string | null
+          checkout_benefits?: Json | null
           checkout_button_text?: string | null
           checkout_coupon_enabled?: boolean | null
           checkout_coupon_label?: string | null
+          checkout_enabled?: boolean | null
           checkout_invite_enabled?: boolean | null
           checkout_invite_label?: string | null
           checkout_invite_placeholder?: string | null
+          checkout_product_description?: string | null
+          checkout_product_subtitle?: string | null
           checkout_security_text?: string | null
           checkout_show_balance?: boolean | null
           checkout_whatsapp_message?: string | null
@@ -393,13 +403,18 @@ export type Database = {
           about_title?: string | null
           access_key?: string | null
           background_image?: string | null
+          checkout_badge_text?: string | null
           checkout_balance_label?: string | null
+          checkout_benefits?: Json | null
           checkout_button_text?: string | null
           checkout_coupon_enabled?: boolean | null
           checkout_coupon_label?: string | null
+          checkout_enabled?: boolean | null
           checkout_invite_enabled?: boolean | null
           checkout_invite_label?: string | null
           checkout_invite_placeholder?: string | null
+          checkout_product_description?: string | null
+          checkout_product_subtitle?: string | null
           checkout_security_text?: string | null
           checkout_show_balance?: boolean | null
           checkout_whatsapp_message?: string | null
