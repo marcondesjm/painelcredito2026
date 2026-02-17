@@ -692,23 +692,27 @@ export const HomepageEditor = () => {
             <CardContent className="space-y-4">
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
-                  <Label>Chave PIX</Label>
+                  <Label>Chave PIX 🔒</Label>
                   <Input
-                    value={pixKey}
-                    onChange={(e) => setPixKey(e.target.value)}
-                    placeholder="CPF, CNPJ, Email, Telefone ou Chave Aleatória"
+                    value={pixKey ? pixKey.replace(/(.{3}).*(.{3})/, '$1•••••$2') : ''}
+                    readOnly
+                    disabled
+                    className="opacity-60 cursor-not-allowed"
+                    title="Campo protegido — não pode ser alterado"
                   />
-                  <p className="text-xs text-muted-foreground">
-                    Insira sua chave PIX para gerar o QR Code de pagamento
-                  </p>
+                  <p className="text-xs text-muted-foreground">🔒 Protegido — entre em contato com o administrador para alterações</p>
                 </div>
-                <div className="space-y-2">
-                  <Label>Nome do Beneficiário</Label>
+
+                <div>
+                  <Label>Nome do Beneficiário 🔒</Label>
                   <Input
-                    value={pixName}
-                    onChange={(e) => setPixName(e.target.value)}
-                    placeholder="Nome que aparecerá no PIX"
+                    value={pixName ? pixName.replace(/(.{3}).*(.{3})/, '$1•••••$2') : ''}
+                    readOnly
+                    disabled
+                    className="opacity-60 cursor-not-allowed"
+                    title="Campo protegido — não pode ser alterado"
                   />
+                  <p className="text-xs text-muted-foreground">🔒 Protegido — entre em contato com o administrador para alterações</p>
                 </div>
               </div>
             </CardContent>
