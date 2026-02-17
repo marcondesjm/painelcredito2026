@@ -949,6 +949,7 @@ const DynamicLandingPageInner = () => {
         data-section-id="features"
         className={`py-20 px-4 transition-all ${isPreview ? 'cursor-pointer' : ''} ${hoveredSection === 'features' ? 'ring-2 ring-primary ring-inset' : ''}`}
         onMouseEnter={() => handleSectionHover('features')}
+        onClick={() => handleSectionClick('features')}
       >
         <div className="max-w-6xl mx-auto">
           {/* Section Header with title and description */}
