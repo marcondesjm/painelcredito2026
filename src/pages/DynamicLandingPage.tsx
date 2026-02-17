@@ -725,81 +725,104 @@ const DynamicLandingPageInner = () => {
               </Button>
             </div>
 
-            {/* Limited offer badge + Price */}
-            {page.price_current && (
-              <div 
-                className={`flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mb-4 transition-all ${hoveredSection === 'pricing' ? 'ring-2 ring-accent ring-inset p-2 rounded-lg' : ''}`}
-                onMouseEnter={(e) => { e.stopPropagation(); handleSectionHover('pricing'); }}
-              >
-                {page.hero_badge_text && (
-                  <span 
-                    className="text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-wide"
-                    style={{ 
-                      backgroundColor: `hsl(${primaryHsl})`,
-                      color: 'white'
-                    }}
-                  >
-                    {page.hero_badge_text}
-                  </span>
-                )}
-                
-                <div className="flex items-baseline gap-3">
-                  {page.price_original && (
-                    <span className="text-xl text-muted-foreground line-through">
-                      {formatPrice(page.price_original)}
-                    </span>
-                  )}
-                  <span 
-                    className="text-3xl md:text-4xl font-bold"
-                    style={{ color: `hsl(${accentHsl})` }}
-                  >
-                    {formatPrice(page.price_current)}
-                  </span>
+            {/* Prices section - matching admin layout */}
+            {page.price_current && (() => {
+              const savings = page.price_original && page.price_original > page.price_current
+                ? Math.round(((page.price_original - page.price_current) / page.price_original) * 100)
+                : null;
+              return (
+                <div className="flex flex-col items-center lg:items-start gap-3 mb-4 sm:mb-6">
+                  {/* Main price + its renewal */}
+                  <div className="flex flex-col items-center lg:items-start gap-2">
+                    <div className="flex items-baseline gap-2 sm:gap-3 flex-wrap justify-center lg:justify-start">
+                      {page.price_original && (
+                        <span className="text-lg sm:text-xl text-muted-foreground line-through">
+                          {formatPrice(page.price_original)}
+                        </span>
+                      )}
+                      <span 
+                        className="text-2xl sm:text-3xl md:text-4xl font-bold"
+                        style={{ color: `hsl(${accentHsl})` }}
+                      >
+                        {formatPrice(page.price_current)}
+                      </span>
+                      {savings && (
+                        <span 
+                          className="text-xs font-bold px-2 py-1 rounded"
+                          style={{ backgroundColor: `hsl(${accentHsl} / 0.2)`, color: `hsl(${accentHsl})` }}
+                        >
+                          Economia de {savings}%
+                        </span>
+                      )}
+                    </div>
+                    {page.hero_daily_renewal_text && (
+                      <div 
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border backdrop-blur-sm animate-pulse cursor-pointer transition-colors"
+                        style={{ 
+                          borderColor: `hsl(${primaryHsl} / 0.3)`,
+                          backgroundColor: `hsl(${primaryHsl} / 0.1)`
+                        }}
+                        onClick={() => handleCtaClick(page.hero_cta_link, navigate)}
+                      >
+                        <RefreshCw className="w-4 h-4" style={{ color: `hsl(${primaryHsl})` }} />
+                        <span className="text-sm sm:text-base font-bold" style={{ color: `hsl(${primaryHsl})` }}>
+                          {page.hero_daily_renewal_text}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Extra price lines, each paired with its own renewal */}
+                  {(page.hero_extra_prices as any[] || []).filter((ep: any) => ep.price_current > 0).map((ep: any, idx: number) => {
+                    const extraRenewal = (page.hero_extra_renewals as any[] || [])[idx];
+                    const epSavings = ep.price_original > ep.price_current
+                      ? Math.round(((ep.price_original - ep.price_current) / ep.price_original) * 100)
+                      : null;
+                    return (
+                      <div key={idx} className="flex flex-col items-center lg:items-start gap-2">
+                        <div className="flex items-baseline gap-2 sm:gap-3 flex-wrap justify-center lg:justify-start">
+                          {ep.label && <span className="text-xs text-muted-foreground">{ep.label}</span>}
+                          {ep.price_original > 0 && (
+                            <span className="text-sm sm:text-base text-muted-foreground line-through">
+                              {formatPrice(ep.price_original)}
+                            </span>
+                          )}
+                          <span 
+                            className="text-xl sm:text-2xl font-bold"
+                            style={{ color: `hsl(${accentHsl})` }}
+                          >
+                            {formatPrice(ep.price_current)}
+                          </span>
+                          {epSavings && (
+                            <span 
+                              className="text-xs font-bold px-2 py-1 rounded"
+                              style={{ backgroundColor: `hsl(${accentHsl} / 0.2)`, color: `hsl(${accentHsl})` }}
+                            >
+                              Economia de {epSavings}%
+                            </span>
+                          )}
+                        </div>
+                        {extraRenewal?.text && (
+                          <div 
+                            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border backdrop-blur-sm animate-pulse cursor-pointer transition-colors"
+                            style={{ 
+                              borderColor: `hsl(${primaryHsl} / 0.3)`,
+                              backgroundColor: `hsl(${primaryHsl} / 0.1)`
+                            }}
+                            onClick={() => handleCtaClick(page.hero_cta_link, navigate)}
+                          >
+                            <RefreshCw className="w-4 h-4" style={{ color: `hsl(${primaryHsl})` }} />
+                            <span className="text-sm sm:text-base font-bold" style={{ color: `hsl(${primaryHsl})` }}>
+                              {extraRenewal.text}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
-              </div>
-            )}
-
-            {/* Daily renewal text */}
-            {page.hero_daily_renewal_text && (
-              <div className="flex items-center justify-center lg:justify-start gap-2 mb-2">
-                <RefreshCw className="w-4 h-4 animate-spin" style={{ color: `hsl(${accentHsl})`, animationDuration: '3s' }} />
-                <span className="text-sm font-medium" style={{ color: `hsl(${accentHsl})` }}>
-                  {page.hero_daily_renewal_text}
-                </span>
-              </div>
-            )}
-
-            {/* Extra prices */}
-            {(page.hero_extra_prices as any[] || []).map((ep: any, idx: number) => (
-              <div key={idx} className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mb-2">
-                {ep.label && (
-                  <span className="text-xs text-muted-foreground">{ep.label}:</span>
-                )}
-                <div className="flex items-baseline gap-3">
-                  {ep.price_original > 0 && (
-                    <span className="text-lg text-muted-foreground line-through">
-                      {formatPrice(ep.price_original)}
-                    </span>
-                  )}
-                  <span 
-                    className="text-2xl font-bold"
-                    style={{ color: `hsl(${accentHsl})` }}
-                  >
-                    {formatPrice(ep.price_current)}
-                  </span>
-                </div>
-              </div>
-            ))}
-
-            {/* Extra renewals */}
-            {(page.hero_extra_renewals as any[] || []).map((er: any, idx: number) => (
-              <div key={idx} className="flex items-center justify-center lg:justify-start gap-2 mb-2">
-                <RefreshCw className="w-4 h-4 animate-spin" style={{ color: `hsl(${accentHsl})`, animationDuration: '3s' }} />
-                <span className="text-sm font-medium" style={{ color: `hsl(${accentHsl})` }}>
-                  {er.text}
-                </span>
-              </div>
-            ))}
+              );
+            })()}
 
             {/* Countdown */}
             <div className="flex justify-center lg:justify-start mb-8">
