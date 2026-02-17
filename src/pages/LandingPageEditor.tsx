@@ -103,6 +103,9 @@ interface LandingPageData {
   hero_daily_renewal_text: string;
   hero_extra_prices: { price_original: number; price_current: number; label?: string }[];
   hero_extra_renewals: { text: string }[];
+  // Promo banner
+  promo_text: string;
+  promo_link: string;
 }
 
 const fontOptions = [
@@ -287,6 +290,8 @@ const defaultData: LandingPageData = {
   hero_daily_renewal_text: '',
   hero_extra_prices: [],
   hero_extra_renewals: [],
+  promo_text: '🔥 Temos contas antigas com 10k por R$215',
+  promo_link: '',
 };
 
 const LandingPageEditor = () => {
@@ -432,6 +437,8 @@ const LandingPageEditor = () => {
     hero_daily_renewal_text: draft.hero_daily_renewal_text || null,
     hero_extra_prices: draft.hero_extra_prices || [],
     hero_extra_renewals: draft.hero_extra_renewals || [],
+    promo_text: draft.promo_text || null,
+    promo_link: draft.promo_link || null,
   });
 
   // Auto-save function with debounce
@@ -669,6 +676,8 @@ const LandingPageEditor = () => {
         hero_daily_renewal_text: (page as any).hero_daily_renewal_text || '',
         hero_extra_prices: ((page as any).hero_extra_prices as { price_original: number; price_current: number; label?: string }[]) || [],
         hero_extra_renewals: ((page as any).hero_extra_renewals as { text: string }[]) || [],
+        promo_text: (page as any).promo_text || '',
+        promo_link: (page as any).promo_link || '',
       });
     } catch (error) {
       console.error('Error fetching page:', error);
@@ -1917,6 +1926,32 @@ const LandingPageEditor = () => {
                       <Plus className="w-4 h-4 mr-2" />
                       Adicionar Pacote
                     </Button>
+
+                    {/* Promo Banner */}
+                    <div className="pt-4 border-t border-border/50">
+                      <h4 className="text-sm font-semibold mb-3">Banner Promocional</h4>
+                      <p className="text-xs text-muted-foreground mb-3">Texto exibido abaixo dos pacotes (deixe vazio para ocultar)</p>
+                      <div className="space-y-3">
+                        <div className="space-y-2">
+                          <Label className="text-xs">Texto do Banner</Label>
+                          <Input
+                            value={data.promo_text}
+                            onChange={(e) => setData({ ...data, promo_text: e.target.value })}
+                            placeholder="🔥 Temos contas antigas com 10k por R$215"
+                            className="bg-background/50"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label className="text-xs">Link do Banner (URL completa)</Label>
+                          <Input
+                            value={data.promo_link}
+                            onChange={(e) => setData({ ...data, promo_link: e.target.value })}
+                            placeholder="https://wa.me/5548996029392?text=..."
+                            className="bg-background/50"
+                          />
+                        </div>
+                      </div>
+                    </div>
 
                     {/* Checkout Configuration */}
                     <div className="pt-4 border-t border-border/50">

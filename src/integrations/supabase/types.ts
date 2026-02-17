@@ -278,6 +278,8 @@ export type Database = {
           price_original: number | null
           pricing_tiers: Json | null
           product_image: string | null
+          promo_link: string | null
+          promo_text: string | null
           section_order: Json | null
           secure_purchase_items: Json | null
           slug: string
@@ -361,6 +363,8 @@ export type Database = {
           price_original?: number | null
           pricing_tiers?: Json | null
           product_image?: string | null
+          promo_link?: string | null
+          promo_text?: string | null
           section_order?: Json | null
           secure_purchase_items?: Json | null
           slug: string
@@ -444,6 +448,8 @@ export type Database = {
           price_original?: number | null
           pricing_tiers?: Json | null
           product_image?: string | null
+          promo_link?: string | null
+          promo_text?: string | null
           section_order?: Json | null
           secure_purchase_items?: Json | null
           slug?: string

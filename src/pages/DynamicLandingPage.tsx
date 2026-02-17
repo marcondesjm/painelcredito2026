@@ -1396,6 +1396,8 @@ const DynamicLandingPageInner = () => {
           setSelectedTier(tier);
           setCheckoutModalOpen(true);
         }}
+        promoText={(page as any).promo_text}
+        promoLink={(page as any).promo_link}
       />
     ),
     'features': renderFeaturesSection,
