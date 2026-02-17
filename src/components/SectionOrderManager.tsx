@@ -46,7 +46,7 @@ export const defaultSectionOrder: SectionId[] = [
   'donation',
 ];
 
-const hiddenFromManager: SectionId[] = ['checkout'];
+const hiddenFromManager: SectionId[] = [];
 
 export const SectionOrderManager = forwardRef<HTMLDivElement, SectionOrderManagerProps>(
   ({ sectionOrder, onOrderChange, disabledSections = [], onToggleSection }, ref) => {
