@@ -558,7 +558,7 @@ const LandingPageEditor = () => {
 
   // Listen for hover and click messages from preview iframe
   useEffect(() => {
-    const handleMessage = (event: MessageEvent) => {
+    const handleMessage = async (event: MessageEvent) => {
       const sectionMap: Record<string, string> = {
         'hero': 'basico',
         'pricing': 'precos',
@@ -581,11 +581,31 @@ const LandingPageEditor = () => {
           setActiveTab(tab);
         }
       }
+
+      if (event.data?.type === 'section-delete') {
+        const sectionId = event.data.section as SectionId;
+        if (sectionId === 'hero') return; // Hero cannot be deleted
+        const newOrder = data.section_order.filter(s => s !== sectionId);
+        const newData = { ...data, section_order: newOrder };
+        setData(newData);
+        if (data.id) {
+          try {
+            const payload = buildPayload(newData);
+            await supabase.from('landing_pages').update(payload).eq('id', data.id);
+            setLastSaved(new Date());
+            refreshPreview();
+            toast.success(`Seção removida com sucesso`);
+          } catch (e) {
+            console.error('Delete section error:', e);
+            toast.error('Erro ao remover seção');
+          }
+        }
+      }
     };
 
     window.addEventListener('message', handleMessage);
     return () => window.removeEventListener('message', handleMessage);
-  }, []);
+  }, [data]);
 
   useEffect(() => {
     if (!authLoading && !user) {

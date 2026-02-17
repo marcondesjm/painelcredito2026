@@ -19,7 +19,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Loader2, Star, Check, Shield, Clock, ArrowRight, MessageCircle, Zap, Headphones, UserPlus, LogOut, Menu, RefreshCw, Heart, Award, Mail, Phone, LockKeyhole, ChevronDown } from 'lucide-react';
+import { Loader2, Star, Check, Shield, Clock, ArrowRight, MessageCircle, Zap, Headphones, UserPlus, LogOut, Menu, RefreshCw, Heart, Award, Mail, Phone, LockKeyhole, ChevronDown, Trash2 } from 'lucide-react';
 import { CountdownTimer } from '@/components/CountdownTimer';
 import { SocialProofNotification } from '@/components/SocialProofNotification';
 import { WhatsAppButton } from '@/components/WhatsAppButton';
@@ -264,6 +264,27 @@ const DynamicLandingPageInner = () => {
     if (isPreview && window.parent !== window) {
       window.parent.postMessage({ type: 'section-click', section }, '*');
     }
+  };
+
+  const handleSectionDelete = (e: React.MouseEvent, section: string) => {
+    e.stopPropagation();
+    if (isPreview && window.parent !== window) {
+      window.parent.postMessage({ type: 'section-delete', section }, '*');
+    }
+  };
+
+  const SectionDeleteButton = ({ section }: { section: string }) => {
+    if (!isPreview || hoveredSection !== section || section === 'hero') return null;
+    return (
+      <button
+        onClick={(e) => handleSectionDelete(e, section)}
+        className="absolute top-3 right-3 z-50 flex items-center gap-1.5 bg-destructive text-destructive-foreground px-3 py-1.5 rounded-full text-xs font-medium shadow-lg hover:opacity-90 transition-opacity"
+        title="Remover seção"
+      >
+        <Trash2 className="w-3.5 h-3.5" />
+        Excluir
+      </button>
+    );
   };
 
   // Listen for scroll-to-section messages from parent editor
@@ -1932,7 +1953,17 @@ const DynamicLandingPageInner = () => {
       )}
 
       {/* Render sections in the configured order */}
-      {sectionOrder.map((sectionId) => sectionRenderers[sectionId]?.())}
+      {sectionOrder.map((sectionId) => {
+        const content = sectionRenderers[sectionId]?.();
+        if (!content) return null;
+        if (!isPreview || sectionId === 'hero') return content;
+        return (
+          <div key={`wrapper-${sectionId}`} className="relative">
+            <SectionDeleteButton section={sectionId} />
+            {content}
+          </div>
+        );
+      })}
 
       {/* Access Key Section (always at the end if exists) */}
       {page.access_key && (
