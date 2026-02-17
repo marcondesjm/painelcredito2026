@@ -1,4 +1,4 @@
-import { forwardRef, useState, useRef } from 'react';
+import { forwardRef, useState, useRef, useEffect, useCallback } from 'react';
 import { ChevronUp, ChevronDown, GripVertical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -116,6 +116,8 @@ export const SectionOrderManager = forwardRef<HTMLDivElement, SectionOrderManage
     const touchStartY = useRef<number>(0);
     const touchDragIndex = useRef<number | null>(null);
     const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+    const containerRef = useRef<HTMLDivElement | null>(null);
+    const overIndexRef = useRef<number | null>(null);
 
     const handleTouchStart = (index: number, e: React.TouchEvent) => {
       touchStartY.current = e.touches[0].clientY;
@@ -123,30 +125,31 @@ export const SectionOrderManager = forwardRef<HTMLDivElement, SectionOrderManage
       setDragIndex(index);
     };
 
-    const handleTouchMove = (e: React.TouchEvent) => {
+    const handleTouchMoveCallback = useCallback((e: TouchEvent) => {
       if (touchDragIndex.current === null) return;
       e.preventDefault();
       const touchY = e.touches[0].clientY;
 
-      // Find which item we're over
       for (let i = 0; i < itemRefs.current.length; i++) {
         const el = itemRefs.current[i];
         if (!el) continue;
         const rect = el.getBoundingClientRect();
         if (touchY >= rect.top && touchY <= rect.bottom) {
           if (i !== touchDragIndex.current) {
+            overIndexRef.current = i;
             setOverIndex(i);
           }
           break;
         }
       }
-    };
+    }, []);
 
     const handleTouchEnd = () => {
-      if (touchDragIndex.current !== null && overIndex !== null && touchDragIndex.current !== overIndex) {
+      const currentOver = overIndexRef.current;
+      if (touchDragIndex.current !== null && currentOver !== null && touchDragIndex.current !== currentOver) {
         const newVisible = [...visibleSections];
         const [moved] = newVisible.splice(touchDragIndex.current, 1);
-        newVisible.splice(overIndex, 0, moved);
+        newVisible.splice(currentOver, 0, moved);
         
         const hiddenItems = sectionOrder.filter(id => hiddenFromManager.includes(id));
         onOrderChange([...newVisible, ...hiddenItems]);
@@ -154,8 +157,19 @@ export const SectionOrderManager = forwardRef<HTMLDivElement, SectionOrderManage
       
       setDragIndex(null);
       setOverIndex(null);
+      overIndexRef.current = null;
       touchDragIndex.current = null;
     };
+
+    // Attach non-passive touchmove to container
+    useEffect(() => {
+      const container = containerRef.current;
+      if (!container) return;
+      container.addEventListener('touchmove', handleTouchMoveCallback, { passive: false });
+      return () => {
+        container.removeEventListener('touchmove', handleTouchMoveCallback);
+      };
+    }, [handleTouchMoveCallback]);
 
     return (
       <Card ref={ref} className="bg-card/50">
@@ -163,7 +177,7 @@ export const SectionOrderManager = forwardRef<HTMLDivElement, SectionOrderManage
           <CardTitle className="text-lg">Ordem das Seções</CardTitle>
           <CardDescription>Arraste ou use as setas para reorganizar</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-2">
+        <CardContent className="space-y-2" ref={containerRef}>
           {visibleSections.map((sectionId, index) => (
             <div
               key={sectionId}
@@ -174,7 +188,6 @@ export const SectionOrderManager = forwardRef<HTMLDivElement, SectionOrderManage
               onDragEnd={handleDragEnd}
               onDragLeave={handleDragLeave}
               onTouchStart={(e) => handleTouchStart(index, e)}
-              onTouchMove={handleTouchMove}
               onTouchEnd={handleTouchEnd}
               className={`flex items-center gap-2 p-3 bg-background/50 rounded-lg border transition-all cursor-grab active:cursor-grabbing select-none ${
                 overIndex === index && dragIndex !== null
