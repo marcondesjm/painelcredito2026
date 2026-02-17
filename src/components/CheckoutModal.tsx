@@ -912,18 +912,16 @@ ${cupomText}
                 <p className="text-xs text-muted-foreground">
                   Problemas com o pagamento? Fale com nosso suporte
                 </p>
-                {whatsappNumber && (
-                  <a
-                    href={`https://wa.me/${whatsappNumber.replace(/\D/g, '')}?text=${encodeURIComponent('Olá! Estou com um problema no pagamento e preciso de ajuda.')}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all hover:scale-105"
-                    style={{ backgroundColor: '#25D366', color: '#fff' }}
-                  >
-                    <Phone className="w-4 h-4" />
-                    Suporte via WhatsApp
-                  </a>
-                )}
+                <a
+                  href={`https://wa.me/${(whatsappNumber?.replace(/\D/g, '')) || '5548996029392'}?text=${encodeURIComponent('Olá! Estou com um problema no pagamento e preciso de ajuda.')}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all hover:scale-105"
+                  style={{ backgroundColor: '#25D366', color: '#fff' }}
+                >
+                  <Phone className="w-4 h-4" />
+                  Suporte via WhatsApp
+                </a>
               </div>
 
               {/* Back button */}
