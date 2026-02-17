@@ -341,8 +341,38 @@ const AdminDashboard = () => {
   const handleDeleteUser = async () => {
     if (!deleteUserId) return;
 
-    toast.error('Exclusão de usuários requer acesso direto ao banco de dados por segurança.');
-    setDeleteUserId(null);
+    // Protect main admin
+    if (deleteUserId === '1633e23a-6a48-42b7-92cf-21cd3ec33ca4') {
+      toast.error('Não é permitido excluir a conta do administrador principal');
+      setDeleteUserId(null);
+      return;
+    }
+
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const res = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/admin-delete-user`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${session?.access_token}`,
+          },
+          body: JSON.stringify({ user_id: deleteUserId }),
+        }
+      );
+
+      const result = await res.json();
+      if (!res.ok) throw new Error(result.error || 'Erro ao excluir usuário');
+
+      toast.success('Usuário excluído com sucesso!');
+      setDeleteUserId(null);
+      await fetchData();
+    } catch (error: any) {
+      console.error('Error deleting user:', error);
+      toast.error(error.message || 'Erro ao excluir usuário');
+      setDeleteUserId(null);
+    }
   };
 
   const handleDeleteOrder = async (orderId: string) => {
