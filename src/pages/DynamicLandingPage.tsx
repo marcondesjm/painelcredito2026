@@ -1555,6 +1555,17 @@ const DynamicLandingPageInner = () => {
                 </Button>
               )}
               <Button 
+                variant="accent" 
+                size="sm"
+                className="glow-accent"
+                onClick={() => {
+                  const el = document.getElementById('pacotes');
+                  el?.scrollIntoView({ behavior: 'smooth' });
+                }}
+              >
+                Compra de Créditos
+              </Button>
+              <Button 
                 variant="ghost" 
                 size="sm" 
                 className="text-muted-foreground hover:text-foreground"
@@ -1618,6 +1629,16 @@ const DynamicLandingPageInner = () => {
                       Criar conta
                     </Button>
                   )}
+                  <Button 
+                    variant="accent" 
+                    className="w-full glow-accent"
+                    onClick={() => {
+                      const el = document.getElementById('pacotes');
+                      el?.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                  >
+                    Compra de Créditos
+                  </Button>
                   <Button 
                     variant="ghost" 
                     className="w-full justify-start text-muted-foreground hover:text-foreground"
