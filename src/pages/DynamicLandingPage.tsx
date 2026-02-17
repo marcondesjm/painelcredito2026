@@ -30,7 +30,7 @@ import { APP_VERSION, LAST_UPDATE } from '@/config/version';
 import backgroundHero from '@/assets/background-hero.png';
 import dashboardMockup from '@/assets/dashboard-mockup.png';
 
-type SectionId = 'hero' | 'video' | 'features' | 'about' | 'how-it-works' | 'secure-purchase' | 'testimonials' | 'faq' | 'cta' | 'donation' | 'pacotes' | 'recharge-info';
+type SectionId = 'hero' | 'video' | 'features' | 'about' | 'how-it-works' | 'secure-purchase' | 'testimonials' | 'faq' | 'cta' | 'donation' | 'pacotes' | 'recharge-info' | 'why-choose';
 
 const defaultSectionOrder: SectionId[] = [
   'hero',
@@ -38,6 +38,7 @@ const defaultSectionOrder: SectionId[] = [
   'pacotes',
   'recharge-info',
   'features',
+  'why-choose',
   'about',
   'how-it-works',
   'secure-purchase',
@@ -123,6 +124,7 @@ interface LandingPageData {
   hero_extra_prices: { price_original: number; price_current: number; label?: string }[] | null;
   hero_extra_renewals: { text: string }[] | null;
   custom_package_options: { credits: number; price: number; bonus_credits?: number }[] | null;
+  why_choose_items: string[] | null;
 }
 
 type BoundaryState = {
@@ -1436,6 +1438,34 @@ const DynamicLandingPageInner = () => {
     ),
     'recharge-info': () => <RechargeInfoSection />,
     'features': renderFeaturesSection,
+    'why-choose': () => {
+      const items = (page.why_choose_items as string[]) || [];
+      if (items.length === 0) return null;
+      return (
+        <section key="why-choose" className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 relative">
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-8 sm:mb-12">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4" style={{ fontFamily: fontHeading }}>
+                Por que <span style={{ color: page.color_text_highlight || '#a855f7' }}>escolher</span> o painel?
+              </h2>
+              <p className="text-sm sm:text-base text-muted-foreground max-w-xl mx-auto px-2">
+                Tudo que você precisa para usar a Lovable sem preocupações.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+              {items.map((text, idx) => (
+                <div key={idx} className="flex items-center gap-2 sm:gap-3 bg-card/50 backdrop-blur-sm border border-border/50 rounded-full px-3 sm:px-5 py-2 sm:py-3">
+                  <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: page.color_primary || '#8B5CF6' }}>
+                    <Check className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
+                  </div>
+                  <span className="text-xs sm:text-sm" style={{ color: page.color_text || '#ffffff' }}>{text}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      );
+    },
     'about': renderAboutSection,
     'how-it-works': renderHowItWorksSection,
     'secure-purchase': renderSecurePurchaseSection,

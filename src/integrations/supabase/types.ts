@@ -299,6 +299,7 @@ export type Database = {
           video_url: string | null
           whatsapp_message: string | null
           whatsapp_number: string | null
+          why_choose_items: Json | null
         }
         Insert: {
           about_description?: string | null
@@ -385,6 +386,7 @@ export type Database = {
           video_url?: string | null
           whatsapp_message?: string | null
           whatsapp_number?: string | null
+          why_choose_items?: Json | null
         }
         Update: {
           about_description?: string | null
@@ -471,6 +473,7 @@ export type Database = {
           video_url?: string | null
           whatsapp_message?: string | null
           whatsapp_number?: string | null
+          why_choose_items?: Json | null
         }
         Relationships: []
       }
