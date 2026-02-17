@@ -130,12 +130,29 @@ function isValidEVP(key: string): boolean {
 function getPixKeyType(key: string): 'CPF' | 'CNPJ' | 'PHONE' | 'EMAIL' | 'EVP' {
   const cleanKey = key.replace(/\D/g, '');
   
+  // Phone with + prefix is always phone
+  if (key.startsWith('+')) {
+    return 'PHONE';
+  }
+  
   if (/^\d{11}$/.test(cleanKey)) {
-    // Pode ser CPF ou telefone
-    if (key.includes('+') || key.startsWith('55')) {
+    // 11 digits: could be CPF or phone. Check if valid CPF first.
+    if (isValidCPF(cleanKey)) {
+      return 'CPF';
+    }
+    // If not a valid CPF, treat as phone
+    return 'PHONE';
+  }
+  
+  if (/^\d{10}$/.test(cleanKey)) {
+    return 'PHONE';
+  }
+  
+  if (/^\d{12,13}$/.test(cleanKey)) {
+    // 12-13 digits starting with 55 = phone with country code
+    if (cleanKey.startsWith('55')) {
       return 'PHONE';
     }
-    return 'CPF';
   }
   
   if (/^\d{14}$/.test(cleanKey)) {
