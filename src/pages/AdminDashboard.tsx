@@ -429,6 +429,27 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleTogglePublish = async (pageId: string, currentlyPublished: boolean) => {
+    try {
+      const { error } = await supabase
+        .from('landing_pages')
+        .update({ is_published: !currentlyPublished })
+        .eq('id', pageId);
+
+      if (error) throw error;
+
+      setPages(prev => prev.map(p => p.id === pageId ? { ...p, is_published: !currentlyPublished } : p));
+      setStats(prev => ({
+        ...prev,
+        publishedPages: prev.publishedPages + (currentlyPublished ? -1 : 1)
+      }));
+      toast.success(currentlyPublished ? 'Página despublicada' : 'Página aprovada e publicada!');
+    } catch (error: any) {
+      console.error('Error toggling publish:', error);
+      toast.error('Erro ao alterar status da página');
+    }
+  };
+
   const handleUpdateOrderStatus = async (orderId: string, newStatus: string) => {
     try {
       const { error } = await supabase
@@ -1141,6 +1162,27 @@ const AdminDashboard = () => {
                             </TableCell>
                             <TableCell>
                               <div className="flex items-center gap-1">
+                                {!page.is_published ? (
+                                  <Button 
+                                    variant="ghost" 
+                                    size="sm"
+                                    onClick={() => handleTogglePublish(page.id, false)}
+                                    className="text-green-400 hover:text-green-300"
+                                    title="Aprovar e publicar"
+                                  >
+                                    <CheckCircle className="w-4 h-4" />
+                                  </Button>
+                                ) : (
+                                  <Button 
+                                    variant="ghost" 
+                                    size="sm"
+                                    onClick={() => handleTogglePublish(page.id, true)}
+                                    className="text-yellow-400 hover:text-yellow-300"
+                                    title="Despublicar"
+                                  >
+                                    <XCircle className="w-4 h-4" />
+                                  </Button>
+                                )}
                                 {page.is_published && (
                                   <Button 
                                     variant="ghost" 
