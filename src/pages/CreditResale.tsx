@@ -2,7 +2,8 @@ import { useState, useMemo, useEffect, useRef } from 'react';
 import { Slider } from '@/components/ui/slider';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Zap, Wallet, X, Copy, Check, AlertTriangle, Clock, Loader2 } from 'lucide-react';
+import { Label } from '@/components/ui/label';
+import { Zap, Wallet, X, Copy, Check, AlertTriangle, Clock, Loader2, Send, Upload, User, Phone, CreditCard } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { generatePixQRCode } from '@/lib/pix';
 import { toast } from 'sonner';
@@ -51,8 +52,15 @@ const CreditResale = () => {
   const [copied, setCopied] = useState(false);
   const [userBalance, setUserBalance] = useState(0);
   const [insufficientInfo, setInsufficientInfo] = useState<{ needed: number; credits: number } | null>(null);
-  const [pixTimer, setPixTimer] = useState(600); // 10 min countdown
+  const [pixTimer, setPixTimer] = useState(600);
+  const [showConfirmForm, setShowConfirmForm] = useState(false);
+  const [confirmName, setConfirmName] = useState('');
+  const [confirmCpf, setConfirmCpf] = useState('');
+  const [confirmPhone, setConfirmPhone] = useState('');
+  const [confirmReceipt, setConfirmReceipt] = useState<File | null>(null);
+  const [adminWhatsapp, setAdminWhatsapp] = useState('5548996029392');
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
   const { user } = useAuth();
 
@@ -88,6 +96,65 @@ const CreditResale = () => {
     };
     fetchBalance();
   }, [user]);
+
+  // Fetch admin whatsapp
+  useEffect(() => {
+    const fetchWhatsapp = async () => {
+      const { data } = await supabase
+        .from('app_settings')
+        .select('value')
+        .eq('key', 'whatsapp_number')
+        .maybeSingle();
+      if (data?.value) setAdminWhatsapp(data.value);
+    };
+    fetchWhatsapp();
+  }, []);
+
+  const formatCpf = (value: string) => {
+    const digits = value.replace(/\D/g, '').slice(0, 11);
+    if (digits.length <= 3) return digits;
+    if (digits.length <= 6) return `${digits.slice(0, 3)}.${digits.slice(3)}`;
+    if (digits.length <= 9) return `${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6)}`;
+    return `${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6, 9)}-${digits.slice(9)}`;
+  };
+
+  const formatPhoneInput = (value: string) => {
+    const digits = value.replace(/\D/g, '').slice(0, 11);
+    if (digits.length <= 2) return `(${digits}`;
+    if (digits.length <= 7) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+    return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+  };
+
+  const handleSendConfirmation = () => {
+    if (!confirmName.trim() || !confirmCpf.trim() || !confirmPhone.trim()) {
+      toast.error('Preencha todos os campos obrigatórios.');
+      return;
+    }
+
+    const message = `✅ *CONFIRMAÇÃO DE PAGAMENTO PIX*
+
+💰 *Valor:* R$ ${formatCurrency(balanceAmount)}
+
+👤 *Dados do pagador:*
+• Nome: ${confirmName.trim()}
+• CPF: ${confirmCpf.trim()}
+• Celular: ${confirmPhone.trim()}
+
+${confirmReceipt ? '📎 *Comprovante:* Será enviado em seguida' : '📎 *Comprovante:* Não anexado'}
+
+📅 *Data:* ${new Date().toLocaleDateString('pt-BR')} às ${new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`;
+
+    const whatsappUrl = `https://wa.me/${adminWhatsapp}?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+    
+    toast.success('Redirecionando para o WhatsApp...');
+    setShowConfirmForm(false);
+    setConfirmName('');
+    setConfirmCpf('');
+    setConfirmPhone('');
+    setConfirmReceipt(null);
+    closeBalanceModal();
+  };
 
   const price = useMemo(() => calculatePrice(credits), [credits]);
   const ratePer100 = useMemo(() => (price / credits) * 100, [price, credits]);
@@ -375,19 +442,112 @@ const CreditResale = () => {
                   </p>
                 </div>
 
-                {/* Confirm payment button */}
-                <Button
-                  variant="outline"
-                  className="w-full font-bold border-accent text-accent hover:bg-accent/10"
-                  size="lg"
-                  onClick={() => {
-                    toast.success('Pagamento confirmado! Aguarde o admin creditar seu saldo.');
-                    closeBalanceModal();
-                  }}
-                >
-                  <Check className="w-4 h-4" />
-                  Já fiz o pagamento
-                </Button>
+                {/* Confirm payment button / form */}
+                {!showConfirmForm ? (
+                  <Button
+                    variant="outline"
+                    className="w-full font-bold border-accent text-accent hover:bg-accent/10"
+                    size="lg"
+                    onClick={() => setShowConfirmForm(true)}
+                  >
+                    <Check className="w-4 h-4" />
+                    Já fiz o pagamento
+                  </Button>
+                ) : (
+                  <div className="space-y-3 bg-background/50 rounded-xl border border-border/50 p-4">
+                    <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
+                      <Send className="w-4 h-4 text-primary" />
+                      Confirmar Pagamento
+                    </h4>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="confirm-name" className="text-xs flex items-center gap-1.5">
+                        <User className="w-3 h-3" /> Nome completo *
+                      </Label>
+                      <Input
+                        id="confirm-name"
+                        placeholder="Seu nome completo"
+                        value={confirmName}
+                        onChange={(e) => setConfirmName(e.target.value)}
+                        className="bg-background/50 h-9 text-sm"
+                        maxLength={100}
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="confirm-cpf" className="text-xs flex items-center gap-1.5">
+                        <CreditCard className="w-3 h-3" /> CPF *
+                      </Label>
+                      <Input
+                        id="confirm-cpf"
+                        placeholder="000.000.000-00"
+                        value={confirmCpf}
+                        onChange={(e) => setConfirmCpf(formatCpf(e.target.value))}
+                        className="bg-background/50 h-9 text-sm"
+                        maxLength={14}
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="confirm-phone" className="text-xs flex items-center gap-1.5">
+                        <Phone className="w-3 h-3" /> Celular *
+                      </Label>
+                      <Input
+                        id="confirm-phone"
+                        placeholder="(00) 00000-0000"
+                        value={confirmPhone}
+                        onChange={(e) => setConfirmPhone(formatPhoneInput(e.target.value))}
+                        className="bg-background/50 h-9 text-sm"
+                        maxLength={15}
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="confirm-receipt" className="text-xs flex items-center gap-1.5">
+                        <Upload className="w-3 h-3" /> Comprovante (opcional)
+                      </Label>
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        id="confirm-receipt"
+                        accept="image/*,.pdf"
+                        className="hidden"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) setConfirmReceipt(file);
+                        }}
+                      />
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="w-full text-xs h-9 gap-2"
+                        onClick={() => fileInputRef.current?.click()}
+                      >
+                        <Upload className="w-3 h-3" />
+                        {confirmReceipt ? confirmReceipt.name : 'Anexar comprovante'}
+                      </Button>
+                    </div>
+
+                    <div className="flex gap-2 pt-1">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="flex-1 h-9 text-xs"
+                        onClick={() => setShowConfirmForm(false)}
+                      >
+                        Voltar
+                      </Button>
+                      <Button
+                        size="sm"
+                        className="flex-1 h-9 text-xs font-bold gap-1.5 bg-accent hover:bg-accent/90 text-accent-foreground"
+                        onClick={handleSendConfirmation}
+                      >
+                        <Send className="w-3 h-3" />
+                        Enviar via WhatsApp
+                      </Button>
+                    </div>
+                  </div>
+                )}
                 <p className="text-xs text-muted-foreground">
                   Após confirmar, o saldo será adicionado pelo administrador.
                 </p>
