@@ -324,6 +324,122 @@ export const HomepageEditor = () => {
                 </div>
               </div>
 
+              {/* Extra Prices */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <Label className="text-base font-semibold">Preços Extras (exibidos abaixo do principal)</Label>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setHero({
+                      ...hero,
+                      extra_prices: [...(hero.extra_prices || []), { price_original: 0, price_current: 0, label: '' }]
+                    })}
+                  >
+                    + Adicionar Preço
+                  </Button>
+                </div>
+                {(hero.extra_prices || []).map((ep, idx) => (
+                  <div key={idx} className="grid gap-3 md:grid-cols-4 items-end bg-muted/30 p-3 rounded-lg">
+                    <div className="space-y-1">
+                      <Label className="text-xs">Rótulo (opcional)</Label>
+                      <Input
+                        value={ep.label || ''}
+                        onChange={(e) => {
+                          const arr = [...(hero.extra_prices || [])];
+                          arr[idx] = { ...arr[idx], label: e.target.value };
+                          setHero({ ...hero, extra_prices: arr });
+                        }}
+                        placeholder="Ex: Plano Mensal"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <Label className="text-xs">Preço Original</Label>
+                      <Input
+                        type="number"
+                        step="0.01"
+                        value={ep.price_original}
+                        onChange={(e) => {
+                          const arr = [...(hero.extra_prices || [])];
+                          arr[idx] = { ...arr[idx], price_original: Number(e.target.value) };
+                          setHero({ ...hero, extra_prices: arr });
+                        }}
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <Label className="text-xs">Preço Atual</Label>
+                      <Input
+                        type="number"
+                        step="0.01"
+                        value={ep.price_current}
+                        onChange={(e) => {
+                          const arr = [...(hero.extra_prices || [])];
+                          arr[idx] = { ...arr[idx], price_current: Number(e.target.value) };
+                          setHero({ ...hero, extra_prices: arr });
+                        }}
+                      />
+                    </div>
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => {
+                        const arr = (hero.extra_prices || []).filter((_, i) => i !== idx);
+                        setHero({ ...hero, extra_prices: arr });
+                      }}
+                    >
+                      Remover
+                    </Button>
+                  </div>
+                ))}
+              </div>
+
+              {/* Extra Renewals */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <Label className="text-base font-semibold">Renovações Extras</Label>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setHero({
+                      ...hero,
+                      extra_renewals: [...(hero.extra_renewals || []), { text: '' }]
+                    })}
+                  >
+                    + Adicionar Renovação
+                  </Button>
+                </div>
+                {(hero.extra_renewals || []).map((er, idx) => (
+                  <div key={idx} className="flex gap-3 items-end">
+                    <div className="flex-1 space-y-1">
+                      <Label className="text-xs">Texto da Renovação</Label>
+                      <Input
+                        value={er.text}
+                        onChange={(e) => {
+                          const arr = [...(hero.extra_renewals || [])];
+                          arr[idx] = { ...arr[idx], text: e.target.value };
+                          setHero({ ...hero, extra_renewals: arr });
+                        }}
+                        placeholder="🔄 Renovação diária de 10k créditos!"
+                      />
+                    </div>
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => {
+                        const arr = (hero.extra_renewals || []).filter((_, i) => i !== idx);
+                        setHero({ ...hero, extra_renewals: arr });
+                      }}
+                    >
+                      Remover
+                    </Button>
+                  </div>
+                ))}
+              </div>
+
               <div className="bg-muted/50 p-4 rounded-lg">
                 <p className="text-sm text-muted-foreground mb-2">Preview:</p>
                 <div className="flex items-center gap-3 flex-wrap">
@@ -335,6 +451,13 @@ export const HomepageEditor = () => {
                     </span>
                   )}
                 </div>
+                {(hero.extra_prices || []).map((ep, idx) => (
+                  <div key={idx} className="flex items-center gap-3 flex-wrap mt-2">
+                    {ep.label && <span className="text-xs text-muted-foreground">{ep.label}:</span>}
+                    <span className="text-muted-foreground line-through text-sm">{formatPrice(ep.price_original)}</span>
+                    <span className="text-lg font-bold text-accent">{formatPrice(ep.price_current)}</span>
+                  </div>
+                ))}
               </div>
 
               <Button onClick={handleSaveHero} disabled={saving} className="w-full">

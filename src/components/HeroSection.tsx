@@ -51,7 +51,7 @@ export const HeroSection = () => {
               })()}
             </p>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 sm:gap-4 mb-4 sm:mb-6">
+            <div className="flex flex-col items-center lg:items-start gap-2 mb-4 sm:mb-6">
               <div className="flex items-baseline gap-2 sm:gap-3 flex-wrap justify-center lg:justify-start">
                 <span className="text-lg sm:text-xl text-muted-foreground line-through">
                   {formatPrice(hero.price_original)}
@@ -65,17 +65,46 @@ export const HeroSection = () => {
                   </span>
                 )}
               </div>
+              {/* Extra price lines */}
+              {(hero.extra_prices || []).filter(ep => ep.price_current > 0).map((ep, idx) => (
+                <div key={idx} className="flex items-baseline gap-2 sm:gap-3 flex-wrap justify-center lg:justify-start">
+                  {ep.label && <span className="text-xs text-muted-foreground">{ep.label}</span>}
+                  {ep.price_original > 0 && (
+                    <span className="text-sm sm:text-base text-muted-foreground line-through">
+                      {formatPrice(ep.price_original)}
+                    </span>
+                  )}
+                  <span className="text-xl sm:text-2xl font-bold text-accent">
+                    {formatPrice(ep.price_current)}
+                  </span>
+                  {ep.price_original > ep.price_current && (
+                    <span className="bg-accent/20 text-accent text-xs font-bold px-2 py-1 rounded">
+                      {t('hero.savings')} {Math.round(((ep.price_original - ep.price_current) / ep.price_original) * 100)}%
+                    </span>
+                  )}
+                </div>
+              ))}
             </div>
 
-            {/* Daily renewal highlight */}
-            {hero.daily_renewal_text && (
-              <div className="flex justify-center lg:justify-start mb-4">
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-primary/30 bg-primary/10 backdrop-blur-sm animate-pulse">
-                  <RefreshCw className="w-4 h-4 text-primary" />
-                  <span className="text-sm sm:text-base font-bold text-primary">
-                    {hero.daily_renewal_text}
-                  </span>
-                </div>
+            {/* Daily renewal highlights */}
+            {(hero.daily_renewal_text || (hero.extra_renewals && hero.extra_renewals.length > 0)) && (
+              <div className="flex flex-col items-center lg:items-start gap-2 mb-4">
+                {hero.daily_renewal_text && (
+                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-primary/30 bg-primary/10 backdrop-blur-sm animate-pulse">
+                    <RefreshCw className="w-4 h-4 text-primary" />
+                    <span className="text-sm sm:text-base font-bold text-primary">
+                      {hero.daily_renewal_text}
+                    </span>
+                  </div>
+                )}
+                {(hero.extra_renewals || []).filter(er => er.text).map((er, idx) => (
+                  <div key={idx} className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-primary/30 bg-primary/10 backdrop-blur-sm animate-pulse">
+                    <RefreshCw className="w-4 h-4 text-primary" />
+                    <span className="text-sm sm:text-base font-bold text-primary">
+                      {er.text}
+                    </span>
+                  </div>
+                ))}
               </div>
             )}
 
