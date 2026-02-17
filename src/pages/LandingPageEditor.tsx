@@ -702,11 +702,7 @@ const LandingPageEditor = () => {
         google_analytics: (page as any).google_analytics || '',
         google_tag_manager: (page as any).google_tag_manager || '',
         tiktok_pixel: (page as any).tiktok_pixel || '',
-        section_order: (() => {
-          const stored = (page.section_order as SectionId[]) || defaultSectionOrder;
-          const missing = defaultSectionOrder.filter(s => !stored.includes(s));
-          return missing.length > 0 ? [...stored, ...missing] : stored;
-        })(),
+        section_order: (page.section_order as SectionId[]) || defaultSectionOrder,
         hero_title_highlight: (page as any).hero_title_highlight || '',
         hero_badge_text: (page as any).hero_badge_text || 'Oferta Limitada',
         hero_daily_renewal_text: (page as any).hero_daily_renewal_text || '',
