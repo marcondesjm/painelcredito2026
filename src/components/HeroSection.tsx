@@ -5,18 +5,13 @@ import { Zap, Shield, Headphones, ChevronDown, RefreshCw } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import productPainel from '@/assets/product-painel.png';
 import { useHomepageSettings } from '@/hooks/useHomepageSettings';
-import { useAppSettings } from '@/hooks/useAppSettings';
 import { useLanguage } from '@/hooks/useLanguage';
 
 export const HeroSection = () => {
   const navigate = useNavigate();
   const { settings } = useHomepageSettings();
-  const { settings: appSettings } = useAppSettings();
   const { hero } = settings;
   const { t, language } = useLanguage();
-
-  const whatsappNumber = appSettings.whatsapp_number || settings.whatsapp_number || '5548996029392';
-  const whatsappUrl = `https://wa.me/${whatsappNumber}`;
 
   const BRL_TO_USD_RATE = 0.18;
 
@@ -73,12 +68,12 @@ export const HeroSection = () => {
                   )}
                 </div>
                 {hero.daily_renewal_text && (
-                  <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-primary/30 bg-primary/10 backdrop-blur-sm animate-pulse hover:bg-primary/20 transition-colors cursor-pointer">
+                  <div onClick={() => navigate('/checkout')} className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-primary/30 bg-primary/10 backdrop-blur-sm animate-pulse hover:bg-primary/20 transition-colors cursor-pointer">
                     <RefreshCw className="w-4 h-4 text-primary" />
                     <span className="text-sm sm:text-base font-bold text-primary">
                       {hero.daily_renewal_text}
                     </span>
-                  </a>
+                  </div>
                 )}
               </div>
 
@@ -104,12 +99,12 @@ export const HeroSection = () => {
                       )}
                     </div>
                     {extraRenewal?.text && (
-                      <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-primary/30 bg-primary/10 backdrop-blur-sm animate-pulse hover:bg-primary/20 transition-colors cursor-pointer">
+                      <div onClick={() => navigate('/checkout')} className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-primary/30 bg-primary/10 backdrop-blur-sm animate-pulse hover:bg-primary/20 transition-colors cursor-pointer">
                         <RefreshCw className="w-4 h-4 text-primary" />
                         <span className="text-sm sm:text-base font-bold text-primary">
                           {extraRenewal.text}
                         </span>
-                      </a>
+                      </div>
                     )}
                   </div>
                 );
