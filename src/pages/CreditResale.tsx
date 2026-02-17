@@ -346,7 +346,7 @@ ${confirmReceipt ? '📎 *Comprovante:* Será enviado em seguida' : '📎 *Compr
       {/* Add Balance Modal */}
       {showBalanceModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-          <div className="w-full max-w-sm rounded-2xl border border-border bg-card p-6 space-y-5 relative">
+          <div className="w-full max-w-sm max-h-[90vh] overflow-y-auto rounded-2xl border border-border bg-card p-6 space-y-5 relative">
             <button
               onClick={closeBalanceModal}
               className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors"
