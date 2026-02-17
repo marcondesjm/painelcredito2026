@@ -214,30 +214,22 @@ export const HomepageEditor = () => {
                   <Label className="text-sm font-medium">{label}</Label>
                   <Switch
                     checked={sectionsVisibility[key]}
-                    onCheckedChange={(checked) =>
-                      setSectionsVisibility({ ...sectionsVisibility, [key]: checked })
-                    }
+                    onCheckedChange={async (checked) => {
+                      const updated = { ...sectionsVisibility, [key]: checked };
+                      setSectionsVisibility(updated);
+                      const result = await updateSetting('sections_visibility', updated);
+                      if (result.success) {
+                        toast.success(`${label} ${checked ? 'ativado' : 'desativado'}!`);
+                      } else {
+                        toast.error('Erro ao salvar');
+                        setSectionsVisibility(sectionsVisibility);
+                      }
+                    }}
                   />
                 </div>
               ))}
 
-              <Button
-                onClick={async () => {
-                  setSaving(true);
-                  const result = await updateSetting('sections_visibility', sectionsVisibility);
-                  if (result.success) {
-                    toast.success('Visibilidade das seções salva!');
-                  } else {
-                    toast.error('Erro ao salvar: ' + result.error);
-                  }
-                  setSaving(false);
-                }}
-                disabled={saving}
-                className="w-full"
-              >
-                {saving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
-                Salvar Visibilidade
-              </Button>
+
             </CardContent>
           </Card>
         </TabsContent>
