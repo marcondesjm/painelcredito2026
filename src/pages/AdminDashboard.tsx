@@ -1183,16 +1183,14 @@ const AdminDashboard = () => {
                                     <XCircle className="w-4 h-4" />
                                   </Button>
                                 )}
-                                {page.is_published && (
-                                  <Button 
-                                    variant="ghost" 
-                                    size="sm"
-                                    onClick={() => window.open(`/p/${page.slug}`, '_blank')}
-                                    title="Visualizar página"
-                                  >
-                                    <Eye className="w-4 h-4" />
-                                  </Button>
-                                )}
+                                <Button 
+                                  variant="ghost" 
+                                  size="sm"
+                                  onClick={() => window.open(`/p/${page.slug}?preview=true`, '_blank')}
+                                  title="Visualizar página"
+                                >
+                                  <Eye className="w-4 h-4" />
+                                </Button>
                                 <Button 
                                   variant="ghost" 
                                   size="sm"
