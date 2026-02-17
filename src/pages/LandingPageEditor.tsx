@@ -97,6 +97,12 @@ interface LandingPageData {
   pix_key: string;
   pix_name: string;
   pix_qr_base: string;
+  // Hero advanced fields
+  hero_title_highlight: string;
+  hero_badge_text: string;
+  hero_daily_renewal_text: string;
+  hero_extra_prices: { price_original: number; price_current: number; label?: string }[];
+  hero_extra_renewals: { text: string }[];
 }
 
 const fontOptions = [
@@ -275,6 +281,12 @@ const defaultData: LandingPageData = {
   pix_key: '',
   pix_name: '',
   pix_qr_base: '',
+  // Hero advanced fields
+  hero_title_highlight: '',
+  hero_badge_text: 'Oferta Limitada',
+  hero_daily_renewal_text: '',
+  hero_extra_prices: [],
+  hero_extra_renewals: [],
 };
 
 const LandingPageEditor = () => {
@@ -414,6 +426,12 @@ const LandingPageEditor = () => {
     pix_key: draft.pix_key || null,
     pix_name: draft.pix_name || null,
     pix_qr_base: draft.pix_qr_base || null,
+    // Hero advanced fields
+    hero_title_highlight: draft.hero_title_highlight || null,
+    hero_badge_text: draft.hero_badge_text || 'Oferta Limitada',
+    hero_daily_renewal_text: draft.hero_daily_renewal_text || null,
+    hero_extra_prices: draft.hero_extra_prices || [],
+    hero_extra_renewals: draft.hero_extra_renewals || [],
   });
 
   // Auto-save function with debounce
@@ -646,6 +664,11 @@ const LandingPageEditor = () => {
         google_tag_manager: (page as any).google_tag_manager || '',
         tiktok_pixel: (page as any).tiktok_pixel || '',
         section_order: (page.section_order as SectionId[]) || defaultSectionOrder,
+        hero_title_highlight: (page as any).hero_title_highlight || '',
+        hero_badge_text: (page as any).hero_badge_text || 'Oferta Limitada',
+        hero_daily_renewal_text: (page as any).hero_daily_renewal_text || '',
+        hero_extra_prices: ((page as any).hero_extra_prices as { price_original: number; price_current: number; label?: string }[]) || [],
+        hero_extra_renewals: ((page as any).hero_extra_renewals as { text: string }[]) || [],
       });
     } catch (error) {
       console.error('Error fetching page:', error);
@@ -1367,12 +1390,23 @@ const LandingPageEditor = () => {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="hero_title" className="text-sm">Título do Hero</Label>
+                      <Label htmlFor="hero_title" className="text-sm">Título Principal</Label>
                       <Input
                         id="hero_title"
                         value={data.hero_title}
                         onChange={(e) => setData({ ...data, hero_title: e.target.value })}
-                        placeholder="Créditos Lovable Ilimitados"
+                        placeholder="Créditos Infinitos na Lovable."
+                        className="bg-background/50"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="hero_title_highlight" className="text-sm">Título em Destaque (Gradiente)</Label>
+                      <Input
+                        id="hero_title_highlight"
+                        value={data.hero_title_highlight}
+                        onChange={(e) => setData({ ...data, hero_title_highlight: e.target.value })}
+                        placeholder="Simples. Rápido. Automático."
                         className="bg-background/50"
                       />
                     </div>
@@ -1385,32 +1419,209 @@ const LandingPageEditor = () => {
                         onChange={(e) => setData({ ...data, hero_subtitle: e.target.value })}
                         placeholder="Acesse o painel gerador..."
                         className="bg-background/50"
-                        rows={2}
+                        rows={3}
                       />
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                       <div className="space-y-2">
-                        <Label htmlFor="hero_cta_text" className="text-sm">Texto CTA</Label>
+                        <Label className="text-sm">Preço Original (De)</Label>
                         <Input
-                          id="hero_cta_text"
+                          type="number"
+                          step="0.01"
+                          value={data.price_original || ''}
+                          onChange={(e) => setData({ ...data, price_original: e.target.value ? Number(e.target.value) : null })}
+                          placeholder="600"
+                          className="bg-background/50"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-sm">Preço Atual (Por)</Label>
+                        <Input
+                          type="number"
+                          step="0.01"
+                          value={data.price_current || ''}
+                          onChange={(e) => setData({ ...data, price_current: e.target.value ? Number(e.target.value) : null })}
+                          placeholder="349.99"
+                          className="bg-background/50"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-sm">Texto do Botão</Label>
+                        <Input
                           value={data.hero_cta_text}
                           onChange={(e) => setData({ ...data, hero_cta_text: e.target.value })}
                           placeholder="Comprar Agora"
                           className="bg-background/50"
                         />
                       </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div className="space-y-2">
-                        <Label htmlFor="hero_cta_link" className="text-sm">Link CTA</Label>
+                        <Label className="text-sm">Texto do Badge (ex: Oferta Limitada)</Label>
                         <Input
-                          id="hero_cta_link"
-                          value={data.hero_cta_link}
-                          onChange={(e) => setData({ ...data, hero_cta_link: e.target.value })}
-                          placeholder="/checkout"
+                          value={data.hero_badge_text}
+                          onChange={(e) => setData({ ...data, hero_badge_text: e.target.value })}
+                          placeholder="Oferta Limitada"
+                          className="bg-background/50"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-sm">Texto de Renovação Diária (deixe vazio para ocultar)</Label>
+                        <Input
+                          value={data.hero_daily_renewal_text}
+                          onChange={(e) => setData({ ...data, hero_daily_renewal_text: e.target.value })}
+                          placeholder="Renovação diária de 5.000 créditos/dia !"
                           className="bg-background/50"
                         />
                       </div>
                     </div>
+
+                    <div className="space-y-2">
+                      <Label className="text-sm">Link CTA</Label>
+                      <Input
+                        value={data.hero_cta_link}
+                        onChange={(e) => setData({ ...data, hero_cta_link: e.target.value })}
+                        placeholder="/checkout"
+                        className="bg-background/50"
+                      />
+                    </div>
+
+                    {/* Extra Prices */}
+                    <div className="border-t border-border/30 pt-4 mt-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <h4 className="font-medium text-sm">Preços Extras (exibidos abaixo do principal)</h4>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setData({ ...data, hero_extra_prices: [...data.hero_extra_prices, { price_original: 0, price_current: 0, label: '' }] })}
+                          className="h-7 text-xs"
+                        >
+                          <Plus className="w-3 h-3 mr-1" /> Adicionar Preço
+                        </Button>
+                      </div>
+                      {data.hero_extra_prices.map((ep, idx) => (
+                        <div key={idx} className="grid grid-cols-4 gap-2 mb-2 items-end">
+                          <div className="space-y-1">
+                            <Label className="text-xs">Rótulo (opcional)</Label>
+                            <Input
+                              value={ep.label || ''}
+                              onChange={(e) => {
+                                const updated = [...data.hero_extra_prices];
+                                updated[idx] = { ...updated[idx], label: e.target.value };
+                                setData({ ...data, hero_extra_prices: updated });
+                              }}
+                              placeholder="Oferta especial"
+                              className="bg-background/50 text-sm h-9"
+                            />
+                          </div>
+                          <div className="space-y-1">
+                            <Label className="text-xs">Preço Original</Label>
+                            <Input
+                              type="number"
+                              step="0.01"
+                              value={ep.price_original || ''}
+                              onChange={(e) => {
+                                const updated = [...data.hero_extra_prices];
+                                updated[idx] = { ...updated[idx], price_original: Number(e.target.value) };
+                                setData({ ...data, hero_extra_prices: updated });
+                              }}
+                              className="bg-background/50 text-sm h-9"
+                            />
+                          </div>
+                          <div className="space-y-1">
+                            <Label className="text-xs">Preço Atual</Label>
+                            <Input
+                              type="number"
+                              step="0.01"
+                              value={ep.price_current || ''}
+                              onChange={(e) => {
+                                const updated = [...data.hero_extra_prices];
+                                updated[idx] = { ...updated[idx], price_current: Number(e.target.value) };
+                                setData({ ...data, hero_extra_prices: updated });
+                              }}
+                              className="bg-background/50 text-sm h-9"
+                            />
+                          </div>
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => setData({ ...data, hero_extra_prices: data.hero_extra_prices.filter((_, i) => i !== idx) })}
+                            className="h-9"
+                          >
+                            Remover
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Extra Renewals */}
+                    <div className="border-t border-border/30 pt-4 mt-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <h4 className="font-medium text-sm">Renovações Extras</h4>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setData({ ...data, hero_extra_renewals: [...data.hero_extra_renewals, { text: '' }] })}
+                          className="h-7 text-xs"
+                        >
+                          <Plus className="w-3 h-3 mr-1" /> Adicionar Renovação
+                        </Button>
+                      </div>
+                      {data.hero_extra_renewals.map((er, idx) => (
+                        <div key={idx} className="flex gap-2 mb-2 items-end">
+                          <div className="flex-1 space-y-1">
+                            <Label className="text-xs">Texto da Renovação</Label>
+                            <Input
+                              value={er.text}
+                              onChange={(e) => {
+                                const updated = [...data.hero_extra_renewals];
+                                updated[idx] = { text: e.target.value };
+                                setData({ ...data, hero_extra_renewals: updated });
+                              }}
+                              placeholder="Renovação diária de 10.000 créditos/dia !"
+                              className="bg-background/50 text-sm h-9"
+                            />
+                          </div>
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => setData({ ...data, hero_extra_renewals: data.hero_extra_renewals.filter((_, i) => i !== idx) })}
+                            className="h-9"
+                          >
+                            Remover
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Preview */}
+                    {(data.price_original || data.price_current) && (
+                      <div className="border-t border-border/30 pt-4 mt-4 p-3 rounded-lg bg-background/30">
+                        <p className="text-xs text-muted-foreground mb-2">Preview:</p>
+                        <div className="flex items-center gap-2 flex-wrap">
+                          {data.price_original && (
+                            <span className="text-sm line-through text-muted-foreground">R$ {Number(data.price_original).toFixed(2).replace('.', ',')}</span>
+                          )}
+                          {data.price_current && (
+                            <span className="text-lg font-bold text-primary">R$ {Number(data.price_current).toFixed(2).replace('.', ',')}</span>
+                          )}
+                          {data.price_original && data.price_current && data.price_original > data.price_current && (
+                            <span className="text-xs bg-green-500/20 text-green-400 px-2 py-0.5 rounded">
+                              Economia de {Math.round((1 - data.price_current / data.price_original) * 100)}%
+                            </span>
+                          )}
+                        </div>
+                        {data.hero_extra_prices.map((ep, idx) => (
+                          <div key={idx} className="flex items-center gap-2 mt-1 flex-wrap">
+                            {ep.label && <span className="text-xs text-muted-foreground">{ep.label}:</span>}
+                            <span className="text-xs line-through text-muted-foreground">R$ {Number(ep.price_original).toFixed(2).replace('.', ',')}</span>
+                            <span className="text-sm font-bold">R$ {Number(ep.price_current).toFixed(2).replace('.', ',')}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               </TabsContent>

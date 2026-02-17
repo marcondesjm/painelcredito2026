@@ -251,11 +251,16 @@ export type Database = {
           font_heading: string | null
           google_analytics: string | null
           google_tag_manager: string | null
+          hero_badge_text: string | null
           hero_cta_link: string | null
           hero_cta_text: string | null
+          hero_daily_renewal_text: string | null
+          hero_extra_prices: Json | null
+          hero_extra_renewals: Json | null
           hero_image: string | null
           hero_subtitle: string | null
           hero_title: string | null
+          hero_title_highlight: string | null
           how_it_works: Json | null
           id: string
           is_published: boolean | null
@@ -329,11 +334,16 @@ export type Database = {
           font_heading?: string | null
           google_analytics?: string | null
           google_tag_manager?: string | null
+          hero_badge_text?: string | null
           hero_cta_link?: string | null
           hero_cta_text?: string | null
+          hero_daily_renewal_text?: string | null
+          hero_extra_prices?: Json | null
+          hero_extra_renewals?: Json | null
           hero_image?: string | null
           hero_subtitle?: string | null
           hero_title?: string | null
+          hero_title_highlight?: string | null
           how_it_works?: Json | null
           id?: string
           is_published?: boolean | null
@@ -407,11 +417,16 @@ export type Database = {
           font_heading?: string | null
           google_analytics?: string | null
           google_tag_manager?: string | null
+          hero_badge_text?: string | null
           hero_cta_link?: string | null
           hero_cta_text?: string | null
+          hero_daily_renewal_text?: string | null
+          hero_extra_prices?: Json | null
+          hero_extra_renewals?: Json | null
           hero_image?: string | null
           hero_subtitle?: string | null
           hero_title?: string | null
+          hero_title_highlight?: string | null
           how_it_works?: Json | null
           id?: string
           is_published?: boolean | null
