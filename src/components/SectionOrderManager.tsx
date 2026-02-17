@@ -41,8 +41,10 @@ export const defaultSectionOrder: SectionId[] = [
   'faq',
   'cta',
   'donation',
-  'checkout',
 ];
+
+// Sections hidden from the order manager (rendered separately)
+const hiddenFromManager: SectionId[] = ['checkout'];
 
 export const SectionOrderManager = forwardRef<HTMLDivElement, SectionOrderManagerProps>(
   ({ sectionOrder, onOrderChange }, ref) => {
@@ -64,7 +66,7 @@ export const SectionOrderManager = forwardRef<HTMLDivElement, SectionOrderManage
           <CardDescription>Reorganize a ordem das seções na página</CardDescription>
         </CardHeader>
         <CardContent className="space-y-2">
-          {sectionOrder.map((sectionId, index) => (
+          {sectionOrder.filter(id => !hiddenFromManager.includes(id)).map((sectionId, index) => (
             <div
               key={sectionId}
               className="flex items-center gap-2 p-3 bg-background/50 rounded-lg border border-border/50 group hover:border-primary/50 transition-colors"
