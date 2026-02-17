@@ -2,6 +2,16 @@ import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { PricingTier } from '@/components/PricingTiersSection';
 
+interface HeroPriceLine {
+  price_original: number;
+  price_current: number;
+  label?: string;
+}
+
+interface HeroRenewalLine {
+  text: string;
+}
+
 interface HeroSettings {
   title: string;
   title_highlight: string;
@@ -11,6 +21,8 @@ interface HeroSettings {
   cta_text: string;
   badge_text: string;
   daily_renewal_text: string;
+  extra_prices?: HeroPriceLine[];
+  extra_renewals?: HeroRenewalLine[];
 }
 
 interface CheckoutSettings {
@@ -284,4 +296,4 @@ export const useHomepageSettings = () => {
   };
 };
 
-export type { HeroSettings, CheckoutSettings, SocialProofSettings, SocialProofCustomer, HomepageSettings, CustomPackageOption, GuaranteeSettings, FAQSettings, FAQItem, SectionsVisibility, TrackingSettings };
+export type { HeroSettings, HeroPriceLine, HeroRenewalLine, CheckoutSettings, SocialProofSettings, SocialProofCustomer, HomepageSettings, CustomPackageOption, GuaranteeSettings, FAQSettings, FAQItem, SectionsVisibility, TrackingSettings };
