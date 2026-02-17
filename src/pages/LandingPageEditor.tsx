@@ -1847,23 +1847,27 @@ const LandingPageEditor = () => {
                         {data.pix_enabled && (
                           <>
                             <div className="space-y-1">
-                              <Label className="text-xs">Chave PIX</Label>
+                              <Label className="text-xs">Chave PIX 🔒</Label>
                               <Input
-                                value={data.pix_key}
-                                onChange={(e) => setData({ ...data, pix_key: e.target.value })}
-                                placeholder="CPF, CNPJ, Email, Telefone ou Chave Aleatória"
-                                className="bg-background/50 text-sm"
+                                value={data.pix_key ? data.pix_key.replace(/(.{3}).*(.{3})/, '$1•••••$2') : ''}
+                                readOnly
+                                disabled
+                                className="bg-background/50 text-sm opacity-60 cursor-not-allowed"
+                                title="Campo protegido"
                               />
+                              <p className="text-xs text-muted-foreground">🔒 Protegido</p>
                             </div>
 
                             <div className="space-y-1">
-                              <Label className="text-xs">Nome do Beneficiário</Label>
+                              <Label className="text-xs">Nome do Beneficiário 🔒</Label>
                               <Input
-                                value={data.pix_name}
-                                onChange={(e) => setData({ ...data, pix_name: e.target.value })}
-                                placeholder="Nome que aparecerá no pagamento"
-                                className="bg-background/50 text-sm"
+                                value={data.pix_name ? data.pix_name.replace(/(.{3}).*(.{3})/, '$1•••••$2') : ''}
+                                readOnly
+                                disabled
+                                className="bg-background/50 text-sm opacity-60 cursor-not-allowed"
+                                title="Campo protegido"
                               />
+                              <p className="text-xs text-muted-foreground">🔒 Protegido</p>
                             </div>
 
                             <div className="space-y-1">
@@ -2060,22 +2064,24 @@ const LandingPageEditor = () => {
 
                     <div className="grid grid-cols-2 gap-3">
                       <div className="space-y-2">
-                        <Label className="text-sm">Chave PIX</Label>
+                        <Label className="text-sm">Chave PIX 🔒</Label>
                         <Input
-                          value={data.donation_pix_key}
-                          onChange={(e) => setData({ ...data, donation_pix_key: e.target.value })}
-                          placeholder="48996029392"
-                          className="bg-background/50"
+                          value={data.donation_pix_key ? data.donation_pix_key.replace(/(.{3}).*(.{3})/, '$1•••••$2') : ''}
+                          readOnly
+                          disabled
+                          className="bg-background/50 opacity-60 cursor-not-allowed"
                         />
+                        <p className="text-xs text-muted-foreground">🔒 Protegido</p>
                       </div>
                       <div className="space-y-2">
-                        <Label className="text-sm">Nome do Beneficiário</Label>
+                        <Label className="text-sm">Nome do Beneficiário 🔒</Label>
                         <Input
-                          value={data.donation_pix_name}
-                          onChange={(e) => setData({ ...data, donation_pix_name: e.target.value })}
-                          placeholder="Marcondes Jorge Machado"
-                          className="bg-background/50"
+                          value={data.donation_pix_name ? data.donation_pix_name.replace(/(.{3}).*(.{3})/, '$1•••••$2') : ''}
+                          readOnly
+                          disabled
+                          className="bg-background/50 opacity-60 cursor-not-allowed"
                         />
+                        <p className="text-xs text-muted-foreground">🔒 Protegido</p>
                       </div>
                     </div>
 
