@@ -111,11 +111,6 @@ export const HeroSection = () => {
               })}
             </div>
 
-            <div className="mb-4 sm:mb-6">
-              <Button variant="accent" size="xl" className="w-full sm:w-auto min-w-[200px]" onClick={() => navigate('/checkout')}>
-                {language === 'en' ? t('hero.cta_text') : hero.cta_text}
-              </Button>
-            </div>
 
 
             <div className="flex flex-wrap justify-center lg:justify-start gap-2 sm:gap-3 mb-4">
