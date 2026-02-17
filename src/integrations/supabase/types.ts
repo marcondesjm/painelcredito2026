@@ -238,6 +238,7 @@ export type Database = {
           created_at: string
           cta_subtitle: string | null
           cta_title: string | null
+          custom_package_options: Json | null
           donation_description: string | null
           donation_enabled: boolean | null
           donation_pix_key: string | null
@@ -323,6 +324,7 @@ export type Database = {
           created_at?: string
           cta_subtitle?: string | null
           cta_title?: string | null
+          custom_package_options?: Json | null
           donation_description?: string | null
           donation_enabled?: boolean | null
           donation_pix_key?: string | null
@@ -408,6 +410,7 @@ export type Database = {
           created_at?: string
           cta_subtitle?: string | null
           cta_title?: string | null
+          custom_package_options?: Json | null
           donation_description?: string | null
           donation_enabled?: boolean | null
           donation_pix_key?: string | null
