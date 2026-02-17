@@ -487,7 +487,8 @@ const LandingPageEditor = () => {
       
       if (!error) {
         setLastSaved(new Date());
-        // Note: Preview updates via postMessage, no need to reload iframe
+        // Refresh preview iframe to reflect saved changes
+        setPreviewKey(prev => prev + 1);
       }
     } catch (error) {
       console.error('Auto-save error:', error);
