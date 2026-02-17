@@ -3,7 +3,7 @@ import { ChevronUp, ChevronDown, GripVertical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
-export type SectionId = 'hero' | 'video' | 'features' | 'about' | 'how-it-works' | 'secure-purchase' | 'testimonials' | 'faq' | 'cta' | 'donation' | 'pacotes';
+export type SectionId = 'hero' | 'video' | 'features' | 'about' | 'how-it-works' | 'secure-purchase' | 'testimonials' | 'faq' | 'cta' | 'donation' | 'pacotes' | 'recharge-info' | 'why-choose' | 'checkout';
 
 interface SectionOrderManagerProps {
   sectionOrder: SectionId[];
@@ -14,7 +14,9 @@ const sectionLabels: Record<SectionId, string> = {
   'hero': '🏠 Hero (Topo)',
   'video': '🎬 Vídeo',
   'pacotes': '💰 Pacotes de Créditos',
+  'recharge-info': '⚡ Recarga Rápida',
   'features': '✨ Funcionalidades',
+  'why-choose': '✅ Por que Escolher',
   'about': '📝 Sobre',
   'how-it-works': '🔧 Como Funciona',
   'secure-purchase': '🛡️ Compra Segura',
@@ -22,13 +24,16 @@ const sectionLabels: Record<SectionId, string> = {
   'faq': '❓ Perguntas Frequentes',
   'cta': '🎯 CTA Final',
   'donation': '💚 Doação',
+  'checkout': '🛒 Checkout',
 };
 
 export const defaultSectionOrder: SectionId[] = [
   'hero',
   'video',
   'pacotes',
+  'recharge-info',
   'features',
+  'why-choose',
   'about',
   'how-it-works',
   'secure-purchase',
@@ -36,6 +41,7 @@ export const defaultSectionOrder: SectionId[] = [
   'faq',
   'cta',
   'donation',
+  'checkout',
 ];
 
 export const SectionOrderManager = forwardRef<HTMLDivElement, SectionOrderManagerProps>(

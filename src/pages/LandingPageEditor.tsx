@@ -108,6 +108,12 @@ interface LandingPageData {
   promo_text: string;
   promo_link: string;
   why_choose_items: string[];
+  // Checkout page fields
+  checkout_product_subtitle: string;
+  checkout_product_description: string;
+  checkout_badge_text: string;
+  checkout_benefits: string[];
+  checkout_enabled: boolean;
 }
 
 const fontOptions = [
@@ -305,6 +311,12 @@ const defaultData: LandingPageData = {
   promo_text: '🔥 Temos contas antigas com 10k por R$215',
   promo_link: '',
   custom_package_options: [],
+  // Checkout page fields
+  checkout_product_subtitle: 'Acesso Completo',
+  checkout_product_description: 'Acesso vitalício • Sem mensalidades',
+  checkout_badge_text: 'OFERTA LIMITADA',
+  checkout_benefits: ['Acesso Vitalício ao Painel', 'Gerador de Créditos Ilimitado', 'Suporte Premium 24/7', 'Atualizações Gratuitas', 'Comunidade Exclusiva'],
+  checkout_enabled: true,
 };
 
 const LandingPageEditor = () => {
@@ -454,6 +466,11 @@ const LandingPageEditor = () => {
     promo_link: draft.promo_link || null,
     custom_package_options: draft.custom_package_options || [],
     why_choose_items: draft.why_choose_items || [],
+    checkout_product_subtitle: draft.checkout_product_subtitle || null,
+    checkout_product_description: draft.checkout_product_description || null,
+    checkout_badge_text: draft.checkout_badge_text || 'OFERTA LIMITADA',
+    checkout_benefits: draft.checkout_benefits || [],
+    checkout_enabled: draft.checkout_enabled ?? true,
   });
 
   // Auto-save function with debounce
@@ -695,6 +712,11 @@ const LandingPageEditor = () => {
         promo_text: (page as any).promo_text || '',
         promo_link: (page as any).promo_link || '',
         why_choose_items: ((page as any).why_choose_items as string[]) || defaultData.why_choose_items,
+        checkout_product_subtitle: (page as any).checkout_product_subtitle || defaultData.checkout_product_subtitle,
+        checkout_product_description: (page as any).checkout_product_description || defaultData.checkout_product_description,
+        checkout_badge_text: (page as any).checkout_badge_text || defaultData.checkout_badge_text,
+        checkout_benefits: ((page as any).checkout_benefits as string[]) || defaultData.checkout_benefits,
+        checkout_enabled: (page as any).checkout_enabled ?? true,
       });
     } catch (error) {
       console.error('Error fetching page:', error);
@@ -2247,6 +2269,97 @@ const LandingPageEditor = () => {
                               <p className="text-xs text-muted-foreground">
                                 Cole a URL do QR Code do seu banco ou deixe vazio para gerar automaticamente
                               </p>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Checkout Page Configuration */}
+                    <div className="pt-4 border-t border-border/50">
+                      <h4 className="text-sm font-semibold mb-4">🛒 Página de Checkout</h4>
+                      
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between p-3 rounded-lg bg-background/50 border border-border/50">
+                          <div className="flex items-center gap-3">
+                            <Switch
+                              checked={data.checkout_enabled}
+                              onCheckedChange={(checked) => setData({ ...data, checkout_enabled: checked })}
+                            />
+                            <div>
+                              <p className="font-medium text-sm">Exibir Seção de Checkout</p>
+                              <p className="text-xs text-muted-foreground">Mostra o formulário de checkout na página</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        {data.checkout_enabled && (
+                          <>
+                            <div className="space-y-1">
+                              <Label className="text-xs">Subtítulo do Produto</Label>
+                              <Input
+                                value={data.checkout_product_subtitle}
+                                onChange={(e) => setData({ ...data, checkout_product_subtitle: e.target.value })}
+                                placeholder="Acesso Completo"
+                                className="bg-background/50 text-sm"
+                              />
+                            </div>
+
+                            <div className="space-y-1">
+                              <Label className="text-xs">Descrição do Produto</Label>
+                              <Input
+                                value={data.checkout_product_description}
+                                onChange={(e) => setData({ ...data, checkout_product_description: e.target.value })}
+                                placeholder="Acesso vitalício • Sem mensalidades"
+                                className="bg-background/50 text-sm"
+                              />
+                            </div>
+
+                            <div className="space-y-1">
+                              <Label className="text-xs">Badge do Preço</Label>
+                              <Input
+                                value={data.checkout_badge_text}
+                                onChange={(e) => setData({ ...data, checkout_badge_text: e.target.value })}
+                                placeholder="OFERTA LIMITADA"
+                                className="bg-background/50 text-sm"
+                              />
+                            </div>
+
+                            <div className="space-y-2">
+                              <div className="flex items-center justify-between">
+                                <Label className="text-xs font-semibold">Benefícios (O que você vai receber)</Label>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => setData({ ...data, checkout_benefits: [...data.checkout_benefits, 'Novo benefício'] })}
+                                >
+                                  <Plus className="w-4 h-4 mr-1" /> Adicionar
+                                </Button>
+                              </div>
+                              {data.checkout_benefits.map((benefit, index) => (
+                                <div key={index} className="flex gap-2">
+                                  <Input
+                                    value={benefit}
+                                    onChange={(e) => {
+                                      const updated = [...data.checkout_benefits];
+                                      updated[index] = e.target.value;
+                                      setData({ ...data, checkout_benefits: updated });
+                                    }}
+                                    className="bg-background/50 text-sm"
+                                  />
+                                  <Button
+                                    variant="destructive"
+                                    size="icon"
+                                    className="h-10 w-10 shrink-0"
+                                    onClick={() => {
+                                      const updated = data.checkout_benefits.filter((_, i) => i !== index);
+                                      setData({ ...data, checkout_benefits: updated });
+                                    }}
+                                  >
+                                    <Trash2 className="w-4 h-4" />
+                                  </Button>
+                                </div>
+                              ))}
                             </div>
                           </>
                         )}
