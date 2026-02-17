@@ -3361,6 +3361,18 @@ ttq.page();
                 <SectionOrderManager
                   sectionOrder={data.section_order}
                   onOrderChange={(newOrder) => setData({ ...data, section_order: newOrder })}
+                  disabledSections={defaultSectionOrder.filter(s => !data.section_order.includes(s))}
+                  onToggleSection={(sectionId, enabled) => {
+                    if (enabled) {
+                      // Add section back at end (before checkout)
+                      const newOrder = [...data.section_order, sectionId];
+                      setData({ ...data, section_order: newOrder });
+                    } else {
+                      // Remove section from order
+                      const newOrder = data.section_order.filter(s => s !== sectionId);
+                      setData({ ...data, section_order: newOrder });
+                    }
+                  }}
                 />
                 <Button
                   onClick={async () => {

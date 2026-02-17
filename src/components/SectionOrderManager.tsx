@@ -1,6 +1,7 @@
 import { forwardRef, useState, useRef, useEffect, useCallback } from 'react';
 import { ChevronUp, ChevronDown, GripVertical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 export type SectionId = 'hero' | 'video' | 'features' | 'about' | 'how-it-works' | 'secure-purchase' | 'testimonials' | 'faq' | 'cta' | 'donation' | 'pacotes' | 'recharge-info' | 'why-choose' | 'checkout';
@@ -8,6 +9,8 @@ export type SectionId = 'hero' | 'video' | 'features' | 'about' | 'how-it-works'
 interface SectionOrderManagerProps {
   sectionOrder: SectionId[];
   onOrderChange: (newOrder: SectionId[]) => void;
+  disabledSections?: SectionId[];
+  onToggleSection?: (sectionId: SectionId, enabled: boolean) => void;
 }
 
 const sectionLabels: Record<SectionId, string> = {
@@ -46,12 +49,18 @@ export const defaultSectionOrder: SectionId[] = [
 const hiddenFromManager: SectionId[] = ['checkout'];
 
 export const SectionOrderManager = forwardRef<HTMLDivElement, SectionOrderManagerProps>(
-  ({ sectionOrder, onOrderChange }, ref) => {
+  ({ sectionOrder, onOrderChange, disabledSections = [], onToggleSection }, ref) => {
     const [dragIndex, setDragIndex] = useState<number | null>(null);
     const [overIndex, setOverIndex] = useState<number | null>(null);
     const dragNode = useRef<HTMLDivElement | null>(null);
 
     const visibleSections = sectionOrder.filter(id => !hiddenFromManager.includes(id));
+    
+    // All sections that can be shown (active + disabled, minus hidden)
+    const allManagerSections = [
+      ...visibleSections,
+      ...disabledSections.filter(id => !hiddenFromManager.includes(id) && !visibleSections.includes(id)),
+    ];
 
     const moveSection = (index: number, direction: 'up' | 'down') => {
       const newOrder = [...sectionOrder];
@@ -178,36 +187,51 @@ export const SectionOrderManager = forwardRef<HTMLDivElement, SectionOrderManage
           <CardDescription>Arraste ou use as setas para reorganizar</CardDescription>
         </CardHeader>
         <CardContent className="space-y-2" ref={containerRef}>
-          {visibleSections.map((sectionId, index) => (
+          {allManagerSections.map((sectionId, index) => {
+            const isEnabled = visibleSections.includes(sectionId);
+            const visibleIndex = visibleSections.indexOf(sectionId);
+            const isHero = sectionId === 'hero';
+            
+            return (
             <div
               key={sectionId}
               ref={el => { itemRefs.current[index] = el; }}
-              draggable
-              onDragStart={(e) => handleDragStart(e, index)}
-              onDragOver={(e) => handleDragOver(e, index)}
+              draggable={isEnabled}
+              onDragStart={(e) => isEnabled && handleDragStart(e, visibleIndex)}
+              onDragOver={(e) => isEnabled && handleDragOver(e, visibleIndex)}
               onDragEnd={handleDragEnd}
               onDragLeave={handleDragLeave}
-              onTouchStart={(e) => handleTouchStart(index, e)}
+              onTouchStart={(e) => isEnabled && handleTouchStart(visibleIndex, e)}
               onTouchEnd={handleTouchEnd}
-              className={`flex items-center gap-2 p-3 bg-background/50 rounded-lg border transition-all cursor-grab active:cursor-grabbing select-none ${
-                overIndex === index && dragIndex !== null
-                  ? 'border-primary ring-1 ring-primary/30 scale-[1.02]'
-                  : dragIndex === index
-                  ? 'border-primary/50 opacity-50'
-                  : 'border-border/50 hover:border-primary/50'
+              className={`flex items-center gap-2 p-3 bg-background/50 rounded-lg border transition-all select-none ${
+                !isEnabled
+                  ? 'opacity-50 border-border/30'
+                  : overIndex === visibleIndex && dragIndex !== null
+                  ? 'border-primary ring-1 ring-primary/30 scale-[1.02] cursor-grab'
+                  : dragIndex === visibleIndex
+                  ? 'border-primary/50 opacity-50 cursor-grabbing'
+                  : 'border-border/50 hover:border-primary/50 cursor-grab active:cursor-grabbing'
               }`}
             >
-              <GripVertical className="w-4 h-4 text-muted-foreground flex-shrink-0" />
-              <span className="flex-1 text-sm font-medium">
+              <GripVertical className={`w-4 h-4 flex-shrink-0 ${isEnabled ? 'text-muted-foreground' : 'text-muted-foreground/30'}`} />
+              <span className={`flex-1 text-sm font-medium ${!isEnabled ? 'line-through text-muted-foreground' : ''}`}>
                 {sectionLabels[sectionId] || sectionId}
               </span>
+              {!isHero && onToggleSection && (
+                <Switch
+                  checked={isEnabled}
+                  onCheckedChange={(checked) => onToggleSection(sectionId, checked)}
+                  className="flex-shrink-0"
+                />
+              )}
+              {isEnabled && (
               <div className="flex gap-1">
                 <Button
                   variant="ghost"
                   size="sm"
                   className="h-7 w-7 p-0"
-                  onClick={() => moveSection(index, 'up')}
-                  disabled={index === 0}
+                  onClick={() => moveSection(visibleIndex, 'up')}
+                  disabled={visibleIndex === 0}
                 >
                   <ChevronUp className="w-4 h-4" />
                 </Button>
@@ -215,14 +239,16 @@ export const SectionOrderManager = forwardRef<HTMLDivElement, SectionOrderManage
                   variant="ghost"
                   size="sm"
                   className="h-7 w-7 p-0"
-                  onClick={() => moveSection(index, 'down')}
-                  disabled={index === visibleSections.length - 1}
+                  onClick={() => moveSection(visibleIndex, 'down')}
+                  disabled={visibleIndex === visibleSections.length - 1}
                 >
                   <ChevronDown className="w-4 h-4" />
                 </Button>
               </div>
+              )}
             </div>
-          ))}
+            );
+          })}
         </CardContent>
       </Card>
     );
