@@ -68,7 +68,8 @@ interface LandingPageData {
   testimonials: { name: string; text: string; rating: number; avatar?: string }[];
   faqs: { question: string; answer: string }[];
   secure_purchase_items: { title: string; description: string; icon?: string }[];
-  pricing_tiers: { id: string; name: string; credits: number; price_original: number; price_current: number; available: number; sales: number; checkout_link: string; highlight?: boolean }[];
+  pricing_tiers: { id: string; name: string; credits: number; bonus_credits?: number; daily_renewal?: number; price_original: number; price_current: number; available: number; sales: number; checkout_link: string; highlight?: boolean }[];
+  custom_package_options: { credits: number; price: number; bonus_credits?: number }[];
   social_proof_enabled: boolean;
   social_proof_product_name: string;
   social_proof_customers: { name: string; city: string; state: string }[];
@@ -292,6 +293,7 @@ const defaultData: LandingPageData = {
   hero_extra_renewals: [],
   promo_text: '🔥 Temos contas antigas com 10k por R$215',
   promo_link: '',
+  custom_package_options: [],
 };
 
 const LandingPageEditor = () => {
@@ -439,6 +441,7 @@ const LandingPageEditor = () => {
     hero_extra_renewals: draft.hero_extra_renewals || [],
     promo_text: draft.promo_text || null,
     promo_link: draft.promo_link || null,
+    custom_package_options: draft.custom_package_options || [],
   });
 
   // Auto-save function with debounce
@@ -656,7 +659,8 @@ const LandingPageEditor = () => {
         testimonials: (page.testimonials as { name: string; text: string; rating: number; avatar?: string }[]) || [],
         faqs: (page.faqs as { question: string; answer: string }[]) || [],
         secure_purchase_items: (page.secure_purchase_items as { title: string; description: string; icon?: string }[]) || defaultData.secure_purchase_items,
-        pricing_tiers: (page.pricing_tiers as { id: string; name: string; credits: number; price_original: number; price_current: number; available: number; sales: number; checkout_link: string; highlight?: boolean }[]) || [],
+        pricing_tiers: (page.pricing_tiers as { id: string; name: string; credits: number; bonus_credits?: number; daily_renewal?: number; price_original: number; price_current: number; available: number; sales: number; checkout_link: string; highlight?: boolean }[]) || [],
+        custom_package_options: ((page as any).custom_package_options as { credits: number; price: number; bonus_credits?: number }[]) || [],
         social_proof_enabled: page.social_proof_enabled ?? true,
         social_proof_product_name: page.social_proof_product_name || 'o Gerador',
         social_proof_customers: (page.social_proof_customers as { name: string; city: string; state: string }[]) || defaultData.social_proof_customers,
@@ -807,11 +811,13 @@ const LandingPageEditor = () => {
   const addPricingTier = () => {
     const newTier = {
       id: crypto.randomUUID(),
-      name: 'OFERTA ESPECIAL',
+      name: 'Pacote Iniciante',
       credits: 1000,
-      price_original: 297,
-      price_current: 97,
-      available: 10,
+      bonus_credits: 0,
+      daily_renewal: 0,
+      price_original: 99.9,
+      price_current: 44.9,
+      available: 35,
       sales: 0,
       checkout_link: '',
       highlight: false
@@ -1799,8 +1805,20 @@ const LandingPageEditor = () => {
               <TabsContent value="pacotes">
                 <Card className="bg-card/50">
                   <CardHeader className="pb-4">
-                    <CardTitle className="text-lg">Pacotes de Créditos</CardTitle>
-                    <CardDescription>Configure diferentes pacotes para venda com links externos (Kiwify, Hotmart, etc)</CardDescription>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <CardTitle className="text-lg">Pacotes de Créditos</CardTitle>
+                        <CardDescription>Configure os pacotes de créditos exibidos na página principal</CardDescription>
+                      </div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={addPricingTier}
+                      >
+                        <Plus className="w-4 h-4 mr-2" />
+                        Adicionar Pacote
+                      </Button>
+                    </div>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     {(data.pricing_tiers || []).length === 0 && (
@@ -1811,37 +1829,15 @@ const LandingPageEditor = () => {
                     )}
                     
                     {(data.pricing_tiers || []).map((tier, index) => (
-                      <div key={tier.id} className="p-4 rounded-lg bg-background/50 border border-border/50 space-y-3">
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="font-medium text-sm">Pacote {index + 1}</span>
-                          <div className="flex items-center gap-2">
-                            <label className="flex items-center gap-2 text-xs">
-                              <input
-                                type="checkbox"
-                                checked={tier.highlight || false}
-                                onChange={(e) => updatePricingTier(index, 'highlight', e.target.checked)}
-                                className="rounded border-border"
-                              />
-                              Destaque
-                            </label>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => removePricingTier(index)}
-                              className="h-7 text-destructive hover:text-destructive"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </Button>
-                          </div>
-                        </div>
-                        
-                        <div className="grid grid-cols-2 gap-3">
+                      <div key={tier.id} className={`p-4 rounded-lg bg-background/50 border space-y-3 ${tier.highlight ? 'border-primary' : 'border-border/50'}`}>
+                        {/* Row 1: Nome, Créditos, Bônus, Renovação */}
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                           <div className="space-y-1">
-                            <Label className="text-xs">Nome/Título</Label>
+                            <Label className="text-xs">Nome do Pacote</Label>
                             <Input
                               value={tier.name}
                               onChange={(e) => updatePricingTier(index, 'name', e.target.value)}
-                              placeholder="OFERTA ESPECIAL"
+                              placeholder="Pacote Iniciante"
                               className="bg-background/50 text-sm"
                             />
                           </div>
@@ -1855,9 +1851,30 @@ const LandingPageEditor = () => {
                               className="bg-background/50 text-sm"
                             />
                           </div>
+                          <div className="space-y-1">
+                            <Label className="text-xs">Bônus de Créditos</Label>
+                            <Input
+                              type="number"
+                              value={tier.bonus_credits || 0}
+                              onChange={(e) => updatePricingTier(index, 'bonus_credits', Number(e.target.value))}
+                              placeholder="0"
+                              className="bg-background/50 text-sm"
+                            />
+                          </div>
+                          <div className="space-y-1">
+                            <Label className="text-xs">Renovação Diária</Label>
+                            <Input
+                              type="number"
+                              value={tier.daily_renewal || 0}
+                              onChange={(e) => updatePricingTier(index, 'daily_renewal', Number(e.target.value))}
+                              placeholder="0"
+                              className="bg-background/50 text-sm"
+                            />
+                          </div>
                         </div>
                         
-                        <div className="grid grid-cols-2 gap-3">
+                        {/* Row 2: Preço Original, Preço Atual, Disponíveis, Vendas */}
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                           <div className="space-y-1">
                             <Label className="text-xs">Preço Original (De)</Label>
                             <Input
@@ -1865,7 +1882,7 @@ const LandingPageEditor = () => {
                               step="0.01"
                               value={tier.price_original}
                               onChange={(e) => updatePricingTier(index, 'price_original', Number(e.target.value))}
-                              placeholder="297.00"
+                              placeholder="99.9"
                               className="bg-background/50 text-sm"
                             />
                           </div>
@@ -1876,20 +1893,17 @@ const LandingPageEditor = () => {
                               step="0.01"
                               value={tier.price_current}
                               onChange={(e) => updatePricingTier(index, 'price_current', Number(e.target.value))}
-                              placeholder="97.00"
+                              placeholder="44.9"
                               className="bg-background/50 text-sm"
                             />
                           </div>
-                        </div>
-                        
-                        <div className="grid grid-cols-2 gap-3">
                           <div className="space-y-1">
                             <Label className="text-xs">Disponíveis</Label>
                             <Input
                               type="number"
                               value={tier.available}
                               onChange={(e) => updatePricingTier(index, 'available', Number(e.target.value))}
-                              placeholder="10"
+                              placeholder="35"
                               className="bg-background/50 text-sm"
                             />
                           </div>
@@ -1899,33 +1913,119 @@ const LandingPageEditor = () => {
                               type="number"
                               value={tier.sales}
                               onChange={(e) => updatePricingTier(index, 'sales', Number(e.target.value))}
-                              placeholder="50"
+                              placeholder="127"
                               className="bg-background/50 text-sm"
                             />
                           </div>
                         </div>
                         
-                        <div className="space-y-1">
-                          <Label className="text-xs">Link de Checkout (Kiwify, Hotmart, etc)</Label>
-                          <Input
-                            value={tier.checkout_link}
-                            onChange={(e) => updatePricingTier(index, 'checkout_link', e.target.value)}
-                            placeholder="https://pay.kiwify.com.br/..."
-                            className="bg-background/50 text-sm"
-                          />
-                          <p className="text-xs text-muted-foreground">Cole o link de pagamento externo</p>
+                        {/* Row 3: Highlight + Remove */}
+                        <div className="flex items-center justify-between pt-1">
+                          <label className="flex items-center gap-2 text-xs cursor-pointer">
+                            <Switch
+                              checked={tier.highlight || false}
+                              onCheckedChange={(checked) => updatePricingTier(index, 'highlight', checked)}
+                            />
+                            <span className="flex items-center gap-1">
+                              <Sparkles className="w-3 h-3" />
+                              Destacar (Mais Popular)
+                            </span>
+                          </label>
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => removePricingTier(index)}
+                            className="h-7 text-xs"
+                          >
+                            <Trash2 className="w-3 h-3 mr-1" />
+                            Remover
+                          </Button>
                         </div>
                       </div>
                     ))}
-                    
-                    <Button
-                      variant="outline"
-                      onClick={addPricingTier}
-                      className="w-full border-dashed"
-                    >
-                      <Plus className="w-4 h-4 mr-2" />
-                      Adicionar Pacote
-                    </Button>
+
+                    {/* Custom Package Options */}
+                    <div className="pt-4 border-t border-border/50">
+                      <div className="flex items-center justify-between mb-3">
+                        <div>
+                          <h4 className="text-sm font-semibold">Pacote Personalizado (Opções)</h4>
+                          <p className="text-xs text-muted-foreground">Configure os valores de créditos e preços disponíveis no card personalizado</p>
+                        </div>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setData({ ...data, custom_package_options: [...data.custom_package_options, { credits: 100, price: 10, bonus_credits: 0 }] })}
+                        >
+                          <Plus className="w-4 h-4 mr-2" />
+                          Adicionar Opção
+                        </Button>
+                      </div>
+                      
+                      {data.custom_package_options.length === 0 ? (
+                        <p className="text-sm text-muted-foreground text-center py-4">Nenhuma opção configurada. O card personalizado não será exibido.</p>
+                      ) : (
+                        <div className="space-y-2">
+                          {data.custom_package_options.map((opt, index) => (
+                            <div key={index} className="flex items-end gap-3">
+                              <div className="flex-1 space-y-1">
+                                <Label className="text-xs">Créditos</Label>
+                                <Input
+                                  type="number"
+                                  value={opt.credits}
+                                  onChange={(e) => {
+                                    const updated = [...data.custom_package_options];
+                                    updated[index] = { ...updated[index], credits: Number(e.target.value) };
+                                    setData({ ...data, custom_package_options: updated });
+                                  }}
+                                  placeholder="100"
+                                  className="bg-background/50 text-sm"
+                                />
+                              </div>
+                              <div className="flex-1 space-y-1">
+                                <Label className="text-xs">Preço (R$)</Label>
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  value={opt.price}
+                                  onChange={(e) => {
+                                    const updated = [...data.custom_package_options];
+                                    updated[index] = { ...updated[index], price: Number(e.target.value) };
+                                    setData({ ...data, custom_package_options: updated });
+                                  }}
+                                  placeholder="7.9"
+                                  className="bg-background/50 text-sm"
+                                />
+                              </div>
+                              <div className="flex-1 space-y-1">
+                                <Label className="text-xs">Bônus</Label>
+                                <Input
+                                  type="number"
+                                  value={opt.bonus_credits || 0}
+                                  onChange={(e) => {
+                                    const updated = [...data.custom_package_options];
+                                    updated[index] = { ...updated[index], bonus_credits: Number(e.target.value) };
+                                    setData({ ...data, custom_package_options: updated });
+                                  }}
+                                  placeholder="0"
+                                  className="bg-background/50 text-sm"
+                                />
+                              </div>
+                              <Button
+                                variant="destructive"
+                                size="icon"
+                                className="h-10 w-10 shrink-0"
+                                onClick={() => {
+                                  const updated = data.custom_package_options.filter((_, i) => i !== index);
+                                  setData({ ...data, custom_package_options: updated });
+                                }}
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
 
                     {/* Promo Banner */}
                     <div className="pt-4 border-t border-border/50">
