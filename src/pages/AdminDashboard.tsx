@@ -34,7 +34,8 @@ import {
   Download,
   Wallet,
   Plus,
-  Minus
+  Minus,
+  UserPlus
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -139,6 +140,12 @@ const AdminDashboard = () => {
   const [balanceDescription, setBalanceDescription] = useState('');
   const [savingBalance, setSavingBalance] = useState(false);
   
+  // Create user
+  const [showCreateUser, setShowCreateUser] = useState(false);
+  const [newUserEmail, setNewUserEmail] = useState('');
+  const [newUserPassword, setNewUserPassword] = useState('');
+  const [newUserName, setNewUserName] = useState('');
+  const [creatingUser, setCreatingUser] = useState(false);
   const [stats, setStats] = useState({
     totalUsers: 0,
     totalPages: 0,
@@ -462,7 +469,52 @@ const AdminDashboard = () => {
     }
   };
 
-  const formatDate = (dateStr: string) => {
+  const handleCreateUser = async () => {
+    if (!newUserEmail || !newUserPassword) {
+      toast.error('Email e senha são obrigatórios');
+      return;
+    }
+    if (newUserPassword.length < 6) {
+      toast.error('A senha deve ter pelo menos 6 caracteres');
+      return;
+    }
+
+    setCreatingUser(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const res = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/admin-create-user`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${session?.access_token}`,
+          },
+          body: JSON.stringify({
+            email: newUserEmail,
+            password: newUserPassword,
+            full_name: newUserName || null,
+          }),
+        }
+      );
+
+      const result = await res.json();
+      if (!res.ok) throw new Error(result.error || 'Erro ao criar usuário');
+
+      toast.success('Usuário cadastrado com sucesso!');
+      setShowCreateUser(false);
+      setNewUserEmail('');
+      setNewUserPassword('');
+      setNewUserName('');
+      await fetchData();
+    } catch (error: any) {
+      console.error('Error creating user:', error);
+      toast.error(error.message || 'Erro ao criar usuário');
+    } finally {
+      setCreatingUser(false);
+    }
+  };
+
     return new Date(dateStr).toLocaleDateString('pt-BR', {
       day: '2-digit',
       month: '2-digit',
@@ -878,8 +930,16 @@ const AdminDashboard = () => {
           <TabsContent value="users">
             <Card className="bg-card/50">
               <CardHeader>
-                <CardTitle>Usuários Cadastrados</CardTitle>
-                <CardDescription>Lista de todos os usuários da plataforma</CardDescription>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle>Usuários Cadastrados</CardTitle>
+                    <CardDescription>Lista de todos os usuários da plataforma</CardDescription>
+                  </div>
+                  <Button onClick={() => setShowCreateUser(true)} className="gap-2">
+                    <UserPlus className="w-4 h-4" />
+                    Cadastrar Usuário
+                  </Button>
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="rounded-md border">
@@ -1313,6 +1373,66 @@ const AdminDashboard = () => {
                 <Minus className="w-4 h-4 mr-2" />
               )}
               {balanceType === 'credit' ? 'Adicionar' : 'Remover'} Créditos
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Create User Modal */}
+      <AlertDialog open={showCreateUser} onOpenChange={setShowCreateUser}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <UserPlus className="w-5 h-5" />
+              Cadastrar Novo Usuário
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              Crie uma conta para o usuário acessar a plataforma e o gerador de créditos.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label>Nome completo</Label>
+              <Input
+                placeholder="Nome do usuário"
+                value={newUserName}
+                onChange={(e) => setNewUserName(e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Email *</Label>
+              <Input
+                type="email"
+                placeholder="email@exemplo.com"
+                value={newUserEmail}
+                onChange={(e) => setNewUserEmail(e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Senha *</Label>
+              <Input
+                type="password"
+                placeholder="Mínimo 6 caracteres"
+                value={newUserPassword}
+                onChange={(e) => setNewUserPassword(e.target.value)}
+              />
+            </div>
+          </div>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => {
+              setNewUserEmail('');
+              setNewUserPassword('');
+              setNewUserName('');
+            }}>
+              Cancelar
+            </AlertDialogCancel>
+            <Button onClick={handleCreateUser} disabled={creatingUser}>
+              {creatingUser ? (
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              ) : (
+                <UserPlus className="w-4 h-4 mr-2" />
+              )}
+              Cadastrar
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>
