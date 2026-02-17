@@ -170,6 +170,8 @@ interface PricingTiersSectionProps {
   isPreview?: boolean;
   onTierClick?: (tier: PricingTier) => void;
   onBuyClick?: (tier: PricingTier) => void;
+  promoText?: string | null;
+  promoLink?: string | null;
 }
 
 const BRL_TO_USD_RATE = 0.18;
@@ -216,7 +218,9 @@ export const PricingTiersSection = ({
   accentColor = '#22C55E',
   isPreview = false,
   onTierClick,
-  onBuyClick
+  onBuyClick,
+  promoText,
+  promoLink,
 }: PricingTiersSectionProps) => {
   const { t, language } = useLanguage();
   const { settings } = useHomepageSettings();
@@ -456,17 +460,19 @@ export const PricingTiersSection = ({
           )}
         </div>
 
-        {/* Link 10k credits */}
-        <div className="mt-6 text-center">
-          <a 
-            href={`https://wa.me/${settings.whatsapp_number}?text=${encodeURIComponent(language === 'en' ? 'Hi! I want to know more about the 10k credits accounts.' : 'Olá! Quero saber mais sobre as contas com 10k de créditos.')}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-primary font-semibold text-sm sm:text-base cursor-pointer hover:underline hover:opacity-80 transition-all inline-flex items-center gap-1 drop-shadow-[0_0_8px_hsl(var(--primary)/0.4)]"
-          >
-            {language === 'en' ? '🔥 We have old accounts with 10k for $215' : '🔥 Temos contas antigas com 10k por R$215'}
-          </a>
-        </div>
+        {/* Link promo */}
+        {(promoText || (!promoText && promoText !== '')) && (
+          <div className="mt-6 text-center">
+            <a 
+              href={promoLink || `https://wa.me/${settings.whatsapp_number}?text=${encodeURIComponent(language === 'en' ? 'Hi! I want to know more about the 10k credits accounts.' : 'Olá! Quero saber mais sobre as contas com 10k de créditos.')}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary font-semibold text-sm sm:text-base cursor-pointer hover:underline hover:opacity-80 transition-all inline-flex items-center gap-1 drop-shadow-[0_0_8px_hsl(var(--primary)/0.4)]"
+            >
+              {promoText || (language === 'en' ? '🔥 We have old accounts with 10k for $215' : '🔥 Temos contas antigas com 10k por R$215')}
+            </a>
+          </div>
+        )}
 
         {/* Aviso de urgência */}
         <div className="mt-8 text-center space-y-4">
