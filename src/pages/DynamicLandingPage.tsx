@@ -113,6 +113,12 @@ interface LandingPageData {
   checkout_coupon_label: string | null;
   checkout_button_text: string | null;
   checkout_whatsapp_message: string | null;
+  // Hero advanced fields
+  hero_title_highlight: string | null;
+  hero_badge_text: string | null;
+  hero_daily_renewal_text: string | null;
+  hero_extra_prices: { price_original: number; price_current: number; label?: string }[] | null;
+  hero_extra_renewals: { text: string }[] | null;
 }
 
 type BoundaryState = {
@@ -686,8 +692,15 @@ const DynamicLandingPageInner = () => {
               className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-4 sm:mb-6 leading-tight"
               style={{ fontFamily: fontHeading }}
             >
-              <span style={{ color: page.color_text || '#ffffff' }}>{(page.hero_title || page.title).split('.')[0]}. </span>
-              <span style={{ color: page.color_text_highlight || '#a855f7' }}>{(page.hero_title || page.title).split('.').slice(1).join('.') || 'Simples. Rápido. Automático.'}</span>
+              <span style={{ color: page.color_text || '#ffffff' }}>
+                {page.hero_title_highlight 
+                  ? (page.hero_title || page.title)
+                  : (page.hero_title || page.title).split('.')[0] + '. '
+                }
+              </span>
+              <span style={{ color: page.color_text_highlight || '#a855f7' }}>
+                {page.hero_title_highlight || (page.hero_title || page.title).split('.').slice(1).join('.') || 'Simples. Rápido. Automático.'}
+              </span>
             </h1>
             
             {page.hero_subtitle && (
@@ -714,18 +727,20 @@ const DynamicLandingPageInner = () => {
             {/* Limited offer badge + Price */}
             {page.price_current && (
               <div 
-                className={`flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mb-6 transition-all ${hoveredSection === 'pricing' ? 'ring-2 ring-accent ring-inset p-2 rounded-lg' : ''}`}
+                className={`flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mb-4 transition-all ${hoveredSection === 'pricing' ? 'ring-2 ring-accent ring-inset p-2 rounded-lg' : ''}`}
                 onMouseEnter={(e) => { e.stopPropagation(); handleSectionHover('pricing'); }}
               >
-                <span 
-                  className="text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-wide"
-                  style={{ 
-                    backgroundColor: `hsl(${primaryHsl})`,
-                    color: 'white'
-                  }}
-                >
-                  Oferta Limitada
-                </span>
+                {page.hero_badge_text && (
+                  <span 
+                    className="text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-wide"
+                    style={{ 
+                      backgroundColor: `hsl(${primaryHsl})`,
+                      color: 'white'
+                    }}
+                  >
+                    {page.hero_badge_text}
+                  </span>
+                )}
                 
                 <div className="flex items-baseline gap-3">
                   {page.price_original && (
@@ -742,6 +757,48 @@ const DynamicLandingPageInner = () => {
                 </div>
               </div>
             )}
+
+            {/* Daily renewal text */}
+            {page.hero_daily_renewal_text && (
+              <div className="flex items-center justify-center lg:justify-start gap-2 mb-2">
+                <RefreshCw className="w-4 h-4 animate-spin" style={{ color: `hsl(${accentHsl})`, animationDuration: '3s' }} />
+                <span className="text-sm font-medium" style={{ color: `hsl(${accentHsl})` }}>
+                  {page.hero_daily_renewal_text}
+                </span>
+              </div>
+            )}
+
+            {/* Extra prices */}
+            {(page.hero_extra_prices as any[] || []).map((ep: any, idx: number) => (
+              <div key={idx} className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mb-2">
+                {ep.label && (
+                  <span className="text-xs text-muted-foreground">{ep.label}:</span>
+                )}
+                <div className="flex items-baseline gap-3">
+                  {ep.price_original > 0 && (
+                    <span className="text-lg text-muted-foreground line-through">
+                      {formatPrice(ep.price_original)}
+                    </span>
+                  )}
+                  <span 
+                    className="text-2xl font-bold"
+                    style={{ color: `hsl(${accentHsl})` }}
+                  >
+                    {formatPrice(ep.price_current)}
+                  </span>
+                </div>
+              </div>
+            ))}
+
+            {/* Extra renewals */}
+            {(page.hero_extra_renewals as any[] || []).map((er: any, idx: number) => (
+              <div key={idx} className="flex items-center justify-center lg:justify-start gap-2 mb-2">
+                <RefreshCw className="w-4 h-4 animate-spin" style={{ color: `hsl(${accentHsl})`, animationDuration: '3s' }} />
+                <span className="text-sm font-medium" style={{ color: `hsl(${accentHsl})` }}>
+                  {er.text}
+                </span>
+              </div>
+            ))}
 
             {/* Countdown */}
             <div className="flex justify-center lg:justify-start mb-8">
