@@ -13,6 +13,7 @@ const handleCtaClick = (link: string | null, navigate: ReturnType<typeof useNavi
   }
 };
 import { supabase } from '@/integrations/supabase/client';
+import { generatePixPayload, generatePixQRCodeUrl } from '@/lib/pix';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -1193,21 +1194,26 @@ const DynamicLandingPageInner = () => {
             </p>
             
             <div className="flex flex-col md:flex-row items-center justify-center gap-6">
-              {/* QR Code */}
-              {page.donation_qr_code && (
+              {/* QR Code - auto-generated from PIX key */}
+              {(() => {
+                const pixKey = page.donation_pix_key || '48996029392';
+                const pixName = page.donation_pix_name || 'Marcondes Jorge Machado';
+                const qrSrc = page.donation_qr_code || generatePixQRCodeUrl(
+                  generatePixPayload({ pixKey, merchantName: pixName }),
+                  200
+                );
+                return (
                 <a 
-                  href={generatePixLink(page.donation_pix_key || '')}
+                  href={generatePixLink(pixKey)}
                   className="bg-white p-3 rounded-lg cursor-pointer hover:shadow-lg hover:scale-105 transition-all group"
                   title="Clique para abrir no app do banco"
                   onClick={async (e) => {
-                    // In editor preview, clicking should open the edit panel instead of performing actions.
                     if (isPreview) {
                       e.preventDefault();
                       handleSectionClick('donation');
                       return;
                     }
-
-                    const key = (page.donation_pix_key || '').trim();
+                    const key = pixKey.trim();
                     if (!key) return;
                     if (!isMobileDevice()) {
                       e.preventDefault();
@@ -1216,7 +1222,7 @@ const DynamicLandingPageInner = () => {
                   }}
                 >
                   <img 
-                    src={page.donation_qr_code} 
+                    src={qrSrc} 
                     alt="QR Code PIX" 
                     className="w-40 h-40 object-contain"
                   />
@@ -1224,7 +1230,8 @@ const DynamicLandingPageInner = () => {
                     📱 Toque para abrir no app
                   </p>
                 </a>
-              )}
+                );
+              })()}
               
               {/* PIX Info */}
               <div className="bg-background/50 rounded-lg p-4 space-y-3">
