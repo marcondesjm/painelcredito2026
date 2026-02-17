@@ -3358,15 +3358,22 @@ ttq.page();
                   sectionOrder={data.section_order}
                   onOrderChange={(newOrder) => setData({ ...data, section_order: newOrder })}
                   disabledSections={defaultSectionOrder.filter(s => !data.section_order.includes(s))}
-                  onToggleSection={(sectionId, enabled) => {
-                    if (enabled) {
-                      // Add section back at end (before checkout)
-                      const newOrder = [...data.section_order, sectionId];
-                      setData({ ...data, section_order: newOrder });
-                    } else {
-                      // Remove section from order
-                      const newOrder = data.section_order.filter(s => s !== sectionId);
-                      setData({ ...data, section_order: newOrder });
+                  onToggleSection={async (sectionId, enabled) => {
+                    const newOrder = enabled
+                      ? [...data.section_order, sectionId]
+                      : data.section_order.filter(s => s !== sectionId);
+                    const newData = { ...data, section_order: newOrder };
+                    setData(newData);
+                    // Save immediately and refresh preview
+                    if (data.id) {
+                      try {
+                        const payload = buildPayload(newData);
+                        await supabase.from('landing_pages').update(payload).eq('id', data.id);
+                        setLastSaved(new Date());
+                        refreshPreview();
+                      } catch (e) {
+                        console.error('Toggle save error:', e);
+                      }
                     }
                   }}
                 />
