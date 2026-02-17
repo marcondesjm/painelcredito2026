@@ -1,8 +1,8 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { Slider } from '@/components/ui/slider';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Zap, Wallet, X, Copy, Check, AlertTriangle } from 'lucide-react';
+import { Zap, Wallet, X, Copy, Check, AlertTriangle, Clock, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { generatePixQRCode } from '@/lib/pix';
 import { toast } from 'sonner';
@@ -51,8 +51,29 @@ const CreditResale = () => {
   const [copied, setCopied] = useState(false);
   const [userBalance, setUserBalance] = useState(0);
   const [insufficientInfo, setInsufficientInfo] = useState<{ needed: number; credits: number } | null>(null);
+  const [pixTimer, setPixTimer] = useState(600); // 10 min countdown
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const navigate = useNavigate();
   const { user } = useAuth();
+
+  // Timer for PIX expiration
+  useEffect(() => {
+    if (pixGenerated) {
+      setPixTimer(600);
+      timerRef.current = setInterval(() => {
+        setPixTimer(prev => {
+          if (prev <= 1) {
+            if (timerRef.current) clearInterval(timerRef.current);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [pixGenerated]);
 
   // Fetch user balance
   useEffect(() => {
@@ -272,7 +293,7 @@ const CreditResale = () => {
                 Adicionar Saldo
               </h3>
               <p className="text-sm text-muted-foreground mt-1">
-                Pague via PIX para adicionar saldo.
+                Escaneie o QR Code ou copie o código PIX.
               </p>
             </div>
 
@@ -314,28 +335,51 @@ const CreditResale = () => {
               </div>
             ) : (
               <div className="space-y-4 text-center">
-                <p className="text-2xl font-black text-foreground">
+                {/* Countdown timer */}
+                <div className="flex items-center justify-center gap-2 bg-secondary/60 rounded-lg py-2 px-4">
+                  <Clock className="w-4 h-4 text-muted-foreground" />
+                  <span className="font-mono font-bold text-foreground">
+                    {String(Math.floor(pixTimer / 60)).padStart(2, '0')}:{String(pixTimer % 60).padStart(2, '0')}
+                  </span>
+                  <span className="text-sm text-muted-foreground">para pagar</span>
+                </div>
+
+                {/* Amount */}
+                <p className="text-2xl font-black text-primary">
                   R$ {formatCurrency(Math.max(5, balanceAmount))}
                 </p>
 
-                <img
-                  src={pixQrUrl}
-                  alt="QR Code PIX"
-                  className="mx-auto rounded-lg w-[200px] h-[200px]"
-                />
+                {/* QR Code */}
+                <div className="bg-secondary/40 rounded-xl p-4 inline-block mx-auto">
+                  <img
+                    src={pixQrUrl}
+                    alt="QR Code PIX"
+                    className="rounded-lg w-[200px] h-[200px]"
+                  />
+                </div>
 
+                {/* Copy button */}
                 <Button
-                  variant="outline"
-                  className="w-full font-semibold"
+                  className="w-full font-bold"
+                  size="lg"
                   onClick={handleCopyPix}
                 >
                   {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                   {copied ? 'Copiado!' : 'Copiar Código PIX'}
                 </Button>
 
-                <p className="text-xs text-muted-foreground">
-                  Após o pagamento, seu saldo será atualizado automaticamente.
-                </p>
+                {/* Payload preview */}
+                <div className="bg-secondary/40 rounded-lg px-3 py-2 overflow-hidden">
+                  <p className="text-xs text-muted-foreground font-mono truncate">
+                    {pixPayload}
+                  </p>
+                </div>
+
+                {/* Waiting status */}
+                <div className="flex items-center justify-center gap-2 text-muted-foreground">
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span className="text-sm">Aguardando pagamento...</span>
+                </div>
               </div>
             )}
           </div>
