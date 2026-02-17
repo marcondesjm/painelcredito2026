@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ArrowLeft, Shield, Zap, Headphones, Check, Mail, Lock, Phone } from 'lucide-react';
+import { ArrowLeft, Shield, Zap, Headphones, Check, Mail, Lock, Phone, RefreshCw } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import productPainel from '@/assets/product-painel.png';
 import { PricingTier } from '@/components/PricingTiersSection';
@@ -134,8 +134,44 @@ const Checkout = () => {
                     </span>
                   )}
                 </div>
+                {settings.hero.daily_renewal_text && selectedTier.id === 'default' && (
+                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl border border-primary/30 bg-primary/10 mt-2">
+                    <RefreshCw className="w-3 h-3 text-primary" />
+                    <span className="text-xs font-bold text-primary">{settings.hero.daily_renewal_text}</span>
+                  </div>
+                )}
               </div>
             </div>
+
+            {/* Extra price lines */}
+            {selectedTier.id === 'default' && (settings.hero.extra_prices || []).filter(ep => ep.price_current > 0).map((ep, idx) => {
+              const extraRenewal = (settings.hero.extra_renewals || [])[idx];
+              const epSavings = ep.price_original > ep.price_current
+                ? Math.round(((ep.price_original - ep.price_current) / ep.price_original) * 100)
+                : null;
+              return (
+                <div key={idx} className="border-t border-border/30 pt-4 mt-4">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    {ep.label && <span className="text-xs text-muted-foreground">{ep.label}</span>}
+                    {ep.price_original > 0 && (
+                      <span className="text-muted-foreground line-through text-sm">{formatPrice(ep.price_original)}</span>
+                    )}
+                    <span className="text-xl font-bold text-accent">{formatPrice(ep.price_current)}</span>
+                    {epSavings && (
+                      <span className="bg-accent/20 text-accent text-xs px-2 py-0.5 rounded-full">
+                        {t('checkout.savings')} {epSavings}%
+                      </span>
+                    )}
+                  </div>
+                  {extraRenewal?.text && (
+                    <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl border border-primary/30 bg-primary/10 mt-2">
+                      <RefreshCw className="w-3 h-3 text-primary" />
+                      <span className="text-xs font-bold text-primary">{extraRenewal.text}</span>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
 
             {/* Trust badges */}
             <div className="flex flex-wrap gap-4 text-sm text-muted-foreground mb-6">
