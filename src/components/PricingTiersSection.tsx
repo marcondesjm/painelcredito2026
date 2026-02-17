@@ -153,6 +153,7 @@ export interface PricingTier {
   name: string;
   credits: number;
   bonus_credits?: number;
+  daily_renewal?: number;
   price_original: number;
   price_current: number;
   available: number;
@@ -354,6 +355,14 @@ export const PricingTiersSection = ({
                         style={{ backgroundColor: accentColor }}
                       >
                         🎁 +{formatCredits(tier.bonus_credits!)} {t('pricing.bonus')}
+                      </Badge>
+                    )}
+                    {(tier.daily_renewal ?? 0) > 0 && (
+                      <Badge 
+                        className="text-xs font-bold text-white mb-1"
+                        style={{ backgroundColor: '#3B82F6' }}
+                      >
+                        🔄 {formatCredits(tier.daily_renewal!)} {language === 'en' ? '/day renewal' : '/dia renovação'}
                       </Badge>
                     )}
                     <p className="text-sm text-muted-foreground line-clamp-1">

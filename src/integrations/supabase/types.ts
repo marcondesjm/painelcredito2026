@@ -145,6 +145,50 @@ export type Database = {
           },
         ]
       }
+      daily_renewals: {
+        Row: {
+          created_at: string
+          daily_limit: number
+          id: string
+          is_active: boolean
+          last_renewed_at: string | null
+          order_id: string | null
+          tier_name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          daily_limit?: number
+          id?: string
+          is_active?: boolean
+          last_renewed_at?: string | null
+          order_id?: string | null
+          tier_name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          daily_limit?: number
+          id?: string
+          is_active?: boolean
+          last_renewed_at?: string | null
+          order_id?: string | null
+          tier_name?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "daily_renewals_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       homepage_settings: {
         Row: {
           created_at: string
