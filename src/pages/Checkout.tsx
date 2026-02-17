@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { ArrowLeft, Shield, Zap, Headphones, Check, Mail, Lock, Phone, RefreshCw } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import productPainel from '@/assets/product-painel.png';
+import logoPainel from '@/assets/logo-painel.png';
 import { PricingTier } from '@/components/PricingTiersSection';
 import { useHomepageSettings } from '@/hooks/useHomepageSettings';
 import { useLanguage } from '@/hooks/useLanguage';
@@ -286,6 +287,10 @@ const Checkout = () => {
                 {' '}{t('checkout.and')}{' '}
                 <Link to="/privacidade" className="text-primary hover:underline">{t('checkout.privacy')}</Link>
               </p>
+
+              <div className="flex justify-center mt-4">
+                <img src={logoPainel} alt="Logo" className="h-10 opacity-70" />
+              </div>
             </form>
           </div>
         </div>
