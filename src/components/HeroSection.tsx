@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { CountdownTimer } from './CountdownTimer';
 import { TrustBadge } from './TrustBadge';
-import { Zap, Shield, Headphones, ChevronDown } from 'lucide-react';
+import { Zap, Shield, Headphones, ChevronDown, RefreshCw } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import productPainel from '@/assets/product-painel.png';
 import { useHomepageSettings } from '@/hooks/useHomepageSettings';
@@ -64,6 +64,16 @@ export const HeroSection = () => {
                     {t('hero.savings')} {savings}%
                   </span>
                 )}
+              </div>
+            </div>
+
+            {/* Daily renewal highlight */}
+            <div className="flex justify-center lg:justify-start mb-4">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-primary/30 bg-primary/10 backdrop-blur-sm animate-pulse">
+                <RefreshCw className="w-4 h-4 text-primary" />
+                <span className="text-sm sm:text-base font-bold text-primary">
+                  {language === 'en' ? '🔄 5k credits renewed daily!' : '🔄 Renovação diária de 5k créditos!'}
+                </span>
               </div>
             </div>
 
