@@ -464,7 +464,7 @@ export const PricingTiersSection = ({
             rel="noopener noreferrer"
             className="text-primary font-semibold text-sm sm:text-base cursor-pointer hover:underline hover:opacity-80 transition-all inline-flex items-center gap-1 drop-shadow-[0_0_8px_hsl(var(--primary)/0.4)]"
           >
-            {language === 'en' ? '🔥 We have old accounts with 10k for $198' : '🔥 Temos contas antigas com 10k por R$198'}
+            {language === 'en' ? '🔥 We have old accounts with 10k for $215' : '🔥 Temos contas antigas com 10k por R$215'}
           </a>
         </div>
 
