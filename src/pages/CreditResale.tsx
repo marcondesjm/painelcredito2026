@@ -6,6 +6,7 @@ import { Zap, Wallet, X, Copy, Check } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { generatePixQRCode } from '@/lib/pix';
 import { toast } from 'sonner';
+import { useAuth } from '@/hooks/useAuth';
 import backgroundHero from '@/assets/background-hero.png';
 
 const POPULAR_PACKAGES = [
@@ -48,6 +49,7 @@ const CreditResale = () => {
   const [pixQrUrl, setPixQrUrl] = useState('');
   const [copied, setCopied] = useState(false);
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const price = useMemo(() => calculatePrice(credits), [credits]);
   const ratePer100 = useMemo(() => (price / credits) * 100, [price, credits]);
@@ -187,7 +189,14 @@ const CreditResale = () => {
             variant="hero"
             size="xl"
             className="w-full text-lg font-bold py-6 bg-primary hover:bg-primary/90"
-            onClick={() => navigate(`/checkout?credits=${credits}&price=${price.toFixed(2)}`)}
+            onClick={() => {
+              if (!user) {
+                toast.error('Faça login para gerar créditos');
+                navigate('/auth');
+                return;
+              }
+              navigate(`/checkout?credits=${credits}&price=${price.toFixed(2)}`);
+            }}
           >
             <Zap className="w-5 h-5" />
             Gerar {formatNumber(credits)} Créditos
@@ -198,7 +207,14 @@ const CreditResale = () => {
             variant="outline"
             size="xl"
             className="w-full text-base font-bold py-6 border-border bg-secondary/60 hover:bg-secondary"
-            onClick={() => setShowBalanceModal(true)}
+            onClick={() => {
+              if (!user) {
+                toast.error('Faça login para adicionar saldo');
+                navigate('/auth');
+                return;
+              }
+              setShowBalanceModal(true);
+            }}
           >
             <Wallet className="w-5 h-5" />
             Adicionar Saldo
