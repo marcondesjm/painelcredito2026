@@ -1,8 +1,11 @@
 import { useState, useMemo } from 'react';
 import { Slider } from '@/components/ui/slider';
 import { Button } from '@/components/ui/button';
-import { Zap } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Zap, Wallet, X, Copy, Check } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { generatePixQRCode } from '@/lib/pix';
+import { toast } from 'sonner';
 import backgroundHero from '@/assets/background-hero.png';
 
 const POPULAR_PACKAGES = [
@@ -14,10 +17,12 @@ const POPULAR_PACKAGES = [
   { credits: 10000, price: 196.0, discount: '44% off' },
 ];
 
-const BASE_RATE = 3.5 / 100; // R$ 3.50 per 100 credits (base)
+const PIX_KEY = '48996029392';
+const PIX_NAME = 'Marcondes Jorge Machado';
+
+const BASE_RATE = 3.5 / 100;
 
 function calculatePrice(credits: number): number {
-  // Tiered pricing: more credits = lower rate
   if (credits >= 10000) return credits * (196 / 10000);
   if (credits >= 5000) return credits * (105 / 5000);
   if (credits >= 2000) return credits * (47.25 / 2000);
@@ -36,6 +41,12 @@ function formatCurrency(n: number): string {
 
 const CreditResale = () => {
   const [credits, setCredits] = useState(5000);
+  const [showBalanceModal, setShowBalanceModal] = useState(false);
+  const [balanceAmount, setBalanceAmount] = useState(5);
+  const [pixGenerated, setPixGenerated] = useState(false);
+  const [pixPayload, setPixPayload] = useState('');
+  const [pixQrUrl, setPixQrUrl] = useState('');
+  const [copied, setCopied] = useState(false);
   const navigate = useNavigate();
 
   const price = useMemo(() => calculatePrice(credits), [credits]);
@@ -43,6 +54,39 @@ const CreditResale = () => {
 
   const handlePackageClick = (pkg: typeof POPULAR_PACKAGES[0]) => {
     setCredits(pkg.credits);
+  };
+
+  const handleGeneratePix = () => {
+    const amount = Math.max(5, balanceAmount);
+    const { payload, qrCodeUrl } = generatePixQRCode({
+      pixKey: PIX_KEY,
+      merchantName: PIX_NAME,
+      amount,
+      txId: 'SALDO',
+      description: 'Adicionar Saldo',
+    }, 250);
+    setPixPayload(payload);
+    setPixQrUrl(qrCodeUrl);
+    setPixGenerated(true);
+  };
+
+  const handleCopyPix = async () => {
+    try {
+      await navigator.clipboard.writeText(pixPayload);
+      setCopied(true);
+      toast.success('Código PIX copiado!');
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      toast.error('Erro ao copiar');
+    }
+  };
+
+  const closeBalanceModal = () => {
+    setShowBalanceModal(false);
+    setPixGenerated(false);
+    setPixPayload('');
+    setPixQrUrl('');
+    setCopied(false);
   };
 
   return (
@@ -148,6 +192,17 @@ const CreditResale = () => {
             <Zap className="w-5 h-5" />
             Gerar {formatNumber(credits)} Créditos
           </Button>
+
+          {/* Add Balance Button */}
+          <Button
+            variant="outline"
+            size="xl"
+            className="w-full text-base font-bold py-6 border-border bg-secondary/60 hover:bg-secondary"
+            onClick={() => setShowBalanceModal(true)}
+          >
+            <Wallet className="w-5 h-5" />
+            Adicionar Saldo
+          </Button>
         </div>
 
         {/* Login link */}
@@ -158,6 +213,82 @@ const CreditResale = () => {
           </a>
         </p>
       </div>
+
+      {/* Add Balance Modal */}
+      {showBalanceModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="w-full max-w-sm rounded-2xl border border-border bg-card p-6 space-y-5 relative">
+            <button
+              onClick={closeBalanceModal}
+              className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div>
+              <h3 className="text-lg font-bold text-foreground flex items-center gap-2">
+                <Wallet className="w-5 h-5" />
+                Adicionar Saldo
+              </h3>
+              <p className="text-sm text-muted-foreground mt-1">
+                Pague via PIX para adicionar saldo.
+              </p>
+            </div>
+
+            {!pixGenerated ? (
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-foreground">
+                    Valor (R$) — mínimo R$ 5,00
+                  </label>
+                  <Input
+                    type="number"
+                    min={5}
+                    step={1}
+                    value={balanceAmount}
+                    onChange={(e) => setBalanceAmount(Math.max(5, Number(e.target.value)))}
+                    className="text-base"
+                  />
+                </div>
+
+                <Button
+                  className="w-full font-bold"
+                  size="lg"
+                  onClick={handleGeneratePix}
+                >
+                  <Zap className="w-4 h-4" />
+                  Gerar PIX de R$ {formatCurrency(Math.max(5, balanceAmount))}
+                </Button>
+              </div>
+            ) : (
+              <div className="space-y-4 text-center">
+                <p className="text-2xl font-black text-foreground">
+                  R$ {formatCurrency(Math.max(5, balanceAmount))}
+                </p>
+
+                <img
+                  src={pixQrUrl}
+                  alt="QR Code PIX"
+                  className="mx-auto rounded-lg w-[200px] h-[200px]"
+                />
+
+                <Button
+                  variant="outline"
+                  className="w-full font-semibold"
+                  onClick={handleCopyPix}
+                >
+                  {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                  {copied ? 'Copiado!' : 'Copiar Código PIX'}
+                </Button>
+
+                <p className="text-xs text-muted-foreground">
+                  Após o pagamento, seu saldo será atualizado automaticamente.
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
