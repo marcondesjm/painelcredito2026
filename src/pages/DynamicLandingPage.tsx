@@ -19,7 +19,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Loader2, Star, Check, Shield, Clock, ArrowRight, MessageCircle, Zap, Headphones, UserPlus, LogOut, Menu, RefreshCw, Heart, Award, Mail, Phone, LockKeyhole } from 'lucide-react';
+import { Loader2, Star, Check, Shield, Clock, ArrowRight, MessageCircle, Zap, Headphones, UserPlus, LogOut, Menu, RefreshCw, Heart, Award, Mail, Phone, LockKeyhole, ChevronDown } from 'lucide-react';
 import { CountdownTimer } from '@/components/CountdownTimer';
 import { SocialProofNotification } from '@/components/SocialProofNotification';
 import { WhatsAppButton } from '@/components/WhatsAppButton';
@@ -1431,22 +1431,45 @@ const DynamicLandingPageInner = () => {
   const sectionRenderers: Record<SectionId, () => React.ReactNode> = {
     'hero': renderHeroSection,
     'video': renderVideoSection,
-    'pacotes': () => (
-      <PricingTiersSection
-        tiers={(page.pricing_tiers as PricingTier[]) || []}
-        customPackageOptions={(page.custom_package_options as any[]) || []}
-        primaryColor={page.color_primary || '#8B5CF6'}
-        accentColor={page.color_accent || '#22C55E'}
-        isPreview={isPreview}
-        onTierClick={() => handleSectionClick('pacotes')}
-        onBuyClick={(tier) => {
-          setSelectedTier(tier);
-          setCheckoutModalOpen(true);
-        }}
-        promoText={(page as any).promo_text}
-        promoLink={(page as any).promo_link}
-      />
-    ),
+    'pacotes': () => {
+      const tiers = (page.pricing_tiers as PricingTier[]) || [];
+      const promoText = (page as any).promo_text;
+      const promoLink = (page as any).promo_link;
+      return (
+        <>
+          {tiers.length > 0 && (
+            <PricingTiersSection
+              tiers={tiers}
+              customPackageOptions={(page.custom_package_options as any[]) || []}
+              primaryColor={page.color_primary || '#8B5CF6'}
+              accentColor={page.color_accent || '#22C55E'}
+              isPreview={isPreview}
+              onTierClick={() => handleSectionClick('pacotes')}
+              onBuyClick={(tier) => {
+                setSelectedTier(tier);
+                setCheckoutModalOpen(true);
+              }}
+              promoText={promoText}
+              promoLink={promoLink}
+            />
+          )}
+          {!tiers.length && promoText && (
+            <div className="py-8 text-center">
+              <a
+                href={promoLink || '#'}
+                target={promoLink ? '_blank' : undefined}
+                rel="noopener noreferrer"
+                className="font-semibold text-sm sm:text-base cursor-pointer hover:underline hover:opacity-80 transition-all inline-flex items-center gap-1 flex-col"
+                style={{ color: page.color_primary || '#8B5CF6' }}
+              >
+                {promoText}
+                <ChevronDown className="w-5 h-5 animate-bounce" />
+              </a>
+            </div>
+          )}
+        </>
+      );
+    },
     'recharge-info': () => <RechargeInfoSection />,
     'features': renderFeaturesSection,
     'why-choose': () => {
