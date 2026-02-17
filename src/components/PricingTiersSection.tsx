@@ -450,11 +450,11 @@ export const PricingTiersSection = ({
           })}
 
           {/* Custom Package Card */}
-          {onBuyClick && !isPreview && customPackageOptions.length > 0 && (
+          {customPackageOptions.length > 0 && (
             <CustomPackageCard 
               primaryColor={primaryColor} 
               accentColor={accentColor} 
-              onBuyClick={onBuyClick}
+              onBuyClick={onBuyClick || (() => {})}
               options={customPackageOptions}
             />
           )}
