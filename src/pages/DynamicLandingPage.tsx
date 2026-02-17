@@ -25,16 +25,18 @@ import { SocialProofNotification } from '@/components/SocialProofNotification';
 import { WhatsAppButton } from '@/components/WhatsAppButton';
 import { PricingTiersSection, PricingTier } from '@/components/PricingTiersSection';
 import { CheckoutModal } from '@/components/CheckoutModal';
+import { RechargeInfoSection } from '@/components/RechargeInfoSection';
 import { APP_VERSION, LAST_UPDATE } from '@/config/version';
 import backgroundHero from '@/assets/background-hero.png';
 import dashboardMockup from '@/assets/dashboard-mockup.png';
 
-type SectionId = 'hero' | 'video' | 'features' | 'about' | 'how-it-works' | 'secure-purchase' | 'testimonials' | 'faq' | 'cta' | 'donation' | 'pacotes';
+type SectionId = 'hero' | 'video' | 'features' | 'about' | 'how-it-works' | 'secure-purchase' | 'testimonials' | 'faq' | 'cta' | 'donation' | 'pacotes' | 'recharge-info';
 
 const defaultSectionOrder: SectionId[] = [
   'hero',
   'video',
   'pacotes',
+  'recharge-info',
   'features',
   'about',
   'how-it-works',
@@ -1432,6 +1434,7 @@ const DynamicLandingPageInner = () => {
         promoLink={(page as any).promo_link}
       />
     ),
+    'recharge-info': () => <RechargeInfoSection />,
     'features': renderFeaturesSection,
     'about': renderAboutSection,
     'how-it-works': renderHowItWorksSection,
