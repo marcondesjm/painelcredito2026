@@ -1,12 +1,13 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Slider } from '@/components/ui/slider';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Zap, Wallet, X, Copy, Check } from 'lucide-react';
+import { Zap, Wallet, X, Copy, Check, AlertTriangle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { generatePixQRCode } from '@/lib/pix';
 import { toast } from 'sonner';
 import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
 import backgroundHero from '@/assets/background-hero.png';
 
 const POPULAR_PACKAGES = [
@@ -48,8 +49,24 @@ const CreditResale = () => {
   const [pixPayload, setPixPayload] = useState('');
   const [pixQrUrl, setPixQrUrl] = useState('');
   const [copied, setCopied] = useState(false);
+  const [userBalance, setUserBalance] = useState(0);
+  const [insufficientInfo, setInsufficientInfo] = useState<{ needed: number; credits: number } | null>(null);
   const navigate = useNavigate();
   const { user } = useAuth();
+
+  // Fetch user balance
+  useEffect(() => {
+    if (!user) return;
+    const fetchBalance = async () => {
+      const { data } = await supabase
+        .from('user_balances')
+        .select('balance')
+        .eq('user_id', user.id)
+        .maybeSingle();
+      setUserBalance(data?.balance ?? 0);
+    };
+    fetchBalance();
+  }, [user]);
 
   const price = useMemo(() => calculatePrice(credits), [credits]);
   const ratePer100 = useMemo(() => (price / credits) * 100, [price, credits]);
@@ -89,6 +106,7 @@ const CreditResale = () => {
     setPixPayload('');
     setPixQrUrl('');
     setCopied(false);
+    setInsufficientInfo(null);
   };
 
   return (
@@ -195,7 +213,14 @@ const CreditResale = () => {
                 navigate('/authrevenda');
                 return;
               }
-              navigate(`/checkout?credits=${credits}&price=${price.toFixed(2)}`);
+              const needed = price - userBalance;
+              if (needed > 0) {
+                setInsufficientInfo({ needed, credits });
+                setBalanceAmount(Math.max(5, Math.ceil(needed)));
+                setShowBalanceModal(true);
+              } else {
+                navigate(`/checkout?credits=${credits}&price=${price.toFixed(2)}`);
+              }
             }}
           >
             <Zap className="w-5 h-5" />
@@ -253,6 +278,17 @@ const CreditResale = () => {
 
             {!pixGenerated ? (
               <div className="space-y-4">
+                {insufficientInfo && (
+                  <div className="rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-3 flex items-start gap-2">
+                    <AlertTriangle className="w-5 h-5 text-yellow-500 shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-semibold text-yellow-500">Saldo insuficiente</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        Você precisa de mais R$ {formatCurrency(insufficientInfo.needed)} para gerar {formatNumber(insufficientInfo.credits)} créditos
+                      </p>
+                    </div>
+                  </div>
+                )}
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-foreground">
                     Valor (R$) — mínimo R$ 5,00
