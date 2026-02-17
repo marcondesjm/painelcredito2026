@@ -120,6 +120,7 @@ interface LandingPageData {
   hero_daily_renewal_text: string | null;
   hero_extra_prices: { price_original: number; price_current: number; label?: string }[] | null;
   hero_extra_renewals: { text: string }[] | null;
+  custom_package_options: { credits: number; price: number; bonus_credits?: number }[] | null;
 }
 
 type BoundaryState = {
@@ -1418,6 +1419,7 @@ const DynamicLandingPageInner = () => {
     'pacotes': () => (
       <PricingTiersSection
         tiers={(page.pricing_tiers as PricingTier[]) || []}
+        customPackageOptions={(page.custom_package_options as any[]) || []}
         primaryColor={page.color_primary || '#8B5CF6'}
         accentColor={page.color_accent || '#22C55E'}
         isPreview={isPreview}
