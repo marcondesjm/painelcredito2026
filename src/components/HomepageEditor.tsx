@@ -362,7 +362,7 @@ export const HomepageEditor = () => {
                       <CardContent className="pt-4">
                         <div className="flex items-start gap-4">
                           <div className="flex-1 space-y-4">
-                            <div className="grid gap-4 md:grid-cols-3">
+                            <div className="grid gap-4 md:grid-cols-4">
                               <div className="space-y-2">
                                 <Label>Nome do Pacote</Label>
                                 <Input
@@ -386,6 +386,15 @@ export const HomepageEditor = () => {
                                   value={tier.bonus_credits || 0}
                                   onChange={(e) => updateTier(index, 'bonus_credits', Number(e.target.value))}
                                   placeholder="0"
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label>Renovação Diária</Label>
+                                <Input
+                                  type="number"
+                                  value={tier.daily_renewal || 0}
+                                  onChange={(e) => updateTier(index, 'daily_renewal', Number(e.target.value))}
+                                  placeholder="0 = sem renovação"
                                 />
                               </div>
                             </div>
