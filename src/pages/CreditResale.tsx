@@ -192,7 +192,7 @@ const CreditResale = () => {
             onClick={() => {
               if (!user) {
                 toast.error('Faça login para gerar créditos');
-                navigate('/auth');
+                navigate('/authrevenda');
                 return;
               }
               navigate(`/checkout?credits=${credits}&price=${price.toFixed(2)}`);
@@ -210,7 +210,7 @@ const CreditResale = () => {
             onClick={() => {
               if (!user) {
                 toast.error('Faça login para adicionar saldo');
-                navigate('/auth');
+                navigate('/authrevenda');
                 return;
               }
               setShowBalanceModal(true);
@@ -224,7 +224,7 @@ const CreditResale = () => {
         {/* Login link */}
         <p className="mt-6 text-sm text-muted-foreground">
           Já tem conta?{' '}
-          <a href="/auth" className="text-primary hover:underline font-medium">
+          <a href="/authrevenda" className="text-primary hover:underline font-medium">
             Entrar
           </a>
         </p>
