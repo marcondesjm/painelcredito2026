@@ -2711,45 +2711,6 @@ const LandingPageEditor = () => {
               {/* Tab Conteúdo */}
               <TabsContent value="conteudo">
                 <div className="space-y-4">
-                  {/* Por que Escolher */}
-                  <Card className="bg-card/50">
-                    <CardHeader className="pb-3">
-                      <div className="flex items-center justify-between">
-                        <CardTitle className="text-lg">Por que Escolher</CardTitle>
-                        <Button variant="outline" size="sm" onClick={() => setData({ ...data, why_choose_items: [...(data.why_choose_items || []), ''] })} className="h-7">
-                          <Plus className="w-3 h-3 mr-1" />
-                          Adicionar
-                        </Button>
-                      </div>
-                      <p className="text-xs text-muted-foreground">Itens exibidos na seção "Por que escolher o painel?"</p>
-                    </CardHeader>
-                    <CardContent className="space-y-2">
-                      {(data.why_choose_items || []).length === 0 ? (
-                        <p className="text-muted-foreground text-center py-4 text-sm">Nenhum item</p>
-                      ) : (
-                        data.why_choose_items.map((item, index) => (
-                          <div key={index} className="flex gap-2 items-center">
-                            <Input
-                              value={item}
-                              onChange={(e) => {
-                                const updated = [...data.why_choose_items];
-                                updated[index] = e.target.value;
-                                setData({ ...data, why_choose_items: updated });
-                              }}
-                              placeholder="Ex: Créditos ilimitados para seus projetos"
-                              className="bg-background/50 text-sm"
-                            />
-                            <Button variant="ghost" size="icon" onClick={() => {
-                              const updated = data.why_choose_items.filter((_, i) => i !== index);
-                              setData({ ...data, why_choose_items: updated });
-                            }} className="h-8 w-8 shrink-0">
-                              <Trash2 className="w-3 h-3 text-destructive" />
-                            </Button>
-                          </div>
-                        ))
-                      )}
-                    </CardContent>
-                  </Card>
 
                   <Card className="bg-card/50">
                     <CardHeader className="pb-3">
