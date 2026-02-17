@@ -314,6 +314,14 @@ export const HomepageEditor = () => {
                     placeholder="Oferta Limitada"
                   />
                 </div>
+                <div className="space-y-2">
+                  <Label>Texto de Renovação Diária (deixe vazio para ocultar)</Label>
+                  <Input
+                    value={hero.daily_renewal_text || ''}
+                    onChange={(e) => setHero({ ...hero, daily_renewal_text: e.target.value })}
+                    placeholder="🔄 Renovação diária de 5k créditos!"
+                  />
+                </div>
               </div>
 
               <div className="bg-muted/50 p-4 rounded-lg">

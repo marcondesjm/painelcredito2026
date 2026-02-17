@@ -10,6 +10,7 @@ interface HeroSettings {
   price_current: number;
   cta_text: string;
   badge_text: string;
+  daily_renewal_text: string;
 }
 
 interface CheckoutSettings {
@@ -130,7 +131,8 @@ const defaultSettings: HomepageSettings = {
     price_original: 600,
     price_current: 349.99,
     cta_text: 'Comprar Agora',
-    badge_text: 'Oferta Limitada'
+    badge_text: 'Oferta Limitada',
+    daily_renewal_text: '🔄 Renovação diária de 5k créditos!'
   },
   checkout: {
     product_subtitle: 'Acesso Completo',

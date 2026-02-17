@@ -68,14 +68,16 @@ export const HeroSection = () => {
             </div>
 
             {/* Daily renewal highlight */}
-            <div className="flex justify-center lg:justify-start mb-4">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-primary/30 bg-primary/10 backdrop-blur-sm animate-pulse">
-                <RefreshCw className="w-4 h-4 text-primary" />
-                <span className="text-sm sm:text-base font-bold text-primary">
-                  {language === 'en' ? '🔄 5k credits renewed daily!' : '🔄 Renovação diária de 5k créditos!'}
-                </span>
+            {hero.daily_renewal_text && (
+              <div className="flex justify-center lg:justify-start mb-4">
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-primary/30 bg-primary/10 backdrop-blur-sm animate-pulse">
+                  <RefreshCw className="w-4 h-4 text-primary" />
+                  <span className="text-sm sm:text-base font-bold text-primary">
+                    {hero.daily_renewal_text}
+                  </span>
+                </div>
               </div>
-            </div>
+            )}
 
             <div className="mb-4 sm:mb-6">
               <Button variant="accent" size="xl" className="w-full sm:w-auto min-w-[200px]" onClick={() => navigate('/checkout')}>
