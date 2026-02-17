@@ -487,8 +487,6 @@ const LandingPageEditor = () => {
       
       if (!error) {
         setLastSaved(new Date());
-        // Refresh preview iframe to reflect saved changes
-        setPreviewKey(prev => prev + 1);
       }
     } catch (error) {
       console.error('Auto-save error:', error);
@@ -3359,11 +3357,22 @@ ttq.page();
               </TabsContent>
 
               {/* Tab Layout */}
-              <TabsContent value="layout">
+              <TabsContent value="layout" className="space-y-4">
                 <SectionOrderManager
                   sectionOrder={data.section_order}
                   onOrderChange={(newOrder) => setData({ ...data, section_order: newOrder })}
                 />
+                <Button
+                  onClick={async () => {
+                    await autoSave();
+                    refreshPreview();
+                    toast.success('Preview atualizado!');
+                  }}
+                  className="w-full gap-2"
+                >
+                  <RefreshCw className="w-4 h-4" />
+                  Atualizar Preview
+                </Button>
               </TabsContent>
             </Tabs>
           </main>
