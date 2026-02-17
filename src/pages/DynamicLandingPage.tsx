@@ -633,12 +633,8 @@ const DynamicLandingPageInner = () => {
   const fontHeading = page.font_heading || 'Inter';
   const fontBody = page.font_body || 'Inter';
 
-  // Get the section order (use default if not set, and ensure new sections are included)
-  const baseSectionOrder = page.section_order || defaultSectionOrder;
-  const sectionOrder = (() => {
-    const missing = defaultSectionOrder.filter(s => !baseSectionOrder.includes(s));
-    return missing.length > 0 ? [...baseSectionOrder, ...missing] : baseSectionOrder;
-  })();
+  // Get the section order (use stored order as-is, sections not included were disabled by user)
+  const sectionOrder = (page.section_order as SectionId[]) || defaultSectionOrder;
 
   // Generate PIX link for banking apps
   const generatePixLink = (pixKey: string) => {
