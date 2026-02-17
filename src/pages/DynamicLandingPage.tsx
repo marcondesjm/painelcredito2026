@@ -1521,6 +1521,13 @@ const DynamicLandingPageInner = () => {
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center gap-2">
               <Button 
+                variant="hero"
+                size="sm"
+                onClick={() => navigate('/checkout')}
+              >
+                Painel Gerador
+              </Button>
+              <Button 
                 size="sm" 
                 className="text-white"
                 style={{ backgroundColor: `hsl(${primaryHsl})` }}
@@ -1598,6 +1605,13 @@ const DynamicLandingPageInner = () => {
               </SheetTrigger>
               <SheetContent side="right" className="bg-background border-border w-[280px]">
                 <nav className="flex flex-col gap-4 mt-8">
+                  <Button 
+                    variant="hero"
+                    className="w-full"
+                    onClick={() => navigate('/checkout')}
+                  >
+                    Painel Gerador
+                  </Button>
                   <Button 
                     className="w-full text-white"
                     style={{ backgroundColor: `hsl(${primaryHsl})` }}
