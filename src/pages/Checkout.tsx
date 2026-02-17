@@ -113,65 +113,74 @@ const Checkout = () => {
                 </h1>
                 <p className="text-lg font-semibold text-foreground">{isEN ? t('checkout.full_access') : checkout.product_subtitle}</p>
                 <p className="text-sm text-muted-foreground">{isEN ? t('checkout.lifetime_access') : checkout.product_description}</p>
-                
-                <div className="flex items-center gap-2 mt-3 mb-1">
-                  <span className="bg-primary text-primary-foreground text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">
-                    {isEN ? t('checkout.limited_offer') : checkout.badge_text}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2 flex-wrap">
-                  {selectedTier.price_original && selectedTier.price_original > selectedTier.price_current && (
-                    <span className="text-muted-foreground line-through text-sm">
-                      {formatPrice(selectedTier.price_original)}
-                    </span>
-                  )}
-                  <span className="text-2xl font-bold text-accent">
-                    {formatPrice(selectedTier.price_current)}
-                  </span>
-                  {savings && (
-                    <span className="bg-accent/20 text-accent text-xs px-2 py-0.5 rounded-full">
-                      {t('checkout.savings')} {savings}%
-                    </span>
-                  )}
-                </div>
-                {settings.hero.daily_renewal_text && selectedTier.id === 'default' && (
-                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl border border-primary/30 bg-primary/10 mt-2">
-                    <RefreshCw className="w-3 h-3 text-primary" />
-                    <span className="text-xs font-bold text-primary">{settings.hero.daily_renewal_text}</span>
-                  </div>
-                )}
               </div>
             </div>
 
-            {/* Extra price lines */}
-            {selectedTier.id === 'default' && (settings.hero.extra_prices || []).filter(ep => ep.price_current > 0).map((ep, idx) => {
-              const extraRenewal = (settings.hero.extra_renewals || [])[idx];
-              const epSavings = ep.price_original > ep.price_current
-                ? Math.round(((ep.price_original - ep.price_current) / ep.price_original) * 100)
-                : null;
+            {/* Pricing cards side by side */}
+            {(() => {
+              const extraPrices = selectedTier.id === 'default' ? (settings.hero.extra_prices || []).filter(ep => ep.price_current > 0) : [];
+              const hasExtras = extraPrices.length > 0;
+
               return (
-                <div key={idx} className="border-t border-border/30 pt-4 mt-4">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    {ep.label && <span className="text-xs text-muted-foreground">{ep.label}</span>}
-                    {ep.price_original > 0 && (
-                      <span className="text-muted-foreground line-through text-sm">{formatPrice(ep.price_original)}</span>
-                    )}
-                    <span className="text-xl font-bold text-accent">{formatPrice(ep.price_current)}</span>
-                    {epSavings && (
-                      <span className="bg-accent/20 text-accent text-xs px-2 py-0.5 rounded-full">
-                        {t('checkout.savings')} {epSavings}%
+                <div className={`grid gap-3 ${hasExtras ? 'grid-cols-2' : 'grid-cols-1'}`}>
+                  {/* Main offer card */}
+                  <div className="rounded-xl border border-primary/30 bg-primary/5 p-4 flex flex-col gap-2">
+                    <span className="bg-primary text-primary-foreground text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wide self-start">
+                      {isEN ? t('checkout.limited_offer') : checkout.badge_text}
+                    </span>
+                    {selectedTier.price_original && selectedTier.price_original > selectedTier.price_current && (
+                      <span className="text-muted-foreground line-through text-sm">
+                        {formatPrice(selectedTier.price_original)}
                       </span>
                     )}
+                    <span className="text-2xl font-bold text-accent">
+                      {formatPrice(selectedTier.price_current)}
+                    </span>
+                    {savings && (
+                      <span className="bg-accent/20 text-accent text-[10px] font-semibold px-2 py-0.5 rounded-full self-start">
+                        {t('checkout.savings')} {savings}%
+                      </span>
+                    )}
+                    {settings.hero.daily_renewal_text && selectedTier.id === 'default' && (
+                      <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-primary/30 bg-primary/10 mt-1 self-start">
+                        <RefreshCw className="w-3 h-3 text-primary" />
+                        <span className="text-[10px] font-bold text-primary">{settings.hero.daily_renewal_text}</span>
+                      </div>
+                    )}
                   </div>
-                  {extraRenewal?.text && (
-                    <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl border border-primary/30 bg-primary/10 mt-2">
-                      <RefreshCw className="w-3 h-3 text-primary" />
-                      <span className="text-xs font-bold text-primary">{extraRenewal.text}</span>
-                    </div>
-                  )}
+
+                  {/* Extra offer cards */}
+                  {extraPrices.map((ep, idx) => {
+                    const extraRenewal = (settings.hero.extra_renewals || [])[idx];
+                    const epSavings = ep.price_original > ep.price_current
+                      ? Math.round(((ep.price_original - ep.price_current) / ep.price_original) * 100)
+                      : null;
+                    return (
+                      <div key={idx} className="rounded-xl border border-border/50 bg-card/50 p-4 flex flex-col gap-2">
+                        {ep.label && (
+                          <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wide">{ep.label}</span>
+                        )}
+                        {ep.price_original > 0 && (
+                          <span className="text-muted-foreground line-through text-sm">{formatPrice(ep.price_original)}</span>
+                        )}
+                        <span className="text-2xl font-bold text-accent">{formatPrice(ep.price_current)}</span>
+                        {epSavings && (
+                          <span className="bg-accent/20 text-accent text-[10px] font-semibold px-2 py-0.5 rounded-full self-start">
+                            {t('checkout.savings')} {epSavings}%
+                          </span>
+                        )}
+                        {extraRenewal?.text && (
+                          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-primary/30 bg-primary/10 mt-1 self-start">
+                            <RefreshCw className="w-3 h-3 text-primary" />
+                            <span className="text-[10px] font-bold text-primary">{extraRenewal.text}</span>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               );
-            })}
+            })()}
 
             {/* Trust badges */}
             <div className="flex flex-wrap gap-4 text-sm text-muted-foreground mb-6">
