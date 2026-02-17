@@ -197,18 +197,18 @@ export const HomepageEditor = () => {
             </CardHeader>
             <CardContent className="space-y-4">
               {([
-                { key: 'hero' as const, label: 'Hero (Créditos Infinitos)' },
-                { key: 'pricing' as const, label: 'Pacotes de Preços' },
-                { key: 'features' as const, label: 'Funcionalidades' },
-                { key: 'why_choose' as const, label: 'Por que Escolher' },
-                { key: 'how_it_works' as const, label: 'Como Funciona' },
-                { key: 'video' as const, label: 'Vídeo' },
-                { key: 'secure_purchase' as const, label: 'Compra Segura' },
-                { key: 'testimonials' as const, label: 'Depoimentos' },
-                { key: 'guarantee' as const, label: 'Garantia' },
-                { key: 'stats' as const, label: 'Estatísticas' },
-                { key: 'faq' as const, label: 'FAQ' },
-                { key: 'final_cta' as const, label: 'CTA Final' },
+                { key: 'hero' as const, label: '🏠 Hero (Créditos Infinitos)' },
+                { key: 'pricing' as const, label: '💰 Pacotes de Preços' },
+                { key: 'features' as const, label: '✨ Funcionalidades' },
+                { key: 'why_choose' as const, label: '✅ Por que Escolher' },
+                { key: 'how_it_works' as const, label: '🔧 Como Funciona' },
+                { key: 'video' as const, label: '🎬 Vídeo' },
+                { key: 'secure_purchase' as const, label: '🛡️ Compra Segura' },
+                { key: 'testimonials' as const, label: '💬 Depoimentos' },
+                { key: 'guarantee' as const, label: '🏅 Garantia' },
+                { key: 'stats' as const, label: '📊 Estatísticas' },
+                { key: 'faq' as const, label: '❓ FAQ' },
+                { key: 'final_cta' as const, label: '🎯 CTA Final' },
               ]).map(({ key, label }) => (
                 <div key={key} className="flex items-center justify-between py-2 border-b border-border last:border-0">
                   <Label className="text-sm font-medium">{label}</Label>
