@@ -51,44 +51,22 @@ export const HeroSection = () => {
               })()}
             </p>
 
-            <div className="flex flex-col items-center lg:items-start gap-2 mb-4 sm:mb-6">
-              <div className="flex items-baseline gap-2 sm:gap-3 flex-wrap justify-center lg:justify-start">
-                <span className="text-lg sm:text-xl text-muted-foreground line-through">
-                  {formatPrice(hero.price_original)}
-                </span>
-                <span className="text-2xl sm:text-3xl md:text-4xl font-bold text-accent">
-                  {formatPrice(hero.price_current)}
-                </span>
-                {savings && (
-                  <span className="bg-accent/20 text-accent text-xs font-bold px-2 py-1 rounded">
-                    {t('hero.savings')} {savings}%
+            <div className="flex flex-col items-center lg:items-start gap-3 mb-4 sm:mb-6">
+              {/* Main price + its renewal */}
+              <div className="flex flex-col items-center lg:items-start gap-2">
+                <div className="flex items-baseline gap-2 sm:gap-3 flex-wrap justify-center lg:justify-start">
+                  <span className="text-lg sm:text-xl text-muted-foreground line-through">
+                    {formatPrice(hero.price_original)}
                   </span>
-                )}
-              </div>
-              {/* Extra price lines */}
-              {(hero.extra_prices || []).filter(ep => ep.price_current > 0).map((ep, idx) => (
-                <div key={idx} className="flex items-baseline gap-2 sm:gap-3 flex-wrap justify-center lg:justify-start">
-                  {ep.label && <span className="text-xs text-muted-foreground">{ep.label}</span>}
-                  {ep.price_original > 0 && (
-                    <span className="text-sm sm:text-base text-muted-foreground line-through">
-                      {formatPrice(ep.price_original)}
-                    </span>
-                  )}
-                  <span className="text-xl sm:text-2xl font-bold text-accent">
-                    {formatPrice(ep.price_current)}
+                  <span className="text-2xl sm:text-3xl md:text-4xl font-bold text-accent">
+                    {formatPrice(hero.price_current)}
                   </span>
-                  {ep.price_original > ep.price_current && (
+                  {savings && (
                     <span className="bg-accent/20 text-accent text-xs font-bold px-2 py-1 rounded">
-                      {t('hero.savings')} {Math.round(((ep.price_original - ep.price_current) / ep.price_original) * 100)}%
+                      {t('hero.savings')} {savings}%
                     </span>
                   )}
                 </div>
-              ))}
-            </div>
-
-            {/* Daily renewal highlights */}
-            {(hero.daily_renewal_text || (hero.extra_renewals && hero.extra_renewals.length > 0)) && (
-              <div className="flex flex-col items-center lg:items-start gap-2 mb-4">
                 {hero.daily_renewal_text && (
                   <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-primary/30 bg-primary/10 backdrop-blur-sm animate-pulse">
                     <RefreshCw className="w-4 h-4 text-primary" />
@@ -97,16 +75,41 @@ export const HeroSection = () => {
                     </span>
                   </div>
                 )}
-                {(hero.extra_renewals || []).filter(er => er.text).map((er, idx) => (
-                  <div key={idx} className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-primary/30 bg-primary/10 backdrop-blur-sm animate-pulse">
-                    <RefreshCw className="w-4 h-4 text-primary" />
-                    <span className="text-sm sm:text-base font-bold text-primary">
-                      {er.text}
-                    </span>
-                  </div>
-                ))}
               </div>
-            )}
+
+              {/* Extra price lines, each with its own renewal below */}
+              {(hero.extra_prices || []).filter(ep => ep.price_current > 0).map((ep, idx) => {
+                const extraRenewal = (hero.extra_renewals || [])[idx];
+                return (
+                  <div key={idx} className="flex flex-col items-center lg:items-start gap-2">
+                    <div className="flex items-baseline gap-2 sm:gap-3 flex-wrap justify-center lg:justify-start">
+                      {ep.label && <span className="text-xs text-muted-foreground">{ep.label}</span>}
+                      {ep.price_original > 0 && (
+                        <span className="text-sm sm:text-base text-muted-foreground line-through">
+                          {formatPrice(ep.price_original)}
+                        </span>
+                      )}
+                      <span className="text-xl sm:text-2xl font-bold text-accent">
+                        {formatPrice(ep.price_current)}
+                      </span>
+                      {ep.price_original > ep.price_current && (
+                        <span className="bg-accent/20 text-accent text-xs font-bold px-2 py-1 rounded">
+                          {t('hero.savings')} {Math.round(((ep.price_original - ep.price_current) / ep.price_original) * 100)}%
+                        </span>
+                      )}
+                    </div>
+                    {extraRenewal?.text && (
+                      <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-primary/30 bg-primary/10 backdrop-blur-sm animate-pulse">
+                        <RefreshCw className="w-4 h-4 text-primary" />
+                        <span className="text-sm sm:text-base font-bold text-primary">
+                          {extraRenewal.text}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
 
             <div className="mb-4 sm:mb-6">
               <Button variant="accent" size="xl" className="w-full sm:w-auto min-w-[200px]" onClick={() => navigate('/checkout')}>
