@@ -274,7 +274,7 @@ const DynamicLandingPageInner = () => {
   };
 
   const SectionDeleteButton = ({ section }: { section: string }) => {
-    if (!isPreview || hoveredSection !== section || section === 'hero') return null;
+    if (!isPreview || hoveredSection !== section || section === 'hero' || section === 'donation') return null;
     return (
       <button
         onClick={(e) => handleSectionDelete(e, section)}

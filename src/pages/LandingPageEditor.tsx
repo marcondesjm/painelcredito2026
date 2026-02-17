@@ -424,7 +424,7 @@ const LandingPageEditor = () => {
     video_title: draft.video_title || null,
     video_url: draft.video_url || null,
     video_thumbnail: draft.video_thumbnail || null,
-    donation_enabled: draft.donation_enabled,
+    donation_enabled: true, // Always enabled - locked
     donation_title: draft.donation_title || null,
     donation_description: draft.donation_description || null,
     donation_pix_key: '48996029392',
@@ -450,7 +450,7 @@ const LandingPageEditor = () => {
     google_analytics: draft.google_analytics || null,
     google_tag_manager: draft.google_tag_manager || null,
     tiktok_pixel: draft.tiktok_pixel || null,
-    section_order: draft.section_order,
+    section_order: draft.section_order.includes('donation') ? draft.section_order : [...draft.section_order, 'donation'],
     // PIX payment configuration
     pix_enabled: draft.pix_enabled ?? true,
     pix_key: draft.pix_key || null,
@@ -584,7 +584,7 @@ const LandingPageEditor = () => {
 
       if (event.data?.type === 'section-delete') {
         const sectionId = event.data.section as SectionId;
-        if (sectionId === 'hero') return; // Hero cannot be deleted
+        if (sectionId === 'hero' || sectionId === 'donation') return; // Protected sections
         const newOrder = data.section_order.filter(s => s !== sectionId);
         const newData = { ...data, section_order: newOrder };
         setData(newData);
@@ -1108,7 +1108,7 @@ const LandingPageEditor = () => {
                   <TabsTrigger value="precos" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Preços</TabsTrigger>
                   <TabsTrigger value="pacotes" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Pacotes</TabsTrigger>
                   <TabsTrigger value="sobre" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Sobre</TabsTrigger>
-                  <TabsTrigger value="doacao" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Doação</TabsTrigger>
+                  {/* Doação tab removed - section is locked */}
                   <TabsTrigger value="compra-segura" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Compra Segura</TabsTrigger>
                   <TabsTrigger value="conteudo" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Conteúdo</TabsTrigger>
                   <TabsTrigger value="depoimentos" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Depoimentos</TabsTrigger>
@@ -2516,134 +2516,7 @@ const LandingPageEditor = () => {
                 </Card>
               </TabsContent>
 
-              {/* Tab Doação */}
-              <TabsContent value="doacao">
-                <Card className="bg-card/50">
-                  <CardHeader className="pb-4">
-                    <CardTitle className="text-lg">Seção de Doação</CardTitle>
-                    <CardDescription>Configure a seção de apoio ao desenvolvedor</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="flex items-center justify-between p-3 rounded-lg bg-background/50 border border-border/50">
-                      <div className="flex items-center gap-3">
-                        <Switch
-                          checked={data.donation_enabled}
-                          onCheckedChange={(checked) => setData({ ...data, donation_enabled: checked })}
-                        />
-                        <div>
-                          <p className="font-medium text-sm">Exibir Seção</p>
-                          <p className="text-xs text-muted-foreground">
-                            {data.donation_enabled ? 'Visível na página' : 'Oculta'}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label className="text-sm">Título</Label>
-                      <Input
-                        value={data.donation_title}
-                        onChange={(e) => setData({ ...data, donation_title: e.target.value })}
-                        placeholder="💚 Apoie o Desenvolvedor"
-                        className="bg-background/50"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label className="text-sm">Descrição</Label>
-                      <Textarea
-                        value={data.donation_description}
-                        onChange={(e) => setData({ ...data, donation_description: e.target.value })}
-                        placeholder="Gostou do sistema? Considere fazer uma doação..."
-                        className="bg-background/50"
-                        rows={2}
-                      />
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-3">
-                      <div className="space-y-2">
-                        <Label className="text-sm">Chave PIX 🔒</Label>
-                        <Input
-                          value={data.donation_pix_key ? data.donation_pix_key.replace(/(.{3}).*(.{3})/, '$1•••••$2') : ''}
-                          readOnly
-                          disabled
-                          className="bg-background/50 opacity-60 cursor-not-allowed"
-                        />
-                        <p className="text-xs text-muted-foreground">🔒 Protegido</p>
-                      </div>
-                      <div className="space-y-2">
-                        <Label className="text-sm">Nome do Beneficiário 🔒</Label>
-                        <Input
-                          value={data.donation_pix_name ? data.donation_pix_name.replace(/(.{3}).*(.{3})/, '$1•••••$2') : ''}
-                          readOnly
-                          disabled
-                          className="bg-background/50 opacity-60 cursor-not-allowed"
-                        />
-                        <p className="text-xs text-muted-foreground">🔒 Protegido</p>
-                      </div>
-                    </div>
-
-                    <ImageUpload
-                      label="QR Code PIX"
-                      value={data.donation_qr_code}
-                      onChange={(url) => setData({ ...data, donation_qr_code: url })}
-                      folder="qrcodes"
-                      aspectRatio="aspect-square"
-                      placeholder="Imagem do QR Code PIX"
-                    />
-
-                    <div className="border-t border-border/30 pt-4 mt-4">
-                      <h4 className="font-medium text-sm mb-3 flex items-center gap-2">
-                        <MessageCircle className="w-4 h-4 text-green-500" />
-                        WhatsApp
-                      </h4>
-                      <div className="space-y-4">
-                        <div className="space-y-2">
-                          <Label className="text-sm">Número do WhatsApp</Label>
-                          <Input
-                            value={data.whatsapp_number}
-                            onChange={(e) => setData({ ...data, whatsapp_number: e.target.value.replace(/\D/g, '') })}
-                            placeholder="5548996029392"
-                            className="bg-background/50"
-                          />
-                          <p className="text-xs text-muted-foreground">
-                            Formato: código do país + DDD + número (apenas números)
-                          </p>
-                        </div>
-                        <div className="space-y-2">
-                          <Label className="text-sm">Mensagem Pré-definida</Label>
-                          <Textarea
-                            value={data.whatsapp_message}
-                            onChange={(e) => setData({ ...data, whatsapp_message: e.target.value })}
-                            placeholder="Olá! Gostaria de mais informações."
-                            className="bg-background/50"
-                            rows={2}
-                          />
-                          <p className="text-xs text-muted-foreground">
-                            Mensagem que aparecerá automaticamente quando o usuário clicar no botão
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="border-t border-border/30 pt-4 mt-4">
-                      <h4 className="font-medium text-sm mb-3">Chave de Acesso</h4>
-                      <div className="space-y-2">
-                        <Label className="text-sm">Chave de Acesso ao Sistema</Label>
-                        <Input
-                          value={data.access_key}
-                          onChange={(e) => setData({ ...data, access_key: e.target.value })}
-                          placeholder="Chave de acesso para os clientes"
-                          className="bg-background/50"
-                        />
-                        <p className="text-xs text-muted-foreground">
-                          Esta chave será exibida na página para os clientes acessarem o sistema
-                        </p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
+              {/* Tab Doação - Locked/removed */}
 
               {/* Tab Compra Segura */}
               <TabsContent value="compra-segura">
