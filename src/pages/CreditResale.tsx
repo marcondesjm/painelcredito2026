@@ -300,10 +300,10 @@ const CreditResale = () => {
             {!pixGenerated ? (
               <div className="space-y-4">
                 {insufficientInfo && (
-                  <div className="rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-3 flex items-start gap-2">
-                    <AlertTriangle className="w-5 h-5 text-yellow-500 shrink-0 mt-0.5" />
+                  <div className="rounded-lg border border-destructive/30 bg-destructive/10 p-3 flex items-start gap-2">
+                    <AlertTriangle className="w-5 h-5 text-destructive shrink-0 mt-0.5" />
                     <div>
-                      <p className="text-sm font-semibold text-yellow-500">Saldo insuficiente</p>
+                      <p className="text-sm font-semibold text-destructive">Saldo insuficiente</p>
                       <p className="text-xs text-muted-foreground mt-0.5">
                         Você precisa de mais R$ {formatCurrency(insufficientInfo.needed)} para gerar {formatNumber(insufficientInfo.credits)} créditos
                       </p>
@@ -375,11 +375,22 @@ const CreditResale = () => {
                   </p>
                 </div>
 
-                {/* Waiting status */}
-                <div className="flex items-center justify-center gap-2 text-muted-foreground">
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  <span className="text-sm">Aguardando pagamento...</span>
-                </div>
+                {/* Confirm payment button */}
+                <Button
+                  variant="outline"
+                  className="w-full font-bold border-accent text-accent hover:bg-accent/10"
+                  size="lg"
+                  onClick={() => {
+                    toast.success('Pagamento confirmado! Aguarde o admin creditar seu saldo.');
+                    closeBalanceModal();
+                  }}
+                >
+                  <Check className="w-4 h-4" />
+                  Já fiz o pagamento
+                </Button>
+                <p className="text-xs text-muted-foreground">
+                  Após confirmar, o saldo será adicionado pelo administrador.
+                </p>
               </div>
             )}
           </div>
