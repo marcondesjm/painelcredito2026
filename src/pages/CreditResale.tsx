@@ -19,7 +19,7 @@ const POPULAR_PACKAGES = [
   { credits: 10000, price: 196.0, discount: '44% off' },
 ];
 
-const PIX_KEY = '48996029392';
+const PIX_KEY = '+5548996029392';
 const PIX_NAME = 'Marcondes Jorge Machado';
 
 const BASE_RATE = 3.5 / 100;
