@@ -1748,7 +1748,10 @@ const DynamicLandingPageInner = () => {
               <Button 
                 variant="hero"
                 size="sm"
-                onClick={() => navigate('/checkout')}
+                onClick={() => {
+                  const el = document.getElementById('checkout');
+                  el?.scrollIntoView({ behavior: 'smooth' });
+                }}
               >
                 Painel Gerador
               </Button>
@@ -1833,7 +1836,10 @@ const DynamicLandingPageInner = () => {
                   <Button 
                     variant="hero"
                     className="w-full"
-                    onClick={() => navigate('/checkout')}
+                    onClick={() => {
+                      const el = document.getElementById('checkout');
+                      el?.scrollIntoView({ behavior: 'smooth' });
+                    }}
                   >
                     Painel Gerador
                   </Button>
