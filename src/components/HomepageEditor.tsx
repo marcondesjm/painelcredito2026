@@ -315,6 +315,14 @@ export const HomepageEditor = () => {
                     placeholder="🔄 Renovação diária de 5k créditos!"
                   />
                 </div>
+                <div className="space-y-2">
+                  <Label>Texto do Banner de Promoção (exibido acima do cronômetro)</Label>
+                  <Input
+                    value={(hero as any).promo_banner_text || ''}
+                    onChange={(e) => setHero({ ...hero, promo_banner_text: e.target.value } as any)}
+                    placeholder="🔥 PROMOÇÃO DE CRÉDITOS 🔥"
+                  />
+                </div>
               </div>
 
               {/* Extra Prices */}

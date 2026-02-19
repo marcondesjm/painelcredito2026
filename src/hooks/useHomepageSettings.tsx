@@ -23,6 +23,7 @@ interface HeroSettings {
   daily_renewal_text: string;
   extra_prices?: HeroPriceLine[];
   extra_renewals?: HeroRenewalLine[];
+  promo_banner_text?: string;
 }
 
 interface CheckoutSettings {
@@ -145,7 +146,8 @@ const defaultSettings: HomepageSettings = {
     price_current: 349.99,
     cta_text: 'Comprar Agora',
     badge_text: 'Oferta Limitada',
-    daily_renewal_text: '🔄 Renovação diária de 5k créditos!'
+    daily_renewal_text: '🔄 Renovação diária de 5k créditos!',
+    promo_banner_text: '🔥 PROMOÇÃO DE CRÉDITOS 🔥',
   },
   checkout: {
     product_subtitle: 'Acesso Completo',
