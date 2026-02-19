@@ -139,7 +139,7 @@ const defaultSettings: HomepageSettings = {
   hero: {
     title: 'Créditos Infinitos na Lovable.',
     title_highlight: 'Simples. Rápido. Automático.',
-    subtitle: 'Use nosso painel exclusivo e gere créditos ilimitados para seus projetos Lovable e revenda créditos.',
+    subtitle: '⚠️ A revenda do painel está pausada neste momento, mas você ainda pode aproveitar os créditos disponíveis!',
     price_original: 600,
     price_current: 349.99,
     cta_text: 'Comprar Agora',
