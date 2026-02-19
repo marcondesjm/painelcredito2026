@@ -100,15 +100,24 @@ const Index = () => {
               background: `linear-gradient(135deg, ${bgText.gradient_from}, ${bgText.gradient_to})`,
             }}
           />
-          <div className="fixed inset-0 -z-15 overflow-hidden pointer-events-none select-none">
-            <div className="absolute inset-0 flex flex-wrap items-start justify-center gap-4 p-8 opacity-[0.04]">
-              {Array.from({ length: 40 }).map((_, i) => (
+          <div className="fixed inset-0 -z-15 overflow-hidden pointer-events-none select-none flex items-center justify-center">
+            <div
+              className="opacity-[0.05]"
+              style={{
+                transform: 'rotate(-15deg) scale(1.5)',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '1.5rem',
+              }}
+            >
+              {Array.from({ length: 20 }).map((_, i) => (
                 <span
                   key={i}
-                  className="text-4xl md:text-6xl font-black text-white whitespace-nowrap"
-                  style={{ transform: `rotate(-15deg)` }}
+                  className="text-3xl md:text-5xl font-black text-white whitespace-nowrap text-center"
                 >
-                  {bgText.text}
+                  {bgText.text} &nbsp; {bgText.text} &nbsp; {bgText.text}
                 </span>
               ))}
             </div>
