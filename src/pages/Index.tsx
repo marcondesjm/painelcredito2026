@@ -98,8 +98,6 @@ const Index = () => {
           backgroundRepeat: 'repeat'
         }}
       />
-      {/* Dark overlay */}
-      <div className="fixed inset-0 bg-[hsl(240,10%,4%)]/80 -z-10" />
       <Header />
       {vis.hero && <HeroSection />}
       {vis.pricing && (
