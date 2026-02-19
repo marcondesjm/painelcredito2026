@@ -102,7 +102,7 @@ const Index = () => {
           />
           <div className="fixed inset-0 z-[50] overflow-hidden pointer-events-none select-none flex items-center justify-center px-4">
             <div className="text-center w-full max-w-4xl">
-              <div className="opacity-[0.06]">
+              <div>
                 <p
                   className="font-black leading-relaxed break-words"
                   style={{
