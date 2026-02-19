@@ -71,6 +71,7 @@ interface FAQSettings {
 
 interface SectionsVisibility {
   hero: boolean;
+  hero_prices: boolean;
   pricing: boolean;
   features: boolean;
   why_choose: boolean;
@@ -179,6 +180,7 @@ const defaultSettings: HomepageSettings = {
   whatsapp_number: '5548996029392',
   sections_visibility: {
     hero: true,
+    hero_prices: false,
     pricing: true,
     features: true,
     why_choose: true,

@@ -198,6 +198,7 @@ export const HomepageEditor = () => {
             <CardContent className="space-y-4">
               {([
                 { key: 'hero' as const, label: '🏠 Hero (Créditos Infinitos)' },
+                { key: 'hero_prices' as const, label: '💲 Preços no Hero (Revenda)' },
                 { key: 'pricing' as const, label: '💰 Pacotes de Preços' },
                 { key: 'features' as const, label: '✨ Funcionalidades' },
                 { key: 'why_choose' as const, label: '✅ Por que Escolher' },
