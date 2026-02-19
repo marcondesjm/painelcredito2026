@@ -113,6 +113,7 @@ interface HomepageSettings {
   social_proof: SocialProofSettings;
   guarantee: GuaranteeSettings;
   faq: FAQSettings;
+  logo_url: string;
   pix_key: string;
   pix_name: string;
   whatsapp_number: string;
@@ -191,6 +192,7 @@ const defaultSettings: HomepageSettings = {
     ],
     credit_options: [200, 500, 1000, 2000]
   },
+  logo_url: '',
   pix_key: '',
   pix_name: '',
   whatsapp_number: '5548996029392',
@@ -263,6 +265,8 @@ export const useHomepageSettings = () => {
           newSettings.guarantee = item.value as GuaranteeSettings;
         } else if (item.key === 'faq' && item.value) {
           newSettings.faq = item.value as FAQSettings;
+        } else if (item.key === 'logo_url' && typeof item.value === 'string') {
+          newSettings.logo_url = item.value;
         } else if (item.key === 'sections_visibility' && item.value) {
           newSettings.sections_visibility = { ...defaultSettings.sections_visibility, ...(item.value as Partial<SectionsVisibility>) };
         } else if (item.key === 'tracking' && item.value) {
