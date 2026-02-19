@@ -129,19 +129,19 @@ const Index = () => {
       <div className="flex-1">
         <Header />
         {bgText.enabled && (
-          <section className="py-12 sm:py-20 px-4">
-            <div className="text-center w-full max-w-4xl mx-auto">
+          <section className="w-full flex items-center justify-center py-10 sm:py-16 md:py-20 px-4 sm:px-6">
+            <div className="text-center w-full max-w-[90%] sm:max-w-2xl md:max-w-3xl lg:max-w-4xl mx-auto">
               <div style={{ opacity: (bgText.opacity ?? 100) / 100 }}>
                 <p
-                  className={`font-black leading-relaxed break-words ${
+                  className={`font-black leading-snug sm:leading-relaxed break-words ${
                     {
-                      'xl': 'text-sm sm:text-xl',
-                      '2xl': 'text-base sm:text-2xl',
-                      '3xl': 'text-lg sm:text-3xl',
-                      '4xl': 'text-xl sm:text-4xl',
-                      '5xl': 'text-2xl sm:text-5xl',
-                      '6xl': 'text-3xl sm:text-6xl',
-                    }[bgText.font_size || '4xl'] || 'text-xl sm:text-4xl'
+                      'xl': 'text-base sm:text-lg md:text-xl',
+                      '2xl': 'text-lg sm:text-xl md:text-2xl',
+                      '3xl': 'text-xl sm:text-2xl md:text-3xl',
+                      '4xl': 'text-2xl sm:text-3xl md:text-4xl',
+                      '5xl': 'text-2xl sm:text-4xl md:text-5xl',
+                      '6xl': 'text-3xl sm:text-5xl md:text-6xl',
+                    }[bgText.font_size || '4xl'] || 'text-2xl sm:text-3xl md:text-4xl'
                   }`}
                   style={{
                     fontFamily: bgText.font_family || 'Inter',
