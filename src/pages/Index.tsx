@@ -17,7 +17,7 @@ import { SocialProofNotification } from '@/components/SocialProofNotification';
 import { PricingTiersSection, PricingTier } from '@/components/PricingTiersSection';
 import { RechargeInfoSection } from '@/components/RechargeInfoSection';
 import { CheckoutModal } from '@/components/CheckoutModal';
-import backgroundHero from '@/assets/background-hero.png';
+import backgroundHeroDefault from '@/assets/background-hero.png';
 import { useHomepageSettings } from '@/hooks/useHomepageSettings';
 import { TrackingScripts } from '@/components/TrackingScripts';
 
@@ -83,6 +83,7 @@ const Index = () => {
   };
 
   const vis = settings.sections_visibility;
+  const bgImage = settings.background_url || backgroundHeroDefault;
 
   return (
     <div className="min-h-screen relative overflow-x-hidden">
@@ -91,7 +92,7 @@ const Index = () => {
       <div 
         className="fixed inset-0 -z-20"
         style={{ 
-          backgroundImage: `url(${backgroundHero})`,
+          backgroundImage: `url(${bgImage})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat'

@@ -218,6 +218,34 @@ export const HomepageEditor = () => {
             </CardContent>
           </Card>
 
+          {/* Background Upload */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <ImageIcon className="w-5 h-5" />
+                Fundo do Site
+              </CardTitle>
+              <CardDescription>Altere a imagem de fundo exibida no site</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ImageUpload
+                label="Imagem de Fundo"
+                value={settings.background_url}
+                onChange={async (url) => {
+                  const result = await updateSetting('background_url', url);
+                  if (result.success) {
+                    toast.success('Fundo atualizado com sucesso!');
+                  } else {
+                    toast.error('Erro ao salvar fundo');
+                  }
+                }}
+                folder="backgrounds"
+                aspectRatio="aspect-video"
+                placeholder="Cole a URL do fundo ou faça upload"
+              />
+            </CardContent>
+          </Card>
+
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
