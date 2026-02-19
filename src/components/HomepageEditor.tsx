@@ -40,6 +40,7 @@ import { ImageUpload } from '@/components/ImageUpload';
 export const HomepageEditor = () => {
   const { settings, loading, updateSetting, refetch } = useHomepageSettings();
   const [saving, setSaving] = useState(false);
+  const [activeTab, setActiveTab] = useState('hero');
   
   // Local state for editing
   const [hero, setHero] = useState<HeroSettings>(settings.hero);
@@ -198,7 +199,7 @@ export const HomepageEditor = () => {
         </div>
       </div>
 
-      <Tabs defaultValue="hero" className="w-full">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-10">
           <TabsTrigger value="sections">Seções</TabsTrigger>
           <TabsTrigger value="hero">Hero</TabsTrigger>
