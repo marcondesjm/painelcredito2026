@@ -218,31 +218,106 @@ export const HomepageEditor = () => {
             </CardContent>
           </Card>
 
-          {/* Background Upload */}
+          {/* Background Settings */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <ImageIcon className="w-5 h-5" />
                 Fundo do Site
               </CardTitle>
-              <CardDescription>Altere a imagem de fundo e o filtro escuro do site</CardDescription>
+              <CardDescription>Escolha entre imagem de fundo ou gradiente com texto</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <ImageUpload
-                label="Imagem de Fundo"
-                value={settings.background_url}
-                onChange={async (url) => {
-                  const result = await updateSetting('background_url', url);
-                  if (result.success) {
-                    toast.success('Fundo atualizado com sucesso!');
-                  } else {
-                    toast.error('Erro ao salvar fundo');
-                  }
-                }}
-                folder="backgrounds"
-                aspectRatio="aspect-video"
-                placeholder="Cole a URL do fundo ou faça upload"
-              />
+              {/* Toggle: text bg mode */}
+              <div className="flex items-center justify-between">
+                <Label>Usar gradiente com texto (ao invés de imagem)</Label>
+                <Switch
+                  checked={settings.background_text.enabled}
+                  onCheckedChange={async (checked) => {
+                    const updated = { ...settings.background_text, enabled: checked };
+                    const result = await updateSetting('background_text', updated);
+                    if (result.success) toast.success(checked ? 'Fundo com texto ativado!' : 'Fundo com imagem ativado!');
+                  }}
+                />
+              </div>
+
+              {settings.background_text.enabled ? (
+                <div className="space-y-4 border rounded-lg p-4 border-border">
+                  <div className="space-y-2">
+                    <Label>Texto do Fundo</Label>
+                    <Input
+                      value={settings.background_text.text}
+                      onChange={async (e) => {
+                        const updated = { ...settings.background_text, text: e.target.value };
+                        await updateSetting('background_text', updated);
+                      }}
+                      placeholder="CRÉDITOS INFINITOS"
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label>Cor Gradiente (início)</Label>
+                      <div className="flex gap-2 items-center">
+                        <input
+                          type="color"
+                          value={settings.background_text.gradient_from}
+                          onChange={async (e) => {
+                            const updated = { ...settings.background_text, gradient_from: e.target.value };
+                            await updateSetting('background_text', updated);
+                          }}
+                          className="w-10 h-10 rounded cursor-pointer border-0"
+                        />
+                        <Input
+                          value={settings.background_text.gradient_from}
+                          onChange={async (e) => {
+                            const updated = { ...settings.background_text, gradient_from: e.target.value };
+                            await updateSetting('background_text', updated);
+                          }}
+                          className="flex-1"
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Cor Gradiente (fim)</Label>
+                      <div className="flex gap-2 items-center">
+                        <input
+                          type="color"
+                          value={settings.background_text.gradient_to}
+                          onChange={async (e) => {
+                            const updated = { ...settings.background_text, gradient_to: e.target.value };
+                            await updateSetting('background_text', updated);
+                          }}
+                          className="w-10 h-10 rounded cursor-pointer border-0"
+                        />
+                        <Input
+                          value={settings.background_text.gradient_to}
+                          onChange={async (e) => {
+                            const updated = { ...settings.background_text, gradient_to: e.target.value };
+                            await updateSetting('background_text', updated);
+                          }}
+                          className="flex-1"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <ImageUpload
+                    label="Imagem de Fundo"
+                    value={settings.background_url}
+                    onChange={async (url) => {
+                      const result = await updateSetting('background_url', url);
+                      if (result.success) toast.success('Fundo atualizado com sucesso!');
+                      else toast.error('Erro ao salvar fundo');
+                    }}
+                    folder="backgrounds"
+                    aspectRatio="aspect-video"
+                    placeholder="Cole a URL do fundo ou faça upload"
+                  />
+                </>
+              )}
+
               <div className="space-y-2">
                 <Label>Filtro Escuro (Overlay): {settings.background_overlay}%</Label>
                 <input
@@ -252,10 +327,7 @@ export const HomepageEditor = () => {
                   value={settings.background_overlay}
                   onChange={async (e) => {
                     const val = Number(e.target.value);
-                    const result = await updateSetting('background_overlay', val);
-                    if (!result.success) {
-                      toast.error('Erro ao salvar filtro');
-                    }
+                    await updateSetting('background_overlay', val);
                   }}
                   className="w-full accent-primary"
                 />

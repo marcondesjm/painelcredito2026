@@ -86,20 +86,45 @@ const Index = () => {
   const vis = settings.sections_visibility;
   const bgImage = settings.background_url || backgroundHeroDefault;
   const overlayOpacity = settings.background_overlay / 100;
+  const bgText = settings.background_text;
 
   return (
     <div className="min-h-screen relative overflow-x-hidden">
       <TrackingScripts />
-      {/* Fixed background for entire page */}
-      <div 
-        className="fixed inset-0 -z-20"
-        style={{ 
-          backgroundImage: `url(${bgImage})`,
-          backgroundSize: 'contain',
-          backgroundPosition: 'top center',
-          backgroundRepeat: 'repeat'
-        }}
-      />
+      {/* Fixed background */}
+      {bgText.enabled ? (
+        <>
+          <div
+            className="fixed inset-0 -z-20"
+            style={{
+              background: `linear-gradient(135deg, ${bgText.gradient_from}, ${bgText.gradient_to})`,
+            }}
+          />
+          <div className="fixed inset-0 -z-15 overflow-hidden pointer-events-none select-none">
+            <div className="absolute inset-0 flex flex-wrap items-start justify-center gap-4 p-8 opacity-[0.04]">
+              {Array.from({ length: 40 }).map((_, i) => (
+                <span
+                  key={i}
+                  className="text-4xl md:text-6xl font-black text-white whitespace-nowrap"
+                  style={{ transform: `rotate(-15deg)` }}
+                >
+                  {bgText.text}
+                </span>
+              ))}
+            </div>
+          </div>
+        </>
+      ) : (
+        <div
+          className="fixed inset-0 -z-20"
+          style={{
+            backgroundImage: `url(${bgImage})`,
+            backgroundSize: 'contain',
+            backgroundPosition: 'top center',
+            backgroundRepeat: 'repeat',
+          }}
+        />
+      )}
       {/* Dark overlay - controlled from admin panel */}
       {overlayOpacity > 0 && (
         <div className="fixed inset-0 -z-10" style={{ backgroundColor: `hsl(240 10% 4% / ${overlayOpacity})` }} />
