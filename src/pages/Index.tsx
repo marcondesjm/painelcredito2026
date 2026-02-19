@@ -129,7 +129,7 @@ const Index = () => {
       <div className="flex-1">
         <Header />
         {showMaintenanceSection && (
-          <section className="w-full flex items-center justify-center min-h-[60vh] sm:min-h-[70vh] px-4 sm:px-6">
+          <section className="w-full flex items-center justify-center py-12 sm:py-20 md:min-h-[60vh] px-4 sm:px-6">
             <div className="text-center w-full max-w-[90%] sm:max-w-2xl md:max-w-3xl lg:max-w-4xl mx-auto">
               <div style={{ opacity: (bgText.opacity ?? 100) / 100 }}>
                 <p
