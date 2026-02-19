@@ -104,10 +104,11 @@ const Index = () => {
             <div className="text-center px-8">
               <div className="opacity-[0.06]">
                 <p
-                  className="font-black text-white leading-relaxed whitespace-pre-line"
+                  className="font-black leading-relaxed whitespace-pre-line"
                   style={{
                     fontFamily: bgText.font_family || 'Inter',
                     fontSize: { xl: '1.25rem', '2xl': '1.5rem', '3xl': '1.875rem', '4xl': '2.25rem', '5xl': '3rem', '6xl': '3.75rem' }[bgText.font_size || '4xl'] || '2.25rem',
+                    color: bgText.font_color || '#ffffff',
                   }}
                 >
                   {bgText.text}
