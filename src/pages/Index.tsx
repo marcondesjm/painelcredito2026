@@ -84,6 +84,7 @@ const Index = () => {
 
   const vis = settings.sections_visibility;
   const bgImage = settings.background_url || backgroundHeroDefault;
+  const overlayOpacity = settings.background_overlay / 100;
 
   return (
     <div className="min-h-screen relative overflow-x-hidden">
@@ -98,6 +99,10 @@ const Index = () => {
           backgroundRepeat: 'repeat'
         }}
       />
+      {/* Dark overlay - controlled from admin panel */}
+      {overlayOpacity > 0 && (
+        <div className="fixed inset-0 -z-10" style={{ backgroundColor: `hsl(240 10% 4% / ${overlayOpacity})` }} />
+      )}
       <Header />
       {vis.hero && <HeroSection />}
       {vis.pricing && (

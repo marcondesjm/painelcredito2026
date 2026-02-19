@@ -115,6 +115,7 @@ interface HomepageSettings {
   faq: FAQSettings;
   logo_url: string;
   background_url: string;
+  background_overlay: number; // 0-100 opacity percentage
   pix_key: string;
   pix_name: string;
   whatsapp_number: string;
@@ -195,6 +196,7 @@ const defaultSettings: HomepageSettings = {
   },
   logo_url: '',
   background_url: '',
+  background_overlay: 0,
   pix_key: '',
   pix_name: '',
   whatsapp_number: '5548996029392',
@@ -271,6 +273,8 @@ export const useHomepageSettings = () => {
           newSettings.logo_url = item.value;
         } else if (item.key === 'background_url' && typeof item.value === 'string') {
           newSettings.background_url = item.value;
+        } else if (item.key === 'background_overlay' && typeof item.value === 'number') {
+          newSettings.background_overlay = item.value;
         } else if (item.key === 'sections_visibility' && item.value) {
           newSettings.sections_visibility = { ...defaultSettings.sections_visibility, ...(item.value as Partial<SectionsVisibility>) };
         } else if (item.key === 'tracking' && item.value) {
