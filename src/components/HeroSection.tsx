@@ -123,27 +123,19 @@ export const HeroSection = () => {
               <CountdownTimer />
             </div>
 
-            {(() => {
-              const text = language === 'en' ? t('hero.subtitle') : hero.subtitle;
-              const parts = text.split(/\n+/);
-              if (parts.length > 1) {
-                return (
-                  <div className="text-center lg:text-left">
-                    <span 
-                      className="text-primary font-bold text-lg sm:text-xl inline-flex items-center gap-2 drop-shadow-[0_0_8px_hsl(var(--primary)/0.5)] cursor-pointer hover:opacity-80 transition-opacity"
-                      onClick={() => document.getElementById('pacotes')?.scrollIntoView({ behavior: 'smooth' })}
-                    >
-                      {parts.slice(1).join(' ')}
-                    </span>
-                    <ChevronDown 
-                      className="w-10 h-10 text-primary animate-bounce cursor-pointer hover:opacity-80 transition-opacity mx-auto lg:mx-0 mt-2 drop-shadow-[0_0_12px_hsl(var(--primary)/0.6)]" 
-                      onClick={() => document.getElementById('pacotes')?.scrollIntoView({ behavior: 'smooth' })}
-                    />
-                  </div>
-                );
-              }
-              return null;
-            })()}
+            <div className="flex flex-col items-center lg:items-start gap-1">
+              <span 
+                className="text-primary font-bold text-sm sm:text-base cursor-pointer hover:opacity-80 transition-opacity"
+                onClick={() => document.getElementById('pacotes')?.scrollIntoView({ behavior: 'smooth' })}
+              >
+                {t('hero.see_plans') || 'Veja os planos abaixo'}
+              </span>
+              <ChevronDown 
+                className="w-8 h-8 sm:w-10 sm:h-10 text-primary animate-bounce cursor-pointer hover:opacity-80 transition-opacity drop-shadow-[0_0_12px_hsl(var(--primary)/0.6)]" 
+                onClick={() => document.getElementById('pacotes')?.scrollIntoView({ behavior: 'smooth' })}
+              />
+            </div>
+
           </div>
         </div>
       </div>
