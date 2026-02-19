@@ -60,6 +60,7 @@ const CreditResale = () => {
   const [confirmPhone, setConfirmPhone] = useState('');
   const [confirmReceipt, setConfirmReceipt] = useState<File | null>(null);
   const [adminWhatsapp, setAdminWhatsapp] = useState('5548996029392');
+  const [showRefreshButton, setShowRefreshButton] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
@@ -98,17 +99,19 @@ const CreditResale = () => {
     fetchBalance();
   }, [user]);
 
-  // Fetch admin whatsapp
+  // Fetch admin whatsapp and refresh button setting
   useEffect(() => {
-    const fetchWhatsapp = async () => {
+    const fetchSettings = async () => {
       const { data } = await supabase
         .from('app_settings')
-        .select('value')
-        .eq('key', 'whatsapp_number')
-        .maybeSingle();
-      if (data?.value) setAdminWhatsapp(data.value);
+        .select('key, value')
+        .in('key', ['whatsapp_number', 'show_refresh_button']);
+      data?.forEach((item) => {
+        if (item.key === 'whatsapp_number' && item.value) setAdminWhatsapp(item.value);
+        if (item.key === 'show_refresh_button') setShowRefreshButton(item.value === 'true');
+      });
     };
-    fetchWhatsapp();
+    fetchSettings();
   }, []);
 
   const price = useMemo(() => calculatePrice(credits), [credits]);
@@ -567,15 +570,17 @@ ${confirmReceipt ? '📎 *Comprovante:* Será enviado em seguida' : '📎 *Compr
       )}
       {/* Footer */}
       <footer className="relative z-10 w-full border-t border-border py-6 text-center text-muted-foreground text-sm mt-auto space-y-3">
-        <Button
-          variant="outline"
-          size="sm"
-          className="mx-auto"
-          onClick={() => window.location.reload()}
-        >
-          <Loader2 className="w-4 h-4 mr-2" />
-          Atualizar Página
-        </Button>
+        {showRefreshButton && (
+          <Button
+            variant="outline"
+            size="sm"
+            className="mx-auto"
+            onClick={() => window.location.reload()}
+          >
+            <Loader2 className="w-4 h-4 mr-2" />
+            Atualizar Página
+          </Button>
+        )}
         <p>© 2026 Curso Lovable. Todos os direitos reservados.</p>
         <p className="text-xs flex items-center justify-center gap-2 mb-16">
           <span className="flex items-center gap-1">

@@ -132,6 +132,7 @@ const AdminDashboard = () => {
   const [whatsappCountryCode, setWhatsappCountryCode] = useState('+55');
   const [whatsappMessage, setWhatsappMessage] = useState('');
   const [savingSettings, setSavingSettings] = useState(false);
+  const [showRefreshButton, setShowRefreshButton] = useState(false);
   
   // Balance management
   const [balanceModalUser, setBalanceModalUser] = useState<UserProfile | null>(null);
@@ -176,6 +177,19 @@ const AdminDashboard = () => {
       setWhatsappMessage(appSettings.whatsapp_message || '');
     }
   }, [appSettings, settingsLoading]);
+
+  // Fetch refresh button setting
+  useEffect(() => {
+    const fetchRefreshSetting = async () => {
+      const { data } = await supabase
+        .from('app_settings')
+        .select('value')
+        .eq('key', 'show_refresh_button')
+        .maybeSingle();
+      setShowRefreshButton(data?.value === 'true');
+    };
+    fetchRefreshSetting();
+  }, []);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -1316,6 +1330,29 @@ const AdminDashboard = () => {
                     )}
                     Salvar Configurações
                   </Button>
+                </div>
+
+                {/* Refresh Button Toggle */}
+                <div className="border-t pt-6">
+                  <div className="flex items-center justify-between max-w-lg">
+                    <div>
+                      <h4 className="text-sm font-medium">Botão "Atualizar Página"</h4>
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        Exibe o botão de atualizar no rodapé da página de revenda
+                      </p>
+                    </div>
+                    <button
+                      onClick={async () => {
+                        const newValue = !showRefreshButton;
+                        setShowRefreshButton(newValue);
+                        await updateSetting('show_refresh_button', String(newValue));
+                        toast.success(newValue ? 'Botão ativado' : 'Botão desativado');
+                      }}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${showRefreshButton ? 'bg-primary' : 'bg-muted'}`}
+                    >
+                      <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${showRefreshButton ? 'translate-x-6' : 'translate-x-1'}`} />
+                    </button>
+                  </div>
                 </div>
 
                 {/* Preview */}
