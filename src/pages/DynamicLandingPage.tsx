@@ -132,6 +132,7 @@ interface LandingPageData {
   checkout_badge_text: string | null;
   checkout_benefits: string[] | null;
   checkout_enabled: boolean | null;
+  nav_buttons: { id: string; label: string; enabled: boolean; action: string; target: string }[] | null;
 }
 
 type BoundaryState = {
@@ -1786,83 +1787,63 @@ const DynamicLandingPageInner = () => {
             
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center gap-2">
-              <Button 
-                variant="hero"
-                size="sm"
-                onClick={() => {
-                  const el = document.getElementById('checkout');
-                  el?.scrollIntoView({ behavior: 'smooth' });
-                }}
-              >
-                Painel Gerador
-              </Button>
-              <Button 
-                size="sm" 
-                className="text-white"
-                style={{ backgroundColor: `hsl(${primaryHsl})` }}
-                onClick={() => handleCtaClick(page.hero_cta_link, navigate)}
-              >
-                {page.hero_cta_text || 'Comprar Agora'}
-              </Button>
-              {user ? (
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="border-primary/50 text-primary hover:bg-primary hover:text-primary-foreground"
-                  style={{ borderColor: `hsl(${primaryHsl} / 0.5)`, color: `hsl(${primaryHsl})` }}
-                  onClick={async () => {
-                    await supabase.auth.signOut();
-                    setUser(null);
-                  }}
-                >
-                  <LogOut className="w-4 h-4 mr-2" />
-                  Sair
-                </Button>
-              ) : (
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="border-primary/50 text-primary hover:bg-primary hover:text-primary-foreground"
-                  style={{ borderColor: `hsl(${primaryHsl} / 0.5)`, color: `hsl(${primaryHsl})` }}
-                  onClick={() => navigate('/auth')}
-                >
-                  <UserPlus className="w-4 h-4 mr-2" />
-                  Criar conta
-                </Button>
-              )}
-              <Button 
-                variant="accent" 
-                size="sm"
-                className="glow-accent"
-                onClick={() => {
-                  const el = document.getElementById('pacotes');
-                  el?.scrollIntoView({ behavior: 'smooth' });
-                }}
-              >
-                Compra de Créditos
-              </Button>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className="text-muted-foreground hover:text-foreground"
-                onClick={() => {
-                  const el = document.getElementById('how-it-works');
-                  el?.scrollIntoView({ behavior: 'smooth' });
-                }}
-              >
-                Como Funciona
-              </Button>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className="text-muted-foreground hover:text-foreground"
-                onClick={() => {
-                  const el = document.getElementById('faq');
-                  el?.scrollIntoView({ behavior: 'smooth' });
-                }}
-              >
-                FAQ
-              </Button>
+              {(() => {
+                const navButtons = (page.nav_buttons as { id: string; label: string; enabled: boolean; action: string; target: string }[]) || [];
+                const getBtn = (id: string) => navButtons.find(b => b.id === id);
+                const isEnabled = (id: string) => { const b = getBtn(id); return b ? b.enabled : true; };
+                const getLabel = (id: string, fallback: string) => { const b = getBtn(id); return b?.label || fallback; };
+                const getTarget = (id: string, fallback: string) => { const b = getBtn(id); return b?.target || fallback; };
+                const handleNavClick = (btn: { action: string; target: string }) => {
+                  if (btn.action === 'link' || btn.target.startsWith('http')) {
+                    window.open(btn.target, '_blank', 'noopener,noreferrer');
+                  } else if (btn.target.startsWith('#')) {
+                    const el = document.getElementById(btn.target.replace('#', ''));
+                    el?.scrollIntoView({ behavior: 'smooth' });
+                  }
+                };
+                return (
+                  <>
+                    {isEnabled('painel_gerador') && (
+                      <Button variant="hero" size="sm" onClick={() => handleNavClick({ action: getBtn('painel_gerador')?.action || 'scroll', target: getTarget('painel_gerador', '#checkout') })}>
+                        {getLabel('painel_gerador', 'Painel Gerador')}
+                      </Button>
+                    )}
+                    {isEnabled('comprar_agora') && (
+                      <Button size="sm" className="text-white" style={{ backgroundColor: `hsl(${primaryHsl})` }} onClick={() => {
+                        const t = getTarget('comprar_agora', '');
+                        if (t && (t.startsWith('http') || t.startsWith('#'))) { handleNavClick({ action: 'link', target: t }); }
+                        else { handleCtaClick(page.hero_cta_link, navigate); }
+                      }}>
+                        {getLabel('comprar_agora', page.hero_cta_text || 'Comprar Agora')}
+                      </Button>
+                    )}
+                    {user ? (
+                      <Button variant="outline" size="sm" style={{ borderColor: `hsl(${primaryHsl} / 0.5)`, color: `hsl(${primaryHsl})` }} onClick={async () => { await supabase.auth.signOut(); setUser(null); }}>
+                        <LogOut className="w-4 h-4 mr-2" /> Sair
+                      </Button>
+                    ) : (
+                      <Button variant="outline" size="sm" style={{ borderColor: `hsl(${primaryHsl} / 0.5)`, color: `hsl(${primaryHsl})` }} onClick={() => navigate('/auth')}>
+                        <UserPlus className="w-4 h-4 mr-2" /> Criar conta
+                      </Button>
+                    )}
+                    {isEnabled('compra_creditos') && (
+                      <Button variant="accent" size="sm" className="glow-accent" onClick={() => handleNavClick({ action: getBtn('compra_creditos')?.action || 'scroll', target: getTarget('compra_creditos', '#pacotes') })}>
+                        {getLabel('compra_creditos', 'Compra de Créditos')}
+                      </Button>
+                    )}
+                    {isEnabled('como_funciona') && (
+                      <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground" onClick={() => handleNavClick({ action: getBtn('como_funciona')?.action || 'scroll', target: getTarget('como_funciona', '#how-it-works') })}>
+                        {getLabel('como_funciona', 'Como Funciona')}
+                      </Button>
+                    )}
+                    {isEnabled('faq') && (
+                      <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground" onClick={() => handleNavClick({ action: getBtn('faq')?.action || 'scroll', target: getTarget('faq', '#faq') })}>
+                        {getLabel('faq', 'FAQ')}
+                      </Button>
+                    )}
+                  </>
+                );
+              })()}
             </nav>
 
             {/* Mobile Menu */}
@@ -1874,77 +1855,63 @@ const DynamicLandingPageInner = () => {
               </SheetTrigger>
               <SheetContent side="right" className="bg-background border-border w-[280px]">
                 <nav className="flex flex-col gap-4 mt-8">
-                  <Button 
-                    variant="hero"
-                    className="w-full"
-                    onClick={() => {
-                      const el = document.getElementById('checkout');
-                      el?.scrollIntoView({ behavior: 'smooth' });
-                    }}
-                  >
-                    Painel Gerador
-                  </Button>
-                  <Button 
-                    className="w-full text-white"
-                    style={{ backgroundColor: `hsl(${primaryHsl})` }}
-                    onClick={() => handleCtaClick(page.hero_cta_link, navigate)}
-                  >
-                    {page.hero_cta_text || 'Comprar Agora'}
-                  </Button>
-                  {user ? (
-                    <Button 
-                      variant="outline" 
-                      className="w-full"
-                      style={{ borderColor: `hsl(${primaryHsl} / 0.5)`, color: `hsl(${primaryHsl})` }}
-                      onClick={async () => {
-                        await supabase.auth.signOut();
-                        setUser(null);
-                      }}
-                    >
-                      <LogOut className="w-4 h-4 mr-2" />
-                      Sair
-                    </Button>
-                  ) : (
-                    <Button 
-                      variant="outline" 
-                      className="w-full"
-                      style={{ borderColor: `hsl(${primaryHsl} / 0.5)`, color: `hsl(${primaryHsl})` }}
-                      onClick={() => navigate('/auth')}
-                    >
-                      <UserPlus className="w-4 h-4 mr-2" />
-                      Criar conta
-                    </Button>
-                  )}
-                  <Button 
-                    variant="accent" 
-                    className="w-full glow-accent"
-                    onClick={() => {
-                      const el = document.getElementById('pacotes');
-                      el?.scrollIntoView({ behavior: 'smooth' });
-                    }}
-                  >
-                    Compra de Créditos
-                  </Button>
-                  <Button 
-                    variant="ghost" 
-                    className="w-full justify-start text-muted-foreground hover:text-foreground"
-                    onClick={() => {
-                      const el = document.getElementById('how-it-works');
-                      el?.scrollIntoView({ behavior: 'smooth' });
-                    }}
-                  >
-                    Como Funciona
-                  </Button>
-                  <Button 
-                    variant="ghost" 
-                    className="w-full justify-start text-muted-foreground hover:text-foreground"
-                    onClick={() => {
-                      const el = document.getElementById('faq');
-                      el?.scrollIntoView({ behavior: 'smooth' });
-                    }}
-                  >
-                    FAQ
-                  </Button>
+                  {(() => {
+                    const navButtons = (page.nav_buttons as { id: string; label: string; enabled: boolean; action: string; target: string }[]) || [];
+                    const getBtn = (id: string) => navButtons.find(b => b.id === id);
+                    const isEnabled = (id: string) => { const b = getBtn(id); return b ? b.enabled : true; };
+                    const getLabel = (id: string, fallback: string) => { const b = getBtn(id); return b?.label || fallback; };
+                    const getTarget = (id: string, fallback: string) => { const b = getBtn(id); return b?.target || fallback; };
+                    const handleNavClick = (btn: { action: string; target: string }) => {
+                      if (btn.action === 'link' || btn.target.startsWith('http')) {
+                        window.open(btn.target, '_blank', 'noopener,noreferrer');
+                      } else if (btn.target.startsWith('#')) {
+                        const el = document.getElementById(btn.target.replace('#', ''));
+                        el?.scrollIntoView({ behavior: 'smooth' });
+                      }
+                    };
+                    return (
+                      <>
+                        {isEnabled('painel_gerador') && (
+                          <Button variant="hero" className="w-full" onClick={() => handleNavClick({ action: getBtn('painel_gerador')?.action || 'scroll', target: getTarget('painel_gerador', '#checkout') })}>
+                            {getLabel('painel_gerador', 'Painel Gerador')}
+                          </Button>
+                        )}
+                        {isEnabled('comprar_agora') && (
+                          <Button className="w-full text-white" style={{ backgroundColor: `hsl(${primaryHsl})` }} onClick={() => {
+                            const t = getTarget('comprar_agora', '');
+                            if (t && (t.startsWith('http') || t.startsWith('#'))) { handleNavClick({ action: 'link', target: t }); }
+                            else { handleCtaClick(page.hero_cta_link, navigate); }
+                          }}>
+                            {getLabel('comprar_agora', page.hero_cta_text || 'Comprar Agora')}
+                          </Button>
+                        )}
+                        {user ? (
+                          <Button variant="outline" className="w-full" style={{ borderColor: `hsl(${primaryHsl} / 0.5)`, color: `hsl(${primaryHsl})` }} onClick={async () => { await supabase.auth.signOut(); setUser(null); }}>
+                            <LogOut className="w-4 h-4 mr-2" /> Sair
+                          </Button>
+                        ) : (
+                          <Button variant="outline" className="w-full" style={{ borderColor: `hsl(${primaryHsl} / 0.5)`, color: `hsl(${primaryHsl})` }} onClick={() => navigate('/auth')}>
+                            <UserPlus className="w-4 h-4 mr-2" /> Criar conta
+                          </Button>
+                        )}
+                        {isEnabled('compra_creditos') && (
+                          <Button variant="accent" className="w-full glow-accent" onClick={() => handleNavClick({ action: getBtn('compra_creditos')?.action || 'scroll', target: getTarget('compra_creditos', '#pacotes') })}>
+                            {getLabel('compra_creditos', 'Compra de Créditos')}
+                          </Button>
+                        )}
+                        {isEnabled('como_funciona') && (
+                          <Button variant="ghost" className="w-full justify-start text-muted-foreground hover:text-foreground" onClick={() => handleNavClick({ action: getBtn('como_funciona')?.action || 'scroll', target: getTarget('como_funciona', '#how-it-works') })}>
+                            {getLabel('como_funciona', 'Como Funciona')}
+                          </Button>
+                        )}
+                        {isEnabled('faq') && (
+                          <Button variant="ghost" className="w-full justify-start text-muted-foreground hover:text-foreground" onClick={() => handleNavClick({ action: getBtn('faq')?.action || 'scroll', target: getTarget('faq', '#faq') })}>
+                            {getLabel('faq', 'FAQ')}
+                          </Button>
+                        )}
+                      </>
+                    );
+                  })()}
                 </nav>
               </SheetContent>
             </Sheet>
