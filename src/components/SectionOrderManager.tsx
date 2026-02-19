@@ -203,7 +203,7 @@ export const SectionOrderManager = forwardRef<HTMLDivElement, SectionOrderManage
               onDragLeave={handleDragLeave}
               onTouchStart={(e) => isEnabled && handleTouchStart(visibleIndex, e)}
               onTouchEnd={handleTouchEnd}
-              className={`flex items-center gap-2 p-3 bg-background/50 rounded-lg border transition-all select-none ${
+              className={`flex flex-col gap-1 p-3 bg-background/50 rounded-lg border transition-all select-none ${
                 !isEnabled
                   ? 'opacity-50 border-border/30'
                   : overIndex === visibleIndex && dragIndex !== null
@@ -213,39 +213,42 @@ export const SectionOrderManager = forwardRef<HTMLDivElement, SectionOrderManage
                   : 'border-border/50 hover:border-primary/50 cursor-grab active:cursor-grabbing'
               }`}
             >
-              <GripVertical className={`w-4 h-4 flex-shrink-0 ${isEnabled ? 'text-muted-foreground' : 'text-muted-foreground/30'}`} />
-              <span className={`flex-1 text-sm font-medium ${!isEnabled ? 'line-through text-muted-foreground' : ''}`}>
+              <span className={`text-xs font-semibold uppercase tracking-wide ${!isEnabled ? 'text-muted-foreground/50 line-through' : 'text-primary'}`}>
                 {sectionLabels[sectionId] || sectionId}
               </span>
-              {!isHero && onToggleSection && (
-                <Switch
-                  checked={isEnabled}
-                  onCheckedChange={(checked) => onToggleSection(sectionId, checked)}
-                  className="flex-shrink-0"
-                />
-              )}
-              {isEnabled && (
-              <div className="flex gap-1">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-7 w-7 p-0"
-                  onClick={() => moveSection(visibleIndex, 'up')}
-                  disabled={visibleIndex === 0}
-                >
-                  <ChevronUp className="w-4 h-4" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-7 w-7 p-0"
-                  onClick={() => moveSection(visibleIndex, 'down')}
-                  disabled={visibleIndex === visibleSections.length - 1}
-                >
-                  <ChevronDown className="w-4 h-4" />
-                </Button>
+              <div className="flex items-center gap-2">
+                <GripVertical className={`w-4 h-4 flex-shrink-0 ${isEnabled ? 'text-muted-foreground' : 'text-muted-foreground/30'}`} />
+                <span className="flex-1" />
+                {!isHero && onToggleSection && (
+                  <Switch
+                    checked={isEnabled}
+                    onCheckedChange={(checked) => onToggleSection(sectionId, checked)}
+                    className="flex-shrink-0"
+                  />
+                )}
+                {isEnabled && (
+                <div className="flex gap-1">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-7 w-7 p-0"
+                    onClick={() => moveSection(visibleIndex, 'up')}
+                    disabled={visibleIndex === 0}
+                  >
+                    <ChevronUp className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-7 w-7 p-0"
+                    onClick={() => moveSection(visibleIndex, 'down')}
+                    disabled={visibleIndex === visibleSections.length - 1}
+                  >
+                    <ChevronDown className="w-4 h-4" />
+                  </Button>
+                </div>
+                )}
               </div>
-              )}
             </div>
             );
           })}
