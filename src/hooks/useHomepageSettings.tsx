@@ -116,6 +116,8 @@ interface BackgroundTextSettings {
   text: string;
   gradient_from: string;
   gradient_to: string;
+  font_family: string;
+  font_size: string;
 }
 
 interface HomepageSettings {
@@ -217,6 +219,8 @@ const defaultSettings: HomepageSettings = {
     text: 'CRÉDITOS INFINITOS',
     gradient_from: '#1a1a2e',
     gradient_to: '#0a0a0f',
+    font_family: 'Inter',
+    font_size: '4xl',
   },
   tool_progress: {
     enabled: false,
