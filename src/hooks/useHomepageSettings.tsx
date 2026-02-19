@@ -111,6 +111,13 @@ interface ToolProgressSettings {
   percentage: number;
 }
 
+interface BackgroundTextSettings {
+  enabled: boolean;
+  text: string;
+  gradient_from: string;
+  gradient_to: string;
+}
+
 interface HomepageSettings {
   pricing_tiers: PricingTier[];
   custom_package_options: CustomPackageOption[];
@@ -122,6 +129,7 @@ interface HomepageSettings {
   logo_url: string;
   background_url: string;
   background_overlay: number;
+  background_text: BackgroundTextSettings;
   tool_progress: ToolProgressSettings;
   pix_key: string;
   pix_name: string;
@@ -204,6 +212,12 @@ const defaultSettings: HomepageSettings = {
   logo_url: '',
   background_url: '',
   background_overlay: 0,
+  background_text: {
+    enabled: false,
+    text: 'CRÉDITOS INFINITOS',
+    gradient_from: '#1a1a2e',
+    gradient_to: '#0a0a0f',
+  },
   tool_progress: {
     enabled: false,
     label: '🚀 Nova Ferramenta',
@@ -287,6 +301,8 @@ export const useHomepageSettings = () => {
           newSettings.background_url = item.value;
         } else if (item.key === 'background_overlay' && typeof item.value === 'number') {
           newSettings.background_overlay = item.value;
+        } else if (item.key === 'background_text' && item.value) {
+          newSettings.background_text = { ...defaultSettings.background_text, ...(item.value as Partial<BackgroundTextSettings>) };
         } else if (item.key === 'tool_progress' && item.value) {
           newSettings.tool_progress = { ...defaultSettings.tool_progress, ...(item.value as Partial<ToolProgressSettings>) };
         } else if (item.key === 'sections_visibility' && item.value) {
@@ -351,4 +367,4 @@ export const useHomepageSettings = () => {
   };
 };
 
-export type { HeroSettings, HeroPriceLine, HeroRenewalLine, CheckoutSettings, SocialProofSettings, SocialProofCustomer, HomepageSettings, CustomPackageOption, GuaranteeSettings, FAQSettings, FAQItem, SectionsVisibility, MenuVisibility, TrackingSettings, ToolProgressSettings };
+export type { HeroSettings, HeroPriceLine, HeroRenewalLine, CheckoutSettings, SocialProofSettings, SocialProofCustomer, HomepageSettings, CustomPackageOption, GuaranteeSettings, FAQSettings, FAQItem, SectionsVisibility, MenuVisibility, TrackingSettings, ToolProgressSettings, BackgroundTextSettings };
