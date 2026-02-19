@@ -102,7 +102,13 @@ const Index = () => {
           />
           <div className="fixed inset-0 -z-15 overflow-hidden pointer-events-none select-none flex items-center justify-center">
             <div className="text-center px-8 opacity-[0.06]">
-              <p className="text-4xl md:text-6xl lg:text-7xl font-black text-white leading-relaxed whitespace-pre-line">
+              <p
+                className="font-black text-white leading-relaxed whitespace-pre-line"
+                style={{
+                  fontFamily: bgText.font_family || 'Inter',
+                  fontSize: { xl: '1.25rem', '2xl': '1.5rem', '3xl': '1.875rem', '4xl': '2.25rem', '5xl': '3rem', '6xl': '3.75rem' }[bgText.font_size || '4xl'] || '2.25rem',
+                }}
+              >
                 {bgText.text}
               </p>
             </div>

@@ -256,6 +256,46 @@ export const HomepageEditor = () => {
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
+                      <Label>Fonte</Label>
+                      <select
+                        value={settings.background_text.font_family || 'Inter'}
+                        onChange={async (e) => {
+                          const updated = { ...settings.background_text, font_family: e.target.value };
+                          await updateSetting('background_text', updated);
+                        }}
+                        className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm"
+                      >
+                        <option value="Inter">Inter</option>
+                        <option value="Arial">Arial</option>
+                        <option value="Georgia">Georgia</option>
+                        <option value="Times New Roman">Times New Roman</option>
+                        <option value="Courier New">Courier New</option>
+                        <option value="Verdana">Verdana</option>
+                        <option value="Impact">Impact</option>
+                        <option value="Comic Sans MS">Comic Sans MS</option>
+                      </select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Tamanho</Label>
+                      <select
+                        value={settings.background_text.font_size || '4xl'}
+                        onChange={async (e) => {
+                          const updated = { ...settings.background_text, font_size: e.target.value };
+                          await updateSetting('background_text', updated);
+                        }}
+                        className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm"
+                      >
+                        <option value="xl">Pequeno</option>
+                        <option value="2xl">Médio</option>
+                        <option value="3xl">Grande</option>
+                        <option value="4xl">Extra Grande</option>
+                        <option value="5xl">Enorme</option>
+                        <option value="6xl">Gigante</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
                       <Label>Cor Gradiente (início)</Label>
                       <div className="flex gap-2 items-center">
                         <input
