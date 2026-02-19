@@ -101,19 +101,21 @@ const Index = () => {
             }}
           />
           <div className="fixed inset-0 -z-15 overflow-hidden pointer-events-none select-none flex items-center justify-center">
-            <div className="text-center px-8 opacity-[0.06]">
-              <p
-                className="font-black text-white leading-relaxed whitespace-pre-line"
-                style={{
-                  fontFamily: bgText.font_family || 'Inter',
-                  fontSize: { xl: '1.25rem', '2xl': '1.5rem', '3xl': '1.875rem', '4xl': '2.25rem', '5xl': '3rem', '6xl': '3.75rem' }[bgText.font_size || '4xl'] || '2.25rem',
-                }}
-              >
-                {bgText.text}
-              </p>
+            <div className="text-center px-8">
+              <div className="opacity-[0.06]">
+                <p
+                  className="font-black text-white leading-relaxed whitespace-pre-line"
+                  style={{
+                    fontFamily: bgText.font_family || 'Inter',
+                    fontSize: { xl: '1.25rem', '2xl': '1.5rem', '3xl': '1.875rem', '4xl': '2.25rem', '5xl': '3rem', '6xl': '3.75rem' }[bgText.font_size || '4xl'] || '2.25rem',
+                  }}
+                >
+                  {bgText.text}
+                </p>
+              </div>
               {settings.tool_progress.enabled && (
-                <div className="mt-6 flex items-center justify-center gap-3 pointer-events-auto opacity-100" style={{ opacity: 1 }}>
-                  <span className="text-sm font-semibold text-white/60 whitespace-nowrap">
+                <div className="mt-6 flex items-center justify-center gap-3">
+                  <span className="text-sm font-semibold text-white/70 whitespace-nowrap">
                     {settings.tool_progress.label}
                   </span>
                   <div className="w-48 h-3 rounded-full bg-white/10 overflow-hidden">
