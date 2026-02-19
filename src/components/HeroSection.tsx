@@ -116,7 +116,7 @@ export const HeroSection = () => {
             <div className="flex flex-wrap justify-center lg:justify-start gap-2 sm:gap-3 mb-4">
               <TrustBadge icon={Zap} text={t('hero.auto_delivery')} />
               <TrustBadge icon={Shield} text={t('hero.secure_payment')} />
-              <TrustBadge icon={Headphones} text={t('hero.support_available')} />
+              <TrustBadge icon={Headphones} text={t('hero.support_available')} href={`https://wa.me/${settings.whatsapp_number || '5548996029392'}`} />
             </div>
 
             <div className="flex flex-col items-center lg:items-start gap-2 mb-4">
