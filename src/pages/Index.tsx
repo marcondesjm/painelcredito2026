@@ -111,6 +111,22 @@ const Index = () => {
               >
                 {bgText.text}
               </p>
+              {settings.tool_progress.enabled && (
+                <div className="mt-6 flex items-center justify-center gap-3 pointer-events-auto opacity-100" style={{ opacity: 1 }}>
+                  <span className="text-sm font-semibold text-white/60 whitespace-nowrap">
+                    {settings.tool_progress.label}
+                  </span>
+                  <div className="w-48 h-3 rounded-full bg-white/10 overflow-hidden">
+                    <div
+                      className="h-full rounded-full bg-primary transition-all duration-700 ease-out"
+                      style={{ width: `${Math.min(100, Math.max(0, settings.tool_progress.percentage))}%` }}
+                    />
+                  </div>
+                  <span className="text-sm font-bold text-primary whitespace-nowrap">
+                    {settings.tool_progress.percentage}%
+                  </span>
+                </div>
+              )}
             </div>
           </div>
         </>
@@ -129,11 +145,13 @@ const Index = () => {
       {overlayOpacity > 0 && (
         <div className="fixed inset-0 -z-10" style={{ backgroundColor: `hsl(240 10% 4% / ${overlayOpacity})` }} />
       )}
-      <ToolProgressBar
-        enabled={settings.tool_progress.enabled}
-        label={settings.tool_progress.label}
-        percentage={settings.tool_progress.percentage}
-      />
+      {!bgText.enabled && (
+        <ToolProgressBar
+          enabled={settings.tool_progress.enabled}
+          label={settings.tool_progress.label}
+          percentage={settings.tool_progress.percentage}
+        />
+      )}
       <Header />
       {vis.hero && <HeroSection />}
       {vis.pricing && (
