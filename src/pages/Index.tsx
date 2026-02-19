@@ -89,7 +89,7 @@ const Index = () => {
   const bgText = settings.background_text;
 
   return (
-    <div className="min-h-screen relative overflow-x-hidden">
+    <div className="min-h-screen relative overflow-x-hidden flex flex-col">
       <TrackingScripts />
       {/* Fixed background */}
       {bgText.enabled ? (
@@ -157,30 +157,32 @@ const Index = () => {
           percentage={settings.tool_progress.percentage}
         />
       )}
-      <Header />
-      {vis.hero && <HeroSection />}
-      {vis.pricing && (
-        <div id="pacotes">
-          <PricingTiersSection 
-            tiers={tiers} 
-            customPackageOptions={settings.custom_package_options}
-            primaryColor="#8B5CF6" 
-            accentColor="#22C55E"
-            onBuyClick={handleBuyClick}
-          />
-          <RechargeInfoSection />
-        </div>
-      )}
-      {vis.features && <FeaturesSection />}
-      {vis.why_choose && <WhyChooseSection />}
-      {vis.how_it_works && <HowItWorksSection />}
-      {vis.video && <VideoSection />}
-      {vis.secure_purchase && <SecurePurchaseSection />}
-      {vis.testimonials && <TestimonialsSection />}
-      {vis.guarantee && <GuaranteeSection title={settings.guarantee.title} items={settings.guarantee.items} />}
-      {vis.stats && <StatsSection />}
-      {vis.faq && <FAQSection title={settings.faq.title} subtitle={settings.faq.subtitle} items={settings.faq.items} />}
-      {vis.final_cta && <FinalCTASection />}
+      <div className="flex-1">
+        <Header />
+        {vis.hero && <HeroSection />}
+        {vis.pricing && (
+          <div id="pacotes">
+            <PricingTiersSection 
+              tiers={tiers} 
+              customPackageOptions={settings.custom_package_options}
+              primaryColor="#8B5CF6" 
+              accentColor="#22C55E"
+              onBuyClick={handleBuyClick}
+            />
+            <RechargeInfoSection />
+          </div>
+        )}
+        {vis.features && <FeaturesSection />}
+        {vis.why_choose && <WhyChooseSection />}
+        {vis.how_it_works && <HowItWorksSection />}
+        {vis.video && <VideoSection />}
+        {vis.secure_purchase && <SecurePurchaseSection />}
+        {vis.testimonials && <TestimonialsSection />}
+        {vis.guarantee && <GuaranteeSection title={settings.guarantee.title} items={settings.guarantee.items} />}
+        {vis.stats && <StatsSection />}
+        {vis.faq && <FAQSection title={settings.faq.title} subtitle={settings.faq.subtitle} items={settings.faq.items} />}
+        {vis.final_cta && <FinalCTASection />}
+      </div>
       <Footer />
       <WhatsAppButton number={settings.whatsapp_number || '5548996029392'} message="Olá! Gostaria de mais informações sobre o painel." />
       <SocialProofNotification 
