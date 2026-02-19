@@ -7,9 +7,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Plus, Trash2, Save, Loader2, Star, CreditCard, MessageSquare, ShoppingCart, Bell, Eye } from 'lucide-react';
+import { Plus, Trash2, Save, Loader2, Star, CreditCard, MessageSquare, ShoppingCart, Bell, Eye, Menu } from 'lucide-react';
 import { toast } from 'sonner';
-import { useHomepageSettings, HeroSettings, CheckoutSettings, SocialProofSettings, SocialProofCustomer, CustomPackageOption, GuaranteeSettings, FAQSettings, FAQItem, SectionsVisibility, TrackingSettings } from '@/hooks/useHomepageSettings';
+import { useHomepageSettings, HeroSettings, CheckoutSettings, SocialProofSettings, SocialProofCustomer, CustomPackageOption, GuaranteeSettings, FAQSettings, FAQItem, SectionsVisibility, MenuVisibility, TrackingSettings } from '@/hooks/useHomepageSettings';
 import { PricingTier } from '@/components/PricingTiersSection';
 
 export const HomepageEditor = () => {
@@ -43,6 +43,7 @@ export const HomepageEditor = () => {
   const [guarantee, setGuarantee] = useState<GuaranteeSettings>(settings.guarantee);
   const [faq, setFaq] = useState<FAQSettings>(settings.faq);
   const [sectionsVisibility, setSectionsVisibility] = useState<SectionsVisibility>(settings.sections_visibility);
+  const [menuVisibility, setMenuVisibility] = useState<MenuVisibility>(settings.menu_visibility);
   const [tracking, setTracking] = useState<TrackingSettings>(settings.tracking);
 
   useEffect(() => {
@@ -73,6 +74,7 @@ export const HomepageEditor = () => {
     setGuarantee(settings.guarantee);
     setFaq(settings.faq);
     setSectionsVisibility(settings.sections_visibility);
+    setMenuVisibility(settings.menu_visibility);
     setTracking(settings.tracking);
   }, [settings]);
 
@@ -231,6 +233,46 @@ export const HomepageEditor = () => {
               ))}
 
 
+            </CardContent>
+          </Card>
+
+          {/* Menu Buttons Visibility */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Menu className="w-5 h-5" />
+                Visibilidade dos Botões do Menu
+              </CardTitle>
+              <CardDescription>Ative ou desative os botões exibidos no menu de navegação</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {([
+                { key: 'painel_gerador' as const, label: '🟣 Painel Gerador' },
+                { key: 'entrar_conta' as const, label: '🔑 Entrar na Conta / Sair' },
+                { key: 'compra_creditos' as const, label: '💚 Compra de Créditos' },
+                { key: 'como_funciona' as const, label: '🔧 Como Funciona' },
+                { key: 'faq' as const, label: '❓ FAQ' },
+                { key: 'install' as const, label: '📥 Instalar App' },
+                { key: 'idioma' as const, label: '🌐 Idioma' },
+              ]).map(({ key, label }) => (
+                <div key={key} className="flex items-center justify-between py-2 border-b border-border last:border-0">
+                  <Label className="text-sm font-medium">{label}</Label>
+                  <Switch
+                    checked={menuVisibility[key]}
+                    onCheckedChange={async (checked) => {
+                      const updated = { ...menuVisibility, [key]: checked };
+                      setMenuVisibility(updated);
+                      const result = await updateSetting('menu_visibility', updated);
+                      if (result.success) {
+                        toast.success(`${label} ${checked ? 'ativado' : 'desativado'}!`);
+                      } else {
+                        toast.error('Erro ao salvar');
+                        setMenuVisibility(menuVisibility);
+                      }
+                    }}
+                  />
+                </div>
+              ))}
             </CardContent>
           </Card>
         </TabsContent>

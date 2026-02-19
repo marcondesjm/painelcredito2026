@@ -9,6 +9,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useLanguage } from '@/hooks/useLanguage';
+import { useHomepageSettings } from '@/hooks/useHomepageSettings';
 import logoPainel from '@/assets/logo-painel.png';
 
 export const Header = () => {
@@ -16,6 +17,8 @@ export const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const { language, setLanguage, t } = useLanguage();
+  const { settings } = useHomepageSettings();
+  const mv = settings.menu_visibility;
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -70,126 +73,124 @@ export const Header = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-2">
-            <Button 
-              variant="hero" 
-              size="sm"
-              onClick={() => navigate('/checkout')}
-            >
-              {t('header.generator')}
-            </Button>
-            {user ? (
+            {mv.painel_gerador && (
               <Button 
-                variant="outline" 
-                size="sm" 
-                className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
-                onClick={handleLogout}
+                variant="hero" 
+                size="sm"
+                onClick={() => navigate('/checkout')}
               >
-                <LogOut className="w-4 h-4 mr-2" />
-                {t('header.logout')}
-              </Button>
-            ) : (
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
-                onClick={() => setLoginOpen(true)}
-              >
-                {t('header.create_account')}
+                {t('header.generator')}
               </Button>
             )}
-            <Button 
-              variant="accent" 
-              size="sm"
-              onClick={() => scrollToSection('pacotes')}
-            >
-              {t('header.buy_credits')}
-            </Button>
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="text-muted-foreground hover:text-foreground"
-              onClick={() => scrollToSection('how-it-works')}
-            >
-              {t('header.how_it_works')}
-            </Button>
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="text-muted-foreground hover:text-foreground"
-              onClick={() => scrollToSection('faq')}
-            >
-              {t('header.faq')}
-            </Button>
-            <Tooltip>
-              <TooltipTrigger asChild>
+            {mv.entrar_conta && (
+              user ? (
                 <Button 
-                  variant="ghost" 
-                  size="icon"
-                  className="text-muted-foreground hover:text-primary hover:bg-primary/10"
-                  onClick={() => navigate('/install')}
+                  variant="outline" 
+                  size="sm" 
+                  className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+                  onClick={handleLogout}
                 >
-                  <Download className="w-4 h-4" />
+                  <LogOut className="w-4 h-4 mr-2" />
+                  {t('header.logout')}
                 </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>{t('header.install')}</p>
-              </TooltipContent>
-            </Tooltip>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground">
-                  <Globe className="w-4 h-4" />
+              ) : (
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+                  onClick={() => setLoginOpen(true)}
+                >
+                  {t('header.create_account')}
                 </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => setLanguage('pt')} className={language === 'pt' ? 'bg-accent' : ''}>
-                  🇧🇷 Português
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setLanguage('en')} className={language === 'en' ? 'bg-accent' : ''}>
-                  🇺🇸 English
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+              )
+            )}
+            {mv.compra_creditos && (
+              <Button 
+                variant="accent" 
+                size="sm"
+                onClick={() => scrollToSection('pacotes')}
+              >
+                {t('header.buy_credits')}
+              </Button>
+            )}
+            {mv.como_funciona && (
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="text-muted-foreground hover:text-foreground"
+                onClick={() => scrollToSection('how-it-works')}
+              >
+                {t('header.how_it_works')}
+              </Button>
+            )}
+            {mv.faq && (
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="text-muted-foreground hover:text-foreground"
+                onClick={() => scrollToSection('faq')}
+              >
+                {t('header.faq')}
+              </Button>
+            )}
+            {mv.install && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    className="text-muted-foreground hover:text-primary hover:bg-primary/10"
+                    onClick={() => navigate('/install')}
+                  >
+                    <Download className="w-4 h-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>{t('header.install')}</p>
+                </TooltipContent>
+              </Tooltip>
+            )}
+            {mv.idioma && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground">
+                    <Globe className="w-4 h-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={() => setLanguage('pt')} className={language === 'pt' ? 'bg-accent' : ''}>
+                    🇧🇷 Português
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setLanguage('en')} className={language === 'en' ? 'bg-accent' : ''}>
+                    🇺🇸 English
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
           </nav>
 
           {/* Tablet/Medium Navigation - simplified */}
           <nav className="hidden md:flex lg:hidden items-center gap-2">
-            <Button variant="hero" size="sm" onClick={() => navigate('/checkout')}>
-              {t('header.generator')}
-            </Button>
-            {user ? (
-              <Button variant="outline" size="sm" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground" onClick={handleLogout}>
-                <LogOut className="w-4 h-4" />
-              </Button>
+            {mv.painel_gerador && <Button variant="hero" size="sm" onClick={() => navigate('/checkout')}>{t('header.generator')}</Button>}
+            {mv.entrar_conta && (user ? (
+              <Button variant="outline" size="sm" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground" onClick={handleLogout}><LogOut className="w-4 h-4" /></Button>
             ) : (
-              <Button variant="outline" size="sm" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground" onClick={() => setLoginOpen(true)}>
-                {t('header.create_account')}
-              </Button>
+              <Button variant="outline" size="sm" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground" onClick={() => setLoginOpen(true)}>{t('header.create_account')}</Button>
+            ))}
+            {mv.compra_creditos && <Button variant="accent" size="sm" onClick={() => scrollToSection('pacotes')}>{t('header.buy_credits')}</Button>}
+            {mv.como_funciona && <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground" onClick={() => scrollToSection('how-it-works')}>{t('header.how_it_works')}</Button>}
+            {mv.faq && <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground" onClick={() => scrollToSection('faq')}>{t('header.faq')}</Button>}
+            {mv.idioma && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground"><Globe className="w-4 h-4" /></Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={() => setLanguage('pt')} className={language === 'pt' ? 'bg-accent' : ''}>🇧🇷 Português</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setLanguage('en')} className={language === 'en' ? 'bg-accent' : ''}>🇺🇸 English</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             )}
-            <Button variant="accent" size="sm" onClick={() => scrollToSection('pacotes')}>
-              {t('header.buy_credits')}
-            </Button>
-            <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground" onClick={() => scrollToSection('how-it-works')}>
-              {t('header.how_it_works')}
-            </Button>
-            <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground" onClick={() => scrollToSection('faq')}>
-              {t('header.faq')}
-            </Button>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground">
-                  <Globe className="w-4 h-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => setLanguage('pt')} className={language === 'pt' ? 'bg-accent' : ''}>
-                  🇧🇷 Português
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setLanguage('en')} className={language === 'en' ? 'bg-accent' : ''}>
-                  🇺🇸 English
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
           </nav>
 
           {/* Mobile Menu */}
@@ -204,51 +205,26 @@ export const Header = () => {
                 <img src={logoPainel} alt="Painel Créditos Lovable" className="h-12 w-auto object-contain" />
               </div>
               <nav className="flex flex-col gap-4">
-                <Button variant="hero" className="w-full" onClick={() => handleNavigate('/checkout')}>
-                  {t('header.generator')}
-                </Button>
-                {user ? (
+                {mv.painel_gerador && <Button variant="hero" className="w-full" onClick={() => handleNavigate('/checkout')}>{t('header.generator')}</Button>}
+                {mv.entrar_conta && (user ? (
                   <Button variant="outline" className="w-full border-primary text-primary hover:bg-primary hover:text-primary-foreground" onClick={handleLogout}>
-                    <LogOut className="w-4 h-4 mr-2" />
-                    {t('header.logout')}
+                    <LogOut className="w-4 h-4 mr-2" />{t('header.logout')}
                   </Button>
                 ) : (
                   <Button variant="outline" className="w-full border-primary text-primary hover:bg-primary hover:text-primary-foreground" onClick={handleOpenLogin}>
                     {t('header.create_account')}
                   </Button>
+                ))}
+                {mv.compra_creditos && <Button variant="accent" className="w-full" onClick={() => scrollToSection('pacotes')}>{t('header.buy_credits')}</Button>}
+                {mv.como_funciona && <Button variant="ghost" className="w-full justify-start text-muted-foreground hover:text-foreground" onClick={() => scrollToSection('how-it-works')}>{t('header.how_it_works')}</Button>}
+                {mv.faq && <Button variant="ghost" className="w-full justify-start text-muted-foreground hover:text-foreground" onClick={() => scrollToSection('faq')}>{t('header.faq')}</Button>}
+                {mv.install && <Button variant="outline" className="w-full" onClick={() => handleNavigate('/install')}><Download className="w-4 h-4 mr-2" />{t('header.install')}</Button>}
+                {mv.idioma && (
+                  <div className="flex gap-2 pt-2 border-t border-border">
+                    <Button variant={language === 'pt' ? 'default' : 'outline'} size="sm" className="flex-1" onClick={() => { setLanguage('pt'); setMobileMenuOpen(false); }}>🇧🇷 PT</Button>
+                    <Button variant={language === 'en' ? 'default' : 'outline'} size="sm" className="flex-1" onClick={() => { setLanguage('en'); setMobileMenuOpen(false); }}>🇺🇸 EN</Button>
+                  </div>
                 )}
-                <Button variant="accent" className="w-full" onClick={() => scrollToSection('pacotes')}>
-                  {t('header.buy_credits')}
-                </Button>
-                <Button variant="ghost" className="w-full justify-start text-muted-foreground hover:text-foreground" onClick={() => scrollToSection('how-it-works')}>
-                  {t('header.how_it_works')}
-                </Button>
-                <Button variant="ghost" className="w-full justify-start text-muted-foreground hover:text-foreground" onClick={() => scrollToSection('faq')}>
-                  {t('header.faq')}
-                </Button>
-                <Button variant="outline" className="w-full" onClick={() => handleNavigate('/install')}>
-                  <Download className="w-4 h-4 mr-2" />
-                  {t('header.install')}
-                </Button>
-                {/* Language selector mobile */}
-                <div className="flex gap-2 pt-2 border-t border-border">
-                  <Button
-                    variant={language === 'pt' ? 'default' : 'outline'}
-                    size="sm"
-                    className="flex-1"
-                    onClick={() => { setLanguage('pt'); setMobileMenuOpen(false); }}
-                  >
-                    🇧🇷 PT
-                  </Button>
-                  <Button
-                    variant={language === 'en' ? 'default' : 'outline'}
-                    size="sm"
-                    className="flex-1"
-                    onClick={() => { setLanguage('en'); setMobileMenuOpen(false); }}
-                  >
-                    🇺🇸 EN
-                  </Button>
-                </div>
               </nav>
             </SheetContent>
           </Sheet>

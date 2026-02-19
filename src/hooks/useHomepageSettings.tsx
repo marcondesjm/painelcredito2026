@@ -88,6 +88,16 @@ interface SectionsVisibility {
   final_cta: boolean;
 }
 
+interface MenuVisibility {
+  painel_gerador: boolean;
+  entrar_conta: boolean;
+  compra_creditos: boolean;
+  como_funciona: boolean;
+  faq: boolean;
+  install: boolean;
+  idioma: boolean;
+}
+
 interface TrackingSettings {
   google_tag_manager: string;
   facebook_pixel: string;
@@ -107,6 +117,7 @@ interface HomepageSettings {
   pix_name: string;
   whatsapp_number: string;
   sections_visibility: SectionsVisibility;
+  menu_visibility: MenuVisibility;
   tracking: TrackingSettings;
 }
 
@@ -198,6 +209,15 @@ const defaultSettings: HomepageSettings = {
     faq: true,
     final_cta: true,
   },
+  menu_visibility: {
+    painel_gerador: true,
+    entrar_conta: true,
+    compra_creditos: true,
+    como_funciona: true,
+    faq: true,
+    install: true,
+    idioma: true,
+  },
   tracking: {
     google_tag_manager: '',
     facebook_pixel: '',
@@ -247,6 +267,8 @@ export const useHomepageSettings = () => {
           newSettings.sections_visibility = { ...defaultSettings.sections_visibility, ...(item.value as Partial<SectionsVisibility>) };
         } else if (item.key === 'tracking' && item.value) {
           newSettings.tracking = { ...defaultSettings.tracking, ...(item.value as Partial<TrackingSettings>) };
+        } else if (item.key === 'menu_visibility' && item.value) {
+          newSettings.menu_visibility = { ...defaultSettings.menu_visibility, ...(item.value as Partial<MenuVisibility>) };
         }
       });
 
@@ -303,4 +325,4 @@ export const useHomepageSettings = () => {
   };
 };
 
-export type { HeroSettings, HeroPriceLine, HeroRenewalLine, CheckoutSettings, SocialProofSettings, SocialProofCustomer, HomepageSettings, CustomPackageOption, GuaranteeSettings, FAQSettings, FAQItem, SectionsVisibility, TrackingSettings };
+export type { HeroSettings, HeroPriceLine, HeroRenewalLine, CheckoutSettings, SocialProofSettings, SocialProofCustomer, HomepageSettings, CustomPackageOption, GuaranteeSettings, FAQSettings, FAQItem, SectionsVisibility, MenuVisibility, TrackingSettings };
