@@ -105,6 +105,12 @@ interface TrackingSettings {
   tiktok_pixel: string;
 }
 
+interface ToolProgressSettings {
+  enabled: boolean;
+  label: string;
+  percentage: number;
+}
+
 interface HomepageSettings {
   pricing_tiers: PricingTier[];
   custom_package_options: CustomPackageOption[];
@@ -115,7 +121,8 @@ interface HomepageSettings {
   faq: FAQSettings;
   logo_url: string;
   background_url: string;
-  background_overlay: number; // 0-100 opacity percentage
+  background_overlay: number;
+  tool_progress: ToolProgressSettings;
   pix_key: string;
   pix_name: string;
   whatsapp_number: string;
@@ -197,6 +204,11 @@ const defaultSettings: HomepageSettings = {
   logo_url: '',
   background_url: '',
   background_overlay: 0,
+  tool_progress: {
+    enabled: false,
+    label: '🚀 Nova Ferramenta',
+    percentage: 0,
+  },
   pix_key: '',
   pix_name: '',
   whatsapp_number: '5548996029392',
@@ -275,6 +287,8 @@ export const useHomepageSettings = () => {
           newSettings.background_url = item.value;
         } else if (item.key === 'background_overlay' && typeof item.value === 'number') {
           newSettings.background_overlay = item.value;
+        } else if (item.key === 'tool_progress' && item.value) {
+          newSettings.tool_progress = { ...defaultSettings.tool_progress, ...(item.value as Partial<ToolProgressSettings>) };
         } else if (item.key === 'sections_visibility' && item.value) {
           newSettings.sections_visibility = { ...defaultSettings.sections_visibility, ...(item.value as Partial<SectionsVisibility>) };
         } else if (item.key === 'tracking' && item.value) {
@@ -337,4 +351,4 @@ export const useHomepageSettings = () => {
   };
 };
 
-export type { HeroSettings, HeroPriceLine, HeroRenewalLine, CheckoutSettings, SocialProofSettings, SocialProofCustomer, HomepageSettings, CustomPackageOption, GuaranteeSettings, FAQSettings, FAQItem, SectionsVisibility, MenuVisibility, TrackingSettings };
+export type { HeroSettings, HeroPriceLine, HeroRenewalLine, CheckoutSettings, SocialProofSettings, SocialProofCustomer, HomepageSettings, CustomPackageOption, GuaranteeSettings, FAQSettings, FAQItem, SectionsVisibility, MenuVisibility, TrackingSettings, ToolProgressSettings };

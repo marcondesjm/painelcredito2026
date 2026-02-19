@@ -264,6 +264,59 @@ export const HomepageEditor = () => {
             </CardContent>
           </Card>
 
+          {/* Tool Progress Bar */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <BarChart3 className="w-5 h-5" />
+                Barra de Progresso (Nova Ferramenta)
+              </CardTitle>
+              <CardDescription>Exiba uma barra de progresso fixa no topo do site</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between">
+                <Label>Ativar barra de progresso</Label>
+                <Switch
+                  checked={settings.tool_progress.enabled}
+                  onCheckedChange={async (checked) => {
+                    const updated = { ...settings.tool_progress, enabled: checked };
+                    const result = await updateSetting('tool_progress', updated);
+                    if (result.success) {
+                      toast.success(checked ? 'Barra ativada!' : 'Barra desativada!');
+                    } else {
+                      toast.error('Erro ao salvar');
+                    }
+                  }}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Texto / Label</Label>
+                <Input
+                  value={settings.tool_progress.label}
+                  onChange={async (e) => {
+                    const updated = { ...settings.tool_progress, label: e.target.value };
+                    await updateSetting('tool_progress', updated);
+                  }}
+                  placeholder="🚀 Nova Ferramenta"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Porcentagem: {settings.tool_progress.percentage}%</Label>
+                <input
+                  type="range"
+                  min={0}
+                  max={100}
+                  value={settings.tool_progress.percentage}
+                  onChange={async (e) => {
+                    const updated = { ...settings.tool_progress, percentage: Number(e.target.value) };
+                    await updateSetting('tool_progress', updated);
+                  }}
+                  className="w-full accent-primary"
+                />
+              </div>
+            </CardContent>
+          </Card>
+
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
