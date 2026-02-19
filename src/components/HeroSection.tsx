@@ -3,7 +3,7 @@ import { CountdownTimer } from './CountdownTimer';
 import { TrustBadge } from './TrustBadge';
 import { Zap, Shield, Headphones, ChevronDown, RefreshCw } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import productPainel from '@/assets/product-painel.png';
+
 import { useHomepageSettings } from '@/hooks/useHomepageSettings';
 import { useLanguage } from '@/hooks/useLanguage';
 
@@ -30,12 +30,7 @@ export const HeroSection = () => {
   return (
     <section className="relative min-h-screen flex items-center justify-center px-4 sm:px-6 pt-24 sm:pt-28 md:pt-32 pb-8 sm:pb-12 overflow-hidden">
       <div className="relative z-10 max-w-7xl mx-auto w-full">
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-          <div className="hidden lg:block relative">
-            <div className="relative animate-float">
-              <img src={productPainel} alt="Dashboard Painel Créditos" className="w-full max-w-lg xl:max-w-2xl mx-auto drop-shadow-2xl" />
-            </div>
-          </div>
+         <div className="grid lg:grid-cols-1 gap-8 lg:gap-12 items-center">
 
           <div className="text-center lg:text-left">
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 leading-tight">
