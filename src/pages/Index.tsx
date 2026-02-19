@@ -100,15 +100,17 @@ const Index = () => {
               background: `linear-gradient(135deg, ${bgText.gradient_from}, ${bgText.gradient_to})`,
             }}
           />
-          <div className="fixed inset-0 z-[50] overflow-hidden pointer-events-none select-none flex items-center justify-center">
-            <div className="text-center px-8">
+          <div className="fixed inset-0 z-[50] overflow-hidden pointer-events-none select-none flex items-center justify-center px-4">
+            <div className="text-center w-full max-w-4xl">
               <div className="opacity-[0.06]">
                 <p
-                  className="font-black leading-relaxed whitespace-pre-line"
+                  className="font-black leading-relaxed break-words"
                   style={{
                     fontFamily: bgText.font_family || 'Inter',
                     fontSize: { xl: '1.25rem', '2xl': '1.5rem', '3xl': '1.875rem', '4xl': '2.25rem', '5xl': '3rem', '6xl': '3.75rem' }[bgText.font_size || '4xl'] || '2.25rem',
                     color: bgText.font_color || '#ffffff',
+                    whiteSpace: 'pre-wrap',
+                    wordBreak: 'break-word',
                   }}
                 >
                   {bgText.text}
