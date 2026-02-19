@@ -1,4 +1,28 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+
+// Slider that only saves on release (prevents page jump)
+const DeferredSlider = ({ value, onCommit, label, hint, min = 0, max = 100 }: {
+  value: number; onCommit: (v: number) => void; label: string; hint?: string; min?: number; max?: number;
+}) => {
+  const [local, setLocal] = useState(value);
+  useEffect(() => { setLocal(value); }, [value]);
+  return (
+    <div className="space-y-2">
+      <Label>{label}: {local}%</Label>
+      <input
+        type="range"
+        min={min}
+        max={max}
+        value={local}
+        onChange={(e) => setLocal(Number(e.target.value))}
+        onMouseUp={() => onCommit(local)}
+        onTouchEnd={() => onCommit(local)}
+        className="w-full accent-primary"
+      />
+      {hint && <p className="text-xs text-muted-foreground">{hint}</p>}
+    </div>
+  );
+};
 import { ExternalLink, BarChart3 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -317,21 +341,15 @@ export const HomepageEditor = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="space-y-2">
-                    <Label>Opacidade do Texto: {settings.background_text.opacity ?? 100}%</Label>
-                    <input
-                      type="range"
-                      min={0}
-                      max={100}
-                      value={settings.background_text.opacity ?? 100}
-                      onChange={async (e) => {
-                        const updated = { ...settings.background_text, opacity: Number(e.target.value) };
-                        await updateSetting('background_text', updated);
-                      }}
-                      className="w-full accent-primary"
-                    />
-                    <p className="text-xs text-muted-foreground">0% = invisível • 100% = totalmente visível</p>
-                  </div>
+                  <DeferredSlider
+                    value={settings.background_text.opacity ?? 100}
+                    onCommit={async (val) => {
+                      const updated = { ...settings.background_text, opacity: val };
+                      await updateSetting('background_text', updated);
+                    }}
+                    label="Opacidade do Texto"
+                    hint="0% = invisível • 100% = totalmente visível"
+                  />
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label>Cor Gradiente (início)</Label>
@@ -396,21 +414,14 @@ export const HomepageEditor = () => {
                 </>
               )}
 
-              <div className="space-y-2">
-                <Label>Filtro Escuro (Overlay): {settings.background_overlay}%</Label>
-                <input
-                  type="range"
-                  min={0}
-                  max={100}
-                  value={settings.background_overlay}
-                  onChange={async (e) => {
-                    const val = Number(e.target.value);
-                    await updateSetting('background_overlay', val);
-                  }}
-                  className="w-full accent-primary"
-                />
-                <p className="text-xs text-muted-foreground">0% = sem filtro (natural) • 100% = totalmente escuro</p>
-              </div>
+              <DeferredSlider
+                value={settings.background_overlay}
+                onCommit={async (val) => {
+                  await updateSetting('background_overlay', val);
+                }}
+                label="Filtro Escuro (Overlay)"
+                hint="0% = sem filtro (natural) • 100% = totalmente escuro"
+              />
             </CardContent>
           </Card>
 
@@ -450,20 +461,14 @@ export const HomepageEditor = () => {
                   placeholder="🚀 Nova Ferramenta"
                 />
               </div>
-              <div className="space-y-2">
-                <Label>Porcentagem: {settings.tool_progress.percentage}%</Label>
-                <input
-                  type="range"
-                  min={0}
-                  max={100}
-                  value={settings.tool_progress.percentage}
-                  onChange={async (e) => {
-                    const updated = { ...settings.tool_progress, percentage: Number(e.target.value) };
-                    await updateSetting('tool_progress', updated);
-                  }}
-                  className="w-full accent-primary"
-                />
-              </div>
+              <DeferredSlider
+                value={settings.tool_progress.percentage}
+                onCommit={async (val) => {
+                  const updated = { ...settings.tool_progress, percentage: val };
+                  await updateSetting('tool_progress', updated);
+                }}
+                label="Porcentagem"
+              />
             </CardContent>
           </Card>
 
