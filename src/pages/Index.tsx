@@ -88,6 +88,11 @@ const Index = () => {
   const overlayOpacity = settings.background_overlay / 100;
   const bgText = settings.background_text;
 
+  // Show nothing until settings are loaded to prevent flash of default background
+  if (loading) {
+    return <div className="min-h-screen bg-background" />;
+  }
+
   return (
     <div className="min-h-screen relative overflow-x-hidden flex flex-col">
       <TrackingScripts />
