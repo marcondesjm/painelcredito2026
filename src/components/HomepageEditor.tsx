@@ -323,6 +323,27 @@ export const HomepageEditor = () => {
                     placeholder="🔥 PROMOÇÃO DE CRÉDITOS 🔥"
                   />
                 </div>
+                <div className="space-y-2">
+                  <Label>Modo do Cronômetro</Label>
+                  <select
+                    className="w-full rounded-md border border-input bg-background/50 px-3 py-2 text-sm"
+                    value={(hero as any).countdown_mode || 'end_of_day'}
+                    onChange={(e) => setHero({ ...hero, countdown_mode: e.target.value as any } as any)}
+                  >
+                    <option value="end_of_day">Até o fim do dia (meia-noite)</option>
+                    <option value="custom">Data/hora personalizada</option>
+                  </select>
+                </div>
+                {(hero as any).countdown_mode === 'custom' && (
+                  <div className="space-y-2">
+                    <Label>Data/Hora limite da promoção</Label>
+                    <Input
+                      type="datetime-local"
+                      value={(hero as any).countdown_deadline || ''}
+                      onChange={(e) => setHero({ ...hero, countdown_deadline: e.target.value } as any)}
+                    />
+                  </div>
+                )}
               </div>
 
               {/* Extra Prices */}

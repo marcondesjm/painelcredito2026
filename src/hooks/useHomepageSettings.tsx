@@ -24,6 +24,8 @@ interface HeroSettings {
   extra_prices?: HeroPriceLine[];
   extra_renewals?: HeroRenewalLine[];
   promo_banner_text?: string;
+  countdown_mode?: 'end_of_day' | 'custom';
+  countdown_deadline?: string; // ISO date string
 }
 
 interface CheckoutSettings {
@@ -148,6 +150,7 @@ const defaultSettings: HomepageSettings = {
     badge_text: 'Oferta Limitada',
     daily_renewal_text: '🔄 Renovação diária de 5k créditos!',
     promo_banner_text: '🔥 PROMOÇÃO DE CRÉDITOS 🔥',
+    countdown_mode: 'end_of_day',
   },
   checkout: {
     product_subtitle: 'Acesso Completo',
