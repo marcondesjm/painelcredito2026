@@ -566,9 +566,18 @@ ${confirmReceipt ? '📎 *Comprovante:* Será enviado em seguida' : '📎 *Compr
         </div>
       )}
       {/* Footer */}
-      <footer className="relative z-10 w-full border-t border-border py-6 text-center text-muted-foreground text-sm mt-auto">
+      <footer className="relative z-10 w-full border-t border-border py-6 text-center text-muted-foreground text-sm mt-auto space-y-3">
+        <Button
+          variant="outline"
+          size="sm"
+          className="mx-auto"
+          onClick={() => window.location.reload()}
+        >
+          <Loader2 className="w-4 h-4 mr-2" />
+          Atualizar Página
+        </Button>
         <p>© 2026 Curso Lovable. Todos os direitos reservados.</p>
-        <p className="mt-1 text-xs flex items-center justify-center gap-2 mb-16">
+        <p className="text-xs flex items-center justify-center gap-2 mb-16">
           <span className="flex items-center gap-1">
             <Clock className="w-3 h-3" /> Versão {APP_VERSION}
           </span>
