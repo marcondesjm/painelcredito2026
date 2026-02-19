@@ -105,14 +105,22 @@ const Index = () => {
               background: `linear-gradient(135deg, ${bgText.gradient_from}, ${bgText.gradient_to})`,
             }}
           />
-          <div className="fixed inset-0 z-[50] overflow-hidden pointer-events-none select-none flex items-center justify-center px-4">
+      <div className="fixed inset-0 z-[50] overflow-hidden pointer-events-none select-none flex items-center justify-center px-4">
             <div className="text-center w-full max-w-4xl">
               <div style={{ opacity: (bgText.opacity ?? 100) / 100 }}>
                 <p
-                  className="font-black leading-relaxed break-words"
+                  className={`font-black leading-relaxed break-words ${
+                    {
+                      'xl': 'text-sm sm:text-xl',
+                      '2xl': 'text-base sm:text-2xl',
+                      '3xl': 'text-lg sm:text-3xl',
+                      '4xl': 'text-xl sm:text-4xl',
+                      '5xl': 'text-2xl sm:text-5xl',
+                      '6xl': 'text-3xl sm:text-6xl',
+                    }[bgText.font_size || '4xl'] || 'text-xl sm:text-4xl'
+                  }`}
                   style={{
                     fontFamily: bgText.font_family || 'Inter',
-                    fontSize: { xl: '1.25rem', '2xl': '1.5rem', '3xl': '1.875rem', '4xl': '2.25rem', '5xl': '3rem', '6xl': '3.75rem' }[bgText.font_size || '4xl'] || '2.25rem',
                     color: bgText.font_color || '#ffffff',
                     whiteSpace: 'pre-wrap',
                     wordBreak: 'break-word',
