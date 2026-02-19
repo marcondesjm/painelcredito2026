@@ -317,6 +317,21 @@ export const HomepageEditor = () => {
                       </div>
                     </div>
                   </div>
+                  <div className="space-y-2">
+                    <Label>Opacidade do Texto: {settings.background_text.opacity ?? 100}%</Label>
+                    <input
+                      type="range"
+                      min={0}
+                      max={100}
+                      value={settings.background_text.opacity ?? 100}
+                      onChange={async (e) => {
+                        const updated = { ...settings.background_text, opacity: Number(e.target.value) };
+                        await updateSetting('background_text', updated);
+                      }}
+                      className="w-full accent-primary"
+                    />
+                    <p className="text-xs text-muted-foreground">0% = invisível • 100% = totalmente visível</p>
+                  </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label>Cor Gradiente (início)</Label>

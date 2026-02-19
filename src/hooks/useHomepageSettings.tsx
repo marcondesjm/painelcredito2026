@@ -119,6 +119,7 @@ interface BackgroundTextSettings {
   font_family: string;
   font_size: string;
   font_color: string;
+  opacity: number; // 0-100
 }
 
 interface HomepageSettings {
@@ -223,6 +224,7 @@ const defaultSettings: HomepageSettings = {
     font_family: 'Inter',
     font_size: '4xl',
     font_color: '#ffffff',
+    opacity: 100,
   },
   tool_progress: {
     enabled: false,
