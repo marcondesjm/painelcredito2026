@@ -274,6 +274,7 @@ export type Database = {
           logo_size: string | null
           meta_description: string | null
           meta_title: string | null
+          nav_buttons: Json | null
           og_image: string | null
           pix_enabled: boolean | null
           pix_key: string | null
@@ -366,6 +367,7 @@ export type Database = {
           logo_size?: string | null
           meta_description?: string | null
           meta_title?: string | null
+          nav_buttons?: Json | null
           og_image?: string | null
           pix_enabled?: boolean | null
           pix_key?: string | null
@@ -458,6 +460,7 @@ export type Database = {
           logo_size?: string | null
           meta_description?: string | null
           meta_title?: string | null
+          nav_buttons?: Json | null
           og_image?: string | null
           pix_enabled?: boolean | null
           pix_key?: string | null

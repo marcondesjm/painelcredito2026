@@ -114,6 +114,7 @@ interface LandingPageData {
   checkout_badge_text: string;
   checkout_benefits: string[];
   checkout_enabled: boolean;
+  nav_buttons: { id: string; label: string; enabled: boolean; action: string; target: string }[];
 }
 
 const fontOptions = [
@@ -317,6 +318,13 @@ const defaultData: LandingPageData = {
   checkout_badge_text: 'OFERTA LIMITADA',
   checkout_benefits: ['Acesso Vitalício ao Painel', 'Gerador de Créditos Ilimitado', 'Suporte Premium 24/7', 'Atualizações Gratuitas', 'Comunidade Exclusiva'],
   checkout_enabled: true,
+  nav_buttons: [
+    { id: 'painel_gerador', label: 'Painel Gerador', enabled: true, action: 'scroll', target: '#checkout' },
+    { id: 'comprar_agora', label: 'Comprar Agora', enabled: true, action: 'cta', target: '' },
+    { id: 'compra_creditos', label: 'Compra de Créditos', enabled: true, action: 'scroll', target: '#pacotes' },
+    { id: 'como_funciona', label: 'Como Funciona', enabled: true, action: 'scroll', target: '#how-it-works' },
+    { id: 'faq', label: 'FAQ', enabled: true, action: 'scroll', target: '#faq' },
+  ],
 };
 
 const LandingPageEditor = () => {
@@ -471,6 +479,7 @@ const LandingPageEditor = () => {
     checkout_badge_text: draft.checkout_badge_text || 'OFERTA LIMITADA',
     checkout_benefits: draft.checkout_benefits || [],
     checkout_enabled: draft.checkout_enabled ?? true,
+    nav_buttons: draft.nav_buttons || defaultData.nav_buttons,
   });
 
   // Auto-save function with debounce
@@ -736,6 +745,7 @@ const LandingPageEditor = () => {
         checkout_badge_text: (page as any).checkout_badge_text || defaultData.checkout_badge_text,
         checkout_benefits: ((page as any).checkout_benefits as string[]) || defaultData.checkout_benefits,
         checkout_enabled: (page as any).checkout_enabled ?? true,
+        nav_buttons: ((page as any).nav_buttons as { id: string; label: string; enabled: boolean; action: string; target: string }[]) || defaultData.nav_buttons,
       });
     } catch (error) {
       console.error('Error fetching page:', error);
@@ -1115,6 +1125,7 @@ const LandingPageEditor = () => {
                   <TabsTrigger value="prova-social" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Prova Social</TabsTrigger>
                   <TabsTrigger value="faq" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">FAQ</TabsTrigger>
                   <TabsTrigger value="whatsapp" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">WhatsApp</TabsTrigger>
+                  <TabsTrigger value="botoes" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Botões</TabsTrigger>
                   <TabsTrigger value="seo" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">SEO</TabsTrigger>
                 </TabsList>
               </div>
@@ -3067,6 +3078,71 @@ const LandingPageEditor = () => {
                 </Card>
               </TabsContent>
 
+              {/* Tab Botões */}
+              <TabsContent value="botoes">
+                <Card className="bg-card/50 backdrop-blur-sm border-border/30">
+                  <CardHeader className="pb-4">
+                    <CardTitle className="text-lg">Botões do Menu</CardTitle>
+                    <CardDescription>Ative/desative e personalize os botões de navegação</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {data.nav_buttons.map((btn, idx) => (
+                      <div key={btn.id} className="rounded-lg border border-border/30 bg-secondary/20 p-4 space-y-3">
+                        <div className="flex items-center justify-between">
+                          <span className="font-semibold text-sm text-foreground">{btn.label || btn.id}</span>
+                          <Switch
+                            checked={btn.enabled}
+                            onCheckedChange={(checked) => {
+                              const updated = [...data.nav_buttons];
+                              updated[idx] = { ...updated[idx], enabled: checked };
+                              setData({ ...data, nav_buttons: updated });
+                            }}
+                          />
+                        </div>
+                        {btn.enabled && (
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div className="space-y-1">
+                              <Label className="text-xs">Nome do botão</Label>
+                              <Input
+                                value={btn.label}
+                                onChange={(e) => {
+                                  const updated = [...data.nav_buttons];
+                                  updated[idx] = { ...updated[idx], label: e.target.value };
+                                  setData({ ...data, nav_buttons: updated });
+                                }}
+                                placeholder="Ex: Comprar Agora"
+                                className="text-sm"
+                              />
+                            </div>
+                            <div className="space-y-1">
+                              <Label className="text-xs">Ação / URL</Label>
+                              <Input
+                                value={btn.target}
+                                onChange={(e) => {
+                                  const updated = [...data.nav_buttons];
+                                  const val = e.target.value;
+                                  updated[idx] = { 
+                                    ...updated[idx], 
+                                    target: val,
+                                    action: val.startsWith('http') ? 'link' : val.startsWith('#') ? 'scroll' : (btn.id === 'comprar_agora' ? 'cta' : 'scroll')
+                                  };
+                                  setData({ ...data, nav_buttons: updated });
+                                }}
+                                placeholder="#secao ou https://..."
+                                className="text-sm"
+                              />
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                    <p className="text-xs text-muted-foreground">
+                      Use <code className="bg-secondary px-1 rounded">#secao</code> para scroll interno ou uma URL completa para link externo.
+                    </p>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
               {/* Tab SEO */}
               <TabsContent value="seo">
                 <Card className="bg-card/50">
@@ -3339,6 +3415,7 @@ ttq.page();
                   <TabsTrigger value="conteudo" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Conteúdo</TabsTrigger>
                   <TabsTrigger value="depoimentos" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Depoimentos</TabsTrigger>
                   <TabsTrigger value="whatsapp" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">WhatsApp</TabsTrigger>
+                  <TabsTrigger value="botoes" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">Botões</TabsTrigger>
                   <TabsTrigger value="seo" className="text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">SEO</TabsTrigger>
                 </TabsList>
               </div>
