@@ -147,12 +147,19 @@ const Index = () => {
                 </p>
               </div>
               {settings.tool_progress.enabled && (
-                <div className="mt-8">
-                  <ToolProgressBar
-                    enabled={settings.tool_progress.enabled}
-                    label={settings.tool_progress.label}
-                    percentage={settings.tool_progress.percentage}
-                  />
+                <div className="mt-8 flex items-center justify-center gap-3">
+                  <span className="text-xs sm:text-sm font-semibold text-foreground/70 whitespace-nowrap">
+                    {settings.tool_progress.label}
+                  </span>
+                  <div className="w-32 sm:w-48 h-2.5 rounded-full bg-muted overflow-hidden">
+                    <div
+                      className="h-full rounded-full bg-primary transition-all duration-700 ease-out"
+                      style={{ width: `${Math.min(100, Math.max(0, settings.tool_progress.percentage))}%` }}
+                    />
+                  </div>
+                  <span className="text-xs sm:text-sm font-bold text-primary whitespace-nowrap">
+                    {Math.min(100, Math.max(0, settings.tool_progress.percentage))}%
+                  </span>
                 </div>
               )}
             </div>
