@@ -18,6 +18,7 @@ import { PricingTiersSection, PricingTier } from '@/components/PricingTiersSecti
 import { RechargeInfoSection } from '@/components/RechargeInfoSection';
 import { CheckoutModal } from '@/components/CheckoutModal';
 import backgroundHeroDefault from '@/assets/background-hero.png';
+import coderCharacter from '@/assets/coder-character.png';
 import { useHomepageSettings } from '@/hooks/useHomepageSettings';
 import { TrackingScripts } from '@/components/TrackingScripts';
 import { ToolProgressBar } from '@/components/ToolProgressBar';
@@ -162,6 +163,11 @@ const Index = () => {
                   </span>
                 </div>
               )}
+              <img 
+                src={coderCharacter} 
+                alt="Robô programando" 
+                className="mt-6 w-24 h-24 sm:w-32 sm:h-32 mx-auto object-contain animate-bounce-slow"
+              />
             </div>
           </section>
         )}
