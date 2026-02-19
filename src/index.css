@@ -111,13 +111,18 @@
   }
 }
 
-@keyframes bounce-slow {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
+@keyframes typing-robot {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  15% { transform: translateY(-3px) rotate(-1deg); }
+  30% { transform: translateY(0) rotate(0.5deg); }
+  45% { transform: translateY(-2px) rotate(-0.5deg); }
+  60% { transform: translateY(0) rotate(1deg); }
+  75% { transform: translateY(-3px) rotate(-0.5deg); }
+  90% { transform: translateY(-1px) rotate(0deg); }
 }
 
 .animate-bounce-slow {
-  animation: bounce-slow 2s ease-in-out infinite;
+  animation: typing-robot 1.2s ease-in-out infinite;
 }
 
 @layer base {
