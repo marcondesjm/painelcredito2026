@@ -10,7 +10,7 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useHomepageSettings } from '@/hooks/useHomepageSettings';
-import logoPainel from '@/assets/logo-painel.png';
+import logoPainelDefault from '@/assets/logo-painel.png';
 
 export const Header = () => {
   const [loginOpen, setLoginOpen] = useState(false);
@@ -19,6 +19,7 @@ export const Header = () => {
   const { language, setLanguage, t } = useLanguage();
   const { settings } = useHomepageSettings();
   const mv = settings.menu_visibility;
+  const logoSrc = settings.logo_url || logoPainelDefault;
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -65,7 +66,7 @@ export const Header = () => {
         <div className="max-w-7xl mx-auto px-3 sm:px-4 h-full flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center h-full py-2 gap-2">
-            <img src={logoPainel} alt="Painel Créditos Lovable" className="h-full max-h-[40px] sm:max-h-[48px] md:max-h-[56px] w-auto object-contain object-left" />
+            <img src={logoSrc} alt="Painel Créditos Lovable" className="h-full max-h-[40px] sm:max-h-[48px] md:max-h-[56px] w-auto object-contain object-left" />
             <span className="text-lg sm:text-xl" role="img" aria-label={language === 'pt' ? 'Português' : 'English'}>
               {language === 'pt' ? '🇧🇷' : '🇺🇸'}
             </span>
@@ -202,7 +203,7 @@ export const Header = () => {
             </SheetTrigger>
             <SheetContent side="right" className="bg-background border-border w-[280px]">
               <div className="flex justify-center mb-6 pt-2">
-                <img src={logoPainel} alt="Painel Créditos Lovable" className="h-12 w-auto object-contain" />
+                <img src={logoSrc} alt="Painel Créditos Lovable" className="h-12 w-auto object-contain" />
               </div>
               <nav className="flex flex-col gap-4">
                 {mv.painel_gerador && <Button variant="hero" className="w-full" onClick={() => handleNavigate('/checkout')}>{t('header.generator')}</Button>}

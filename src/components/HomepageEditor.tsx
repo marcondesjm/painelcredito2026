@@ -7,10 +7,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Plus, Trash2, Save, Loader2, Star, CreditCard, MessageSquare, ShoppingCart, Bell, Eye, Menu } from 'lucide-react';
+import { Plus, Trash2, Save, Loader2, Star, CreditCard, MessageSquare, ShoppingCart, Bell, Eye, Menu, Image as ImageIcon } from 'lucide-react';
 import { toast } from 'sonner';
 import { useHomepageSettings, HeroSettings, CheckoutSettings, SocialProofSettings, SocialProofCustomer, CustomPackageOption, GuaranteeSettings, FAQSettings, FAQItem, SectionsVisibility, MenuVisibility, TrackingSettings } from '@/hooks/useHomepageSettings';
 import { PricingTier } from '@/components/PricingTiersSection';
+import { ImageUpload } from '@/components/ImageUpload';
 
 export const HomepageEditor = () => {
   const { settings, loading, updateSetting, refetch } = useHomepageSettings();
@@ -189,6 +190,34 @@ export const HomepageEditor = () => {
 
         {/* Sections Visibility Tab */}
         <TabsContent value="sections" className="space-y-4">
+          {/* Logo Upload */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <ImageIcon className="w-5 h-5" />
+                Logo do Site
+              </CardTitle>
+              <CardDescription>Altere a logo exibida no cabeçalho do site</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ImageUpload
+                label="Logo"
+                value={settings.logo_url}
+                onChange={async (url) => {
+                  const result = await updateSetting('logo_url', url);
+                  if (result.success) {
+                    toast.success('Logo atualizada com sucesso!');
+                  } else {
+                    toast.error('Erro ao salvar logo');
+                  }
+                }}
+                folder="logos"
+                aspectRatio="aspect-[4/1]"
+                placeholder="Cole a URL da logo ou faça upload"
+              />
+            </CardContent>
+          </Card>
+
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
