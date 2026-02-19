@@ -212,7 +212,7 @@ ${confirmReceipt ? '📎 *Comprovante:* Será enviado em seguida' : '📎 *Compr
         <div className="text-center mb-10 max-w-2xl">
           <h1 className="text-4xl md:text-5xl font-black mb-4">
             Gerador de Créditos{' '}
-            <span className="text-primary">Lovable</span>
+            <span className="text-primary">Compra Curso</span>
           </h1>
           <p className="text-muted-foreground text-base md:text-lg">
             Escolha a quantidade, pague via PIX e seus créditos são gerados automaticamente.
