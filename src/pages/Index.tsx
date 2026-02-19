@@ -98,15 +98,39 @@ const Index = () => {
       <TrackingScripts />
       {/* Fixed background */}
       {bgText.enabled ? (
-        <>
-          <div
-            className="fixed inset-0 -z-20"
-            style={{
-              background: `linear-gradient(135deg, ${bgText.gradient_from}, ${bgText.gradient_to})`,
-            }}
-          />
-      <div className="fixed inset-0 z-[50] overflow-hidden pointer-events-none select-none flex items-center justify-center px-4">
-            <div className="text-center w-full max-w-4xl">
+        <div
+          className="fixed inset-0 -z-20"
+          style={{
+            background: `linear-gradient(135deg, ${bgText.gradient_from}, ${bgText.gradient_to})`,
+          }}
+        />
+      ) : (
+        <div
+          className="fixed inset-0 -z-20"
+          style={{
+            backgroundImage: `url(${bgImage})`,
+            backgroundSize: 'contain',
+            backgroundPosition: 'top center',
+            backgroundRepeat: 'repeat',
+          }}
+        />
+      )}
+      {/* Dark overlay - controlled from admin panel */}
+      {overlayOpacity > 0 && (
+        <div className="fixed inset-0 -z-10" style={{ backgroundColor: `hsl(240 10% 4% / ${overlayOpacity})` }} />
+      )}
+      {bgText.enabled && (
+        <ToolProgressBar
+          enabled={settings.tool_progress.enabled}
+          label={settings.tool_progress.label}
+          percentage={settings.tool_progress.percentage}
+        />
+      )}
+      <div className="flex-1">
+        <Header />
+        {bgText.enabled && (
+          <section className="py-12 sm:py-20 px-4">
+            <div className="text-center w-full max-w-4xl mx-auto">
               <div style={{ opacity: (bgText.opacity ?? 100) / 100 }}>
                 <p
                   className={`font-black leading-relaxed break-words ${
@@ -129,49 +153,9 @@ const Index = () => {
                   {bgText.text}
                 </p>
               </div>
-              {settings.tool_progress.enabled && (
-                <div className="mt-6 flex items-center justify-center gap-3">
-                  <span className="text-sm font-semibold text-white/70 whitespace-nowrap">
-                    {settings.tool_progress.label}
-                  </span>
-                  <div className="w-48 h-3 rounded-full bg-white/10 overflow-hidden">
-                    <div
-                      className="h-full rounded-full bg-primary transition-all duration-700 ease-out"
-                      style={{ width: `${Math.min(100, Math.max(0, settings.tool_progress.percentage))}%` }}
-                    />
-                  </div>
-                  <span className="text-sm font-bold text-primary whitespace-nowrap">
-                    {settings.tool_progress.percentage}%
-                  </span>
-                </div>
-              )}
             </div>
-          </div>
-        </>
-      ) : (
-        <div
-          className="fixed inset-0 -z-20"
-          style={{
-            backgroundImage: `url(${bgImage})`,
-            backgroundSize: 'contain',
-            backgroundPosition: 'top center',
-            backgroundRepeat: 'repeat',
-          }}
-        />
-      )}
-      {/* Dark overlay - controlled from admin panel */}
-      {overlayOpacity > 0 && (
-        <div className="fixed inset-0 -z-10" style={{ backgroundColor: `hsl(240 10% 4% / ${overlayOpacity})` }} />
-      )}
-      {!bgText.enabled && (
-        <ToolProgressBar
-          enabled={settings.tool_progress.enabled}
-          label={settings.tool_progress.label}
-          percentage={settings.tool_progress.percentage}
-        />
-      )}
-      <div className="flex-1">
-        <Header />
+          </section>
+        )}
         {vis.hero && <HeroSection />}
         {vis.pricing && (
           <div id="pacotes">
