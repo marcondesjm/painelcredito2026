@@ -225,9 +225,9 @@ export const HomepageEditor = () => {
                 <ImageIcon className="w-5 h-5" />
                 Fundo do Site
               </CardTitle>
-              <CardDescription>Altere a imagem de fundo exibida no site</CardDescription>
+              <CardDescription>Altere a imagem de fundo e o filtro escuro do site</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-4">
               <ImageUpload
                 label="Imagem de Fundo"
                 value={settings.background_url}
@@ -243,6 +243,24 @@ export const HomepageEditor = () => {
                 aspectRatio="aspect-video"
                 placeholder="Cole a URL do fundo ou faça upload"
               />
+              <div className="space-y-2">
+                <Label>Filtro Escuro (Overlay): {settings.background_overlay}%</Label>
+                <input
+                  type="range"
+                  min={0}
+                  max={100}
+                  value={settings.background_overlay}
+                  onChange={async (e) => {
+                    const val = Number(e.target.value);
+                    const result = await updateSetting('background_overlay', val);
+                    if (!result.success) {
+                      toast.error('Erro ao salvar filtro');
+                    }
+                  }}
+                  className="w-full accent-primary"
+                />
+                <p className="text-xs text-muted-foreground">0% = sem filtro (natural) • 100% = totalmente escuro</p>
+              </div>
             </CardContent>
           </Card>
 
