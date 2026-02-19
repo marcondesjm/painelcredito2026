@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { FakeImplementationLog } from '@/components/FakeImplementationLog';
+import { useAuth } from '@/hooks/useAuth';
 import { Header } from '@/components/Header';
 import { HeroSection } from '@/components/HeroSection';
 import { FeaturesSection } from '@/components/FeaturesSection';
@@ -74,6 +75,7 @@ const fallbackTiers: PricingTier[] = [
 
 const Index = () => {
   const { settings, loading } = useHomepageSettings();
+  const { session } = useAuth();
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [selectedTier, setSelectedTier] = useState<PricingTier | null>(null);
 
@@ -89,6 +91,9 @@ const Index = () => {
   const bgImage = settings.background_url || backgroundHeroDefault;
   const overlayOpacity = settings.background_overlay / 100;
   const bgText = settings.background_text;
+  
+  // Only show maintenance/text section when NOT logged in
+  const showMaintenanceSection = bgText.enabled && !session;
 
   // Show nothing until settings are loaded to prevent flash of default background
   if (loading) {
@@ -99,7 +104,7 @@ const Index = () => {
     <div className="min-h-screen relative overflow-x-hidden flex flex-col">
       <TrackingScripts />
       {/* Fixed background */}
-      {bgText.enabled ? (
+      {showMaintenanceSection ? (
         <div
           className="fixed inset-0 -z-20"
           style={{
@@ -123,7 +128,7 @@ const Index = () => {
       )}
       <div className="flex-1">
         <Header />
-        {bgText.enabled && (
+        {showMaintenanceSection && (
           <section className="w-full flex items-center justify-center min-h-[60vh] sm:min-h-[70vh] px-4 sm:px-6">
             <div className="text-center w-full max-w-[90%] sm:max-w-2xl md:max-w-3xl lg:max-w-4xl mx-auto">
               <div style={{ opacity: (bgText.opacity ?? 100) / 100 }}>
