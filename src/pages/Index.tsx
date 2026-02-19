@@ -102,23 +102,16 @@ const Index = () => {
           />
           <div className="fixed inset-0 -z-15 overflow-hidden pointer-events-none select-none flex items-center justify-center">
             <div
-              className="opacity-[0.05]"
-              style={{
-                transform: 'rotate(-15deg) scale(1.5)',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '1.5rem',
-              }}
+              className="w-[200vw] h-[200vh] flex flex-col items-center justify-center gap-6 opacity-[0.08]"
+              style={{ transform: 'rotate(-20deg)' }}
             >
-              {Array.from({ length: 20 }).map((_, i) => (
-                <span
+              {Array.from({ length: 30 }).map((_, i) => (
+                <p
                   key={i}
-                  className="text-3xl md:text-5xl font-black text-white whitespace-nowrap text-center"
+                  className="text-2xl md:text-4xl font-extrabold text-white whitespace-nowrap text-center tracking-widest"
                 >
-                  {bgText.text} &nbsp; {bgText.text} &nbsp; {bgText.text}
-                </span>
+                  {bgText.text} &nbsp;&nbsp; {bgText.text} &nbsp;&nbsp; {bgText.text} &nbsp;&nbsp; {bgText.text}
+                </p>
               ))}
             </div>
           </div>
