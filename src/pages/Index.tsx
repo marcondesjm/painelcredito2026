@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { FakeImplementationLog } from '@/components/FakeImplementationLog';
 import { Header } from '@/components/Header';
 import { HeroSection } from '@/components/HeroSection';
 import { FeaturesSection } from '@/components/FeaturesSection';
@@ -168,6 +169,7 @@ const Index = () => {
                 alt="Robô programando" 
                 className="mt-6 w-24 h-24 sm:w-32 sm:h-32 mx-auto object-contain animate-bounce-slow"
               />
+              <FakeImplementationLog />
             </div>
           </section>
         )}
