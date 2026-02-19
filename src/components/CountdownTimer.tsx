@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Clock } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguage';
+import { useHomepageSettings } from '@/hooks/useHomepageSettings';
 
 interface TimeLeft {
   hours: number;
@@ -8,27 +9,52 @@ interface TimeLeft {
   seconds: number;
 }
 
+const getTimeLeftUntilEndOfDay = (): TimeLeft => {
+  const now = new Date();
+  const endOfDay = new Date(now);
+  endOfDay.setHours(23, 59, 59, 999);
+  const diff = Math.max(0, Math.floor((endOfDay.getTime() - now.getTime()) / 1000));
+  return {
+    hours: Math.floor(diff / 3600),
+    minutes: Math.floor((diff % 3600) / 60),
+    seconds: diff % 60,
+  };
+};
+
+const getTimeLeftUntilDeadline = (deadline: string): TimeLeft => {
+  const now = new Date();
+  const target = new Date(deadline);
+  const diff = Math.max(0, Math.floor((target.getTime() - now.getTime()) / 1000));
+  return {
+    hours: Math.floor(diff / 3600),
+    minutes: Math.floor((diff % 3600) / 60),
+    seconds: diff % 60,
+  };
+};
+
 export const CountdownTimer = () => {
-  const [timeLeft, setTimeLeft] = useState<TimeLeft>({ hours: 5, minutes: 34, seconds: 53 });
+  const { settings } = useHomepageSettings();
+  const { hero } = settings;
+  const mode = hero.countdown_mode || 'end_of_day';
+  const deadline = hero.countdown_deadline;
+
+  const getTimeLeft = () => {
+    if (mode === 'custom' && deadline) {
+      return getTimeLeftUntilDeadline(deadline);
+    }
+    return getTimeLeftUntilEndOfDay();
+  };
+
+  const [timeLeft, setTimeLeft] = useState<TimeLeft>(getTimeLeft);
   const { t } = useLanguage();
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setTimeLeft((prev) => {
-        const totalSeconds = prev.hours * 3600 + prev.minutes * 60 + prev.seconds - 1;
-        if (totalSeconds <= 0) {
-          return { hours: 5, minutes: 34, seconds: 53 };
-        }
-        return {
-          hours: Math.floor(totalSeconds / 3600),
-          minutes: Math.floor((totalSeconds % 3600) / 60),
-          seconds: totalSeconds % 60,
-        };
-      });
+      setTimeLeft(getTimeLeft());
     }, 1000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [mode, deadline]);
 
   const formatNumber = (num: number) => num.toString().padStart(2, '0');
 
