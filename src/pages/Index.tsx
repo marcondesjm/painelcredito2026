@@ -119,13 +119,6 @@ const Index = () => {
       {overlayOpacity > 0 && (
         <div className="fixed inset-0 -z-10" style={{ backgroundColor: `hsl(240 10% 4% / ${overlayOpacity})` }} />
       )}
-      {bgText.enabled && (
-        <ToolProgressBar
-          enabled={settings.tool_progress.enabled}
-          label={settings.tool_progress.label}
-          percentage={settings.tool_progress.percentage}
-        />
-      )}
       <div className="flex-1">
         <Header />
         {bgText.enabled && (
@@ -153,6 +146,15 @@ const Index = () => {
                   {bgText.text}
                 </p>
               </div>
+              {settings.tool_progress.enabled && (
+                <div className="mt-8">
+                  <ToolProgressBar
+                    enabled={settings.tool_progress.enabled}
+                    label={settings.tool_progress.label}
+                    percentage={settings.tool_progress.percentage}
+                  />
+                </div>
+              )}
             </div>
           </section>
         )}
