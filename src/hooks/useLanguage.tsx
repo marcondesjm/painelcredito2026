@@ -158,7 +158,7 @@ const translations: Record<Language, Record<string, string>> = {
     'footer.support': 'Suporte via WhatsApp',
     'footer.clear_cache': 'Limpar Cache',
     'footer.clearing': 'Limpando...',
-    'footer.rights': '© 2026 Painel Gerador de Créditos. Todos os direitos reservados.',
+    'footer.rights': '© 2026 Curso Lovable. Todos os direitos reservados.',
     'footer.version': 'Versão',
     'footer.updated': 'Atualizado em',
     // Language
