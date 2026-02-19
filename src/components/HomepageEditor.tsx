@@ -244,14 +244,15 @@ export const HomepageEditor = () => {
               {settings.background_text.enabled ? (
                 <div className="space-y-4 border rounded-lg p-4 border-border">
                   <div className="space-y-2">
-                    <Label>Texto do Fundo</Label>
-                    <Input
+                    <Label>Texto do Fundo (use Enter para pular linha)</Label>
+                    <Textarea
                       value={settings.background_text.text}
                       onChange={async (e) => {
                         const updated = { ...settings.background_text, text: e.target.value };
                         await updateSetting('background_text', updated);
                       }}
                       placeholder="CRÉDITOS INFINITOS"
+                      rows={4}
                     />
                   </div>
                   <div className="grid grid-cols-2 gap-4">
