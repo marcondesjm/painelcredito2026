@@ -566,9 +566,9 @@ ${confirmReceipt ? '📎 *Comprovante:* Será enviado em seguida' : '📎 *Compr
         </div>
       )}
       {/* Footer */}
-      <footer className="w-full border-t border-border mt-12 py-6 text-center text-muted-foreground text-sm">
+      <footer className="relative z-10 w-full border-t border-border py-6 text-center text-muted-foreground text-sm mt-auto">
         <p>© 2026 Curso Lovable. Todos os direitos reservados.</p>
-        <p className="mt-1 text-xs flex items-center justify-center gap-2">
+        <p className="mt-1 text-xs flex items-center justify-center gap-2 mb-16">
           <span className="flex items-center gap-1">
             <Clock className="w-3 h-3" /> Versão {APP_VERSION}
           </span>
