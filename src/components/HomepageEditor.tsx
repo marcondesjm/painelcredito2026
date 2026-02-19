@@ -559,6 +559,25 @@ export const HomepageEditor = () => {
               ))}
             </CardContent>
           </Card>
+
+          <Button
+            onClick={async () => {
+              setSaving(true);
+              const r1 = await updateSetting('sections_visibility', sectionsVisibility);
+              const r2 = await updateSetting('menu_visibility', menuVisibility);
+              if (r1.success && r2.success) {
+                toast.success('Seções salvas com sucesso!');
+              } else {
+                toast.error('Erro ao salvar seções');
+              }
+              setSaving(false);
+            }}
+            className="w-full"
+            disabled={saving}
+          >
+            {saving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
+            Salvar Seções
+          </Button>
         </TabsContent>
 
         {/* Hero Tab */}
