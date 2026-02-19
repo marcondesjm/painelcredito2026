@@ -118,6 +118,7 @@ interface BackgroundTextSettings {
   gradient_to: string;
   font_family: string;
   font_size: string;
+  font_color: string;
 }
 
 interface HomepageSettings {
@@ -221,6 +222,7 @@ const defaultSettings: HomepageSettings = {
     gradient_to: '#0a0a0f',
     font_family: 'Inter',
     font_size: '4xl',
+    font_color: '#ffffff',
   },
   tool_progress: {
     enabled: false,

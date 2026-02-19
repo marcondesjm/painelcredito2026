@@ -294,6 +294,28 @@ export const HomepageEditor = () => {
                         <option value="6xl">Gigante</option>
                       </select>
                     </div>
+                    <div className="space-y-2">
+                      <Label>Cor da Fonte</Label>
+                      <div className="flex gap-2 items-center">
+                        <input
+                          type="color"
+                          value={settings.background_text.font_color || '#ffffff'}
+                          onChange={async (e) => {
+                            const updated = { ...settings.background_text, font_color: e.target.value };
+                            await updateSetting('background_text', updated);
+                          }}
+                          className="w-10 h-10 rounded cursor-pointer border-0"
+                        />
+                        <Input
+                          value={settings.background_text.font_color || '#ffffff'}
+                          onChange={async (e) => {
+                            const updated = { ...settings.background_text, font_color: e.target.value };
+                            await updateSetting('background_text', updated);
+                          }}
+                          className="flex-1"
+                        />
+                      </div>
+                    </div>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
