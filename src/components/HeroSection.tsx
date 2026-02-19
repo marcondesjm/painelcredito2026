@@ -51,7 +51,7 @@ export const HeroSection = () => {
               })()}
             </p>
 
-            <div className="flex flex-col items-center lg:items-start gap-3 mb-4 sm:mb-6">
+            {settings.sections_visibility.hero_prices && <div className="flex flex-col items-center lg:items-start gap-3 mb-4 sm:mb-6">
               {/* Main price + its renewal */}
               <div className="flex flex-col items-center lg:items-start gap-2">
                 <div className="flex items-baseline gap-2 sm:gap-3 flex-wrap justify-center lg:justify-start">
@@ -109,7 +109,7 @@ export const HeroSection = () => {
                   </div>
                 );
               })}
-            </div>
+            </div>}
 
 
 
