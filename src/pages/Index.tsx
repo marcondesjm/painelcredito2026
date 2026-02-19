@@ -93,13 +93,13 @@ const Index = () => {
         className="fixed inset-0 -z-20"
         style={{ 
           backgroundImage: `url(${bgImage})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat'
+          backgroundSize: 'contain',
+          backgroundPosition: 'top center',
+          backgroundRepeat: 'repeat'
         }}
       />
       {/* Dark overlay */}
-      <div className="fixed inset-0 bg-[hsl(240,10%,4%)]/70 -z-10" />
+      <div className="fixed inset-0 bg-[hsl(240,10%,4%)]/80 -z-10" />
       <Header />
       {vis.hero && <HeroSection />}
       {vis.pricing && (
