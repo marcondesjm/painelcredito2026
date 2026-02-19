@@ -122,7 +122,7 @@ export const HeroSection = () => {
             <div className="flex flex-col items-center lg:items-start gap-2 mb-4">
               <div className="inline-flex items-center gap-2 bg-destructive/10 border border-destructive/30 rounded-full px-4 py-1.5 animate-pulse-glow">
                 <span className="text-sm sm:text-base font-bold text-destructive">
-                  ⏳🔥 ÚLTIMAS HORAS! A PROMOÇÃO TERMINA HOJE! 🔥⏳
+                  🔥 PROMOÇÃO DE CRÉDITOS 🔥
                 </span>
               </div>
               <CountdownTimer />
