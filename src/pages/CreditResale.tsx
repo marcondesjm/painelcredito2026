@@ -63,7 +63,7 @@ const CreditResale = () => {
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
 
   // Timer for PIX expiration
   useEffect(() => {
@@ -111,6 +111,17 @@ const CreditResale = () => {
     fetchWhatsapp();
   }, []);
 
+  const price = useMemo(() => calculatePrice(credits), [credits]);
+  const ratePer100 = useMemo(() => (price / credits) * 100, [price, credits]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
   const formatCpf = (value: string) => {
     const digits = value.replace(/\D/g, '').slice(0, 11);
     if (digits.length <= 3) return digits;
@@ -156,9 +167,6 @@ ${confirmReceipt ? '📎 *Comprovante:* Será enviado em seguida' : '📎 *Compr
     setConfirmReceipt(null);
     closeBalanceModal();
   };
-
-  const price = useMemo(() => calculatePrice(credits), [credits]);
-  const ratePer100 = useMemo(() => (price / credits) * 100, [price, credits]);
 
   const handlePackageClick = (pkg: typeof POPULAR_PACKAGES[0]) => {
     setCredits(pkg.credits);
