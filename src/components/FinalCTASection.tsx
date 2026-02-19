@@ -15,9 +15,6 @@ export const FinalCTASection = () => {
         <p className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8 px-2">
           {t('cta.subtitle')}
         </p>
-        <Button variant="hero" size="xl" className="w-full sm:w-auto" onClick={() => navigate('/checkout')}>
-          {t('cta.button')}
-        </Button>
       </div>
     </section>
   );
