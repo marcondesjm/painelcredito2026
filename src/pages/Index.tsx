@@ -100,7 +100,7 @@ const Index = () => {
               background: `linear-gradient(135deg, ${bgText.gradient_from}, ${bgText.gradient_to})`,
             }}
           />
-          <div className="fixed inset-0 -z-15 overflow-hidden pointer-events-none select-none flex items-center justify-center">
+          <div className="fixed inset-0 z-[50] overflow-hidden pointer-events-none select-none flex items-center justify-center">
             <div className="text-center px-8">
               <div className="opacity-[0.06]">
                 <p
