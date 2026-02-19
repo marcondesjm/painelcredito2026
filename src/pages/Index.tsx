@@ -20,6 +20,7 @@ import { CheckoutModal } from '@/components/CheckoutModal';
 import backgroundHeroDefault from '@/assets/background-hero.png';
 import { useHomepageSettings } from '@/hooks/useHomepageSettings';
 import { TrackingScripts } from '@/components/TrackingScripts';
+import { ToolProgressBar } from '@/components/ToolProgressBar';
 
 // Fallback tiers when database is loading or empty
 const fallbackTiers: PricingTier[] = [
@@ -103,6 +104,11 @@ const Index = () => {
       {overlayOpacity > 0 && (
         <div className="fixed inset-0 -z-10" style={{ backgroundColor: `hsl(240 10% 4% / ${overlayOpacity})` }} />
       )}
+      <ToolProgressBar
+        enabled={settings.tool_progress.enabled}
+        label={settings.tool_progress.label}
+        percentage={settings.tool_progress.percentage}
+      />
       <Header />
       {vis.hero && <HeroSection />}
       {vis.pricing && (
