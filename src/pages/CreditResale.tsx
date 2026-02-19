@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import backgroundHero from '@/assets/background-hero.png';
+import { APP_VERSION, LAST_UPDATE } from '@/config/version';
 
 const POPULAR_PACKAGES = [
   { credits: 100, price: 3.5, discount: null },
@@ -556,6 +557,17 @@ ${confirmReceipt ? '📎 *Comprovante:* Será enviado em seguida' : '📎 *Compr
           </div>
         </div>
       )}
+      {/* Footer */}
+      <footer className="w-full border-t border-border mt-12 py-6 text-center text-muted-foreground text-sm">
+        <p>© 2026 Curso Lovable. Todos os direitos reservados.</p>
+        <p className="mt-1 text-xs flex items-center justify-center gap-2">
+          <span className="flex items-center gap-1">
+            <Clock className="w-3 h-3" /> Versão {APP_VERSION}
+          </span>
+          <span>•</span>
+          <span>Atualizado em {LAST_UPDATE}</span>
+        </p>
+      </footer>
     </div>
   );
 };
