@@ -210,10 +210,10 @@ ${confirmReceipt ? '📎 *Comprovante:* Será enviado em seguida' : '📎 *Compr
     <div className="min-h-screen bg-background text-foreground relative overflow-hidden">
       {/* Background */}
       <div
-        className="absolute inset-0 opacity-30 bg-cover bg-center"
+        className="absolute inset-0 opacity-[0.06] bg-cover bg-center"
         style={{ backgroundImage: `url(${backgroundHero})` }}
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-background/50 via-background/80 to-background" />
+      <div className="absolute inset-0 bg-background/95" />
 
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 py-12">
         {/* Header */}
