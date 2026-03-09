@@ -220,8 +220,8 @@ const Index = () => {
         primaryColor="#8B5CF6"
         accentColor="#22C55E"
         pixEnabled={true}
-        pixKey={settings.pix_key || ''}
-        pixName={settings.pix_name || ''}
+        pixKey={settings.pix_key || '+5548996029392'}
+        pixName={settings.pix_name || 'Marcondes Jorge Machado'}
         whatsappNumber={settings.whatsapp_number || '5548996029392'}
         showBalance={true}
       />

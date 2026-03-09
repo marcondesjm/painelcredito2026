@@ -226,8 +226,8 @@ const defaultSettings: HomepageSettings = {
     label: '🚀 Nova Ferramenta',
     percentage: 0,
   },
-  pix_key: '',
-  pix_name: '',
+  pix_key: '+5548996029392',
+  pix_name: 'Marcondes Jorge Machado',
   whatsapp_number: '5548996029392',
   sections_visibility: {
     hero: true,
