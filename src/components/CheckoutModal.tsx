@@ -80,6 +80,9 @@ export const CheckoutModal = ({
   const [sendLinkNow, setSendLinkNow] = useState(true);
   const [couponCode, setCouponCode] = useState('');
   const [cpf, setCpf] = useState('');
+  const [receiptFile, setReceiptFile] = useState<File | null>(null);
+  const [receiptPreview, setReceiptPreview] = useState<string | null>(null);
+  const [uploadingReceipt, setUploadingReceipt] = useState(false);
   // Calculate discount and final price
   const calculateDiscount = () => {
     if (!tier || !useBalanceAsDiscount || userBalance <= 0) return { discount: 0, finalPrice: tier?.price_current || 0, creditsUsed: 0 };
