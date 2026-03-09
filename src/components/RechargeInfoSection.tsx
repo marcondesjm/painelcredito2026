@@ -8,7 +8,7 @@ export const RechargeInfoSection = () => {
     <section className="py-8 sm:py-12 px-4 sm:px-6">
       <div className="max-w-2xl mx-auto text-center space-y-4 sm:space-y-5">
         <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-foreground flex items-center justify-center gap-2 flex-wrap">
-          {t('recharge.title_pre')} <span className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-primary">1</span> {t('recharge.title_post')}
+          {t('recharge.title_pre')} {t('recharge.title_post')}
           <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-muted-foreground" />
         </h3>
 
