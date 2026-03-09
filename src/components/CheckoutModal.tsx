@@ -1096,18 +1096,6 @@ ${linkConviteText}
                 Enviar Pedido via WhatsApp
               </Button>
 
-              <p className="text-center text-sm text-muted-foreground">
-                Já tem uma conta?{' '}
-                <button 
-                  className="underline hover:text-foreground font-medium"
-                  style={{ color: primaryColor }}
-                  onClick={() => {
-                    window.location.href = '/auth';
-                  }}
-                >
-                  Fazer login
-                </button>
-              </p>
             </div>
           </div>
         )}
