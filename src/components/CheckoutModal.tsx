@@ -478,14 +478,6 @@ ${cupomText}
                 </div>
               </div>
 
-              {/* Footer note */}
-              <div 
-                className="text-center p-3 rounded-lg border"
-                style={{ borderColor: `${primaryColor}30`, backgroundColor: `${primaryColor}08` }}
-              >
-                <p className="text-sm font-semibold text-foreground">Você escolhe após o pagamento!</p>
-                <p className="text-xs text-muted-foreground">Na página do pedido você decide qual opção prefere</p>
-              </div>
             </div>
           </div>
         )}
