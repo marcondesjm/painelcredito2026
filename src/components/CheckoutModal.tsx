@@ -1062,6 +1062,61 @@ ${cupomText}
                 />
               </div>
 
+              {/* Comprovante PIX */}
+              <div className="space-y-1.5">
+                <Label className="text-sm font-medium">Comprovante do PIX</Label>
+                <div 
+                  className="relative border-2 border-dashed border-border rounded-xl p-4 text-center cursor-pointer hover:border-primary/50 transition-colors"
+                  onClick={() => document.getElementById('receipt-upload')?.click()}
+                >
+                  <input
+                    id="receipt-upload"
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        if (file.size > 5 * 1024 * 1024) {
+                          toast.error('Arquivo muito grande. Máximo 5MB.');
+                          return;
+                        }
+                        setReceiptFile(file);
+                        const reader = new FileReader();
+                        reader.onload = (ev) => setReceiptPreview(ev.target?.result as string);
+                        reader.readAsDataURL(file);
+                      }
+                    }}
+                  />
+                  {receiptPreview ? (
+                    <div className="flex items-center gap-3">
+                      <img src={receiptPreview} alt="Comprovante" className="w-16 h-16 object-cover rounded-lg" />
+                      <div className="flex-1 text-left">
+                        <p className="text-sm font-medium text-foreground">{receiptFile?.name}</p>
+                        <p className="text-xs text-muted-foreground">Clique para trocar</p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setReceiptFile(null);
+                          setReceiptPreview(null);
+                        }}
+                        className="text-muted-foreground hover:text-destructive"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="space-y-2 py-2">
+                      <ImageIcon className="w-8 h-8 mx-auto text-muted-foreground" />
+                      <p className="text-sm text-muted-foreground">Clique para anexar o comprovante</p>
+                      <p className="text-xs text-muted-foreground">PNG, JPG até 5MB</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+
               <Button
                 className="w-full h-12 text-white font-semibold text-base"
                 style={{ backgroundColor: '#25D366' }}
