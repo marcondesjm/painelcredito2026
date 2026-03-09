@@ -242,7 +242,7 @@ const defaultSettings: HomepageSettings = {
     guarantee: true,
     stats: true,
     faq: true,
-    final_cta: true,
+    final_cta: false,
   },
   menu_visibility: {
     painel_gerador: true,
