@@ -247,7 +247,7 @@ const defaultSettings: HomepageSettings = {
   menu_visibility: {
     painel_gerador: true,
     entrar_conta: true,
-    compra_creditos: true,
+    compra_creditos: false,
     como_funciona: true,
     faq: true,
     install: true,
