@@ -5,9 +5,9 @@ export const FinalCTASection = () => {
   return (
     <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 relative">
       <div className="relative z-10 max-w-3xl mx-auto text-center space-y-6">
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-tight">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-tight drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">
           Gerencie{' '}
-          <span className="bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent drop-shadow-none" style={{ WebkitTextStroke: '1px rgba(168,85,247,0.4)' }}>
             todos os projetos
           </span>
           <br />
