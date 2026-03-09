@@ -4,7 +4,7 @@ import { Zap, Play } from 'lucide-react';
 export const FinalCTASection = () => {
   return (
     <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 relative">
-      <div className="max-w-3xl mx-auto text-center space-y-6">
+      <div className="relative z-10 max-w-3xl mx-auto text-center space-y-6">
         <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-tight">
           Gerencie{' '}
           <span className="bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
