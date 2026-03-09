@@ -119,7 +119,7 @@ export const Header = () => {
                 variant="ghost" 
                 size="sm" 
                 className="text-muted-foreground hover:text-foreground"
-                onClick={() => scrollToSection('how-it-works')}
+                onClick={() => scrollToSection('faq')}
               >
                 {t('header.how_it_works')}
               </Button>
