@@ -161,7 +161,7 @@ const defaultSettings: HomepageSettings = {
       { question: "Como funciona o acesso ao produto?", answer: "Após a confirmação do pagamento, será criado automaticamente um login utilizando o e-mail cadastrado na compra. Com esse login, você poderá acessar o painel diretamente pelo nosso site, na aba Painel. O acesso é liberado de forma automática e imediata." },
       { question: "Tem tutorial por vídeo e manual de acesso?", answer: "Sim! Temos tutorial em vídeo e manual de acesso completo." },
       { question: "Por quanto tempo terei acesso?", answer: "Você terá acesso vitalício ao painel, incluindo todas as atualizações futuras sem custo adicional." },
-      { question: "Quais sistemas operacionais o programa funciona?", answer: "O painel funciona 100% online, direto no navegador. Acesse de qualquer dispositivo (Windows, Mac, Linux, Android, iOS)." },
+      
       { question: "Tem limite de resgate de créditos?", answer: "Não há limite de resgates. Você pode gerar quantos créditos quiser, sem restrições." },
       { question: "Está funcionando depois da atualização do Lovable?", answer: "Sim, está funcionando depois do fix que a Lovable deu no método antigo das extensões que clicavam publish ao mesmo tempo. Nosso painel utiliza métodos diferentes e atualizados." },
       { question: "Funciona em uma conta que já indicou mais de 10 convites?", answer: "Sim! Você pode resgatar créditos em uma conta que já indicou mais de 10 pessoas, desde que você tenha acesso a uma conta que já resgatou créditos nessa conta, então você pode depositar na conta desejada." },
