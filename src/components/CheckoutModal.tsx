@@ -1012,7 +1012,7 @@ ${cupomText}
             </div>
 
             <div className="p-4 space-y-4">
-              <p className="text-sm text-center text-muted-foreground">Criar sua conta</p>
+              <p className="text-sm text-center text-muted-foreground">Preencha seus dados para enviar o pedido</p>
 
               <div className="space-y-1.5">
                 <Label className="text-sm font-medium">Nome completo</Label>
@@ -1046,25 +1046,6 @@ ${cupomText}
                 />
               </div>
 
-              <div className="space-y-1.5">
-                <Label className="text-sm font-medium">Senha</Label>
-                <div className="relative">
-                  <Input
-                    type={showPassword ? "text" : "password"}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="••••••••"
-                    className="bg-background border-2 h-11 pr-10"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                  >
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
-                </div>
-              </div>
 
               <div className="space-y-1.5">
                 <Label className="text-sm font-medium" style={{ color: primaryColor }}>
@@ -1080,32 +1061,41 @@ ${cupomText}
 
               <Button
                 className="w-full h-12 text-white font-semibold text-base"
-                style={{ backgroundColor: '#F59E0B' }}
-                onClick={handleSignup}
+                style={{ backgroundColor: '#25D366' }}
+                onClick={() => {
+                  if (!name || !whatsapp || !email) {
+                    toast.error('Preencha todos os campos obrigatórios');
+                    return;
+                  }
+                  const formattedPrice = formatPrice(finalPrice);
+                  const linkConviteText = inviteLink 
+                    ? `🔗 *Link de Convite:* ${inviteLink}` 
+                    : '⏳ *Link de Convite:* Será enviado depois';
+                  
+                  const orderMessage = `🛒 *NOVO PEDIDO*
+
+📦 *Pacote:* ${tier.name}
+💳 *Créditos:* ${tier.credits.toLocaleString('pt-BR')}
+💰 *Valor:* ${formattedPrice}
+
+👤 *Cliente:*
+• Nome: ${name} ${surname}
+• WhatsApp: ${whatsapp}
+• Email: ${email}
+
+${linkConviteText}
+
+📅 *Data:* ${new Date().toLocaleString('pt-BR')}`;
+
+                  const cleanNumber = (whatsappNumber?.replace(/\D/g, '')) || '5548996029392';
+                  window.open(`https://wa.me/${cleanNumber}?text=${encodeURIComponent(orderMessage)}`, '_blank');
+                }}
                 disabled={loading}
               >
-                {loading ? (
-                  <>
-                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                    Criando conta...
-                  </>
-                ) : (
-                  'Criar conta'
-                )}
+                <Phone className="w-5 h-5 mr-2" />
+                Enviar Pedido via WhatsApp
               </Button>
 
-              <p className="text-center text-sm text-muted-foreground">
-                Já tem uma conta?{' '}
-                <button 
-                  className="underline hover:text-foreground font-medium"
-                  style={{ color: primaryColor }}
-                  onClick={() => {
-                    window.location.href = '/auth';
-                  }}
-                >
-                  Fazer login
-                </button>
-              </p>
             </div>
           </div>
         )}
