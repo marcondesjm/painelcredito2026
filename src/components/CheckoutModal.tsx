@@ -743,7 +743,7 @@ ${cupomText}
                 <Button
                   className="flex-1 h-12 text-white font-semibold"
                   style={{ background: `linear-gradient(90deg, ${primaryColor}, ${accentColor})` }}
-                  onClick={() => setStep('payment-method')}
+                  onClick={() => setStep('pix')}
                   disabled={loading}
                 >
                   Entendi e Concordo
