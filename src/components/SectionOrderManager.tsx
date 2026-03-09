@@ -220,11 +220,13 @@ export const SectionOrderManager = forwardRef<HTMLDivElement, SectionOrderManage
                 <GripVertical className={`w-4 h-4 flex-shrink-0 ${isEnabled ? 'text-muted-foreground' : 'text-muted-foreground/30'}`} />
                 <span className="flex-1" />
                 {!isHero && onToggleSection && (
-                  <Switch
-                    checked={isEnabled}
-                    onCheckedChange={(checked) => onToggleSection(sectionId, checked)}
-                    className="flex-shrink-0"
-                  />
+                  <div onClick={(e) => e.stopPropagation()} onMouseDown={(e) => e.stopPropagation()} onTouchStart={(e) => e.stopPropagation()}>
+                    <Switch
+                      checked={isEnabled}
+                      onCheckedChange={(checked) => onToggleSection(sectionId, checked)}
+                      className="flex-shrink-0"
+                    />
+                  </div>
                 )}
                 {isEnabled && (
                 <div className="flex gap-1">
