@@ -1120,15 +1120,42 @@ ${cupomText}
               <Button
                 className="w-full h-12 text-white font-semibold text-base"
                 style={{ backgroundColor: '#25D366' }}
-                onClick={() => {
+                onClick={async () => {
                   if (!name || !whatsapp || !email) {
                     toast.error('Preencha todos os campos obrigatórios');
                     return;
                   }
+
+                  let receiptUrl = '';
+                  if (receiptFile) {
+                    setUploadingReceipt(true);
+                    try {
+                      const fileExt = receiptFile.name.split('.').pop();
+                      const fileName = `comprovantes/${Date.now()}_${Math.random().toString(36).slice(2)}.${fileExt}`;
+                      const { data, error } = await supabase.storage
+                        .from('landing-pages')
+                        .upload(fileName, receiptFile, { contentType: receiptFile.type });
+                      if (error) throw error;
+                      const { data: urlData } = supabase.storage
+                        .from('landing-pages')
+                        .getPublicUrl(fileName);
+                      receiptUrl = urlData.publicUrl;
+                    } catch (err: any) {
+                      console.error('Upload error:', err);
+                      toast.error('Erro ao enviar comprovante. Tente novamente.');
+                      setUploadingReceipt(false);
+                      return;
+                    }
+                    setUploadingReceipt(false);
+                  }
+
                   const formattedPrice = formatPrice(finalPrice);
                   const linkConviteText = inviteLink 
                     ? `🔗 *Link de Convite:* ${inviteLink}` 
                     : '⏳ *Link de Convite:* Será enviado depois';
+                  const comprovanteText = receiptUrl 
+                    ? `🧾 *Comprovante:* ${receiptUrl}` 
+                    : '⚠️ *Comprovante:* Não anexado';
                   
                   const orderMessage = `🛒 *NOVO PEDIDO*
 
@@ -1142,16 +1169,26 @@ ${cupomText}
 • Email: ${email}
 
 ${linkConviteText}
+${comprovanteText}
 
 📅 *Data:* ${new Date().toLocaleString('pt-BR')}`;
 
                   const cleanNumber = (whatsappNumber?.replace(/\D/g, '')) || '5548996029392';
                   window.open(`https://wa.me/${cleanNumber}?text=${encodeURIComponent(orderMessage)}`, '_blank');
                 }}
-                disabled={loading}
+                disabled={loading || uploadingReceipt}
               >
-                <Phone className="w-5 h-5 mr-2" />
-                Enviar Pedido via WhatsApp
+                {uploadingReceipt ? (
+                  <>
+                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                    Enviando comprovante...
+                  </>
+                ) : (
+                  <>
+                    <Phone className="w-5 h-5 mr-2" />
+                    Enviar Pedido via WhatsApp
+                  </>
+                )}
               </Button>
 
             </div>
