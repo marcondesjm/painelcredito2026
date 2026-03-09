@@ -1080,18 +1080,39 @@ ${cupomText}
 
               <Button
                 className="w-full h-12 text-white font-semibold text-base"
-                style={{ backgroundColor: '#F59E0B' }}
-                onClick={handleSignup}
+                style={{ backgroundColor: '#25D366' }}
+                onClick={() => {
+                  if (!name || !whatsapp || !email) {
+                    toast.error('Preencha todos os campos obrigatórios');
+                    return;
+                  }
+                  const formattedPrice = formatPrice(finalPrice);
+                  const linkConviteText = inviteLink 
+                    ? `🔗 *Link de Convite:* ${inviteLink}` 
+                    : '⏳ *Link de Convite:* Será enviado depois';
+                  
+                  const orderMessage = `🛒 *NOVO PEDIDO*
+
+📦 *Pacote:* ${tier.name}
+💳 *Créditos:* ${tier.credits.toLocaleString('pt-BR')}
+💰 *Valor:* ${formattedPrice}
+
+👤 *Cliente:*
+• Nome: ${name} ${surname}
+• WhatsApp: ${whatsapp}
+• Email: ${email}
+
+${linkConviteText}
+
+📅 *Data:* ${new Date().toLocaleString('pt-BR')}`;
+
+                  const cleanNumber = (whatsappNumber?.replace(/\D/g, '')) || '5548996029392';
+                  window.open(`https://wa.me/${cleanNumber}?text=${encodeURIComponent(orderMessage)}`, '_blank');
+                }}
                 disabled={loading}
               >
-                {loading ? (
-                  <>
-                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                    Criando conta...
-                  </>
-                ) : (
-                  'Criar conta'
-                )}
+                <Phone className="w-5 h-5 mr-2" />
+                Enviar Pedido via WhatsApp
               </Button>
 
               <p className="text-center text-sm text-muted-foreground">
