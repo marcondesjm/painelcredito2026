@@ -1012,7 +1012,7 @@ ${cupomText}
             </div>
 
             <div className="p-4 space-y-4">
-              <p className="text-sm text-center text-muted-foreground">Criar sua conta</p>
+              <p className="text-sm text-center text-muted-foreground">Preencha seus dados para enviar o pedido</p>
 
               <div className="space-y-1.5">
                 <Label className="text-sm font-medium">Nome completo</Label>
