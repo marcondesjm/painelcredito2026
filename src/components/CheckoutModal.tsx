@@ -450,32 +450,7 @@ ${cupomText}
                   </div>
                 </div>
                 <h2 className="text-xl font-bold text-foreground">Como Você Vai Receber</h2>
-                <p className="text-sm text-muted-foreground">Duas opções para entregar seus créditos</p>
-              </div>
-
-              {/* Option 1: Workspace Novo */}
-              <div 
-                className="p-4 rounded-xl border-2 space-y-2 cursor-pointer transition-all hover:shadow-md"
-                style={{ borderColor: `${primaryColor}50`, backgroundColor: `${primaryColor}08` }}
-                onClick={() => setStep('checkout')}
-              >
-                <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: `${primaryColor}20` }}>
-                    <Globe className="w-5 h-5" style={{ color: primaryColor }} />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="font-bold text-foreground">Workspace Novo</h3>
-                    <p className="text-xs font-medium" style={{ color: primaryColor }}>Recomendado para iniciantes</p>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      Criamos um workspace novo, carregamos com seus créditos e <strong>transferimos para você</strong>. Você recebe um workspace pronto para usar!
-                    </p>
-                    <div className="flex items-center gap-1.5 mt-2 text-xs text-muted-foreground">
-                      <CheckCircle className="w-3.5 h-3.5" style={{ color: accentColor }} />
-                      <span>Simples e rápido</span>
-                    </div>
-                  </div>
-                  <ChevronRight className="w-5 h-5 text-muted-foreground flex-shrink-0 mt-2" />
-                </div>
+                <p className="text-sm text-muted-foreground">Envie seu link invite e carregamos seus créditos</p>
               </div>
 
               {/* Option 2: Workspace Próprio */}
