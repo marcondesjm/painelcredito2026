@@ -410,6 +410,8 @@ ${cupomText}
     setInviteLink('');
     setCouponCode('');
     setCpf('');
+    setReceiptFile(null);
+    setReceiptPreview(null);
     onClose();
   };
 
