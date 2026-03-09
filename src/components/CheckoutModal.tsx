@@ -743,7 +743,7 @@ ${cupomText}
                 <Button
                   className="flex-1 h-12 text-white font-semibold"
                   style={{ background: `linear-gradient(90deg, ${primaryColor}, ${accentColor})` }}
-                  onClick={() => setStep('payment-method')}
+                  onClick={() => setStep('pix')}
                   disabled={loading}
                 >
                   Entendi e Concordo
@@ -899,6 +899,31 @@ ${cupomText}
                       </div>
                     </div>
 
+                    {/* Chave PIX para copiar */}
+                    <div className="w-full space-y-2">
+                      <Label className="text-sm font-medium text-muted-foreground">Chave PIX</Label>
+                      <div className="flex gap-2">
+                        <Input
+                          readOnly
+                          value={pixKey || ''}
+                          className="bg-background border-2 h-11 text-sm font-mono flex-1"
+                        />
+                        <Button
+                          variant="outline"
+                          className="h-11 px-4 gap-2"
+                          onClick={() => {
+                            if (pixKey) {
+                              navigator.clipboard.writeText(pixKey);
+                              toast.success('Chave PIX copiada!');
+                            }
+                          }}
+                        >
+                          <Copy className="w-4 h-4" />
+                          Copiar
+                        </Button>
+                      </div>
+                    </div>
+
                     {/* Beneficiário */}
                     <div className="w-full p-3 rounded-lg border border-border/50 text-sm text-muted-foreground">
                       <div className="flex justify-between">
@@ -922,7 +947,7 @@ ${cupomText}
                   <Button
                     variant="outline"
                     className="flex-1 h-12"
-                    onClick={() => setStep('payment-method')}
+                    onClick={() => setStep('warning')}
                   >
                     <ArrowLeft className="w-4 h-4 mr-2" />
                     Voltar
