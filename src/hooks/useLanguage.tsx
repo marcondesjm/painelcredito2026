@@ -125,8 +125,8 @@ const translations: Record<Language, Record<string, string>> = {
     'cta.subtitle': 'Junte-se aos usuários que já estão aproveitando a Lovable sem limites.',
     'cta.button': 'Comprar Agora',
     // Recharge Info
-    'recharge.title_pre': 'Recarregue em menos de',
-    'recharge.title_post': 'minuto',
+    'recharge.title_pre': 'Recarregue em',
+    'recharge.title_post': 'minutos',
     'recharge.secure': 'Seguro',
     'recharge.no_ban': 'Sem risco de banimento',
     'recharge.bonus': 'Bônus',
@@ -287,8 +287,8 @@ const translations: Record<Language, Record<string, string>> = {
     'cta.subtitle': 'Join the users who are already enjoying Lovable without limits.',
     'cta.button': 'Buy Now',
     // Recharge Info
-    'recharge.title_pre': 'Recharge in less than',
-    'recharge.title_post': 'minute',
+    'recharge.title_pre': 'Recharge in',
+    'recharge.title_post': 'minutes',
     'recharge.secure': 'Secure',
     'recharge.no_ban': 'No risk of ban',
     'recharge.bonus': 'Bonus',
