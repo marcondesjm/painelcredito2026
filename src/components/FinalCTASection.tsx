@@ -1,19 +1,57 @@
 import { Button } from '@/components/ui/button';
-import { useNavigate } from 'react-router-dom';
-import { useLanguage } from '@/hooks/useLanguage';
+import { Zap, Play } from 'lucide-react';
 
 export const FinalCTASection = () => {
-  const navigate = useNavigate();
-  const { t } = useLanguage();
-  
   return (
     <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 relative">
-      <div className="max-w-2xl mx-auto text-center">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
-          {t('cta.title_pre')} <span className="text-primary">{t('cta.title_highlight')}</span>?
+      <div className="max-w-3xl mx-auto text-center space-y-6">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-tight">
+          Gerencie{' '}
+          <span className="bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
+            todos os projetos
+          </span>
+          <br />
+          em um só lugar
         </h2>
-        <p className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8 px-2">
-          {t('cta.subtitle')}
+        <p className="text-sm sm:text-base text-muted-foreground max-w-xl mx-auto leading-relaxed">
+          Unifique múltiplas contas e projetos, encontre qualquer projeto em segundos e ganhe até{' '}
+          <strong className="text-foreground">2 horas por semana</strong> em produtividade.
+          <br />
+          Com <strong className="text-foreground">Cursor</strong>,{' '}
+          <strong className="text-foreground">Base44</strong> e outras integrações inteligentes, você centraliza tudo em um só lugar e trabalha com muito mais eficiência.
+        </p>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+          <a
+            href="https://central-opus-flow.lovable.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Button
+              size="lg"
+              className="h-12 px-6 text-base font-semibold bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-xl gap-2"
+            >
+              <Zap className="w-4 h-4" />
+              Começar Grátis
+              <span className="ml-1">→</span>
+            </Button>
+          </a>
+          <a
+            href="https://central-opus-flow.lovable.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Button
+              variant="outline"
+              size="lg"
+              className="h-12 px-6 text-base font-semibold rounded-xl gap-2 border-2"
+            >
+              <Play className="w-4 h-4" />
+              Ver Demonstração
+            </Button>
+          </a>
+        </div>
+        <p className="text-xs text-muted-foreground pt-2">
+          🎁 <strong className="text-primary">Bônus Central Opus Flow</strong> — Acesso exclusivo para clientes
         </p>
       </div>
     </section>
