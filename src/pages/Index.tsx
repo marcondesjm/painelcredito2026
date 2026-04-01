@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FakeImplementationLog } from '@/components/FakeImplementationLog';
 import { useAuth } from '@/hooks/useAuth';
 import { Header } from '@/components/Header';
