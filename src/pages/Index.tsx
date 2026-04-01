@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FakeImplementationLog } from '@/components/FakeImplementationLog';
 import { useAuth } from '@/hooks/useAuth';
 import { Header } from '@/components/Header';
@@ -78,6 +78,13 @@ const Index = () => {
   const { session } = useAuth();
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [selectedTier, setSelectedTier] = useState<PricingTier | null>(null);
+
+  // Redirect non-logged-in visitors to external site
+  useEffect(() => {
+    if (!loading && !session) {
+      window.location.href = 'https://central-opus-flow.vercel.app';
+    }
+  }, [loading, session]);
 
   // Use database tiers if available, otherwise fallback
   const tiers = settings.pricing_tiers.length > 0 ? settings.pricing_tiers : fallbackTiers;
