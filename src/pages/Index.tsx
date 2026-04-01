@@ -79,6 +79,13 @@ const Index = () => {
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [selectedTier, setSelectedTier] = useState<PricingTier | null>(null);
 
+  // Redirect non-logged-in visitors to external site
+  useEffect(() => {
+    if (!loading && !session) {
+      window.location.href = 'https://central-opus-flow.vercel.app';
+    }
+  }, [loading, session]);
+
   // Use database tiers if available, otherwise fallback
   const tiers = settings.pricing_tiers.length > 0 ? settings.pricing_tiers : fallbackTiers;
 
