@@ -181,7 +181,7 @@ const Index = () => {
         )}
         {vis.hero && <HeroSection />}
         {vis.pricing && (
-          <div id="pacotes">
+          <div id="pacotes" className={!vis.hero && !showMaintenanceSection ? 'pt-20 sm:pt-24' : ''}>
             <PricingTiersSection 
               tiers={tiers} 
               customPackageOptions={settings.custom_package_options}
