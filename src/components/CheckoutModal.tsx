@@ -472,7 +472,7 @@ ${cupomText}
                     <h3 className="font-bold text-foreground">Workspace Próprio</h3>
                     <p className="text-xs font-medium text-muted-foreground">Para quem já tem projetos</p>
                     <p className="text-sm text-muted-foreground mt-1">
-                      Copie o Link Invite em <strong>Share Lovable</strong> (https://lovable.dev/invite/XXXXXX) e envie para nós no WhatsApp. Carregamos os créditos direto no seu workspace!
+                      Após pagamento enviaremos um email para você adicionar no link de convite de membros. Ensinaremos via WhatsApp.
                     </p>
                     <div className="flex items-center gap-1.5 mt-2 text-xs text-muted-foreground">
                       <CheckCircle className="w-3.5 h-3.5" style={{ color: accentColor }} />
