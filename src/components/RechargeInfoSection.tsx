@@ -19,7 +19,12 @@ export const RechargeInfoSection = () => {
           </p>
           <p className="text-sm sm:text-base text-foreground flex items-center justify-center gap-2">
             <Gift className="w-4 h-4 text-primary flex-shrink-0" />
-            <span><strong className="text-accent">{t('recharge.bonus')}</strong> {t('recharge.bonus_suffix')}</span>
+            <span>
+              <strong className="text-accent">{t('recharge.bonus')}</strong>{' '}
+              <a href="https://central-opus-flow.lovable.app/" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-primary transition-colors">
+                Central Opus Flow
+              </a>
+            </span>
           </p>
         </div>
 
