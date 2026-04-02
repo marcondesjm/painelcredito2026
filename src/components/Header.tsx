@@ -226,6 +226,9 @@ export const Header = () => {
                   </Button>
                 ))}
                 {mv.compra_creditos && <Button variant="accent" className="w-full" onClick={() => scrollToSection('pacotes')}>{t('header.buy_credits')}</Button>}
+                <a href="https://central-opus-flow.lovable.app/" target="_blank" rel="noopener noreferrer" className="w-full">
+                  <Button variant="ghost" className="w-full justify-start text-primary hover:bg-primary/10 gap-1" onClick={() => setMobileMenuOpen(false)}><Gift className="w-4 h-4" />Bônus</Button>
+                </a>
                 {mv.como_funciona && <Button variant="ghost" className="w-full justify-start text-muted-foreground hover:text-foreground" onClick={() => scrollToSection('faq')}>{t('header.how_it_works')}</Button>}
                 {mv.faq && <Button variant="ghost" className="w-full justify-start text-muted-foreground hover:text-foreground" onClick={() => scrollToSection('faq')}>{t('header.faq')}</Button>}
                 {mv.install && <Button variant="outline" className="w-full" onClick={() => handleNavigate('/install')}><Download className="w-4 h-4 mr-2" />{t('header.install')}</Button>}
