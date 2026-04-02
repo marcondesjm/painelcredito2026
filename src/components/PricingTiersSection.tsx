@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { Check, TrendingUp, Sparkles, MessageCircle, Package, Minus, Plus, HelpCircle } from 'lucide-react';
+import { Check, TrendingUp, Sparkles, MessageCircle, Package, Minus, Plus, HelpCircle, Gift } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useHomepageSettings } from '@/hooks/useHomepageSettings';
 
