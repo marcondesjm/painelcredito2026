@@ -469,7 +469,7 @@ export const PricingTiersSection = ({
               rel="noopener noreferrer"
               className="text-primary font-semibold text-sm sm:text-base cursor-pointer hover:underline hover:opacity-80 transition-all inline-flex items-center gap-1 drop-shadow-[0_0_8px_hsl(var(--primary)/0.4)]"
             >
-              {promoText || (language === 'en' ? '🔥 We have old accounts with 2k for $36' : '🔥 Temos contas antigas com 2k por R$ 199')}
+              {promoText || (language === 'en' ? '🔥 Take advantage and recharge while the new method is live April 02/26' : '🔥 Aproveite pra recarregar bastante enquanto está no ar o método novo Abril 02/26')}
             </a>
           </div>
         )}
