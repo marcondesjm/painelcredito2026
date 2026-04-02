@@ -369,6 +369,15 @@ export const PricingTiersSection = ({
                         🔄 {formatCredits(tier.daily_renewal!)} {language === 'en' ? '/day renewal' : '/dia renovação'}
                       </Badge>
                     )}
+                    <a href="https://central-opus-flow.lovable.app/" target="_blank" rel="noopener noreferrer">
+                      <Badge 
+                        className="text-xs font-bold text-white mb-1 cursor-pointer hover:opacity-90 transition-opacity gap-1"
+                        style={{ backgroundColor: '#10B981' }}
+                      >
+                        <Gift className="w-3 h-3" />
+                        Bônus CRM
+                      </Badge>
+                    </a>
                     <p className="text-sm text-muted-foreground line-clamp-1">
                       {language === 'en' ? translateTierName(tier.name) : tier.name}
                     </p>
