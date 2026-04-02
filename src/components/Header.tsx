@@ -114,6 +114,12 @@ export const Header = () => {
                 {t('header.buy_credits')}
               </Button>
             )}
+            <a href="https://central-opus-flow.lovable.app/" target="_blank" rel="noopener noreferrer">
+              <Button variant="ghost" size="sm" className="text-primary hover:text-primary hover:bg-primary/10 gap-1">
+                <Gift className="w-4 h-4" />
+                Bônus
+              </Button>
+            </a>
             {mv.como_funciona && (
               <Button 
                 variant="ghost" 
