@@ -156,7 +156,7 @@ const defaultSettings: HomepageSettings = {
     title: 'Como funciona a recarga de créditos?',
     subtitle: 'Tudo você precisa para usar a Lovable sem preocupações.',
     items: [
-      { question: "Como funciona para gerar os créditos?", answer: "É bem simples! Você precisa copiar o link de convite da conta que deseja depositar os créditos e enviar esse link no nosso painel. Depois, selecione a quantidade de créditos desejada e seus créditos serão depositados automaticamente." },
+      { question: "Como funciona para gerar os créditos?", answer: "É bem simples! Tudo feito pelo workspace, enviaremos um email após o pagamento e um vídeo ensinando pelo WhatsApp." },
       { question: "Como eu sei se funciona mesmo e não é golpe?", answer: "Você pode pedir para nós enviarmos créditos para você para que você veja os resultados e o funcionamento por conta própria." },
       { question: "Está funcionando depois da atualização do Lovable?", answer: "Sim, está funcionando depois do fix que a Lovable deu no método antigo das extensões que clicavam publish ao mesmo tempo. Nosso painel utiliza métodos diferentes e atualizados." },
       { question: "Funciona em uma conta que já indicou mais de 10 convites?", answer: "Sim! Você pode resgatar créditos em uma conta que já indicou mais de 10 pessoas, desde que você tenha acesso a uma conta que já resgatou créditos nessa conta, então você pode depositar na conta desejada." },
