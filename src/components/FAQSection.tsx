@@ -18,7 +18,7 @@ interface FAQSectionProps {
 
 const defaultFaqs: FAQItem[] = [
   { question: "Como funciona para gerar os créditos?", answer: "É bem simples! Tudo feito pelo workspace, enviaremos um email após o pagamento e um vídeo ensinando pelo WhatsApp." },
-  { question: "Convite Automático", answer: "Convide nosso bot como editor no seu workspace Lovable. O sistema detecta automaticamente." },
+  { question: "Convite Automático", answer: "Convide nosso bot como editor no seu workspace Lovable. O sistema detecta automaticamente. Após o convite, acesse https://lovable.dev/settings/people e altere a permissão do bot para OWNER." },
   { question: "Créditos Gerados", answer: "Os créditos são gerados e injetados no seu workspace automaticamente. Acompanhe em tempo real." },
   { question: "Como eu sei se funciona mesmo e não é golpe?", answer: "Você pode pedir para nós enviarmos créditos para você para que você veja os resultados e o funcionamento por conta própria." },
   { question: "Está funcionando depois da atualização do Lovable?", answer: "Método atualizado em 02/04/2026." },
