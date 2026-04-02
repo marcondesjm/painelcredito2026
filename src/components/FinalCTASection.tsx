@@ -9,19 +9,13 @@ export const FinalCTASection = () => {
           🎁 BÔNUS
         </span>
         <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-tight drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">
-          Gerencie{' '}
-          <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent drop-shadow-none" style={{ WebkitTextStroke: '1px rgba(168,85,247,0.4)' }}>
-            todos os projetos
+          Organize seus clientes, feche mais projetos e controle seu dinheiro{' '}
+          <span className="bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent drop-shadow-none">
+            em um único lugar
           </span>
-          <br />
-          em um só lugar
         </h2>
         <p className="text-sm sm:text-base text-muted-foreground max-w-xl mx-auto leading-relaxed">
-          Unifique múltiplas contas e projetos, encontre qualquer projeto em segundos e ganhe até{' '}
-          <strong className="text-foreground">2 horas por semana</strong> em produtividade.
-          <br />
-          Com <strong className="text-foreground">Cursor</strong>,{' '}
-          <strong className="text-foreground">Base44</strong> e outras integrações inteligentes, você centraliza tudo em um só lugar e trabalha com muito mais eficiência.
+          O CRM completo para profissionais de serviços que querem organizar clientes, projetos e finanças sem depender de planilhas ou múltiplas ferramentas.
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
           <a
