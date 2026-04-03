@@ -409,7 +409,7 @@ export const PricingTiersSection = ({
                             color: accentColor 
                           }}
                         >
-                          {tier.available} {t('pricing.available')}
+                          {getScarcityCount(tier.available, tier.name)} {t('pricing.available')}
                         </Badge>
                       )}
                     </div>
