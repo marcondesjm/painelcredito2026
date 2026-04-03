@@ -214,6 +214,13 @@ const getScarcityCount = (baseAvailable: number, tierName: string): number => {
     return baseAvailable;
   }
 };
+// Lovable official: $25 USD per 100 credits = $0.25/credit
+// Convert to BRL for display (using ~5.50 rate)
+const LOVABLE_USD_PER_CREDIT = 0.25;
+const USD_TO_BRL = 5.50;
+const getLovableOfficialPrice = (credits: number): number => {
+  return credits * LOVABLE_USD_PER_CREDIT * USD_TO_BRL;
+};
 
 const formatPrice = (value: number) => {
   return new Intl.NumberFormat('pt-BR', {
@@ -416,7 +423,7 @@ export const PricingTiersSection = ({
                   <div className="mb-4">
                     <div className="text-xs text-muted-foreground mb-1">{t('pricing.official_price')}</div>
                     <div className="text-sm text-muted-foreground line-through">
-                      {formatPriceLocale(tier.price_original, language)}
+                      {formatPriceLocale(getLovableOfficialPrice(tier.credits), language)}
                     </div>
                     
                     <div className="text-xs text-muted-foreground mt-2 mb-1">{t('pricing.our_price')}</div>
