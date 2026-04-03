@@ -97,6 +97,7 @@ export const HomepageEditor = () => {
     }
     setCheckout(settings.checkout);
     setSocialProof(settings.social_proof);
+    setSocialProofCreditsInput(settings.social_proof.credit_options.join(', '));
     setCustomPackageOptions(settings.custom_package_options);
     setGuarantee(settings.guarantee);
     setFaq(settings.faq);
