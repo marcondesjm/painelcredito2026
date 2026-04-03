@@ -423,7 +423,7 @@ export const PricingTiersSection = ({
                   <div className="mb-4">
                     <div className="text-xs text-muted-foreground mb-1">{t('pricing.official_price')}</div>
                     <div className="text-sm text-muted-foreground line-through">
-                      {formatPriceLocale(tier.price_original, language)}
+                      {formatPriceLocale(getLovableOfficialPrice(tier.credits), language)}
                     </div>
                     
                     <div className="text-xs text-muted-foreground mt-2 mb-1">{t('pricing.our_price')}</div>
