@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { ShoppingCart, X } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguage';
 
@@ -29,93 +29,71 @@ const defaultCustomers: SocialProofCustomer[] = [
 
 const defaultCreditOptions = [200, 500, 1000, 2000];
 
-const getRandomTime = (lang: string) => {
-  const minutes = Math.floor(Math.random() * 10) + 1;
-  return lang === 'en' ? `${minutes} min ago` : `${minutes} min atrás`;
-};
-
-const getRandomCredits = (options: number[]) => {
-  const randomIndex = Math.floor(Math.random() * options.length);
-  return options[randomIndex];
-};
-
 export const SocialProofNotification = ({ 
   enabled = true, 
   productName = 'o Gerador',
-  customers = defaultCustomers,
-  creditOptions = defaultCreditOptions
+  customers,
+  creditOptions
 }: SocialProofNotificationProps) => {
   const { language } = useLanguage();
   const [isVisible, setIsVisible] = useState(false);
-  const [currentCustomer, setCurrentCustomer] = useState(customers[0] || defaultCustomers[0]);
-  const [currentCredits, setCurrentCredits] = useState(creditOptions[0] || 1000);
-  const [time, setTime] = useState(getRandomTime(language));
+  const [data, setData] = useState({ name: '', city: '', state: '', credits: 0, time: '', product: '' as string | undefined });
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const activeCustomers = customers && customers.length > 0 ? customers : defaultCustomers;
   const activeCreditOptions = creditOptions && creditOptions.length > 0 ? creditOptions : defaultCreditOptions;
 
-  useEffect(() => {
-    if (!enabled) return;
-    
-    // Initial delay before first notification
-    const initialDelay = setTimeout(() => {
-      showNotification();
-    }, 5000);
+  const show = useCallback(() => {
+    const customer = activeCustomers[Math.floor(Math.random() * activeCustomers.length)];
+    const credits = activeCreditOptions[Math.floor(Math.random() * activeCreditOptions.length)];
+    const minutes = Math.floor(Math.random() * 10) + 1;
+    const time = language === 'en' ? `${minutes} min ago` : `${minutes} min atrás`;
 
-    return () => clearTimeout(initialDelay);
-  }, [enabled]);
-
-  const showNotification = () => {
-    if (!enabled) return;
-    
-    // Pick a random customer and credit amount
-    const randomCustomerIndex = Math.floor(Math.random() * activeCustomers.length);
-    setCurrentCustomer(activeCustomers[randomCustomerIndex]);
-    setCurrentCredits(getRandomCredits(activeCreditOptions));
-    setTime(getRandomTime(language));
+    setData({ name: customer.name, city: customer.city, state: customer.state, credits, time, product: customer.product });
     setIsVisible(true);
 
-    // Hide after 5 seconds
-    setTimeout(() => {
+    timerRef.current = setTimeout(() => {
       setIsVisible(false);
-      
-      // Schedule next notification (15-30 seconds)
       const nextDelay = Math.floor(Math.random() * 15000) + 15000;
-      setTimeout(showNotification, nextDelay);
+      timerRef.current = setTimeout(show, nextDelay);
     }, 5000);
-  };
+  }, [activeCustomers, activeCreditOptions, language]);
 
-  const handleClose = () => {
-    setIsVisible(false);
-  };
+  useEffect(() => {
+    if (!enabled) return;
+
+    timerRef.current = setTimeout(show, 5000);
+
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, [enabled, show]);
 
   if (!enabled || !isVisible) return null;
+
+  const purchaseText = language === 'en'
+    ? `purchased ${data.product === 'creditos' ? `${data.credits} credits` : (productName || 'the Generator')}`
+    : `adquiriu ${data.product === 'creditos' ? `${data.credits} créditos` : (productName || 'o Gerador')}`;
 
   return (
     <div className="fixed bottom-16 sm:bottom-4 left-2 sm:left-4 z-40 animate-in slide-in-from-left-full duration-500 max-w-[calc(100vw-1rem)] sm:max-w-sm">
       <div className="bg-card/95 backdrop-blur-sm border border-border/50 rounded-lg shadow-xl p-3 sm:p-4 flex items-start gap-2 sm:gap-3">
-        {/* Icon */}
         <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
           <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
         </div>
         
-        {/* Content */}
         <div className="flex-1 min-w-0">
           <p className="text-xs sm:text-sm font-medium text-foreground">
-            <span className="text-primary">{currentCustomer.name}</span>{' '}
-            {language === 'en' 
-              ? `purchased ${currentCustomer.product === 'creditos' ? `${currentCredits} credits` : (productName || 'the Generator')}`
-              : `adquiriu ${currentCustomer.product === 'creditos' ? `${currentCredits} créditos` : (productName || 'o Gerador')}`
-            }
+            <span className="text-primary">{data.name}</span>{' '}
+            {purchaseText}
           </p>
           <p className="text-[10px] sm:text-xs text-muted-foreground mt-0.5">
-            {currentCustomer.city}, {currentCustomer.state} • {time}
+            {data.city}, {data.state} • {data.time}
           </p>
         </div>
 
-        {/* Close button */}
         <button 
-          onClick={handleClose}
+          onClick={() => setIsVisible(false)}
           className="text-muted-foreground hover:text-foreground transition-colors p-0.5 sm:p-1 -mr-1 -mt-1"
           aria-label="Fechar notificação"
         >
