@@ -50,8 +50,9 @@ export const SocialProofNotification = ({
   creditsRef.current = creditOptions && creditOptions.length > 0 ? creditOptions : defaultCreditOptions;
   langRef.current = language;
 
+  const isEnabled = Boolean(enabled);
+
   useEffect(() => {
-    const isEnabled = enabled === true || enabled === 'true' as unknown;
     if (!isEnabled) return;
 
     const showNext = () => {
