@@ -79,7 +79,7 @@ export const SocialProofNotification = ({
       if (timerRef.current) clearTimeout(timerRef.current);
       if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
     };
-  }, [enabled]);
+  }, [isEnabled]);
 
   if (!isVisible) return null;
 
