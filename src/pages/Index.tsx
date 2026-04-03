@@ -190,9 +190,9 @@ const Index = () => {
               onBuyClick={handleBuyClick}
             />
             <RechargeInfoSection />
-            {vis.video && <VideoSection />}
           </div>
         )}
+        {vis.video && <VideoSection />}
         {vis.features && <FeaturesSection />}
         {vis.why_choose && <WhyChooseSection />}
         {vis.how_it_works && <HowItWorksSection />}
