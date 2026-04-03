@@ -190,12 +190,12 @@ const Index = () => {
               onBuyClick={handleBuyClick}
             />
             <RechargeInfoSection />
+            {vis.video && <VideoSection />}
           </div>
         )}
         {vis.features && <FeaturesSection />}
         {vis.why_choose && <WhyChooseSection />}
         {vis.how_it_works && <HowItWorksSection />}
-        {vis.video && <VideoSection />}
         {vis.secure_purchase && <SecurePurchaseSection />}
         {vis.testimonials && <TestimonialsSection />}
         {vis.guarantee && <GuaranteeSection title={settings.guarantee.title} items={settings.guarantee.items} />}
