@@ -341,7 +341,8 @@ export const PricingTiersSection = ({
 
         <div className={`grid grid-cols-1 sm:grid-cols-2 ${tiers.length >= 4 ? 'lg:grid-cols-4 xl:grid-cols-5' : `lg:grid-cols-${tiers.length + 1}`} gap-4 md:gap-6`}>
           {tiers.map((tier) => {
-            const savings = tier.price_original - tier.price_current;
+            const officialPrice = getLovableOfficialPrice(tier.credits);
+            const savings = officialPrice - tier.price_current;
             
             return (
               <Card
