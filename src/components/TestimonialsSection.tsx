@@ -3,8 +3,8 @@ import { useState, useEffect, useMemo } from 'react';
 import { useLanguage } from '@/hooks/useLanguage';
 
 const testimonials_pt = [
-  { id: 1, email: "mn***@gmail.com", credits: 50, text: "Experiência incrível, recarrega de forma rápida os créditos. Parabéns a equipe que desenvolveu o Lovable Credits :)" },
-  { id: 2, email: "ad***@leieimici.online", credits: 30, text: "Isso aqui é surreal de bom" },
+  { id: 1, email: "mn***@gmail.com", credits: 100, text: "Experiência incrível, recarrega de forma rápida os créditos. Parabéns a equipe que desenvolveu o Lovable Credits :)" },
+  { id: 2, email: "ad***@leieimici.online", credits: 200, text: "Isso aqui é surreal de bom" },
   { id: 3, email: "bl***@gmail.com", credits: 400, text: "Muito obrigado pelo exelente trabalho" },
   { id: 4, email: "co***@leigosacademy.site", credits: 100, text: "Foi top 🔥 gostei de compra mais barato" },
   { id: 5, email: "bu***@gmail.com", credits: 300, text: "gostei foi bem rapido e super pratico recomendo" },
@@ -12,14 +12,14 @@ const testimonials_pt = [
   { id: 7, email: "ra***@hotmail.com", credits: 200, text: "Sensacional, recebi os créditos em menos de 5 minutos!" },
   { id: 8, email: "le***@outlook.com", credits: 150, text: "Melhor custo-benefício que já encontrei, super recomendo" },
   { id: 9, email: "jo***@gmail.com", credits: 500, text: "Já comprei 3 vezes, sempre rápido e confiável 💯" },
-  { id: 10, email: "pe***@yahoo.com", credits: 80, text: "Atendimento excelente, tiraram todas as dúvidas" },
+  { id: 10, email: "pe***@yahoo.com", credits: 100, text: "Atendimento excelente, tiraram todas as dúvidas" },
   { id: 11, email: "ca***@gmail.com", credits: 250, text: "Processo super simples, até minha avó conseguiria fazer kk" },
   { id: 12, email: "ma***@proton.me", credits: 1000, text: "Comprei o pacote maior e valeu muito a pena, preço justo" },
 ];
 
 const testimonials_en = [
-  { id: 1, email: "mn***@gmail.com", credits: 50, text: "Incredible experience, recharges credits quickly. Congrats to the team that developed Lovable Credits :)" },
-  { id: 2, email: "ad***@leieimici.online", credits: 30, text: "This is unbelievably good" },
+  { id: 1, email: "mn***@gmail.com", credits: 100, text: "Incredible experience, recharges credits quickly. Congrats to the team that developed Lovable Credits :)" },
+  { id: 2, email: "ad***@leieimici.online", credits: 200, text: "This is unbelievably good" },
   { id: 3, email: "bl***@gmail.com", credits: 400, text: "Thank you so much for the excellent work" },
   { id: 4, email: "co***@leigosacademy.site", credits: 100, text: "It was great 🔥 loved buying it cheaper" },
   { id: 5, email: "bu***@gmail.com", credits: 300, text: "loved it, very fast and super practical, I recommend it" },
@@ -27,7 +27,7 @@ const testimonials_en = [
   { id: 7, email: "ra***@hotmail.com", credits: 200, text: "Amazing, received credits in less than 5 minutes!" },
   { id: 8, email: "le***@outlook.com", credits: 150, text: "Best value I've ever found, highly recommend" },
   { id: 9, email: "jo***@gmail.com", credits: 500, text: "Bought 3 times already, always fast and reliable 💯" },
-  { id: 10, email: "pe***@yahoo.com", credits: 80, text: "Excellent support, answered all my questions" },
+  { id: 10, email: "pe***@yahoo.com", credits: 100, text: "Excellent support, answered all my questions" },
   { id: 11, email: "ca***@gmail.com", credits: 250, text: "Super simple process, anyone can do it" },
   { id: 12, email: "ma***@proton.me", credits: 1000, text: "Bought the biggest package and it was totally worth it" },
 ];
