@@ -38,48 +38,47 @@ export const SocialProofNotification = ({
   const { language } = useLanguage();
   const [isVisible, setIsVisible] = useState(false);
   const [notification, setNotification] = useState({ name: '', city: '', state: '', credits: 0, time: '', product: '' as string | undefined });
-  
-  // Use refs to avoid stale closures
-  const customersRef = useRef(customers && customers.length > 0 ? customers : defaultCustomers);
-  const creditsRef = useRef(creditOptions && creditOptions.length > 0 ? creditOptions : defaultCreditOptions);
-  const langRef = useRef(language);
-  const timerRef = useRef<number | null>(null);
-  const hideTimerRef = useRef<number | null>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  customersRef.current = customers && customers.length > 0 ? customers : defaultCustomers;
-  creditsRef.current = creditOptions && creditOptions.length > 0 ? creditOptions : defaultCreditOptions;
-  langRef.current = language;
-
-  const isEnabled = Boolean(enabled);
+  const activeCustomers = customers && customers.length > 0 ? customers : defaultCustomers;
+  const activeCreditOptions = creditOptions && creditOptions.length > 0 ? creditOptions : defaultCreditOptions;
 
   useEffect(() => {
-    if (!isEnabled) return;
+    if (!enabled) {
+      setIsVisible(false);
+      return;
+    }
 
-    const showNext = () => {
-      const c = customersRef.current;
-      const cr = creditsRef.current;
-      const customer = c[Math.floor(Math.random() * c.length)];
-      const credits = cr[Math.floor(Math.random() * cr.length)];
+    const show = () => {
+      const customer = activeCustomers[Math.floor(Math.random() * activeCustomers.length)];
+      const credits = activeCreditOptions[Math.floor(Math.random() * activeCreditOptions.length)];
       const mins = Math.floor(Math.random() * 10) + 1;
-      const time = langRef.current === 'en' ? `${mins} min ago` : `há ${mins} min`;
+      const time = language === 'en' ? `${mins} min ago` : `há ${mins} min`;
 
       setNotification({ name: customer.name, city: customer.city, state: customer.state, credits, time, product: customer.product });
       setIsVisible(true);
 
-      hideTimerRef.current = window.setTimeout(() => {
+      timeoutRef.current = setTimeout(() => {
         setIsVisible(false);
-        const nextDelay = Math.floor(Math.random() * 15000) + 15000;
-        timerRef.current = window.setTimeout(showNext, nextDelay);
       }, 5000);
     };
 
-    timerRef.current = window.setTimeout(showNext, 5000);
+    // Show first notification after 5 seconds
+    const initialTimer = setTimeout(show, 5000);
+
+    // Then repeat every 20-35 seconds
+    intervalRef.current = setInterval(() => {
+      show();
+    }, 20000 + Math.random() * 15000);
 
     return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-      if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
+      clearTimeout(initialTimer);
+      if (intervalRef.current) clearInterval(intervalRef.current);
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
-  }, [isEnabled]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [enabled]);
 
   if (!isVisible) return null;
 
@@ -93,22 +92,15 @@ export const SocialProofNotification = ({
         <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
           <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
         </div>
-        
         <div className="flex-1 min-w-0">
           <p className="text-xs sm:text-sm font-medium text-foreground">
-            <span className="text-primary">{notification.name}</span>{' '}
-            {purchaseText}
+            <span className="text-primary">{notification.name}</span>{' '}{purchaseText}
           </p>
           <p className="text-[10px] sm:text-xs text-muted-foreground mt-0.5">
             {notification.city}, {notification.state} • {notification.time}
           </p>
         </div>
-
-        <button 
-          onClick={() => setIsVisible(false)}
-          className="text-muted-foreground hover:text-foreground transition-colors p-0.5 sm:p-1 -mr-1 -mt-1"
-          aria-label="Fechar notificação"
-        >
+        <button onClick={() => setIsVisible(false)} className="text-muted-foreground hover:text-foreground transition-colors p-0.5 sm:p-1 -mr-1 -mt-1" aria-label="Fechar">
           <X className="w-3 h-3 sm:w-4 sm:h-4" />
         </button>
       </div>
