@@ -1177,11 +1177,13 @@ export const HomepageEditor = () => {
               <div className="space-y-2">
                 <Label>Opções de Créditos (separados por vírgula)</Label>
                 <Input
-                  value={socialProof.credit_options.join(', ')}
-                  onChange={(e) => setSocialProof({ 
-                    ...socialProof, 
-                    credit_options: e.target.value.split(',').map(v => Number(v.trim())).filter(v => !isNaN(v) && v > 0)
-                  })}
+                  defaultValue={socialProof.credit_options.join(', ')}
+                  onBlur={(e) => {
+                    const parsed = e.target.value.split(',').map(v => Number(v.trim())).filter(v => !isNaN(v) && v > 0);
+                    if (parsed.length > 0) {
+                      setSocialProof({ ...socialProof, credit_options: parsed });
+                    }
+                  }}
                   placeholder="200, 500, 1000, 2000"
                 />
                 <p className="text-xs text-muted-foreground">Valores que aparecerão aleatoriamente nas notificações</p>
