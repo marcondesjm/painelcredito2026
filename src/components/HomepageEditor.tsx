@@ -65,6 +65,7 @@ export const HomepageEditor = () => {
   });
   const [checkout, setCheckout] = useState<CheckoutSettings>(settings.checkout);
   const [socialProof, setSocialProof] = useState<SocialProofSettings>(settings.social_proof);
+  const [socialProofCreditsInput, setSocialProofCreditsInput] = useState(settings.social_proof.credit_options.join(', '));
   const [customPackageOptions, setCustomPackageOptions] = useState<CustomPackageOption[]>(settings.custom_package_options);
   const [guarantee, setGuarantee] = useState<GuaranteeSettings>(settings.guarantee);
   const [faq, setFaq] = useState<FAQSettings>(settings.faq);
