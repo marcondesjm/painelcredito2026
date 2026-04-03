@@ -186,6 +186,35 @@ const formatPriceLocale = (value: number, language: string) => {
   }).format(displayValue);
 };
 
+const getScarcityCount = (baseAvailable: number, tierName: string): number => {
+  try {
+    const storageKey = `scarcity_${tierName}`;
+    const visitKey = `scarcity_visit_${tierName}`;
+    const now = Date.now();
+    const stored = localStorage.getItem(storageKey);
+    const lastVisit = localStorage.getItem(visitKey);
+    
+    if (stored !== null && lastVisit !== null) {
+      const timeSince = now - parseInt(lastVisit, 10);
+      if (timeSince > 30000) {
+        const decrease = Math.floor(Math.random() * 3) + 1;
+        const newVal = Math.max(Math.floor(baseAvailable * 0.15), parseInt(stored, 10) - decrease);
+        localStorage.setItem(storageKey, String(newVal));
+        localStorage.setItem(visitKey, String(now));
+        return newVal;
+      }
+      return parseInt(stored, 10);
+    }
+    
+    const initial = baseAvailable - Math.floor(Math.random() * 5);
+    localStorage.setItem(storageKey, String(initial));
+    localStorage.setItem(visitKey, String(now));
+    return initial;
+  } catch {
+    return baseAvailable;
+  }
+};
+
 const formatPrice = (value: number) => {
   return new Intl.NumberFormat('pt-BR', {
     style: 'currency',
@@ -409,7 +438,7 @@ export const PricingTiersSection = ({
                             color: accentColor 
                           }}
                         >
-                          {tier.available} {t('pricing.available')}
+                          {getScarcityCount(tier.available, tier.name)} {t('pricing.available')}
                         </Badge>
                       )}
                     </div>
