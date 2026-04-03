@@ -51,8 +51,8 @@ export const SocialProofNotification = ({
   langRef.current = language;
 
   useEffect(() => {
-    console.log('[SocialProof] mount, enabled=', enabled);
-    if (!enabled) return;
+    const isEnabled = enabled === true || enabled === 'true' as unknown;
+    if (!isEnabled) return;
 
     const showNext = () => {
       const c = customersRef.current;
