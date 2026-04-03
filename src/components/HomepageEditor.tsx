@@ -65,6 +65,7 @@ export const HomepageEditor = () => {
   });
   const [checkout, setCheckout] = useState<CheckoutSettings>(settings.checkout);
   const [socialProof, setSocialProof] = useState<SocialProofSettings>(settings.social_proof);
+  const [socialProofCreditsInput, setSocialProofCreditsInput] = useState(settings.social_proof.credit_options.join(', '));
   const [customPackageOptions, setCustomPackageOptions] = useState<CustomPackageOption[]>(settings.custom_package_options);
   const [guarantee, setGuarantee] = useState<GuaranteeSettings>(settings.guarantee);
   const [faq, setFaq] = useState<FAQSettings>(settings.faq);
@@ -96,6 +97,7 @@ export const HomepageEditor = () => {
     }
     setCheckout(settings.checkout);
     setSocialProof(settings.social_proof);
+    setSocialProofCreditsInput(settings.social_proof.credit_options.join(', '));
     setCustomPackageOptions(settings.custom_package_options);
     setGuarantee(settings.guarantee);
     setFaq(settings.faq);
@@ -1177,10 +1179,17 @@ export const HomepageEditor = () => {
               <div className="space-y-2">
                 <Label>Opções de Créditos (separados por vírgula)</Label>
                 <Input
-                  defaultValue={socialProof.credit_options.join(', ')}
-                  onBlur={(e) => {
-                    const parsed = e.target.value.split(',').map(v => Number(v.trim())).filter(v => !isNaN(v) && v > 0);
-                    if (parsed.length > 0) {
+                  value={socialProofCreditsInput}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setSocialProofCreditsInput(value);
+
+                    const parsed = value
+                      .split(',')
+                      .map((v) => Number(v.trim()))
+                      .filter((v) => !Number.isNaN(v) && v > 0);
+
+                    if (parsed.length > 0 || value.trim() === '') {
                       setSocialProof({ ...socialProof, credit_options: parsed });
                     }
                   }}
