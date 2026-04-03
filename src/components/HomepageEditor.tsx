@@ -1179,10 +1179,17 @@ export const HomepageEditor = () => {
               <div className="space-y-2">
                 <Label>Opções de Créditos (separados por vírgula)</Label>
                 <Input
-                  defaultValue={socialProof.credit_options.join(', ')}
-                  onBlur={(e) => {
-                    const parsed = e.target.value.split(',').map(v => Number(v.trim())).filter(v => !isNaN(v) && v > 0);
-                    if (parsed.length > 0) {
+                  value={socialProofCreditsInput}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setSocialProofCreditsInput(value);
+
+                    const parsed = value
+                      .split(',')
+                      .map((v) => Number(v.trim()))
+                      .filter((v) => !Number.isNaN(v) && v > 0);
+
+                    if (parsed.length > 0 || value.trim() === '') {
                       setSocialProof({ ...socialProof, credit_options: parsed });
                     }
                   }}
