@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { ShoppingCart, X } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguage';
 
@@ -37,43 +37,53 @@ export const SocialProofNotification = ({
 }: SocialProofNotificationProps) => {
   const { language } = useLanguage();
   const [isVisible, setIsVisible] = useState(false);
-  const [data, setData] = useState({ name: '', city: '', state: '', credits: 0, time: '', product: '' as string | undefined });
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [notification, setNotification] = useState({ name: '', city: '', state: '', credits: 0, time: '', product: '' as string | undefined });
+  
+  // Use refs to avoid stale closures
+  const customersRef = useRef(customers && customers.length > 0 ? customers : defaultCustomers);
+  const creditsRef = useRef(creditOptions && creditOptions.length > 0 ? creditOptions : defaultCreditOptions);
+  const langRef = useRef(language);
+  const timerRef = useRef<number | null>(null);
+  const hideTimerRef = useRef<number | null>(null);
 
-  const activeCustomers = customers && customers.length > 0 ? customers : defaultCustomers;
-  const activeCreditOptions = creditOptions && creditOptions.length > 0 ? creditOptions : defaultCreditOptions;
-
-  const show = useCallback(() => {
-    const customer = activeCustomers[Math.floor(Math.random() * activeCustomers.length)];
-    const credits = activeCreditOptions[Math.floor(Math.random() * activeCreditOptions.length)];
-    const minutes = Math.floor(Math.random() * 10) + 1;
-    const time = language === 'en' ? `${minutes} min ago` : `${minutes} min atrás`;
-
-    setData({ name: customer.name, city: customer.city, state: customer.state, credits, time, product: customer.product });
-    setIsVisible(true);
-
-    timerRef.current = setTimeout(() => {
-      setIsVisible(false);
-      const nextDelay = Math.floor(Math.random() * 15000) + 15000;
-      timerRef.current = setTimeout(show, nextDelay);
-    }, 5000);
-  }, [activeCustomers, activeCreditOptions, language]);
+  customersRef.current = customers && customers.length > 0 ? customers : defaultCustomers;
+  creditsRef.current = creditOptions && creditOptions.length > 0 ? creditOptions : defaultCreditOptions;
+  langRef.current = language;
 
   useEffect(() => {
     if (!enabled) return;
 
-    timerRef.current = setTimeout(show, 5000);
+    const showNext = () => {
+      const c = customersRef.current;
+      const cr = creditsRef.current;
+      const customer = c[Math.floor(Math.random() * c.length)];
+      const credits = cr[Math.floor(Math.random() * cr.length)];
+      const mins = Math.floor(Math.random() * 10) + 1;
+      const time = langRef.current === 'en' ? `${mins} min ago` : `há ${mins} min`;
+
+      setNotification({ name: customer.name, city: customer.city, state: customer.state, credits, time, product: customer.product });
+      setIsVisible(true);
+
+      hideTimerRef.current = window.setTimeout(() => {
+        setIsVisible(false);
+        const nextDelay = Math.floor(Math.random() * 15000) + 15000;
+        timerRef.current = window.setTimeout(showNext, nextDelay);
+      }, 5000);
+    };
+
+    timerRef.current = window.setTimeout(showNext, 5000);
 
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
+      if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
     };
-  }, [enabled, show]);
+  }, [enabled]);
 
-  if (!enabled || !isVisible) return null;
+  if (!isVisible) return null;
 
   const purchaseText = language === 'en'
-    ? `purchased ${data.product === 'creditos' ? `${data.credits} credits` : (productName || 'the Generator')}`
-    : `adquiriu ${data.product === 'creditos' ? `${data.credits} créditos` : (productName || 'o Gerador')}`;
+    ? `purchased ${notification.product === 'creditos' ? `${notification.credits} credits` : (productName || 'the Generator')}`
+    : `adquiriu ${notification.product === 'creditos' ? `${notification.credits} créditos` : (productName || 'o Gerador')}`;
 
   return (
     <div className="fixed bottom-16 sm:bottom-4 left-2 sm:left-4 z-40 animate-in slide-in-from-left-full duration-500 max-w-[calc(100vw-1rem)] sm:max-w-sm">
@@ -84,11 +94,11 @@ export const SocialProofNotification = ({
         
         <div className="flex-1 min-w-0">
           <p className="text-xs sm:text-sm font-medium text-foreground">
-            <span className="text-primary">{data.name}</span>{' '}
+            <span className="text-primary">{notification.name}</span>{' '}
             {purchaseText}
           </p>
           <p className="text-[10px] sm:text-xs text-muted-foreground mt-0.5">
-            {data.city}, {data.state} • {data.time}
+            {notification.city}, {notification.state} • {notification.time}
           </p>
         </div>
 
