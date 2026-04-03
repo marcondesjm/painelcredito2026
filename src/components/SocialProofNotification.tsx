@@ -50,35 +50,39 @@ export const SocialProofNotification = ({
       return;
     }
 
-    const show = () => {
-      const customer = activeCustomers[Math.floor(Math.random() * activeCustomers.length)];
-      const credits = activeCreditOptions[Math.floor(Math.random() * activeCreditOptions.length)];
-      const mins = Math.floor(Math.random() * 10) + 1;
-      const time = language === 'en' ? `${mins} min ago` : `há ${mins} min`;
+    let hideTimer: ReturnType<typeof setTimeout>;
+    let showTimer: ReturnType<typeof setTimeout>;
+    let running = true;
 
-      setNotification({ name: customer.name, city: customer.city, state: customer.state, credits, time, product: customer.product });
-      setIsVisible(true);
+    const schedule = (delay: number) => {
+      showTimer = setTimeout(() => {
+        if (!running) return;
+        const c = activeCustomers;
+        const cr = activeCreditOptions;
+        const customer = c[Math.floor(Math.random() * c.length)];
+        const credits = cr[Math.floor(Math.random() * cr.length)];
+        const mins = Math.floor(Math.random() * 10) + 1;
+        const time = language === 'en' ? `${mins} min ago` : `há ${mins} min`;
 
-      timeoutRef.current = setTimeout(() => {
-        setIsVisible(false);
-      }, 5000);
+        setNotification({ name: customer.name, city: customer.city, state: customer.state, credits, time, product: customer.product });
+        setIsVisible(true);
+
+        hideTimer = setTimeout(() => {
+          if (!running) return;
+          setIsVisible(false);
+          schedule(15000 + Math.random() * 15000);
+        }, 5000);
+      }, delay);
     };
 
-    // Show first notification after 5 seconds
-    const initialTimer = setTimeout(show, 5000);
-
-    // Then repeat every 20-35 seconds
-    intervalRef.current = setInterval(() => {
-      show();
-    }, 20000 + Math.random() * 15000);
+    schedule(5000);
 
     return () => {
-      clearTimeout(initialTimer);
-      if (intervalRef.current) clearInterval(intervalRef.current);
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      running = false;
+      clearTimeout(showTimer);
+      clearTimeout(hideTimer);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [enabled]);
+  }, []); // empty deps - run once on mount
 
   if (!isVisible) return null;
 
