@@ -19,20 +19,32 @@ const PanelAccess = () => {
 
   return (
     <div className="fixed inset-0 bg-[#0a0f1a] overflow-hidden">
-      {/* Top mask - hide nav/banner on both mobile and desktop */}
+      <style>{`
+        .panel-iframe {
+          width: 100%;
+          height: calc(100% + 140px);
+          margin-top: -60px;
+          margin-left: 0;
+        }
+        @media (min-width: 768px) {
+          .panel-iframe {
+            width: calc(100% + 90px);
+            height: calc(100% + 150px);
+            margin-top: -70px;
+            margin-left: -90px;
+          }
+        }
+      `}</style>
+      {/* Top mask */}
       <div className="absolute top-0 left-0 right-0 h-[60px] md:h-[70px] bg-[#0a0f1a] z-10" />
-      {/* Left mask - hide sidebar (desktop only, mobile has hamburger) */}
+      {/* Left mask (desktop only) */}
       <div className="absolute top-0 left-0 bottom-0 w-0 md:w-[90px] bg-[#0a0f1a] z-10" />
-      {/* Bottom mask - hide "Criar conta" */}
+      {/* Bottom mask */}
       <div className="absolute bottom-0 left-0 right-0 h-[80px] bg-[#0a0f1a] z-10" />
       <div className="w-full h-full overflow-hidden">
         <iframe
           src="https://www.painelcreditoslovable.com/auth"
-          className="border-0 w-full md:w-[calc(100%+90px)]"
-          style={{
-            height: 'calc(100% + 150px)',
-            marginTop: '-60px',
-          }}
+          className="panel-iframe border-0"
           title="Painel Gerador de Créditos"
           allow="clipboard-read; clipboard-write; payment"
           referrerPolicy="no-referrer"
