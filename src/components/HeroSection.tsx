@@ -176,12 +176,18 @@ export const HeroSection = () => {
             <div className="flex flex-col items-center lg:items-start gap-2 mb-4">
               <button
                 type="button"
-                className="inline-flex items-center gap-2 bg-destructive/10 border border-destructive/30 rounded-full px-4 py-1.5 animate-pulse-glow cursor-pointer hover:bg-destructive/20 transition-colors"
+                className="inline-flex items-center gap-2 bg-primary/10 border border-primary/30 rounded-xl px-5 py-3 cursor-pointer hover:bg-primary/20 transition-colors"
                 onClick={() => navigate('/x7k9m2p4')}
               >
-                <span className="text-sm sm:text-base font-bold text-destructive">
-                  {hero.promo_banner_text || `🔥 PROMOÇÃO DE CRÉDITOS 🔥 — ${new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })}`}
-                </span>
+                <span className="text-lg">👀</span>
+                <div className="flex flex-col items-start">
+                  <span className="text-sm sm:text-base font-bold text-primary">
+                    👁️ Veja os valores de revenda aqui
+                  </span>
+                  <span className="text-xs text-primary/70">
+                    Clique para ver quanto você pode lucrar
+                  </span>
+                </div>
               </button>
               <CountdownTimer />
             </div>
