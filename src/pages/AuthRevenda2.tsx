@@ -46,52 +46,36 @@ const AuthRevenda2 = () => {
     setFailedEmail('');
 
     try {
-      if (isLogin) {
-        const proxyUrl = `https://${import.meta.env.VITE_SUPABASE_PROJECT_ID}.supabase.co/functions/v1/auth-proxy`;
-        const res = await fetch(proxyUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password }),
-        });
+      const proxyUrl = `https://${import.meta.env.VITE_SUPABASE_PROJECT_ID}.supabase.co/functions/v1/auth-proxy`;
+      const res = await fetch(proxyUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
 
-        const data = await res.json();
+      const data = await res.json();
 
-        if (!res.ok) {
-          toast.error(data.error || 'Email ou senha incorretos');
-
-          if (res.status === 401) {
-            setShowNotRegistered(true);
-            setFailedEmail(email);
-          }
-
-          return;
+      if (!res.ok) {
+        toast.error(data.error || 'Email ou senha incorretos');
+        if (res.status === 401) {
+          setShowNotRegistered(true);
+          setFailedEmail(email);
         }
-
-        const { error: sessionError } = await supabase.auth.setSession({
-          access_token: data.session.access_token,
-          refresh_token: data.session.refresh_token,
-        });
-
-        if (sessionError) {
-          toast.error('Erro ao estabelecer sessão');
-          return;
-        }
-
-        toast.success('Login realizado com sucesso!');
-        navigate(redirectTo || '/gerador');
         return;
       }
 
-      const { error } = await signUp(email, password, fullName);
-      if (error) {
-        if (error.message.includes('already registered')) {
-          toast.error('Este email já está cadastrado');
-        } else {
-          toast.error(error.message);
-        }
-      } else {
-        toast.success('Conta criada! Verifique seu email para confirmar.');
+      const { error: sessionError } = await supabase.auth.setSession({
+        access_token: data.session.access_token,
+        refresh_token: data.session.refresh_token,
+      });
+
+      if (sessionError) {
+        toast.error('Erro ao estabelecer sessão');
+        return;
       }
+
+      toast.success('Login realizado com sucesso!');
+      navigate(redirectTo || '/gerador');
     } catch (err) {
       toast.error('Ocorreu um erro. Tente novamente.');
     } finally {
