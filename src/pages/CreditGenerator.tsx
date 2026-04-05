@@ -98,7 +98,8 @@ const CreditGenerator = () => {
       } else {
         const msg = res.error || res.message || ''
         if (msg.toLowerCase().includes('saldo') || msg.toLowerCase().includes('balance') || msg.toLowerCase().includes('insufficient')) {
-          toast.error(`Saldo insuficiente. ${msg}`)
+          toast.error(`Saldo insuficiente. Abrindo recarga...`)
+          setShowPaymentModal(true)
         } else {
           toast.error(msg || 'Erro ao criar pedido')
         }
