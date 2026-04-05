@@ -19,17 +19,21 @@ const PanelAccess = () => {
 
   return (
     <div className="fixed inset-0 bg-[#0a0f1a] overflow-hidden">
-      {/* Top mask to hide promo banner */}
-      <div className="absolute top-0 left-0 right-0 h-[40px] bg-[#0a0f1a] z-10" />
-      {/* Bottom mask - just enough to hide "Criar conta" text */}
+      {/* Top mask to hide nav bar after login */}
+      <div className="absolute top-0 left-0 right-0 h-[70px] bg-[#0a0f1a] z-10" />
+      {/* Left mask to hide sidebar after login */}
+      <div className="absolute top-0 left-0 bottom-0 w-[90px] bg-[#0a0f1a] z-10" />
+      {/* Bottom mask to hide "Criar conta" */}
       <div className="absolute bottom-0 left-0 right-0 h-[80px] bg-[#0a0f1a] z-10" />
       <div className="w-full h-full overflow-hidden">
         <iframe
           src="https://www.painelcreditoslovable.com/auth"
-          className="w-full border-0"
+          className="border-0"
           style={{
-            height: 'calc(100% + 120px)',
-            marginTop: '-40px',
+            width: 'calc(100% + 90px)',
+            height: 'calc(100% + 150px)',
+            marginTop: '-70px',
+            marginLeft: '-90px',
           }}
           title="Painel Gerador de Créditos"
           allow="clipboard-read; clipboard-write; payment"
