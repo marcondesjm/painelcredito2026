@@ -3,8 +3,7 @@ import { Button } from '@/components/ui/button';
 import { CountdownTimer } from './CountdownTimer';
 import { TrustBadge } from './TrustBadge';
 import { PanelCheckoutModal } from './PanelCheckoutModal';
-import { ResellerValuesModal } from './ResellerValuesModal';
-import { Zap, Shield, Eye, ChevronDown, RefreshCw, CreditCard, Play, X } from 'lucide-react';
+import { Zap, Shield, ChevronDown, RefreshCw, CreditCard, Play, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import productPainel from '@/assets/product-painel.png';
 
