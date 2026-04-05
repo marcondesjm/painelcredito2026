@@ -6,8 +6,9 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
 import { useAuth } from '@/hooks/useAuth';
 import { lovable } from '@/integrations/lovable/index';
+import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Eye, EyeOff, Loader2, Zap } from 'lucide-react';
+import { Eye, EyeOff, Loader2, Zap, LogOut, Coins } from 'lucide-react';
 import backgroundHero from '@/assets/background-hero.png';
 
 const AuthRevenda = () => {
@@ -17,10 +18,12 @@ const AuthRevenda = () => {
   const [fullName, setFullName] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { signIn, signUp, user, loading } = useAuth();
+  const [balance, setBalance] = useState<number | null>(null);
+  const { signIn, signUp, signOut, user, loading } = useAuth();
   const navigate = useNavigate();
 
   const redirectTo = new URLSearchParams(window.location.search).get('redirect');
+  const isLogout = new URLSearchParams(window.location.search).get('logout') === '1';
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -30,6 +33,20 @@ const AuthRevenda = () => {
       navigate(redirectTo || '/revenda');
     }
   }, [user, loading, navigate, redirectTo]);
+
+  useEffect(() => {
+    if (user && !isLogout) {
+      const fetchBalance = async () => {
+        const { data } = await supabase
+          .from('user_balances')
+          .select('balance')
+          .eq('user_id', user.id)
+          .maybeSingle();
+        setBalance(data?.balance ?? 0);
+      };
+      fetchBalance();
+    }
+  }, [user, isLogout]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -79,6 +96,12 @@ const AuthRevenda = () => {
     }
   };
 
+  const handleSignOut = async () => {
+    await signOut();
+    setBalance(null);
+    toast.success('Você saiu da conta.');
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -87,6 +110,70 @@ const AuthRevenda = () => {
     );
   }
 
+  // Logged in view
+  if (user && !isLogout) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center p-4 relative overflow-hidden">
+        <div
+          className="absolute inset-0 opacity-30 bg-cover bg-center"
+          style={{ backgroundImage: `url(${backgroundHero})` }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/50 via-background/80 to-background" />
+
+        <Card className="relative z-10 w-full max-w-md bg-card/80 backdrop-blur-md border-border/50">
+          <CardContent className="pt-6">
+            <div className="flex justify-center mb-4">
+              <div className="p-3 rounded-full bg-primary/20">
+                <Zap className="w-8 h-8 text-primary" />
+              </div>
+            </div>
+
+            <div className="text-center mb-6">
+              <h1 className="text-2xl font-bold text-foreground">
+                Você já está logado!
+              </h1>
+              <p className="text-sm text-muted-foreground mt-1">
+                {user.email}
+              </p>
+            </div>
+
+            {/* Credit Balance */}
+            <div className="bg-background/50 border border-border rounded-lg p-4 mb-6 text-center">
+              <div className="flex items-center justify-center gap-2 mb-1">
+                <Coins className="w-5 h-5 text-primary" />
+                <span className="text-sm text-muted-foreground">Seus créditos</span>
+              </div>
+              <p className="text-3xl font-bold text-foreground">
+                {balance !== null ? balance.toLocaleString('pt-BR') : <Loader2 className="w-5 h-5 animate-spin mx-auto" />}
+              </p>
+            </div>
+
+            <div className="space-y-3">
+              <Button
+                variant="hero"
+                className="w-full"
+                onClick={() => navigate(redirectTo || '/revenda')}
+              >
+                <Zap className="w-4 h-4 mr-2" />
+                Acessar Gerador de Créditos
+              </Button>
+
+              <Button
+                variant="outline"
+                className="w-full gap-2"
+                onClick={handleSignOut}
+              >
+                <LogOut className="w-4 h-4" />
+                Sair da conta
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  // Login form
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4 relative overflow-hidden">
       <div
@@ -112,7 +199,6 @@ const AuthRevenda = () => {
             </p>
           </div>
 
-          {/* Google Sign In */}
           <Button
             type="button"
             variant="outline"
