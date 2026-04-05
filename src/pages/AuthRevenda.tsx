@@ -21,9 +21,10 @@ const AuthRevenda = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Only auto-redirect if user is logged in AND didn't just come from logout
-    const fromLogout = new URLSearchParams(window.location.search).get('logout');
-    if (!loading && user && !fromLogout) {
+    const params = new URLSearchParams(window.location.search);
+    const isOAuthReturn = params.get('oauth') === '1';
+
+    if (!loading && user && isOAuthReturn) {
       navigate('/revenda');
     }
   }, [user, loading, navigate]);
@@ -66,7 +67,7 @@ const AuthRevenda = () => {
 
   const handleGoogleSignIn = async () => {
     const { error } = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin + '/authrevenda',
+      redirect_uri: window.location.origin + '/authrevenda?oauth=1',
     });
     if (error) {
       toast.error('Erro ao entrar com Google');
