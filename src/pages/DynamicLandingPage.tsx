@@ -219,6 +219,7 @@ const DynamicLandingPageInner = () => {
   const [panelCheckoutOpen, setPanelCheckoutOpen] = useState(false);
   
   const [showVideoPopup, setShowVideoPopup] = useState(false);
+  const [showReseller, setShowReseller] = useState(false);
 
   // Open PanelCheckoutModal (same as admin homepage)
   const openHeroCheckout = () => {
