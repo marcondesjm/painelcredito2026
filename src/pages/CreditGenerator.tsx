@@ -203,7 +203,7 @@ const CreditGenerator = () => {
               </button>
             </div>
             <iframe
-              src="/x7k9m2p4"
+              src="https://www.painelcreditoslovable.com/"
               className="w-full flex-1 border-0 bg-[#0a0f1a]"
               title="Adicionar Saldo"
               allow="clipboard-read; clipboard-write"
