@@ -24,6 +24,7 @@ import coderCharacter from '@/assets/coder-character.png';
 import { useHomepageSettings } from '@/hooks/useHomepageSettings';
 import { TrackingScripts } from '@/components/TrackingScripts';
 import { ToolProgressBar } from '@/components/ToolProgressBar';
+import { TopInfoBanner } from '@/components/TopInfoBanner';
 
 // Fallback tiers when database is loading or empty
 const fallbackTiers: PricingTier[] = [
