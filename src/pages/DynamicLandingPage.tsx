@@ -764,10 +764,7 @@ const DynamicLandingPageInner = () => {
               </div>
               <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-card/50 backdrop-blur-sm border border-border/50">
                 <Shield className="w-4 h-4" style={{ color: page.color_icons || '#8B5CF6' }} />
-                <span className="text-sm text-muted-foreground">Pagamento Seguro</span>
               </div>
-                </div>
-              </button>
             </div>
 
             {/* Buy Panel Button */}

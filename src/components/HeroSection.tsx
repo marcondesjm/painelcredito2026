@@ -126,9 +126,6 @@ export const HeroSection = () => {
 
             <div className="flex flex-wrap justify-center lg:justify-start gap-2 sm:gap-3 mb-4">
               <TrustBadge icon={Zap} text={t('hero.auto_delivery')} />
-              <TrustBadge icon={Shield} text={t('hero.secure_payment')} />
-                </div>
-              </button>
             </div>
 
             {/* Buy Panel Button */}
