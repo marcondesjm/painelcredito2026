@@ -81,6 +81,7 @@ interface SectionsVisibility {
   why_choose: boolean;
   how_it_works: boolean;
   video: boolean;
+  video_hide_controls: boolean;
   secure_purchase: boolean;
   testimonials: boolean;
   guarantee: boolean;
