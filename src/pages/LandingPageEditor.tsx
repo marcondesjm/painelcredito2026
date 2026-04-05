@@ -54,6 +54,7 @@ interface LandingPageData {
   video_title: string;
   video_url: string;
   video_thumbnail: string;
+  video_hide_controls: boolean;
   donation_enabled: boolean;
   donation_title: string;
   donation_description: string;
