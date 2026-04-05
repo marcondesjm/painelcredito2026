@@ -832,7 +832,7 @@ const DynamicLandingPageInner = () => {
                 type="button"
                 className="inline-flex items-center gap-2 bg-[hsl(var(--dynamic-primary))]/10 border border-[hsl(var(--dynamic-primary))]/30 rounded-xl px-5 py-3 cursor-pointer hover:bg-[hsl(var(--dynamic-primary))]/20 transition-colors"
                 onClick={() => {
-                  const el = document.getElementById('pacotes-section');
+                  const el = document.getElementById('pacotes');
                   if (el) el.scrollIntoView({ behavior: 'smooth' });
                 }}
               >
