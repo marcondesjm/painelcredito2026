@@ -826,23 +826,27 @@ const DynamicLandingPageInner = () => {
               );
             })()}
 
-            {/* Promo banner */}
-            {(page as any).promo_text && (
-              <div className="flex flex-col items-center lg:items-start gap-2 mb-4">
-                <button
-                  type="button"
-                  className="inline-flex items-center gap-2 bg-destructive/10 border border-destructive/30 rounded-full px-4 py-1.5 animate-pulse cursor-pointer hover:bg-destructive/20 transition-colors"
-                  onClick={() => {
-                    const link = (page as any).promo_link;
-                    if (link) handleCtaClick(link, navigate);
-                  }}
-                >
-                  <span className="text-sm sm:text-base font-bold text-destructive">
-                    {(page as any).promo_text}
+            {/* Reseller values banner */}
+            <div className="flex flex-col items-center lg:items-start gap-2 mb-4">
+              <button
+                type="button"
+                className="inline-flex items-center gap-2 bg-[hsl(var(--dynamic-primary))]/10 border border-[hsl(var(--dynamic-primary))]/30 rounded-xl px-5 py-3 cursor-pointer hover:bg-[hsl(var(--dynamic-primary))]/20 transition-colors"
+                onClick={() => {
+                  const el = document.getElementById('pacotes');
+                  if (el) el.scrollIntoView({ behavior: 'smooth' });
+                }}
+              >
+                <span className="text-lg">👀</span>
+                <div className="flex flex-col items-start">
+                  <span className="text-sm sm:text-base font-bold" style={{ color: 'hsl(var(--dynamic-primary))' }}>
+                    👁️ Veja os valores de revenda aqui
                   </span>
-                </button>
-              </div>
-            )}
+                  <span className="text-xs opacity-70" style={{ color: 'hsl(var(--dynamic-primary))' }}>
+                    Clique para ver quanto você pode lucrar
+                  </span>
+                </div>
+              </button>
+            </div>
 
             {/* Prices section */}
             {page.price_current && (() => {
