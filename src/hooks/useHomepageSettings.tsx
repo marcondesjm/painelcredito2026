@@ -25,7 +25,8 @@ interface HeroSettings {
   extra_renewals?: HeroRenewalLine[];
   promo_banner_text?: string;
   countdown_mode?: 'end_of_day' | 'custom';
-  countdown_deadline?: string; // ISO date string
+  countdown_deadline?: string;
+  image?: string;
 }
 
 interface CheckoutSettings {
