@@ -7,8 +7,8 @@ import { toast } from 'sonner'
 import { generatePixQRCode } from '@/lib/pix'
 import { supabase } from '@/integrations/supabase/client'
 
-const PIX_KEY = '+5548996029392'
-const PIX_NAME = 'Marcondes Jorge Machado'
+const DEFAULT_PIX_KEY = '+5548996029392'
+const DEFAULT_PIX_NAME = 'Marcondes Jorge Machado'
 const PANEL_PRICE = 199
 const ORIGINAL_PRICE = 680
 
