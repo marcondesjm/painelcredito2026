@@ -1,12 +1,22 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 const PanelAccess = () => {
   const [loading, setLoading] = useState(true);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const loadCountRef = useRef(0);
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 800);
     return () => clearTimeout(timer);
   }, []);
+
+  const handleIframeLoad = () => {
+    loadCountRef.current += 1;
+    // First load = auth page, second load = user logged in and navigated
+    if (loadCountRef.current >= 2) {
+      setLoggedIn(true);
+    }
+  };
 
   if (loading) {
     return (
@@ -46,7 +56,8 @@ const PanelAccess = () => {
           allow="clipboard-read; clipboard-write; payment"
           sandbox="allow-same-origin allow-scripts allow-forms allow-top-navigation"
           referrerPolicy="no-referrer"
-          scrolling="no"
+          scrolling={loggedIn ? "yes" : "no"}
+          onLoad={handleIframeLoad}
         />
       </div>
     </div>
