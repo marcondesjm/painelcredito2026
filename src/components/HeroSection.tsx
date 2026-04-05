@@ -130,7 +130,7 @@ export const HeroSection = () => {
                 onClick={() => document.getElementById('pacotes')?.scrollIntoView({ behavior: 'smooth' })}
               >
                 <span className="text-sm sm:text-base font-bold text-destructive">
-                  {hero.promo_banner_text || '🔥 PROMOÇÃO DE CRÉDITOS 🔥'} — {new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+                  {hero.promo_banner_text || `🔥 PROMOÇÃO DE CRÉDITOS 🔥 — ${new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })}`}
                 </span>
               </div>
               <CountdownTimer />
