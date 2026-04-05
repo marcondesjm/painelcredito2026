@@ -1901,7 +1901,7 @@ const DynamicLandingPageInner = () => {
                           <Button className="w-full text-white" style={{ backgroundColor: `hsl(${primaryHsl})` }} onClick={() => {
                             const t = getTarget('comprar_agora', '');
                             if (t && (t.startsWith('http') || t.startsWith('#'))) { handleNavClick({ action: 'link', target: t }); }
-                            else { handleCtaClick(page.hero_cta_link, navigate); }
+                            else { openHeroCheckout(); }
                           }}>
                             {getLabel('comprar_agora', page.hero_cta_text || 'Comprar Agora')}
                           </Button>
