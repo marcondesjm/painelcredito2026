@@ -239,6 +239,7 @@ const defaultSettings: HomepageSettings = {
     why_choose: true,
     how_it_works: true,
     video: true,
+    video_hide_controls: true,
     secure_purchase: true,
     testimonials: true,
     guarantee: true,
