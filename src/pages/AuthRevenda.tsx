@@ -86,48 +86,55 @@ const AuthRevenda = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setShowNotRegistered(false);
+    setFailedEmail('');
 
     try {
       if (isLogin) {
-        // Authenticate against the external platform first
         const proxyUrl = `https://${import.meta.env.VITE_SUPABASE_PROJECT_ID}.supabase.co/functions/v1/auth-proxy`;
         const res = await fetch(proxyUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, password }),
         });
+
         const data = await res.json();
 
         if (!res.ok) {
           toast.error(data.error || 'Email ou senha incorretos');
-          // Check if it's a "not registered" error (401 = wrong credentials on external platform)
+
           if (res.status === 401) {
             setShowNotRegistered(true);
             setFailedEmail(email);
           }
-          // Set the session locally using the tokens from auth-proxy
-          const { error: sessionError } = await supabase.auth.setSession({
-            access_token: data.session.access_token,
-            refresh_token: data.session.refresh_token,
-          });
-          if (sessionError) {
-            toast.error('Erro ao estabelecer sessão');
-          } else {
-            toast.success('Login realizado com sucesso!');
-            navigate(redirectTo || '/gerador');
-          }
+
+          return;
+        }
+
+        const { error: sessionError } = await supabase.auth.setSession({
+          access_token: data.session.access_token,
+          refresh_token: data.session.refresh_token,
+        });
+
+        if (sessionError) {
+          toast.error('Erro ao estabelecer sessão');
+          return;
+        }
+
+        toast.success('Login realizado com sucesso!');
+        navigate(redirectTo || '/gerador');
+        return;
+      }
+
+      const { error } = await signUp(email, password, fullName);
+      if (error) {
+        if (error.message.includes('already registered')) {
+          toast.error('Este email já está cadastrado');
+        } else {
+          toast.error(error.message);
         }
       } else {
-        const { error } = await signUp(email, password, fullName);
-        if (error) {
-          if (error.message.includes('already registered')) {
-            toast.error('Este email já está cadastrado');
-          } else {
-            toast.error(error.message);
-          }
-        } else {
-          toast.success('Conta criada! Verifique seu email para confirmar.');
-        }
+        toast.success('Conta criada! Verifique seu email para confirmar.');
       }
     } catch (err) {
       toast.error('Ocorreu um erro. Tente novamente.');
