@@ -22,6 +22,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Install from "./pages/Install";
 
 import AuthRevenda from "./pages/AuthRevenda";
+import AuthRevenda2 from "./pages/AuthRevenda2";
 import PanelAccess from "./pages/PanelAccess";
 import CreditGenerator from "./pages/CreditGenerator";
 import OrderTracking from "./pages/OrderTracking";
