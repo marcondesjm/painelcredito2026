@@ -302,6 +302,12 @@ ${couponApplied ? `• Cupom: ${coupon.trim().toUpperCase()}` : ''}
                 </div>
               </div>
 
+              <div className="rounded-lg border border-primary/30 bg-primary/5 p-3 text-center">
+                <p className="text-xs text-muted-foreground">
+                  📲 Após o pagamento, envie o <span className="font-bold text-foreground">comprovante para o suporte</span> via WhatsApp para que sua conta seja criada e o acesso liberado.
+                </p>
+              </div>
+
               {/* Form */}
               <div className="space-y-3">
                 <div className="grid grid-cols-2 gap-3">
