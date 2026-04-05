@@ -20,7 +20,7 @@ const AuthRevenda2 = () => {
   const [failedEmail, setFailedEmail] = useState('');
   const [showCheckoutModal, setShowCheckoutModal] = useState(false);
   const [balance, setBalance] = useState<number | null>(null);
-  const { signIn, signUp, signOut, user, loading } = useAuth();
+  const { signOut, user, loading } = useAuth();
   const navigate = useNavigate();
 
   const redirectTo = new URLSearchParams(window.location.search).get('redirect');
