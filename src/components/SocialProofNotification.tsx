@@ -89,7 +89,7 @@ export const SocialProofNotification = ({
   if (!isVisible) return null;
 
   const purchaseText = notification.product === 'painel'
-    ? (language === 'en' ? 'purchased the Resale Panel — R$ 350' : 'adquiriu o Painel de Revenda — R$ 350')
+    ? (language === 'en' ? 'purchased the Resale Panel — R$ 199' : 'adquiriu o Painel de Revenda — R$ 199')
     : language === 'en'
       ? `purchased ${notification.product === 'creditos' ? `${notification.credits} credits` : (productName || 'the Generator')}`
       : `adquiriu ${notification.product === 'creditos' ? `${notification.credits} créditos` : (productName || 'o Gerador')}`;

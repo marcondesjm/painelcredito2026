@@ -292,7 +292,7 @@ ${couponApplied ? `• Cupom: ${coupon.trim().toUpperCase()}` : ''}
                     ))}
                   </div>
                   <p className="text-[10px] sm:text-xs text-center text-muted-foreground">
-                    💰 Compre o painel por <span className="font-bold text-accent">R$ 350</span> e revenda créditos com lucro!
+                    💰 Compre o painel por <span className="font-bold text-accent">R$ 199</span> e revenda créditos com lucro!
                   </p>
                 </div>
               )}
