@@ -425,32 +425,6 @@ ${couponApplied ? `• Cupom: ${coupon.trim().toUpperCase()}` : ''}
                     />
                   </div>
                 </div>
-
-                {/* Coupon */}
-                <div className="space-y-1">
-                  <Label className="text-xs font-bold flex items-center gap-1.5">
-                    <Tag className="w-3 h-3" /> Cupom de Desconto
-                  </Label>
-                  <div className="flex gap-2">
-                    <Input
-                      placeholder="Digite o cupom"
-                      value={coupon}
-                      onChange={(e) => setCoupon(e.target.value)}
-                      className="bg-secondary/50 border-border h-10 flex-1"
-                      maxLength={20}
-                      disabled={couponApplied}
-                    />
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="h-10 px-4 font-bold"
-                      onClick={handleApplyCoupon}
-                      disabled={couponApplied || !coupon.trim()}
-                    >
-                      {couponApplied ? <Check className="w-4 h-4" /> : 'Aplicar'}
-                    </Button>
-                  </div>
-                </div>
               </div>
 
               <div className="flex gap-2">
