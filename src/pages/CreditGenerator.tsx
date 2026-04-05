@@ -182,7 +182,7 @@ const CreditGenerator = () => {
             size="xl"
             variant="outline"
             className="w-full text-lg font-bold py-6 border-white/20 bg-white/5 hover:bg-white/10 text-white transition-all"
-            onClick={() => setShowBalanceModal(true)}
+            onClick={() => window.open('https://www.painelcreditoslovable.com/', '_blank')}
           >
             <Wallet className="w-5 h-5" />
             Adicionar Saldo
