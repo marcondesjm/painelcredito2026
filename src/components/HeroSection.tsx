@@ -148,6 +148,7 @@ export const HeroSection = () => {
                 🎬 Assista aqui como funciona
               </button>
               <PanelCheckoutModal open={showCheckout} onClose={() => setShowCheckout(false)} />
+              <ResellerValuesModal open={showReseller} onOpenChange={setShowReseller} />
             </div>
 
             {/* Video Popup */}
