@@ -212,6 +212,23 @@ const DynamicLandingPageInner = () => {
   // Checkout modal state
   const [checkoutModalOpen, setCheckoutModalOpen] = useState(false);
   const [selectedTier, setSelectedTier] = useState<PricingTier | null>(null);
+
+  // Open checkout with hero price as a virtual tier
+  const openHeroCheckout = () => {
+    if (!page) return;
+    const virtualTier: PricingTier = {
+      id: 'hero-main',
+      name: page.hero_cta_text || 'Painel Gerador',
+      credits: 0,
+      price_original: page.price_original || 0,
+      price_current: page.price_current || 0,
+      available: 999,
+      sales: 0,
+      checkout_link: '',
+    };
+    setSelectedTier(virtualTier);
+    setCheckoutModalOpen(true);
+  };
   
   const isPreview = searchParams.get('preview') === 'true';
   const draftId = searchParams.get('draftId');
@@ -754,7 +771,7 @@ const DynamicLandingPageInner = () => {
                   backgroundColor: `hsl(${primaryHsl})`,
                   boxShadow: `0 0 20px hsl(${primaryHsl} / 0.4)`
                 }}
-                onClick={() => handleCtaClick(page.hero_cta_link, navigate)}
+                onClick={() => openHeroCheckout()}
               >
                 {page.hero_cta_text || 'Comprar Agora'}
               </Button>
@@ -797,7 +814,7 @@ const DynamicLandingPageInner = () => {
                           borderColor: `hsl(${primaryHsl} / 0.3)`,
                           backgroundColor: `hsl(${primaryHsl} / 0.1)`
                         }}
-                        onClick={() => handleCtaClick(page.hero_cta_link, navigate)}
+                        onClick={() => openHeroCheckout()}
                       >
                         <RefreshCw className="w-4 h-4" style={{ color: `hsl(${primaryHsl})` }} />
                         <span className="text-sm sm:text-base font-bold" style={{ color: `hsl(${primaryHsl})` }}>
@@ -844,7 +861,7 @@ const DynamicLandingPageInner = () => {
                               borderColor: `hsl(${primaryHsl} / 0.3)`,
                               backgroundColor: `hsl(${primaryHsl} / 0.1)`
                             }}
-                            onClick={() => handleCtaClick(page.hero_cta_link, navigate)}
+                            onClick={() => openHeroCheckout()}
                           >
                             <RefreshCw className="w-4 h-4" style={{ color: `hsl(${primaryHsl})` }} />
                             <span className="text-sm sm:text-base font-bold" style={{ color: `hsl(${primaryHsl})` }}>
@@ -1202,7 +1219,7 @@ const DynamicLandingPageInner = () => {
                 handleSectionClick('cta');
                 return;
               }
-              handleCtaClick(page.hero_cta_link, navigate);
+              openHeroCheckout();
             }}
           >
             {page.hero_cta_text || 'Comprar Agora'}
@@ -1816,7 +1833,7 @@ const DynamicLandingPageInner = () => {
                       <Button size="sm" className="text-white" style={{ backgroundColor: `hsl(${primaryHsl})` }} onClick={() => {
                         const t = getTarget('comprar_agora', '');
                         if (t && (t.startsWith('http') || t.startsWith('#'))) { handleNavClick({ action: 'link', target: t }); }
-                        else { handleCtaClick(page.hero_cta_link, navigate); }
+                        else { openHeroCheckout(); }
                       }}>
                         {getLabel('comprar_agora', page.hero_cta_text || 'Comprar Agora')}
                       </Button>
@@ -1884,7 +1901,7 @@ const DynamicLandingPageInner = () => {
                           <Button className="w-full text-white" style={{ backgroundColor: `hsl(${primaryHsl})` }} onClick={() => {
                             const t = getTarget('comprar_agora', '');
                             if (t && (t.startsWith('http') || t.startsWith('#'))) { handleNavClick({ action: 'link', target: t }); }
-                            else { handleCtaClick(page.hero_cta_link, navigate); }
+                            else { openHeroCheckout(); }
                           }}>
                             {getLabel('comprar_agora', page.hero_cta_text || 'Comprar Agora')}
                           </Button>
