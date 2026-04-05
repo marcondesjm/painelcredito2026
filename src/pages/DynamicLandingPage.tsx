@@ -216,7 +216,7 @@ const DynamicLandingPageInner = () => {
   const [checkoutModalOpen, setCheckoutModalOpen] = useState(false);
   const [selectedTier, setSelectedTier] = useState<PricingTier | null>(null);
   const [panelCheckoutOpen, setPanelCheckoutOpen] = useState(false);
-  const [showReseller, setShowReseller] = useState(false);
+  
   const [showVideoPopup, setShowVideoPopup] = useState(false);
 
   // Open PanelCheckoutModal (same as admin homepage)
