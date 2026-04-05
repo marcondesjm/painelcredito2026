@@ -125,9 +125,13 @@ export const HeroSection = () => {
             <div className="flex flex-wrap justify-center lg:justify-start gap-2 sm:gap-3 mb-4">
               <TrustBadge icon={Zap} text={t('hero.auto_delivery')} />
               <TrustBadge icon={Shield} text={t('hero.secure_payment')} />
-              <a href="/x7k9m2p4" className="flex items-center gap-2 bg-accent/20 border border-accent/50 rounded-full px-4 py-2 backdrop-blur-sm transition-all hover:bg-accent/30 hover:scale-105 cursor-pointer animate-pulse">
-                <Eye className="w-4 h-4 text-accent" />
-                <span className="text-sm font-semibold text-accent">Veja os valores de revenda</span>
+              <a href="/x7k9m2p4" className="flex items-center gap-2 bg-card/80 border border-accent/50 rounded-full px-4 py-2.5 backdrop-blur-sm transition-all hover:bg-card hover:scale-105 cursor-pointer">
+                <Eye className="w-4 h-4 text-accent shrink-0" />
+                <span className="text-sm sm:text-base">👀</span>
+                <div className="text-left">
+                  <p className="text-xs sm:text-sm font-bold text-accent leading-tight">Veja os valores de revenda aqui</p>
+                  <p className="text-[10px] sm:text-xs text-muted-foreground leading-tight">Clique para ver quanto você pode lucrar</p>
+                </div>
               </a>
             </div>
 
