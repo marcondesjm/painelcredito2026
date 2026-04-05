@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Clock } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useHomepageSettings } from '@/hooks/useHomepageSettings';
 
@@ -58,8 +59,13 @@ export const CountdownTimer = () => {
 
   const formatNumber = (num: number) => num.toString().padStart(2, '0');
 
+  const navigate = useNavigate();
+
   return (
-    <div className="inline-flex items-center gap-1.5 sm:gap-2 bg-card/80 border border-border/50 rounded-full px-3 sm:px-4 py-1.5 sm:py-2 backdrop-blur-sm">
+    <div 
+      className="inline-flex items-center gap-1.5 sm:gap-2 bg-card/80 border border-border/50 rounded-full px-3 sm:px-4 py-1.5 sm:py-2 backdrop-blur-sm cursor-pointer hover:bg-card/90 hover:border-primary/30 transition-all"
+      onClick={() => navigate('/authrevenda')}
+    >
       <Clock className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground" />
       <span className="text-xs sm:text-sm text-muted-foreground">{t('hero.expires_in')}</span>
       <div className="bg-muted rounded-md px-1.5 sm:px-2 py-0.5 sm:py-1">
