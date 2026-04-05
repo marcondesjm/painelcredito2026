@@ -28,18 +28,15 @@ const PanelAccess = () => {
         }
         @media (min-width: 768px) {
           .panel-iframe {
-            width: calc(100% + 90px);
+            width: calc(100% + 44px);
             height: calc(100% + 150px);
             margin-top: -70px;
-            margin-left: -90px;
+            margin-left: -44px;
           }
         }
       `}</style>
-      {/* Top mask */}
       <div className="absolute top-0 left-0 right-0 h-[60px] md:h-[70px] bg-[#0a0f1a] z-10" />
-      {/* Left mask (desktop only) */}
-      <div className="absolute top-0 left-0 bottom-0 w-0 md:w-[90px] bg-[#0a0f1a] z-10" />
-      {/* Bottom mask */}
+      <div className="absolute top-0 left-0 bottom-0 w-0 md:w-[44px] bg-[#0a0f1a] z-10" />
       <div className="absolute bottom-0 left-0 right-0 h-[80px] bg-[#0a0f1a] z-10" />
       <div className="w-full h-full overflow-hidden">
         <iframe
