@@ -50,6 +50,8 @@ export const PanelCheckoutModal = ({ open, onClose }: PanelCheckoutModalProps) =
   const [copied, setCopied] = useState(false)
   const [pixTimer, setPixTimer] = useState(600)
   const [adminWhatsapp, setAdminWhatsapp] = useState('5548996029392')
+  const [pixKey, setPixKey] = useState(DEFAULT_PIX_KEY)
+  const [pixName, setPixName] = useState(DEFAULT_PIX_NAME)
 
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
