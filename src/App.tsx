@@ -23,6 +23,9 @@ import Install from "./pages/Install";
 import CreditResale from "./pages/CreditResale";
 import AuthRevenda from "./pages/AuthRevenda";
 import PanelAccess from "./pages/PanelAccess";
+import CreditGenerator from "./pages/CreditGenerator";
+import OrderTracking from "./pages/OrderTracking";
+import OrderHistory from "./pages/OrderHistory";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -56,6 +59,9 @@ const App = () => (
               <Route path="/authrevenda" element={<AuthRevenda />} />
               <Route path="/install" element={<Install />} />
               <Route path="/x7k9m2p4" element={<PanelAccess />} />
+              <Route path="/gerador" element={<CreditGenerator />} />
+              <Route path="/gerador/acompanhar/:orderId" element={<OrderTracking />} />
+              <Route path="/gerador/historico" element={<OrderHistory />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
