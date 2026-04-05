@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { X, Check, CreditCard, User, Clock, Copy, Zap, Tag, Send, Upload } from 'lucide-react'
+import { X, Check, CreditCard, User, Clock, Copy, Zap, Tag, Send, Upload, Eye } from 'lucide-react'
 import { toast } from 'sonner'
 import { generatePixQRCode } from '@/lib/pix'
 import { supabase } from '@/integrations/supabase/client'
@@ -11,6 +11,16 @@ const PIX_KEY = '+5548996029392'
 const PIX_NAME = 'Marcondes Jorge Machado'
 const PANEL_PRICE = 350
 const ORIGINAL_PRICE = 680
+
+const RESALE_PACKAGES = [
+  { credits: 50, price: 2.50 },
+  { credits: 100, price: 5.00 },
+  { credits: 500, price: 22.23, discount: '10%' },
+  { credits: 1000, price: 37.52, discount: '20%' },
+  { credits: 2000, price: 72.36, discount: '30%' },
+  { credits: 5000, price: 160.79, discount: '40%' },
+  { credits: 10000, price: 300.15, discount: '44%' },
+]
 
 function fmtR(n: number) {
   return n.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
@@ -23,7 +33,7 @@ interface PanelCheckoutModalProps {
 
 export const PanelCheckoutModal = ({ open, onClose }: PanelCheckoutModalProps) => {
   const [step, setStep] = useState<1 | 2 | 3>(1)
-
+  const [showResaleValues, setShowResaleValues] = useState(false)
   // Step 3 form
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
@@ -163,6 +173,7 @@ ${couponApplied ? `• Cupom: ${coupon.trim().toUpperCase()}` : ''}
     setPixPayload('')
     setPixQrUrl('')
     setCopied(false)
+    setShowResaleValues(false)
     onClose()
   }
 
@@ -216,11 +227,11 @@ ${couponApplied ? `• Cupom: ${coupon.trim().toUpperCase()}` : ''}
                 <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto">
                   <CreditCard className="w-6 h-6 text-primary" />
                 </div>
-                <h2 className="text-xl font-bold">Painel Gerador de Créditos</h2>
-                <p className="text-sm text-muted-foreground">Acesso completo ao gerador de créditos Lovable</p>
+                <h2 className="text-lg sm:text-xl font-bold">Painel Gerador de Créditos</h2>
+                <p className="text-xs sm:text-sm text-muted-foreground">Acesso completo ao gerador de créditos Lovable</p>
               </div>
 
-              <div className="rounded-xl border border-border bg-secondary/30 p-4 space-y-3">
+              <div className="rounded-xl border border-border bg-secondary/30 p-3 sm:p-4 space-y-3">
                 <h3 className="text-xs font-bold tracking-widest uppercase text-muted-foreground">Resumo do Pedido</h3>
                 <div className="flex justify-between text-sm">
                   <span className="flex items-center gap-2"><CreditCard className="w-4 h-4 text-accent" /> Painel Completo:</span>
@@ -231,15 +242,62 @@ ${couponApplied ? `• Cupom: ${coupon.trim().toUpperCase()}` : ''}
                   <span className="font-bold">✓ Incluído</span>
                 </div>
                 <div className="border-t border-border pt-3 flex justify-between items-center">
-                  <span className="font-bold">Valor a Pagar:</span>
+                  <span className="font-bold text-sm">Valor a Pagar:</span>
                   <div className="text-right">
-                    <span className="text-sm text-muted-foreground line-through mr-2">R$ {fmtR(ORIGINAL_PRICE)}</span>
-                    <span className="text-xl font-black text-accent">R$ {fmtR(PANEL_PRICE)}</span>
+                    <span className="text-xs sm:text-sm text-muted-foreground line-through mr-2">R$ {fmtR(ORIGINAL_PRICE)}</span>
+                    <span className="text-lg sm:text-xl font-black text-accent">R$ {fmtR(PANEL_PRICE)}</span>
                   </div>
                 </div>
               </div>
 
-              <Button className="w-full font-bold bg-primary hover:bg-primary/90" size="lg" onClick={() => setStep(2)}>
+              {/* Resale values highlight */}
+              <button
+                onClick={() => setShowResaleValues(!showResaleValues)}
+                className="w-full rounded-xl border-2 border-accent/50 bg-accent/5 p-3 text-center transition-all hover:bg-accent/10 hover:border-accent"
+              >
+                <div className="flex items-center justify-center gap-2">
+                  <Eye className="w-4 h-4 text-accent" />
+                  <span className="text-sm sm:text-base font-bold text-accent">
+                    👀 Veja os valores de revenda aqui
+                  </span>
+                </div>
+                <p className="text-[10px] sm:text-xs text-muted-foreground mt-1">
+                  {showResaleValues ? 'Clique para fechar' : 'Clique para ver quanto você pode lucrar'}
+                </p>
+              </button>
+
+              {showResaleValues && (
+                <div className="rounded-xl border border-border bg-secondary/30 p-3 sm:p-4 space-y-3 animate-in fade-in slide-in-from-top-2 duration-300">
+                  <h3 className="text-xs font-bold tracking-widest uppercase text-center text-muted-foreground">
+                    Pacotes Populares — Valores Reais
+                  </h3>
+                  <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+                    {RESALE_PACKAGES.map((pkg) => (
+                      <div
+                        key={pkg.credits}
+                        className="relative rounded-lg border border-border bg-card p-2 text-center hover:border-primary/50 transition-colors"
+                      >
+                        {pkg.discount && (
+                          <span className="absolute -top-2 left-1/2 -translate-x-1/2 text-[9px] font-bold bg-accent text-accent-foreground px-1.5 py-0.5 rounded-full whitespace-nowrap">
+                            {pkg.discount} off
+                          </span>
+                        )}
+                        <p className="text-xs sm:text-sm font-bold mt-1">
+                          🎫 {pkg.credits.toLocaleString('pt-BR')}
+                        </p>
+                        <p className="text-[10px] sm:text-xs text-accent font-bold">
+                          R$ {fmtR(pkg.price)}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-[10px] sm:text-xs text-center text-muted-foreground">
+                    💰 Compre o painel por <span className="font-bold text-accent">R$ 350</span> e revenda créditos com lucro!
+                  </p>
+                </div>
+              )}
+
+              <Button className="w-full font-bold bg-primary hover:bg-primary/90 text-sm sm:text-base" size="lg" onClick={() => setStep(2)}>
                 Continuar
               </Button>
             </>
