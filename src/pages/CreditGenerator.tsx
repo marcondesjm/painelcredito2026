@@ -16,7 +16,7 @@ const CreditGenerator = () => {
   const [credits, setCredits] = useState(100)
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
-  const { user } = useAuth()
+  const { user, signOut } = useAuth()
 
   const price = useMemo(() => calculateCreditPrice(credits), [credits])
   const ratePer100 = useMemo(() => (price / credits) * 100, [price, credits])
