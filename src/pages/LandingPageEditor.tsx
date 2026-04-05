@@ -429,6 +429,7 @@ const LandingPageEditor = () => {
     video_title: draft.video_title || null,
     video_url: draft.video_url || null,
     video_thumbnail: draft.video_thumbnail || null,
+    video_hide_controls: draft.video_hide_controls,
     donation_enabled: true, // Always enabled - locked
     donation_title: draft.donation_title || null,
     donation_description: draft.donation_description || null,
