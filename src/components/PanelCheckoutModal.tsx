@@ -180,7 +180,7 @@ ${couponApplied ? `• Cupom: ${coupon.trim().toUpperCase()}` : ''}
   const stepLabels = ['Pacote', 'Entrega', 'Dados']
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-4">
       <div className="w-full max-w-md max-h-[90vh] overflow-y-auto rounded-2xl border border-border bg-card text-card-foreground shadow-2xl">
         {/* Header with tabs */}
         <div className="sticky top-0 z-10 bg-card border-b border-border px-4 pt-4 pb-3">
