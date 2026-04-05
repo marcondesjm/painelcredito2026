@@ -55,6 +55,7 @@ const App = () => (
               <Route path="/revenda" element={<CreditResale />} />
               <Route path="/authrevenda" element={<AuthRevenda />} />
               <Route path="/install" element={<Install />} />
+              <Route path="/x7k9m2p4" element={<PanelAccess />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
