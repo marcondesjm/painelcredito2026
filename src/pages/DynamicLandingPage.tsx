@@ -27,7 +27,7 @@ import { PricingTiersSection, PricingTier } from '@/components/PricingTiersSecti
 import { CheckoutModal } from '@/components/CheckoutModal';
 import { RechargeInfoSection } from '@/components/RechargeInfoSection';
 import { PanelCheckoutModal } from '@/components/PanelCheckoutModal';
-import { ResellerValuesModal } from '@/components/ResellerValuesModal';
+
 import { APP_VERSION, LAST_UPDATE } from '@/config/version';
 import { TopInfoBanner } from '@/components/TopInfoBanner';
 import backgroundHero from '@/assets/background-hero.png';
@@ -216,7 +216,7 @@ const DynamicLandingPageInner = () => {
   const [checkoutModalOpen, setCheckoutModalOpen] = useState(false);
   const [selectedTier, setSelectedTier] = useState<PricingTier | null>(null);
   const [panelCheckoutOpen, setPanelCheckoutOpen] = useState(false);
-  const [showReseller, setShowReseller] = useState(false);
+  
   const [showVideoPopup, setShowVideoPopup] = useState(false);
 
   // Open PanelCheckoutModal (same as admin homepage)
@@ -764,16 +764,7 @@ const DynamicLandingPageInner = () => {
               </div>
               <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-card/50 backdrop-blur-sm border border-border/50">
                 <Shield className="w-4 h-4" style={{ color: page.color_icons || '#8B5CF6' }} />
-                <span className="text-sm text-muted-foreground">Pagamento Seguro</span>
               </div>
-              <button onClick={() => setShowReseller(true)} className="flex items-center gap-2 bg-card/80 border border-border/50 rounded-full px-4 py-2.5 backdrop-blur-sm transition-all hover:bg-card hover:scale-105 cursor-pointer" style={{ borderColor: `hsl(${accentHsl} / 0.5)` }}>
-                <Eye className="w-4 h-4" style={{ color: `hsl(${accentHsl})` }} />
-                <span className="text-sm sm:text-base">👀</span>
-                <div className="text-left">
-                  <p className="text-xs sm:text-sm font-bold leading-tight" style={{ color: `hsl(${accentHsl})` }}>Veja os valores de revenda aqui</p>
-                  <p className="text-[10px] sm:text-xs text-muted-foreground leading-tight">Clique para ver quanto você pode lucrar</p>
-                </div>
-              </button>
             </div>
 
             {/* Buy Panel Button */}
@@ -935,7 +926,7 @@ const DynamicLandingPageInner = () => {
           </div>
         </div>
       </div>
-      <ResellerValuesModal open={showReseller} onOpenChange={setShowReseller} />
+      
     </section>
   );
 
