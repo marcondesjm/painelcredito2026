@@ -2468,6 +2468,21 @@ const LandingPageEditor = () => {
                       </div>
                     </div>
 
+                    <div className="flex items-center justify-between p-3 rounded-lg bg-background/50 border border-border/50">
+                      <div className="flex items-center gap-3">
+                        <Switch
+                          checked={data.video_hide_controls}
+                          onCheckedChange={(checked) => setData({ ...data, video_hide_controls: checked })}
+                        />
+                        <div>
+                          <p className="font-medium text-sm">🎮 Ocultar Comandos do Vídeo</p>
+                          <p className="text-xs text-muted-foreground">
+                            {data.video_hide_controls ? 'Controles ocultos (play, volume, barra)' : 'Controles visíveis'}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
                     <div className="space-y-2">
                       <Label className="text-sm">Título da Seção</Label>
                       <Input
