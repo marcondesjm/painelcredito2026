@@ -182,15 +182,33 @@ const CreditGenerator = () => {
             size="xl"
             variant="outline"
             className="w-full text-lg font-bold py-6 border-white/20 bg-white/5 hover:bg-white/10 text-white transition-all"
-            onClick={() => window.location.href = 'https://www.painelcreditoslovable.com/'}
+            onClick={() => setShowBalanceModal(true)}
           >
-            <Zap className="w-5 h-5" />
+            <Wallet className="w-5 h-5" />
             Adicionar Saldo
           </Button>
         </div>
 
         <div className="pb-8" />
       </div>
+
+      {/* Modal com painel externo embed */}
+      <Dialog open={showBalanceModal} onOpenChange={setShowBalanceModal}>
+        <DialogContent className="max-w-[95vw] w-[900px] h-[85vh] p-0 bg-[#0a0a1a] border-white/10 overflow-hidden">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-white/10">
+            <h3 className="text-white font-bold text-sm">Adicionar Saldo</h3>
+            <button onClick={() => setShowBalanceModal(false)} className="text-white/40 hover:text-white">
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+          <iframe
+            src="https://www.painelcreditoslovable.com/"
+            className="w-full flex-1 border-0"
+            style={{ height: 'calc(85vh - 52px)' }}
+            allow="clipboard-write"
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
