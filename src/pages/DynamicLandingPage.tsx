@@ -922,7 +922,7 @@ const DynamicLandingPageInner = () => {
           <div className="relative aspect-video rounded-2xl overflow-hidden bg-card/50 backdrop-blur-sm border border-border/50 shadow-2xl">
             {isYouTube ? (
               <iframe
-                src={youtubeEmbedUrl}
+                src={`${youtubeEmbedUrl}?rel=0&modestbranding=1&iv_load_policy=3`}
                 className="w-full h-full"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
@@ -933,6 +933,9 @@ const DynamicLandingPageInner = () => {
                 src={page.video_url}
                 poster={page.video_thumbnail || undefined}
                 controls
+                controlsList="nodownload noplaybackrate"
+                disablePictureInPicture
+                onContextMenu={(e) => e.preventDefault()}
                 className="w-full h-full object-cover"
               >
                 Seu navegador não suporta vídeos.

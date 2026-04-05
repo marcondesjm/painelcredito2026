@@ -23,9 +23,12 @@ export const VideoSection = () => {
               src="/videos/0403.mp4"
               className="w-full h-full object-cover"
               controls={isPlaying}
+              controlsList="nodownload noplaybackrate"
+              disablePictureInPicture
               playsInline
               preload="metadata"
               loop
+              onContextMenu={(e) => e.preventDefault()}
             />
             {!isPlaying && (
               <div className="absolute inset-0 bg-background/50 flex items-center justify-center cursor-pointer" onClick={handlePlay}>
