@@ -161,7 +161,7 @@ export const HeroSection = () => {
                     <X className="w-8 h-8" />
                   </button>
                   <iframe
-                    src="https://www.youtube.com/embed/l0ENT4d8DFY?autoplay=1&rel=0"
+                    src="https://www.youtube.com/embed/l0ENT4d8DFY?autoplay=1&rel=0&controls=0&modestbranding=1&showinfo=0"
                     className="w-full h-full"
                     allow="autoplay; encrypted-media"
                     allowFullScreen
