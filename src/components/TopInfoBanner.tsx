@@ -18,7 +18,7 @@ export const TopInfoBanner = () => {
         >
           <ShoppingCart className="w-4 h-4 text-accent shrink-0" />
           <p className="text-xs sm:text-sm font-bold text-accent leading-tight text-center">
-            🔥 Acesso ao Painel Gerador de Créditos Aqui!
+            🔥 Acesso ao Painel Gerador de Créditos Aqui! Ganhe uma landing page para venda de créditos!
           </p>
         </button>
         <button
