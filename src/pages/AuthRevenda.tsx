@@ -21,7 +21,9 @@ const AuthRevenda = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!loading && user) {
+    // Only auto-redirect if user is logged in AND didn't just come from logout
+    const fromLogout = new URLSearchParams(window.location.search).get('logout');
+    if (!loading && user && !fromLogout) {
       navigate('/revenda');
     }
   }, [user, loading, navigate]);

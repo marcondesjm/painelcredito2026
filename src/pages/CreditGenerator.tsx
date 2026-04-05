@@ -62,7 +62,7 @@ const CreditGenerator = () => {
             <Button variant="ghost" size="sm" onClick={() => navigate('/gerador/historico')} className="text-white/70 hover:text-white">
               <History className="w-4 h-4 mr-1" /> Histórico
             </Button>
-            <Button variant="ghost" size="sm" onClick={async () => { await signOut(); navigate('/authrevenda'); }} className="text-white/70 hover:text-red-400">
+            <Button variant="ghost" size="sm" onClick={async () => { await signOut(); navigate('/authrevenda?logout=1'); }} className="text-white/70 hover:text-red-400">
               <LogOut className="w-4 h-4 mr-1" /> Sair
             </Button>
           </div>
