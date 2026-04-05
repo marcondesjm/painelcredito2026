@@ -26,6 +26,7 @@ import { WhatsAppButton } from '@/components/WhatsAppButton';
 import { PricingTiersSection, PricingTier } from '@/components/PricingTiersSection';
 import { CheckoutModal } from '@/components/CheckoutModal';
 import { RechargeInfoSection } from '@/components/RechargeInfoSection';
+import { PanelCheckoutModal } from '@/components/PanelCheckoutModal';
 import { APP_VERSION, LAST_UPDATE } from '@/config/version';
 import { TopInfoBanner } from '@/components/TopInfoBanner';
 import backgroundHero from '@/assets/background-hero.png';
@@ -213,22 +214,11 @@ const DynamicLandingPageInner = () => {
   // Checkout modal state
   const [checkoutModalOpen, setCheckoutModalOpen] = useState(false);
   const [selectedTier, setSelectedTier] = useState<PricingTier | null>(null);
+  const [panelCheckoutOpen, setPanelCheckoutOpen] = useState(false);
 
-  // Open checkout with hero price as a virtual tier
+  // Open PanelCheckoutModal (same as admin homepage)
   const openHeroCheckout = () => {
-    if (!page) return;
-    const virtualTier: PricingTier = {
-      id: 'hero-main',
-      name: page.hero_cta_text || 'Painel Gerador',
-      credits: 0,
-      price_original: page.price_original || 0,
-      price_current: page.price_current || 0,
-      available: 999,
-      sales: 0,
-      checkout_link: '',
-    };
-    setSelectedTier(virtualTier);
-    setCheckoutModalOpen(true);
+    setPanelCheckoutOpen(true);
   };
   
   const isPreview = searchParams.get('preview') === 'true';
@@ -2065,6 +2055,7 @@ const DynamicLandingPageInner = () => {
         pixName={(page as any).pix_name || ''}
         pixQrBase={(page as any).pix_qr_base || ''}
       />
+      <PanelCheckoutModal open={panelCheckoutOpen} onClose={() => setPanelCheckoutOpen(false)} />
     </div>
   );
 };
