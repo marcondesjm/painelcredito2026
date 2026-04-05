@@ -154,6 +154,7 @@ const AuthRevenda = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="seu@email.com"
                 required
+                autoComplete="off"
                 className="bg-background/50"
               />
             </div>
@@ -169,6 +170,7 @@ const AuthRevenda = () => {
                   placeholder="••••••••"
                   required
                   minLength={6}
+                  autoComplete="off"
                   className="bg-background/50 pr-10"
                 />
                 <button
