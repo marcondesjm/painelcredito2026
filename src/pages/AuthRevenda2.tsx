@@ -12,7 +12,7 @@ import { PanelCheckoutModal } from '@/components/PanelCheckoutModal';
 
 const AuthRevenda2 = () => {
   const [email, setEmail] = useState('');
-  const [fullName, setFullName] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showNotRegistered, setShowNotRegistered] = useState(false);
