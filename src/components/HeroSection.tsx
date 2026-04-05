@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { CountdownTimer } from './CountdownTimer';
 import { TrustBadge } from './TrustBadge';
+import { PanelCheckoutModal } from './PanelCheckoutModal';
 import { Zap, Shield, Headphones, ChevronDown, RefreshCw, CreditCard } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import productPainel from '@/assets/product-painel.png';
@@ -10,6 +12,7 @@ import { useLanguage } from '@/hooks/useLanguage';
 
 export const HeroSection = () => {
   const navigate = useNavigate();
+  const [showCheckout, setShowCheckout] = useState(false);
   const { settings } = useHomepageSettings();
   const { hero } = settings;
   const { t, language } = useLanguage();
