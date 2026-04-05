@@ -124,6 +124,18 @@ export const HeroSection = () => {
               <TrustBadge icon={Headphones} text="Suporte 100% Humanizado" href={`https://wa.me/${settings.whatsapp_number || '5548996029392'}`} />
             </div>
 
+            {/* Buy Panel Button */}
+            <div className="flex flex-col items-center lg:items-start gap-3 mb-4">
+              <Button
+                size="xl"
+                className="text-base sm:text-lg font-bold py-5 px-8 bg-accent hover:bg-accent/90 text-accent-foreground shadow-[0_0_30px_hsl(var(--accent)_/_0.4)] hover:shadow-[0_0_50px_hsl(var(--accent)_/_0.6)] transition-all hover:scale-105"
+                onClick={() => navigate('/authrevenda')}
+              >
+                <CreditCard className="w-5 h-5" />
+                Comprar Painel — R$ 350,00
+              </Button>
+            </div>
+
             <div className="flex flex-col items-center lg:items-start gap-2 mb-4">
               <div 
                 className="inline-flex items-center gap-2 bg-destructive/10 border border-destructive/30 rounded-full px-4 py-1.5 animate-pulse-glow cursor-pointer hover:bg-destructive/20 transition-colors"
