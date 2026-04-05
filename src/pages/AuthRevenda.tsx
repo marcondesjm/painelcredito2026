@@ -30,7 +30,7 @@ const AuthRevenda = () => {
     const isOAuthReturn = params.get('oauth') === '1';
 
     if (!loading && user && isOAuthReturn) {
-      navigate(redirectTo || '/revenda');
+      navigate(redirectTo || '/gerador');
     }
   }, [user, loading, navigate, redirectTo]);
 
@@ -63,7 +63,7 @@ const AuthRevenda = () => {
           }
         } else {
           toast.success('Login realizado com sucesso!');
-          navigate(redirectTo || '/revenda');
+          navigate(redirectTo || '/gerador');
         }
       } else {
         const { error } = await signUp(email, password, fullName);
@@ -110,7 +110,6 @@ const AuthRevenda = () => {
     );
   }
 
-  // Logged in view
   if (user && !isLogout) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center p-4 relative overflow-hidden">
@@ -137,7 +136,6 @@ const AuthRevenda = () => {
               </p>
             </div>
 
-            {/* Credit Balance */}
             <div className="bg-background/50 border border-border rounded-lg p-4 mb-6 text-center">
               <div className="flex items-center justify-center gap-2 mb-1">
                 <Coins className="w-5 h-5 text-primary" />
@@ -152,7 +150,7 @@ const AuthRevenda = () => {
               <Button
                 variant="hero"
                 className="w-full"
-                onClick={() => navigate(redirectTo || '/revenda')}
+                onClick={() => navigate(redirectTo || '/gerador')}
               >
                 <Zap className="w-4 h-4 mr-2" />
                 Acessar Gerador de Créditos
@@ -173,7 +171,6 @@ const AuthRevenda = () => {
     );
   }
 
-  // Login form
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4 relative overflow-hidden">
       <div
@@ -287,7 +284,6 @@ const AuthRevenda = () => {
               {isLogin ? 'Entrar' : 'Criar Conta'}
             </Button>
           </form>
-
         </CardContent>
       </Card>
     </div>

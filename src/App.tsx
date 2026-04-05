@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import { LanguageProvider } from "@/hooks/useLanguage";
 import { useSecurityProtection } from "@/hooks/useSecurityProtection";
@@ -20,7 +20,7 @@ import DynamicLandingPage from "./pages/DynamicLandingPage";
 import TermsOfUse from "./pages/TermsOfUse";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Install from "./pages/Install";
-import CreditResale from "./pages/CreditResale";
+
 import AuthRevenda from "./pages/AuthRevenda";
 import PanelAccess from "./pages/PanelAccess";
 import CreditGenerator from "./pages/CreditGenerator";
@@ -55,7 +55,7 @@ const App = () => (
               <Route path="/p/:slug" element={<DynamicLandingPage />} />
               <Route path="/termos" element={<TermsOfUse />} />
               <Route path="/privacidade" element={<PrivacyPolicy />} />
-              <Route path="/revenda" element={<CreditResale />} />
+              <Route path="/revenda" element={<Navigate to="/gerador" replace />} />
               <Route path="/authrevenda" element={<AuthRevenda />} />
               <Route path="/install" element={<Install />} />
               <Route path="/x7k9m2p4" element={<PanelAccess />} />
