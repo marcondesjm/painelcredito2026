@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { CountdownTimer } from './CountdownTimer';
 import { TrustBadge } from './TrustBadge';
-import { Zap, Shield, Headphones, ChevronDown, RefreshCw } from 'lucide-react';
+import { Zap, Shield, Headphones, ChevronDown, RefreshCw, CreditCard } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import productPainel from '@/assets/product-painel.png';
 
@@ -122,6 +122,18 @@ export const HeroSection = () => {
               <TrustBadge icon={Zap} text={t('hero.auto_delivery')} />
               <TrustBadge icon={Shield} text={t('hero.secure_payment')} />
               <TrustBadge icon={Headphones} text="Suporte 100% Humanizado" href={`https://wa.me/${settings.whatsapp_number || '5548996029392'}`} />
+            </div>
+
+            {/* Buy Panel Button */}
+            <div className="flex flex-col items-center lg:items-start gap-3 mb-4">
+              <Button
+                size="xl"
+                className="text-base sm:text-lg font-bold py-5 px-8 bg-accent hover:bg-accent/90 text-accent-foreground shadow-[0_0_30px_hsl(var(--accent)_/_0.4)] hover:shadow-[0_0_50px_hsl(var(--accent)_/_0.6)] transition-all hover:scale-105"
+                onClick={() => navigate('/authrevenda')}
+              >
+                <CreditCard className="w-5 h-5" />
+                Comprar Painel — R$ 350,00
+              </Button>
             </div>
 
             <div className="flex flex-col items-center lg:items-start gap-2 mb-4">
