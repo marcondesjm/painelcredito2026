@@ -1,9 +1,12 @@
 import { Play } from 'lucide-react';
 import { useState, useRef } from 'react';
+import { useHomepageSettings } from '@/hooks/useHomepageSettings';
 
 export const VideoSection = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const { settings } = useHomepageSettings();
+  const hideControls = settings.sections_visibility.video_hide_controls;
 
   const handlePlay = () => {
     setIsPlaying(true);
@@ -22,7 +25,7 @@ export const VideoSection = () => {
               ref={videoRef}
               src="/videos/0403.mp4"
               className="w-full h-full object-cover"
-              controls={isPlaying}
+              controls={isPlaying && !hideControls}
               controlsList="nodownload noplaybackrate"
               disablePictureInPicture
               playsInline
