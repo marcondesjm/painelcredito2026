@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Slider } from '@/components/ui/slider'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -23,6 +23,7 @@ const CreditGenerator = () => {
   const [credits, setCredits] = useState(100)
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const { user, signOut } = useAuth()
 
   // PIX payment modal state
@@ -55,6 +56,13 @@ const CreditGenerator = () => {
     }
     fetchSettings()
   }, [])
+
+  // Auto-open payment modal if ?pay=1
+  useEffect(() => {
+    if (searchParams.get('pay') === '1') {
+      setShowPaymentModal(true)
+    }
+  }, [searchParams])
 
   // Timer for PIX expiration
   useEffect(() => {

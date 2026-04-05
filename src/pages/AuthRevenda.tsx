@@ -20,14 +20,16 @@ const AuthRevenda = () => {
   const { signIn, signUp, user, loading } = useAuth();
   const navigate = useNavigate();
 
+  const redirectTo = new URLSearchParams(window.location.search).get('redirect');
+
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const isOAuthReturn = params.get('oauth') === '1';
 
     if (!loading && user && isOAuthReturn) {
-      navigate('/revenda');
+      navigate(redirectTo || '/revenda');
     }
-  }, [user, loading, navigate]);
+  }, [user, loading, navigate, redirectTo]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,7 +46,7 @@ const AuthRevenda = () => {
           }
         } else {
           toast.success('Login realizado com sucesso!');
-          navigate('/revenda');
+          navigate(redirectTo || '/revenda');
         }
       } else {
         const { error } = await signUp(email, password, fullName);
