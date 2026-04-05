@@ -174,7 +174,20 @@ const CreditGenerator = () => {
             {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Zap className="w-5 h-5" />}
             {loading ? 'Criando pedido...' : `Gerar ${fmt(credits)} Créditos`}
           </Button>
+
+          {/* Adicionar Saldo */}
+          <Button
+            size="xl"
+            variant="outline"
+            className="w-full text-lg font-bold py-6 border-white/20 bg-white/5 hover:bg-white/10 text-white transition-all"
+            onClick={() => window.open('https://wa.me/5511999999999?text=Quero%20adicionar%20saldo', '_blank')}
+          >
+            <Zap className="w-5 h-5" />
+            Adicionar Saldo
+          </Button>
         </div>
+
+        <div className="pb-8" />
       </div>
     </div>
   )
