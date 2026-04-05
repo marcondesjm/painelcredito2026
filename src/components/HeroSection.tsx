@@ -30,9 +30,19 @@ export const HeroSection = () => {
   return (
     <section className="relative min-h-screen flex items-center justify-center px-4 sm:px-6 pt-24 sm:pt-28 md:pt-32 pb-8 sm:pb-12 overflow-hidden">
       <div className="relative z-10 max-w-7xl mx-auto w-full">
-         <div className="grid lg:grid-cols-1 gap-8 lg:gap-12 items-center">
+         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
 
-          <div className="text-center lg:text-left">
+           {/* Product Image */}
+           <div className="hidden lg:flex items-center justify-center">
+             <img 
+               src={hero.image || ''} 
+               alt="Painel de Créditos" 
+               className="w-full max-w-lg rounded-2xl shadow-2xl shadow-primary/20 border border-white/10"
+               style={{ display: hero.image ? 'block' : 'none' }}
+             />
+           </div>
+
+           <div className="text-center lg:text-left">
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 leading-tight">
               <span className="text-foreground">{language === 'en' ? t('hero.title') : hero.title} </span>
               <span className="text-gradient">{language === 'en' ? t('hero.title_highlight') : hero.title_highlight}</span>
