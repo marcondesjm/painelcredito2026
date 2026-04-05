@@ -27,6 +27,7 @@ import { PricingTiersSection, PricingTier } from '@/components/PricingTiersSecti
 import { CheckoutModal } from '@/components/CheckoutModal';
 import { RechargeInfoSection } from '@/components/RechargeInfoSection';
 import { APP_VERSION, LAST_UPDATE } from '@/config/version';
+import { TopInfoBanner } from '@/components/TopInfoBanner';
 import backgroundHero from '@/assets/background-hero.png';
 import dashboardMockup from '@/assets/dashboard-mockup.png';
 
