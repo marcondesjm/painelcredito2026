@@ -256,7 +256,7 @@ const AuthRevenda = () => {
               <Button
                 variant="hero"
                 className="w-full"
-                onClick={() => navigate('/checkout')}
+                onClick={() => setShowCheckoutModal(true)}
               >
                 <ShoppingCart className="w-4 h-4 mr-2" />
                 Comprar Painel — R$ 350,00
