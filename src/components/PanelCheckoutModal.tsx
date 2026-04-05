@@ -9,7 +9,7 @@ import { supabase } from '@/integrations/supabase/client'
 
 const PIX_KEY = '+5548996029392'
 const PIX_NAME = 'Marcondes Jorge Machado'
-const PANEL_PRICE = 350
+const PANEL_PRICE = 199
 const ORIGINAL_PRICE = 680
 
 const RESALE_PACKAGES = [
@@ -292,7 +292,7 @@ ${couponApplied ? `• Cupom: ${coupon.trim().toUpperCase()}` : ''}
                     ))}
                   </div>
                   <p className="text-[10px] sm:text-xs text-center text-muted-foreground">
-                    💰 Compre o painel por <span className="font-bold text-accent">R$ 350</span> e revenda créditos com lucro!
+                    💰 Compre o painel por <span className="font-bold text-accent">R$ 199</span> e revenda créditos com lucro!
                   </p>
                 </div>
               )}

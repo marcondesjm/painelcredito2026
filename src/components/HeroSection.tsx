@@ -135,7 +135,7 @@ export const HeroSection = () => {
                 onClick={() => setShowCheckout(true)}
               >
                 <CreditCard className="w-5 h-5" />
-                Comprar Painel — R$ 350,00
+                Comprar Painel — R$ 199,00
               </Button>
               <PanelCheckoutModal open={showCheckout} onClose={() => setShowCheckout(false)} />
             </div>
