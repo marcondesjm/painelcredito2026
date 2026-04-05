@@ -19,7 +19,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Loader2, Star, Check, Shield, Clock, ArrowRight, MessageCircle, Zap, Headphones, UserPlus, LogOut, Menu, RefreshCw, Heart, Award, Mail, Phone, LockKeyhole, ChevronDown, Trash2 } from 'lucide-react';
+import { Loader2, Star, Check, Shield, Clock, ArrowRight, MessageCircle, Zap, Headphones, UserPlus, LogOut, Menu, RefreshCw, Heart, Award, Mail, Phone, LockKeyhole, ChevronDown, Trash2, CreditCard, Eye, Play, X as XIcon } from 'lucide-react';
 import { CountdownTimer } from '@/components/CountdownTimer';
 import { SocialProofNotification } from '@/components/SocialProofNotification';
 import { WhatsAppButton } from '@/components/WhatsAppButton';
