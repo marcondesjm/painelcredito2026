@@ -21,7 +21,8 @@ const PanelAccess = () => {
 
   return (
     <div className="fixed inset-0 bg-[#0a0f1a]">
-      {/* CSS to hide the "Acessar" button and nav login elements inside the iframe */}
+      {/* Overlay to cover the top header/nav of the external site */}
+      <div className="absolute top-0 left-0 right-0 h-[100px] bg-[#1a1a2e] z-10" />
       <iframe
         src="https://www.painelcreditoslovable.com/"
         className="w-full h-full border-0"
