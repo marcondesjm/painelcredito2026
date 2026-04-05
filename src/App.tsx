@@ -22,6 +22,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Install from "./pages/Install";
 
 import AuthRevenda from "./pages/AuthRevenda";
+import AuthRevenda2 from "./pages/AuthRevenda2";
 import PanelAccess from "./pages/PanelAccess";
 import CreditGenerator from "./pages/CreditGenerator";
 import OrderTracking from "./pages/OrderTracking";
@@ -57,6 +58,7 @@ const App = () => (
               <Route path="/privacidade" element={<PrivacyPolicy />} />
               <Route path="/revenda" element={<Navigate to="/gerador" replace />} />
               <Route path="/authrevenda" element={<AuthRevenda />} />
+              <Route path="/authrevenda2" element={<AuthRevenda2 />} />
               <Route path="/install" element={<Install />} />
               <Route path="/x7k9m2p4" element={<PanelAccess />} />
               <Route path="/gerador" element={<CreditGenerator />} />
