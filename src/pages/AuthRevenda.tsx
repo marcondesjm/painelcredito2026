@@ -192,15 +192,6 @@ const AuthRevenda = () => {
             </Button>
           </form>
 
-          <div className="text-center mt-4">
-            <button
-              type="button"
-              onClick={() => setIsLogin(!isLogin)}
-              className="text-sm text-muted-foreground hover:text-primary transition-colors"
-            >
-              {isLogin ? 'Não tem conta? Criar conta' : 'Já tem conta? Entrar'}
-            </button>
-          </div>
         </CardContent>
       </Card>
     </div>
