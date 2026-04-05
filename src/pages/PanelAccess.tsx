@@ -26,7 +26,7 @@ const PanelAccess = () => {
       {/* Right mask to hide edge artifacts */}
       <div className="absolute top-0 right-0 bottom-0 w-[50px] bg-[#0a0f1a] z-10" />
       {/* Bottom mask to hide footer/criar conta */}
-      <div className="absolute bottom-0 left-0 right-0 h-[120px] bg-[#0a0f1a] z-10" />
+      <div className="absolute bottom-0 left-0 right-0 h-[250px] bg-[#0a0f1a] z-10" />
       <div className="w-full h-full overflow-hidden">
         <iframe
           src="https://www.painelcreditoslovable.com/auth"
