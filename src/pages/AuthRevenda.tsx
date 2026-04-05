@@ -170,6 +170,7 @@ const AuthRevenda = () => {
                   placeholder="••••••••"
                   required
                   minLength={6}
+                  autoComplete="off"
                   className="bg-background/50 pr-10"
                 />
                 <button
