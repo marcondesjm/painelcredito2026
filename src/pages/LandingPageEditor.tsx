@@ -10,7 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, Save, Loader2, ExternalLink, Sparkles, Plus, Trash2, Eye, EyeOff, GripVertical, Check, RefreshCw, HelpCircle, Menu, MessageCircle } from 'lucide-react';
+import { ArrowLeft, Save, Loader2, ExternalLink, Sparkles, Plus, Trash2, Eye, EyeOff, GripVertical, Check, RefreshCw, HelpCircle, Menu, MessageCircle, Download } from 'lucide-react';
 import { toast } from 'sonner';
 import { ImageUpload } from '@/components/ImageUpload';
 import { EditorTour, triggerEditorTour } from '@/components/EditorTour';
