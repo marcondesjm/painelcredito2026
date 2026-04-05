@@ -1772,6 +1772,7 @@ const DynamicLandingPageInner = () => {
         fontFamily: fontBody,
       } as React.CSSProperties}
     >
+      <TopInfoBanner />
       {/* Fixed background */}
       <div 
         className="fixed inset-0 -z-20"
