@@ -46,7 +46,7 @@ const AuthRevenda = () => {
           }
         } else {
           toast.success('Login realizado com sucesso!');
-          navigate('/revenda');
+          navigate(redirectTo || '/revenda');
         }
       } else {
         const { error } = await signUp(email, password, fullName);
