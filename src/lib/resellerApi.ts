@@ -20,10 +20,12 @@ export async function createOrder(credits: number) {
 }
 
 export async function checkStatus(orderId: number) {
+  if (!orderId || isNaN(orderId)) return { ok: false, error: 'order_id inválido' }
   return callProxy({ action: 'check_status', order_id: orderId })
 }
 
 export async function getEvents(orderId: number) {
+  if (!orderId || isNaN(orderId)) return { ok: false, events: [], error: 'order_id inválido' }
   return callProxy({ action: 'get_events', order_id: orderId })
 }
 

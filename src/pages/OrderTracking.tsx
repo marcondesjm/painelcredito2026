@@ -101,6 +101,7 @@ const OrderTracking = () => {
   const poll = useCallback(async () => {
     if (!orderId) return
     const id = Number(orderId)
+    if (isNaN(id) || id <= 0) return
     const [statusRes, eventsRes] = await Promise.all([
       checkStatus(id),
       getEvents(id),
