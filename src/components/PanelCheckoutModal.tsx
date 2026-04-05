@@ -12,6 +12,16 @@ const PIX_NAME = 'Marcondes Jorge Machado'
 const PANEL_PRICE = 350
 const ORIGINAL_PRICE = 680
 
+const RESALE_PACKAGES = [
+  { credits: 50, price: 2.50 },
+  { credits: 100, price: 5.00 },
+  { credits: 500, price: 22.23, discount: '10%' },
+  { credits: 1000, price: 37.52, discount: '20%' },
+  { credits: 2000, price: 72.36, discount: '30%' },
+  { credits: 5000, price: 160.79, discount: '40%' },
+  { credits: 10000, price: 300.15, discount: '44%' },
+]
+
 function fmtR(n: number) {
   return n.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 }
