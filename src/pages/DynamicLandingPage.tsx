@@ -1219,7 +1219,7 @@ const DynamicLandingPageInner = () => {
                 handleSectionClick('cta');
                 return;
               }
-              handleCtaClick(page.hero_cta_link, navigate);
+              openHeroCheckout();
             }}
           >
             {page.hero_cta_text || 'Comprar Agora'}
