@@ -67,7 +67,7 @@ const CreditGenerator = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a1a] text-white relative overflow-x-hidden">
+    <div className="min-h-screen bg-[#0a0a1a] text-white relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent" />
 
       <div className="relative z-10 flex flex-col items-center min-h-screen px-4 py-8">
