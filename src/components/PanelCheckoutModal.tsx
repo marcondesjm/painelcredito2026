@@ -125,8 +125,8 @@ export const PanelCheckoutModal = ({ open, onClose }: PanelCheckoutModalProps) =
     }
 
     const { payload, qrCodeUrl } = generatePixQRCode({
-      pixKey: PIX_KEY,
-      merchantName: PIX_NAME,
+      pixKey: pixKey,
+      merchantName: pixName,
       amount: finalPrice,
       txId: 'PAINEL',
       description: 'Painel Gerador',
