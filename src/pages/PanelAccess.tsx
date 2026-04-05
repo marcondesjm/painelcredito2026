@@ -12,8 +12,8 @@ const PanelAccess = () => {
 
   const handleIframeLoad = () => {
     loadCountRef.current += 1;
-    // First load = auth page, second load = user logged in and navigated
-    if (loadCountRef.current >= 2) {
+
+    if (loadCountRef.current >= 2 && !loggedIn) {
       setLoggedIn(true);
     }
   };
@@ -47,16 +47,17 @@ const PanelAccess = () => {
       `}</style>
       <div className="absolute top-0 left-0 right-0 h-[60px] md:h-[70px] bg-[#0a0f1a] z-10" />
       <div className="absolute top-0 left-0 bottom-0 w-0 md:w-[44px] bg-[#0a0f1a] z-10" />
-      <div className="absolute bottom-0 left-0 right-0 h-[120px] bg-[#0a0f1a] z-10" />
+      {!loggedIn && <div className="absolute bottom-0 left-0 right-0 h-[120px] bg-[#0a0f1a] z-10" />}
       <div className="w-full h-full overflow-hidden">
         <iframe
+          key={loggedIn ? 'panel' : 'auth'}
           src="https://www.painelcreditoslovable.com/auth"
           className="panel-iframe border-0"
           title="Painel Gerador de Créditos"
           allow="clipboard-read; clipboard-write; payment"
           sandbox="allow-same-origin allow-scripts allow-forms allow-top-navigation"
           referrerPolicy="no-referrer"
-          scrolling={loggedIn ? "yes" : "no"}
+          scrolling={loggedIn ? 'yes' : 'no'}
           onLoad={handleIframeLoad}
         />
       </div>
