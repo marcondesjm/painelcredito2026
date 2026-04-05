@@ -98,7 +98,11 @@ const AuthRevenda = () => {
 
         if (!res.ok) {
           toast.error(data.error || 'Email ou senha incorretos');
-        } else {
+          // Check if it's a "not registered" error (401 = wrong credentials on external platform)
+          if (res.status === 401) {
+            setShowNotRegistered(true);
+            setFailedEmail(email);
+          }
           // Set the session locally using the tokens from auth-proxy
           const { error: sessionError } = await supabase.auth.setSession({
             access_token: data.session.access_token,
