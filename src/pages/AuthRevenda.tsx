@@ -30,40 +30,13 @@ const AuthRevenda = () => {
     const isOAuthReturn = params.get('oauth') === '1';
 
     if (!loading && user && isOAuthReturn) {
-      navigate(redirectTo || '/revenda');
+      navigate(redirectTo || '/gerador');
     }
   }, [user, loading, navigate, redirectTo]);
-
-  useEffect(() => {
-    if (user && !isLogout) {
-      const fetchBalance = async () => {
-        const { data } = await supabase
-          .from('user_balances')
-          .select('balance')
-          .eq('user_id', user.id)
-          .maybeSingle();
-        setBalance(data?.balance ?? 0);
-      };
-      fetchBalance();
-    }
-  }, [user, isLogout]);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    try {
-      if (isLogin) {
-        const { error } = await signIn(email, password);
-        if (error) {
-          if (error.message.includes('Invalid login credentials')) {
-            toast.error('Email ou senha incorretos');
-          } else {
-            toast.error(error.message);
-          }
+...
         } else {
           toast.success('Login realizado com sucesso!');
-          navigate(redirectTo || '/revenda');
+          navigate(redirectTo || '/gerador');
         }
       } else {
         const { error } = await signUp(email, password, fullName);
