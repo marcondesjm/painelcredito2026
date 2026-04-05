@@ -27,6 +27,7 @@ import { PricingTiersSection, PricingTier } from '@/components/PricingTiersSecti
 import { CheckoutModal } from '@/components/CheckoutModal';
 import { RechargeInfoSection } from '@/components/RechargeInfoSection';
 import { PanelCheckoutModal } from '@/components/PanelCheckoutModal';
+import { ResellerValuesModal } from '@/components/ResellerValuesModal';
 
 import { APP_VERSION, LAST_UPDATE } from '@/config/version';
 import { TopInfoBanner } from '@/components/TopInfoBanner';
@@ -218,6 +219,7 @@ const DynamicLandingPageInner = () => {
   const [panelCheckoutOpen, setPanelCheckoutOpen] = useState(false);
   
   const [showVideoPopup, setShowVideoPopup] = useState(false);
+  const [showReseller, setShowReseller] = useState(false);
 
   // Open PanelCheckoutModal (same as admin homepage)
   const openHeroCheckout = () => {
@@ -831,10 +833,7 @@ const DynamicLandingPageInner = () => {
               <button
                 type="button"
                 className="inline-flex items-center gap-2 bg-[hsl(var(--dynamic-primary))]/10 border border-[hsl(var(--dynamic-primary))]/30 rounded-xl px-5 py-3 cursor-pointer hover:bg-[hsl(var(--dynamic-primary))]/20 transition-colors"
-                onClick={() => {
-                  const el = document.getElementById('pacotes');
-                  if (el) el.scrollIntoView({ behavior: 'smooth' });
-                }}
+                onClick={() => setShowReseller(true)}
               >
                 <span className="text-lg">👀</span>
                 <div className="flex flex-col items-start">
@@ -2097,6 +2096,7 @@ const DynamicLandingPageInner = () => {
         pixQrBase={(page as any).pix_qr_base || ''}
       />
       <PanelCheckoutModal open={panelCheckoutOpen} onClose={() => setPanelCheckoutOpen(false)} customPrice={page.price_current || undefined} customOriginalPrice={page.price_original || undefined} />
+      <ResellerValuesModal open={showReseller} onOpenChange={setShowReseller} />
     </div>
   );
 };

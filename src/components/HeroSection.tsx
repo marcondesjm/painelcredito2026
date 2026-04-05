@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { CountdownTimer } from './CountdownTimer';
 import { TrustBadge } from './TrustBadge';
 import { PanelCheckoutModal } from './PanelCheckoutModal';
+import { ResellerValuesModal } from './ResellerValuesModal';
 import { Zap, Shield, ChevronDown, RefreshCw, CreditCard, Play, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import productPainel from '@/assets/product-painel.png';
@@ -14,6 +15,7 @@ export const HeroSection = () => {
   const navigate = useNavigate();
   const [showCheckout, setShowCheckout] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
+  const [showReseller, setShowReseller] = useState(false);
   
   const { settings } = useHomepageSettings();
   const { hero } = settings;
@@ -146,6 +148,7 @@ export const HeroSection = () => {
                 🎬 Assista aqui como funciona
               </button>
               <PanelCheckoutModal open={showCheckout} onClose={() => setShowCheckout(false)} />
+              <ResellerValuesModal open={showReseller} onOpenChange={setShowReseller} />
             </div>
 
             {/* Video Popup */}
@@ -177,7 +180,7 @@ export const HeroSection = () => {
               <button
                 type="button"
                 className="inline-flex items-center gap-2 bg-primary/10 border border-primary/30 rounded-xl px-5 py-3 cursor-pointer hover:bg-primary/20 transition-colors"
-                onClick={() => navigate('/x7k9m2p4')}
+                onClick={() => setShowReseller(true)}
               >
                 <span className="text-lg">👀</span>
                 <div className="flex flex-col items-start">
