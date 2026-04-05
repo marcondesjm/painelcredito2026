@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { CountdownTimer } from './CountdownTimer';
 import { TrustBadge } from './TrustBadge';
+import { PanelCheckoutModal } from './PanelCheckoutModal';
 import { Zap, Shield, Headphones, ChevronDown, RefreshCw, CreditCard } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import productPainel from '@/assets/product-painel.png';
@@ -10,6 +12,7 @@ import { useLanguage } from '@/hooks/useLanguage';
 
 export const HeroSection = () => {
   const navigate = useNavigate();
+  const [showCheckout, setShowCheckout] = useState(false);
   const { settings } = useHomepageSettings();
   const { hero } = settings;
   const { t, language } = useLanguage();
@@ -129,11 +132,12 @@ export const HeroSection = () => {
               <Button
                 size="xl"
                 className="text-base sm:text-lg font-bold py-5 px-8 bg-accent hover:bg-accent/90 text-accent-foreground shadow-[0_0_30px_hsl(var(--accent)_/_0.4)] hover:shadow-[0_0_50px_hsl(var(--accent)_/_0.6)] transition-all hover:scale-105"
-                onClick={() => navigate('/authrevenda?redirect=/gerador?pay=1')}
+                onClick={() => setShowCheckout(true)}
               >
                 <CreditCard className="w-5 h-5" />
                 Comprar Painel — R$ 350,00
               </Button>
+              <PanelCheckoutModal open={showCheckout} onClose={() => setShowCheckout(false)} />
             </div>
 
             <div className="flex flex-col items-center lg:items-start gap-2 mb-4">
