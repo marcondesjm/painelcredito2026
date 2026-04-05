@@ -12,7 +12,7 @@ export const TopInfoBanner = () => {
         <div className="flex-1 flex items-center justify-center gap-2">
           <ShoppingCart className="w-4 h-4 text-accent shrink-0" />
           <p className="text-xs sm:text-sm font-bold text-accent leading-tight text-center">
-            Compre a ativação e comece a gerar créditos agora!
+            Compre a ativação do painel e ganhe uma landing page igual a essa pra revender seus créditos
           </p>
         </div>
         <button
