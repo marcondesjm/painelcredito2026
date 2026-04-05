@@ -11,9 +11,7 @@ import { Eye, EyeOff, Loader2, Zap, LogOut, Coins, ShoppingCart, MessageCircle }
 import { PanelCheckoutModal } from '@/components/PanelCheckoutModal';
 
 const AuthRevenda2 = () => {
-  const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
