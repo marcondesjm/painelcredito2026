@@ -5,23 +5,22 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
 import { useAuth } from '@/hooks/useAuth';
+// signUp removed - account creation is done externally
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Eye, EyeOff, Loader2, Zap, LogOut, Coins, ShoppingCart, MessageCircle } from 'lucide-react';
 import { PanelCheckoutModal } from '@/components/PanelCheckoutModal';
 
 const AuthRevenda2 = () => {
-  const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [fullName, setFullName] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showNotRegistered, setShowNotRegistered] = useState(false);
   const [failedEmail, setFailedEmail] = useState('');
   const [showCheckoutModal, setShowCheckoutModal] = useState(false);
   const [balance, setBalance] = useState<number | null>(null);
-  const { signIn, signUp, signOut, user, loading } = useAuth();
+  const { signOut, user, loading } = useAuth();
   const navigate = useNavigate();
 
   const redirectTo = new URLSearchParams(window.location.search).get('redirect');
@@ -48,52 +47,36 @@ const AuthRevenda2 = () => {
     setFailedEmail('');
 
     try {
-      if (isLogin) {
-        const proxyUrl = `https://${import.meta.env.VITE_SUPABASE_PROJECT_ID}.supabase.co/functions/v1/auth-proxy`;
-        const res = await fetch(proxyUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password }),
-        });
+      const proxyUrl = `https://${import.meta.env.VITE_SUPABASE_PROJECT_ID}.supabase.co/functions/v1/auth-proxy`;
+      const res = await fetch(proxyUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
 
-        const data = await res.json();
+      const data = await res.json();
 
-        if (!res.ok) {
-          toast.error(data.error || 'Email ou senha incorretos');
-
-          if (res.status === 401) {
-            setShowNotRegistered(true);
-            setFailedEmail(email);
-          }
-
-          return;
+      if (!res.ok) {
+        toast.error(data.error || 'Email ou senha incorretos');
+        if (res.status === 401) {
+          setShowNotRegistered(true);
+          setFailedEmail(email);
         }
-
-        const { error: sessionError } = await supabase.auth.setSession({
-          access_token: data.session.access_token,
-          refresh_token: data.session.refresh_token,
-        });
-
-        if (sessionError) {
-          toast.error('Erro ao estabelecer sessão');
-          return;
-        }
-
-        toast.success('Login realizado com sucesso!');
-        navigate(redirectTo || '/gerador');
         return;
       }
 
-      const { error } = await signUp(email, password, fullName);
-      if (error) {
-        if (error.message.includes('already registered')) {
-          toast.error('Este email já está cadastrado');
-        } else {
-          toast.error(error.message);
-        }
-      } else {
-        toast.success('Conta criada! Verifique seu email para confirmar.');
+      const { error: sessionError } = await supabase.auth.setSession({
+        access_token: data.session.access_token,
+        refresh_token: data.session.refresh_token,
+      });
+
+      if (sessionError) {
+        toast.error('Erro ao estabelecer sessão');
+        return;
       }
+
+      toast.success('Login realizado com sucesso!');
+      navigate(redirectTo || '/gerador');
     } catch (err) {
       toast.error('Ocorreu um erro. Tente novamente.');
     } finally {
@@ -257,26 +240,11 @@ const AuthRevenda2 = () => {
               Gerador de Créditos
             </h1>
             <p className="text-sm text-white/50 mt-1">
-              {isLogin ? 'Faça login para acessar o gerador' : 'Crie sua conta para começar'}
+              Faça login para acessar o gerador
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            {!isLogin && (
-              <div className="space-y-2">
-                <Label htmlFor="fullName" className="text-white">Nome completo</Label>
-                <Input
-                  id="fullName"
-                  type="text"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  placeholder="Seu nome"
-                  required={!isLogin}
-                  className="bg-white/5 border-white/10 text-white placeholder:text-white/30"
-                />
-              </div>
-            )}
-
             <div className="space-y-2">
               <Label htmlFor="email" className="text-white">Email</Label>
               <Input
@@ -321,19 +289,9 @@ const AuthRevenda2 = () => {
               disabled={isSubmitting}
             >
               {isSubmitting && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
-              {isLogin ? 'Entrar' : 'Criar Conta'}
+              Entrar
             </Button>
           </form>
-
-          <div className="mt-4 text-center">
-            <button
-              type="button"
-              onClick={() => setIsLogin(!isLogin)}
-              className="text-sm text-white/50 hover:text-white transition-colors"
-            >
-              {isLogin ? 'Não tem conta? Criar conta' : 'Já tem conta? Entrar'}
-            </button>
-          </div>
         </CardContent>
       </Card>
     </div>
