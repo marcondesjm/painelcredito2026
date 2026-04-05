@@ -814,7 +814,7 @@ const DynamicLandingPageInner = () => {
                           borderColor: `hsl(${primaryHsl} / 0.3)`,
                           backgroundColor: `hsl(${primaryHsl} / 0.1)`
                         }}
-                        onClick={() => handleCtaClick(page.hero_cta_link, navigate)}
+                        onClick={() => openHeroCheckout()}
                       >
                         <RefreshCw className="w-4 h-4" style={{ color: `hsl(${primaryHsl})` }} />
                         <span className="text-sm sm:text-base font-bold" style={{ color: `hsl(${primaryHsl})` }}>
