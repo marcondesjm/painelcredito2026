@@ -2055,6 +2055,7 @@ const DynamicLandingPageInner = () => {
         pixName={(page as any).pix_name || ''}
         pixQrBase={(page as any).pix_qr_base || ''}
       />
+      <PanelCheckoutModal open={panelCheckoutOpen} onClose={() => setPanelCheckoutOpen(false)} />
     </div>
   );
 };
