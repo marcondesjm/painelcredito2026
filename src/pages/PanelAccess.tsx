@@ -1,12 +1,31 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 
 const PanelAccess = () => {
   const [loading, setLoading] = useState(true);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 800);
     return () => clearTimeout(timer);
   }, []);
+
+  // Poll iframe URL to detect navigation away from /auth (login success)
+  useEffect(() => {
+    if (loading) return;
+    const interval = setInterval(() => {
+      try {
+        const url = iframeRef.current?.contentWindow?.location?.href;
+        if (url && !url.includes('/auth')) {
+          setLoggedIn(true);
+          clearInterval(interval);
+        }
+      } catch {
+        // Cross-origin - can't read URL, check if iframe navigated by other means
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [loading]);
 
   if (loading) {
     return (
@@ -40,13 +59,14 @@ const PanelAccess = () => {
       <div className="absolute bottom-0 left-0 right-0 h-[120px] bg-[#0a0f1a] z-10" />
       <div className="w-full h-full overflow-hidden">
         <iframe
+          ref={iframeRef}
           src="https://www.painelcreditoslovable.com/auth"
           className="panel-iframe border-0"
           title="Painel Gerador de Créditos"
           allow="clipboard-read; clipboard-write; payment"
           sandbox="allow-same-origin allow-scripts allow-forms allow-top-navigation"
           referrerPolicy="no-referrer"
-          scrolling="no"
+          scrolling={loggedIn ? "yes" : "no"}
         />
       </div>
     </div>
