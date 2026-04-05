@@ -179,7 +179,7 @@ export const HeroSection = () => {
               <button
                 type="button"
                 className="inline-flex items-center gap-2 bg-primary/10 border border-primary/30 rounded-xl px-5 py-3 cursor-pointer hover:bg-primary/20 transition-colors"
-                onClick={() => navigate('/x7k9m2p4')}
+                onClick={() => setShowReseller(true)}
               >
                 <span className="text-lg">👀</span>
                 <div className="flex flex-col items-start">
