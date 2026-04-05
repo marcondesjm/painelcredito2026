@@ -9,7 +9,7 @@ import { supabase } from '@/integrations/supabase/client'
 
 const PIX_KEY = '+5548996029392'
 const PIX_NAME = 'Marcondes Jorge Machado'
-const PANEL_PRICE = 350
+const PANEL_PRICE = 199
 const ORIGINAL_PRICE = 680
 
 const RESALE_PACKAGES = [
