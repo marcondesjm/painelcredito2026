@@ -29,9 +29,13 @@ function fmtR(n: number) {
 interface PanelCheckoutModalProps {
   open: boolean
   onClose: () => void
+  customPrice?: number
+  customOriginalPrice?: number
 }
 
-export const PanelCheckoutModal = ({ open, onClose }: PanelCheckoutModalProps) => {
+export const PanelCheckoutModal = ({ open, onClose, customPrice, customOriginalPrice }: PanelCheckoutModalProps) => {
+  const activePrice = customPrice ?? PANEL_PRICE
+  const activeOriginalPrice = customOriginalPrice ?? ORIGINAL_PRICE
   const [step, setStep] = useState<1 | 2 | 3>(1)
   const [showResaleValues, setShowResaleValues] = useState(false)
   // Step 3 form
