@@ -19,21 +19,23 @@ const PanelAccess = () => {
 
   return (
     <div className="fixed inset-0 bg-[#0a0f1a] overflow-hidden">
-      {/* Top mask to hide promo banner */}
-      <div className="absolute top-0 left-0 right-0 h-[40px] bg-[#0a0f1a] z-10" />
-      {/* Left mask to hide sidebar after login */}
-      <div className="absolute top-0 left-0 bottom-0 w-[250px] bg-[#0a0f1a] z-10" />
-      {/* Bottom mask to hide "Criar conta" link */}
+      {/* Top mask to hide nav bar */}
+      <div className="absolute top-0 left-0 right-0 h-[100px] bg-[#0a0f1a] z-10" />
+      {/* Left mask to hide sidebar */}
+      <div className="absolute top-0 left-0 bottom-0 w-[100px] bg-[#0a0f1a] z-10" />
+      {/* Right mask to hide edge artifacts */}
+      <div className="absolute top-0 right-0 bottom-0 w-[50px] bg-[#0a0f1a] z-10" />
+      {/* Bottom mask to hide footer/criar conta */}
       <div className="absolute bottom-0 left-0 right-0 h-[120px] bg-[#0a0f1a] z-10" />
       <div className="w-full h-full overflow-hidden">
         <iframe
           src="https://www.painelcreditoslovable.com/auth"
           className="border-0"
           style={{
-            width: 'calc(100% + 250px)',
-            height: 'calc(100% + 100px)',
-            marginTop: '-40px',
-            marginLeft: '-250px',
+            width: 'calc(100% + 100px)',
+            height: 'calc(100% + 220px)',
+            marginTop: '-100px',
+            marginLeft: '-100px',
           }}
           title="Painel Gerador de Créditos"
           allow="clipboard-read; clipboard-write; payment"
