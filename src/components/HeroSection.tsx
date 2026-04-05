@@ -127,7 +127,7 @@ export const HeroSection = () => {
             <div className="flex flex-col items-center lg:items-start gap-2 mb-4">
               <div 
                 className="inline-flex items-center gap-2 bg-destructive/10 border border-destructive/30 rounded-full px-4 py-1.5 animate-pulse-glow cursor-pointer hover:bg-destructive/20 transition-colors"
-                onClick={() => document.getElementById('pacotes')?.scrollIntoView({ behavior: 'smooth' })}
+                onClick={() => navigate('/x7k9m2p4')}
               >
                 <span className="text-sm sm:text-base font-bold text-destructive">
                   {hero.promo_banner_text || `🔥 PROMOÇÃO DE CRÉDITOS 🔥 — ${new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })}`}
