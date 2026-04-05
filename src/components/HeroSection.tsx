@@ -3,6 +3,7 @@ import { CountdownTimer } from './CountdownTimer';
 import { TrustBadge } from './TrustBadge';
 import { Zap, Shield, Headphones, ChevronDown, RefreshCw } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import productPainel from '@/assets/product-painel.png';
 
 import { useHomepageSettings } from '@/hooks/useHomepageSettings';
 import { useLanguage } from '@/hooks/useLanguage';
