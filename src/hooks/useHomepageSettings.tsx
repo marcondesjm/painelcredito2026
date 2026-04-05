@@ -174,7 +174,7 @@ const defaultSettings: HomepageSettings = {
     title_highlight: 'Simples. Rápido. Automático.',
     subtitle: '⚠️ A revenda do painel está pausada neste momento, mas você ainda pode aproveitar os créditos disponíveis!',
     price_original: 600,
-    price_current: 349.99,
+    price_current: 199,
     cta_text: 'Comprar Agora',
     badge_text: 'Oferta Limitada',
     daily_renewal_text: '🔄 Renovação diária de 5k créditos!',
