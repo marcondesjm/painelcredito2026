@@ -154,6 +154,7 @@ const AuthRevenda = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="seu@email.com"
                 required
+                autoComplete="off"
                 className="bg-background/50"
               />
             </div>
