@@ -132,11 +132,12 @@ export const HeroSection = () => {
               <Button
                 size="xl"
                 className="text-base sm:text-lg font-bold py-5 px-8 bg-accent hover:bg-accent/90 text-accent-foreground shadow-[0_0_30px_hsl(var(--accent)_/_0.4)] hover:shadow-[0_0_50px_hsl(var(--accent)_/_0.6)] transition-all hover:scale-105"
-                onClick={() => navigate('/authrevenda?redirect=/gerador?pay=1')}
+                onClick={() => setShowCheckout(true)}
               >
                 <CreditCard className="w-5 h-5" />
                 Comprar Painel — R$ 350,00
               </Button>
+              <PanelCheckoutModal open={showCheckout} onClose={() => setShowCheckout(false)} />
             </div>
 
             <div className="flex flex-col items-center lg:items-start gap-2 mb-4">
