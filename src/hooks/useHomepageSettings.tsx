@@ -81,6 +81,7 @@ interface SectionsVisibility {
   why_choose: boolean;
   how_it_works: boolean;
   video: boolean;
+  video_hide_controls: boolean;
   secure_purchase: boolean;
   testimonials: boolean;
   guarantee: boolean;
@@ -238,6 +239,7 @@ const defaultSettings: HomepageSettings = {
     why_choose: true,
     how_it_works: true,
     video: true,
+    video_hide_controls: true,
     secure_purchase: true,
     testimonials: true,
     guarantee: true,

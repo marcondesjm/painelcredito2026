@@ -492,6 +492,7 @@ export const HomepageEditor = () => {
                 { key: 'why_choose' as const, label: '✅ Por que Escolher' },
                 { key: 'how_it_works' as const, label: '🔧 Como Funciona' },
                 { key: 'video' as const, label: '🎬 Vídeo' },
+                { key: 'video_hide_controls' as const, label: '🎮 Ocultar Comandos do Vídeo' },
                 { key: 'secure_purchase' as const, label: '🛡️ Compra Segura' },
                 { key: 'testimonials' as const, label: '💬 Depoimentos' },
                 { key: 'guarantee' as const, label: '🏅 Garantia' },

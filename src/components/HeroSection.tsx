@@ -171,7 +171,7 @@ export const HeroSection = () => {
                   </button>
                   <div className="relative w-full overflow-hidden" style={{ paddingBottom: '56.25%' }}>
                     <iframe
-                      src="https://www.youtube.com/embed/l0ENT4d8DFY?autoplay=1&rel=0&controls=0&modestbranding=1&showinfo=0&iv_load_policy=3&disablekb=1"
+                      src={`https://www.youtube.com/embed/l0ENT4d8DFY?autoplay=1&rel=0&modestbranding=1&showinfo=0&iv_load_policy=3&disablekb=1${settings.sections_visibility.video_hide_controls ? '&controls=0' : '&controls=1'}`}
                       className="absolute inset-0 w-full border-0"
                       style={{ height: 'calc(100% + 120px)', top: '-60px' }}
                       allow="autoplay; encrypted-media"
