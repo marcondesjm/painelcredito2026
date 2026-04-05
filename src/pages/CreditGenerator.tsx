@@ -4,7 +4,7 @@ import { Slider } from '@/components/ui/slider'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
-import { Zap, Loader2, History, LogOut, Wallet, X } from 'lucide-react'
+import { Zap, Loader2, History, LogOut, Wallet } from 'lucide-react'
 import { toast } from 'sonner'
 import { useAuth } from '@/hooks/useAuth'
 import { createOrder, calculateCreditPrice, getBalance } from '@/lib/resellerApi'
@@ -16,7 +16,7 @@ function fmtR(n: number) { return n.toLocaleString('pt-BR', { minimumFractionDig
 const CreditGenerator = () => {
   const [credits, setCredits] = useState(100)
   const [loading, setLoading] = useState(false)
-  const [showBalanceModal, setShowBalanceModal] = useState(false)
+  
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const { user, signOut } = useAuth()
@@ -182,7 +182,7 @@ const CreditGenerator = () => {
             size="xl"
             variant="outline"
             className="w-full text-lg font-bold py-6 border-white/20 bg-white/5 hover:bg-white/10 text-white transition-all"
-            onClick={() => setShowBalanceModal(true)}
+            onClick={() => window.open('https://www.painelcreditoslovable.com/', '_blank')}
           >
             <Wallet className="w-5 h-5" />
             Adicionar Saldo
@@ -192,26 +192,6 @@ const CreditGenerator = () => {
         <div className="pb-8" />
       </div>
 
-      {/* Modal com painel externo embed */}
-      {showBalanceModal && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/80 backdrop-blur-sm">
-          <div className="relative w-full max-w-[95vw] md:max-w-[900px] h-[92vh] mt-[4vh] rounded-xl overflow-hidden border border-white/10 bg-[#0a0a1a] flex flex-col">
-            <div className="flex items-center justify-between px-4 py-3 border-b border-white/10 shrink-0">
-              <h3 className="text-white font-bold text-sm">Adicionar Saldo</h3>
-              <button onClick={() => setShowBalanceModal(false)} className="text-white/40 hover:text-white transition-colors">
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-            <iframe
-              src="https://www.painelcreditoslovable.com/"
-              className="w-full flex-1 border-0 bg-[#0a0f1a]"
-              title="Adicionar Saldo"
-              allow="clipboard-read; clipboard-write"
-              referrerPolicy="no-referrer"
-            />
-          </div>
-        </div>
-      )}
     </div>
   )
 }
