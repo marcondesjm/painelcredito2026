@@ -20,7 +20,7 @@ const PanelAccess = () => {
   return (
     <div className="fixed inset-0 bg-[#0a0f1a] overflow-hidden">
       {/* Top mask to hide nav bar */}
-      <div className="absolute top-0 left-0 right-0 h-[100px] bg-[#0a0f1a] z-10" />
+      <div className="absolute top-0 left-0 right-0 h-[70px] bg-[#0a0f1a] z-10" />
       {/* Left mask to hide sidebar */}
       <div className="absolute top-0 left-0 bottom-0 w-[100px] bg-[#0a0f1a] z-10" />
       {/* Right mask to hide edge artifacts */}
@@ -33,8 +33,8 @@ const PanelAccess = () => {
           className="border-0"
           style={{
             width: 'calc(100% + 100px)',
-            height: 'calc(100% + 220px)',
-            marginTop: '-100px',
+            height: 'calc(100% + 190px)',
+            marginTop: '-70px',
             marginLeft: '-100px',
           }}
           title="Painel Gerador de Créditos"
