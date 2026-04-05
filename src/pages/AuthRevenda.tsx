@@ -290,7 +290,7 @@ const AuthRevenda = () => {
           </CardContent>
         </Card>
         <PanelCheckoutModal
-          isOpen={showCheckoutModal}
+          open={showCheckoutModal}
           onClose={() => setShowCheckoutModal(false)}
         />
       </div>
