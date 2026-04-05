@@ -138,8 +138,38 @@ export const HeroSection = () => {
                 <CreditCard className="w-5 h-5" />
                 Comprar Painel — R$ 199,00
               </Button>
+              <button
+                type="button"
+                className="inline-flex items-center gap-2 text-primary font-semibold text-sm sm:text-base hover:underline hover:opacity-90 transition-all"
+                onClick={() => setShowVideo(true)}
+              >
+                <Play className="w-4 h-4 fill-primary" />
+                🎬 Assista aqui como funciona
+              </button>
               <PanelCheckoutModal open={showCheckout} onClose={() => setShowCheckout(false)} />
             </div>
+
+            {/* Video Popup */}
+            {showVideo && (
+              <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4" onClick={() => setShowVideo(false)}>
+                <div className="relative w-full max-w-3xl aspect-video rounded-2xl overflow-hidden shadow-2xl" onClick={(e) => e.stopPropagation()}>
+                  <button
+                    type="button"
+                    className="absolute -top-10 right-0 text-white hover:text-primary transition-colors z-10"
+                    onClick={() => setShowVideo(false)}
+                  >
+                    <X className="w-8 h-8" />
+                  </button>
+                  <iframe
+                    src="https://www.youtube.com/embed/l0ENT4d8DFY?autoplay=1&rel=0"
+                    className="w-full h-full"
+                    allow="autoplay; encrypted-media"
+                    allowFullScreen
+                    title="Como funciona"
+                  />
+                </div>
+              </div>
+            )}
 
             <div className="flex flex-col items-center lg:items-start gap-2 mb-4">
               <button
