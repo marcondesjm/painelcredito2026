@@ -766,12 +766,6 @@ const DynamicLandingPageInner = () => {
                 <Shield className="w-4 h-4" style={{ color: page.color_icons || '#8B5CF6' }} />
                 <span className="text-sm text-muted-foreground">Pagamento Seguro</span>
               </div>
-              <button onClick={() => setShowReseller(true)} className="flex items-center gap-2 bg-card/80 border border-border/50 rounded-full px-4 py-2.5 backdrop-blur-sm transition-all hover:bg-card hover:scale-105 cursor-pointer" style={{ borderColor: `hsl(${accentHsl} / 0.5)` }}>
-                <Eye className="w-4 h-4" style={{ color: `hsl(${accentHsl})` }} />
-                <span className="text-sm sm:text-base">👀</span>
-                <div className="text-left">
-                  <p className="text-xs sm:text-sm font-bold leading-tight" style={{ color: `hsl(${accentHsl})` }}>Veja os valores de revenda aqui</p>
-                  <p className="text-[10px] sm:text-xs text-muted-foreground leading-tight">Clique para ver quanto você pode lucrar</p>
                 </div>
               </button>
             </div>
