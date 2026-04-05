@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Clock } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useHomepageSettings } from '@/hooks/useHomepageSettings';
 
