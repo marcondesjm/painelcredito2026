@@ -177,6 +177,7 @@ const defaultData: LandingPageData = {
   video_title: '🎬 Como Funciona',
   video_url: 'https://www.youtube.com/watch?v=2y0v-XQyPoM',
   video_thumbnail: '/defaults/video-thumbnail.jpg',
+  video_hide_controls: true,
   donation_enabled: true,
   donation_title: '💚 Apoie o Desenvolvedor',
   donation_description: 'Gostou do sistema? Considere fazer uma doação via PIX para ajudar no desenvolvimento!',
