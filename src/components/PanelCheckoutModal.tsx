@@ -301,7 +301,7 @@ ${couponApplied ? `• Cupom: ${coupon.trim().toUpperCase()}` : ''}
                 <h3 className="text-xs font-bold tracking-widest uppercase text-muted-foreground">Resumo do Pedido</h3>
                 <div className="flex justify-between text-sm">
                   <span className="flex items-center gap-2"><CreditCard className="w-4 h-4 text-accent" /> Painel Completo:</span>
-                  <span className="font-bold">Vitalício</span>
+                  <span className="font-bold">✓ Incluído</span>
                 </div>
                 <div className="border-t border-border pt-2 flex justify-between items-center">
                   <span className="font-bold">Valor a Pagar:</span>
