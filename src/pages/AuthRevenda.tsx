@@ -18,6 +18,8 @@ const AuthRevenda = () => {
   const [fullName, setFullName] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showNotRegistered, setShowNotRegistered] = useState(false);
+  const [failedEmail, setFailedEmail] = useState('');
   const [balance, setBalance] = useState<number | null>(null);
   const { signIn, signUp, signOut, user, loading } = useAuth();
   const navigate = useNavigate();
