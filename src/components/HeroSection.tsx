@@ -15,6 +15,7 @@ export const HeroSection = () => {
   const navigate = useNavigate();
   const [showCheckout, setShowCheckout] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
+  const [showReseller, setShowReseller] = useState(false);
   
   const { settings } = useHomepageSettings();
   const { hero } = settings;
