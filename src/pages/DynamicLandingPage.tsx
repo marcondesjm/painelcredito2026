@@ -19,7 +19,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Loader2, Star, Check, Shield, Clock, ArrowRight, MessageCircle, Zap, Headphones, UserPlus, LogOut, Menu, RefreshCw, Heart, Award, Mail, Phone, LockKeyhole, ChevronDown, Trash2 } from 'lucide-react';
+import { Loader2, Star, Check, Shield, Clock, ArrowRight, MessageCircle, Zap, Headphones, UserPlus, LogOut, Menu, RefreshCw, Heart, Award, Mail, Phone, LockKeyhole, ChevronDown, Trash2, CreditCard, Eye, Play, X as XIcon } from 'lucide-react';
 import { CountdownTimer } from '@/components/CountdownTimer';
 import { SocialProofNotification } from '@/components/SocialProofNotification';
 import { WhatsAppButton } from '@/components/WhatsAppButton';
@@ -27,6 +27,7 @@ import { PricingTiersSection, PricingTier } from '@/components/PricingTiersSecti
 import { CheckoutModal } from '@/components/CheckoutModal';
 import { RechargeInfoSection } from '@/components/RechargeInfoSection';
 import { PanelCheckoutModal } from '@/components/PanelCheckoutModal';
+import { ResellerValuesModal } from '@/components/ResellerValuesModal';
 import { APP_VERSION, LAST_UPDATE } from '@/config/version';
 import { TopInfoBanner } from '@/components/TopInfoBanner';
 import backgroundHero from '@/assets/background-hero.png';
@@ -215,6 +216,8 @@ const DynamicLandingPageInner = () => {
   const [checkoutModalOpen, setCheckoutModalOpen] = useState(false);
   const [selectedTier, setSelectedTier] = useState<PricingTier | null>(null);
   const [panelCheckoutOpen, setPanelCheckoutOpen] = useState(false);
+  const [showReseller, setShowReseller] = useState(false);
+  const [showVideoPopup, setShowVideoPopup] = useState(false);
 
   // Open PanelCheckoutModal (same as admin homepage)
   const openHeroCheckout = () => {
@@ -753,29 +756,110 @@ const DynamicLandingPageInner = () => {
               </p>
             )}
 
-            {/* CTA Button */}
-            <div className="mb-6">
-              <Button 
-                size="lg" 
-                className="w-full sm:w-auto min-w-[200px] text-lg px-8 text-white"
+            {/* Trust badges + Reseller values button */}
+            <div className="flex flex-wrap justify-center lg:justify-start gap-2 sm:gap-3 mb-4">
+              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-card/50 backdrop-blur-sm border border-border/50">
+                <Zap className="w-4 h-4" style={{ color: page.color_icons || '#8B5CF6' }} />
+                <span className="text-sm text-muted-foreground">Entrega Automática</span>
+              </div>
+              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-card/50 backdrop-blur-sm border border-border/50">
+                <Shield className="w-4 h-4" style={{ color: page.color_icons || '#8B5CF6' }} />
+                <span className="text-sm text-muted-foreground">Pagamento Seguro</span>
+              </div>
+              <button onClick={() => setShowReseller(true)} className="flex items-center gap-2 bg-card/80 border border-border/50 rounded-full px-4 py-2.5 backdrop-blur-sm transition-all hover:bg-card hover:scale-105 cursor-pointer" style={{ borderColor: `hsl(${accentHsl} / 0.5)` }}>
+                <Eye className="w-4 h-4" style={{ color: `hsl(${accentHsl})` }} />
+                <span className="text-sm sm:text-base">👀</span>
+                <div className="text-left">
+                  <p className="text-xs sm:text-sm font-bold leading-tight" style={{ color: `hsl(${accentHsl})` }}>Veja os valores de revenda aqui</p>
+                  <p className="text-[10px] sm:text-xs text-muted-foreground leading-tight">Clique para ver quanto você pode lucrar</p>
+                </div>
+              </button>
+            </div>
+
+            {/* Buy Panel Button */}
+            <div className="flex flex-col items-center lg:items-start gap-3 mb-4">
+              <Button
+                size="lg"
+                className="text-base sm:text-lg font-bold py-5 px-8 text-white shadow-lg hover:scale-105 transition-all"
                 style={{ 
-                  backgroundColor: `hsl(${primaryHsl})`,
-                  boxShadow: `0 0 20px hsl(${primaryHsl} / 0.4)`
+                  backgroundColor: `hsl(${accentHsl})`,
+                  boxShadow: `0 0 30px hsl(${accentHsl} / 0.4)`
                 }}
                 onClick={() => openHeroCheckout()}
               >
-                {page.hero_cta_text || 'Comprar Agora'}
+                <CreditCard className="w-5 h-5" />
+                Comprar Painel — R$ {(page.price_current || 199).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
               </Button>
+              {page.video_url && (
+                <button
+                  type="button"
+                  className="inline-flex items-center gap-2 font-semibold text-sm sm:text-base hover:underline hover:opacity-90 transition-all"
+                  style={{ color: `hsl(${primaryHsl})` }}
+                  onClick={() => setShowVideoPopup(true)}
+                >
+                  <Play className="w-4 h-4" style={{ fill: `hsl(${primaryHsl})` }} />
+                  🎬 Assista aqui como funciona
+                </button>
+              )}
             </div>
 
-            {/* Prices section - matching admin layout */}
+            {/* Video Popup */}
+            {showVideoPopup && page.video_url && (() => {
+              const getYTUrl = (url: string) => {
+                if (url.includes('youtu.be')) return `https://www.youtube.com/embed/${url.split('/').pop()?.split('?')[0]}`;
+                if (url.includes('youtube.com/watch')) return `https://www.youtube.com/embed/${new URLSearchParams(url.split('?')[1]).get('v')}`;
+                return null;
+              };
+              const ytUrl = getYTUrl(page.video_url);
+              return (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4" onClick={() => setShowVideoPopup(false)}>
+                  <div className="relative w-full max-w-3xl rounded-2xl overflow-hidden shadow-2xl" onClick={(e) => e.stopPropagation()}>
+                    <button type="button" className="absolute -top-10 right-0 text-white hover:opacity-70 transition-colors z-10" onClick={() => setShowVideoPopup(false)}>
+                      <XIcon className="w-8 h-8" />
+                    </button>
+                    <div className="relative w-full overflow-hidden" style={{ paddingBottom: '56.25%' }}>
+                      {ytUrl ? (
+                        <iframe
+                          src={`${ytUrl}?autoplay=1&rel=0&modestbranding=1${page.video_hide_controls ? '&controls=0' : ''}`}
+                          className="absolute inset-0 w-full h-full border-0"
+                          allow="autoplay; encrypted-media"
+                          allowFullScreen
+                          title="Como funciona"
+                        />
+                      ) : (
+                        <video src={page.video_url} className="absolute inset-0 w-full h-full" autoPlay controls={!page.video_hide_controls} />
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
+
+            {/* Promo banner */}
+            {(page as any).promo_text && (
+              <div className="flex flex-col items-center lg:items-start gap-2 mb-4">
+                <button
+                  type="button"
+                  className="inline-flex items-center gap-2 bg-destructive/10 border border-destructive/30 rounded-full px-4 py-1.5 animate-pulse cursor-pointer hover:bg-destructive/20 transition-colors"
+                  onClick={() => {
+                    const link = (page as any).promo_link;
+                    if (link) handleCtaClick(link, navigate);
+                  }}
+                >
+                  <span className="text-sm sm:text-base font-bold text-destructive">
+                    {(page as any).promo_text}
+                  </span>
+                </button>
+              </div>
+            )}
+
+            {/* Prices section */}
             {page.price_current && (() => {
               const savings = page.price_original && page.price_original > page.price_current
                 ? Math.round(((page.price_original - page.price_current) / page.price_original) * 100)
                 : null;
               return (
                 <div className="flex flex-col items-center lg:items-start gap-3 mb-4 sm:mb-6">
-                  {/* Main price + its renewal */}
                   <div className="flex flex-col items-center lg:items-start gap-2">
                     <div className="flex items-baseline gap-2 sm:gap-3 flex-wrap justify-center lg:justify-start">
                       {page.price_original && (
@@ -783,17 +867,11 @@ const DynamicLandingPageInner = () => {
                           {formatPrice(page.price_original)}
                         </span>
                       )}
-                      <span 
-                        className="text-2xl sm:text-3xl md:text-4xl font-bold"
-                        style={{ color: `hsl(${accentHsl})` }}
-                      >
+                      <span className="text-2xl sm:text-3xl md:text-4xl font-bold" style={{ color: `hsl(${accentHsl})` }}>
                         {formatPrice(page.price_current)}
                       </span>
                       {savings && (
-                        <span 
-                          className="text-xs font-bold px-2 py-1 rounded"
-                          style={{ backgroundColor: `hsl(${accentHsl} / 0.2)`, color: `hsl(${accentHsl})` }}
-                        >
+                        <span className="text-xs font-bold px-2 py-1 rounded" style={{ backgroundColor: `hsl(${accentHsl} / 0.2)`, color: `hsl(${accentHsl})` }}>
                           Economia de {savings}%
                         </span>
                       )}
@@ -801,63 +879,29 @@ const DynamicLandingPageInner = () => {
                     {page.hero_daily_renewal_text && (
                       <div 
                         className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border backdrop-blur-sm animate-pulse cursor-pointer transition-colors"
-                        style={{ 
-                          borderColor: `hsl(${primaryHsl} / 0.3)`,
-                          backgroundColor: `hsl(${primaryHsl} / 0.1)`
-                        }}
+                        style={{ borderColor: `hsl(${primaryHsl} / 0.3)`, backgroundColor: `hsl(${primaryHsl} / 0.1)` }}
                         onClick={() => openHeroCheckout()}
                       >
                         <RefreshCw className="w-4 h-4" style={{ color: `hsl(${primaryHsl})` }} />
-                        <span className="text-sm sm:text-base font-bold" style={{ color: `hsl(${primaryHsl})` }}>
-                          {page.hero_daily_renewal_text}
-                        </span>
+                        <span className="text-sm sm:text-base font-bold" style={{ color: `hsl(${primaryHsl})` }}>{page.hero_daily_renewal_text}</span>
                       </div>
                     )}
                   </div>
-
-                  {/* Extra price lines, each paired with its own renewal */}
                   {(page.hero_extra_prices as any[] || []).filter((ep: any) => ep.price_current > 0).map((ep: any, idx: number) => {
                     const extraRenewal = (page.hero_extra_renewals as any[] || [])[idx];
-                    const epSavings = ep.price_original > ep.price_current
-                      ? Math.round(((ep.price_original - ep.price_current) / ep.price_original) * 100)
-                      : null;
+                    const epSavings = ep.price_original > ep.price_current ? Math.round(((ep.price_original - ep.price_current) / ep.price_original) * 100) : null;
                     return (
                       <div key={idx} className="flex flex-col items-center lg:items-start gap-2">
                         <div className="flex items-baseline gap-2 sm:gap-3 flex-wrap justify-center lg:justify-start">
                           {ep.label && <span className="text-xs text-muted-foreground">{ep.label}</span>}
-                          {ep.price_original > 0 && (
-                            <span className="text-sm sm:text-base text-muted-foreground line-through">
-                              {formatPrice(ep.price_original)}
-                            </span>
-                          )}
-                          <span 
-                            className="text-xl sm:text-2xl font-bold"
-                            style={{ color: `hsl(${accentHsl})` }}
-                          >
-                            {formatPrice(ep.price_current)}
-                          </span>
-                          {epSavings && (
-                            <span 
-                              className="text-xs font-bold px-2 py-1 rounded"
-                              style={{ backgroundColor: `hsl(${accentHsl} / 0.2)`, color: `hsl(${accentHsl})` }}
-                            >
-                              Economia de {epSavings}%
-                            </span>
-                          )}
+                          {ep.price_original > 0 && <span className="text-sm sm:text-base text-muted-foreground line-through">{formatPrice(ep.price_original)}</span>}
+                          <span className="text-xl sm:text-2xl font-bold" style={{ color: `hsl(${accentHsl})` }}>{formatPrice(ep.price_current)}</span>
+                          {epSavings && <span className="text-xs font-bold px-2 py-1 rounded" style={{ backgroundColor: `hsl(${accentHsl} / 0.2)`, color: `hsl(${accentHsl})` }}>Economia de {epSavings}%</span>}
                         </div>
                         {extraRenewal?.text && (
-                          <div 
-                            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border backdrop-blur-sm animate-pulse cursor-pointer transition-colors"
-                            style={{ 
-                              borderColor: `hsl(${primaryHsl} / 0.3)`,
-                              backgroundColor: `hsl(${primaryHsl} / 0.1)`
-                            }}
-                            onClick={() => openHeroCheckout()}
-                          >
+                          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border backdrop-blur-sm animate-pulse cursor-pointer transition-colors" style={{ borderColor: `hsl(${primaryHsl} / 0.3)`, backgroundColor: `hsl(${primaryHsl} / 0.1)` }} onClick={() => openHeroCheckout()}>
                             <RefreshCw className="w-4 h-4" style={{ color: `hsl(${primaryHsl})` }} />
-                            <span className="text-sm sm:text-base font-bold" style={{ color: `hsl(${primaryHsl})` }}>
-                              {extraRenewal.text}
-                            </span>
+                            <span className="text-sm sm:text-base font-bold" style={{ color: `hsl(${primaryHsl})` }}>{extraRenewal.text}</span>
                           </div>
                         )}
                       </div>
@@ -868,28 +912,30 @@ const DynamicLandingPageInner = () => {
             })()}
 
             {/* Countdown */}
-            <div className="flex justify-center lg:justify-start mb-8">
+            <div className="flex justify-center lg:justify-start mb-4">
               <CountdownTimer />
             </div>
 
-            {/* Trust badges */}
-            <div className="flex flex-wrap justify-center lg:justify-start gap-3">
-              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-card/50 backdrop-blur-sm border border-border/50">
-                <Zap className="w-4 h-4" style={{ color: page.color_icons || '#8B5CF6' }} />
-                <span className="text-sm text-muted-foreground">Entrega Automática</span>
-              </div>
-              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-card/50 backdrop-blur-sm border border-border/50">
-                <Shield className="w-4 h-4" style={{ color: page.color_icons || '#8B5CF6' }} />
-                <span className="text-sm text-muted-foreground">Pagamento Seguro</span>
-              </div>
-              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-card/50 backdrop-blur-sm border border-border/50">
-                <Headphones className="w-4 h-4" style={{ color: page.color_icons || '#8B5CF6' }} />
-                <span className="text-sm text-muted-foreground">Suporte Disponível</span>
-              </div>
+            {/* See plans below */}
+            <div className="flex flex-col items-center lg:items-start gap-1">
+              <span 
+                className="font-bold text-sm sm:text-base cursor-pointer hover:opacity-80 transition-opacity"
+                style={{ color: `hsl(${primaryHsl})` }}
+                onClick={() => document.getElementById('pacotes')?.scrollIntoView({ behavior: 'smooth' })}
+              >
+                Pacotes de Créditos Avulsos Abaixo!
+              </span>
+              <ChevronDown 
+                className="w-8 h-8 sm:w-10 sm:h-10 animate-bounce cursor-pointer hover:opacity-80 transition-opacity"
+                style={{ color: `hsl(${primaryHsl})`, filter: `drop-shadow(0 0 12px hsl(${primaryHsl} / 0.6))` }}
+                onClick={() => document.getElementById('pacotes')?.scrollIntoView({ behavior: 'smooth' })}
+              />
             </div>
+
           </div>
         </div>
       </div>
+      <ResellerValuesModal open={showReseller} onOpenChange={setShowReseller} />
     </section>
   );
 
