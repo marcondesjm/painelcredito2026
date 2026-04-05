@@ -270,13 +270,6 @@ ${couponApplied ? `• Cupom: ${coupon.trim().toUpperCase()}` : ''}
                     <p className="text-xs text-muted-foreground">Atendimento humanizado 24/7</p>
                   </div>
                 </div>
-                <div className="flex items-start gap-3">
-                  <Check className="w-5 h-5 text-accent mt-0.5 shrink-0" />
-                  <div>
-                    <p className="text-sm font-bold">Atualizações gratuitas</p>
-                    <p className="text-xs text-muted-foreground">Todas as futuras melhorias incluídas</p>
-                  </div>
-                </div>
               </div>
 
               <div className="flex gap-2">
