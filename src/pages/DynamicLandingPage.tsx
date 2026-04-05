@@ -212,6 +212,25 @@ const DynamicLandingPageInner = () => {
   // Checkout modal state
   const [checkoutModalOpen, setCheckoutModalOpen] = useState(false);
   const [selectedTier, setSelectedTier] = useState<PricingTier | null>(null);
+
+  // Open checkout with hero price as a virtual tier
+  const openHeroCheckout = () => {
+    if (!page) return;
+    const virtualTier: PricingTier = {
+      id: 'hero-main',
+      name: page.hero_cta_text || 'Painel Gerador',
+      credits: 0,
+      price_original: page.price_original || 0,
+      price_current: page.price_current || 0,
+      available: 999,
+      sales: 0,
+      checkout_link: '',
+      badge: '',
+      bonus_credits: 0,
+    };
+    setSelectedTier(virtualTier);
+    setCheckoutModalOpen(true);
+  };
   
   const isPreview = searchParams.get('preview') === 'true';
   const draftId = searchParams.get('draftId');
