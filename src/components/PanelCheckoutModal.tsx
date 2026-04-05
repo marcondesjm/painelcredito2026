@@ -173,6 +173,7 @@ ${couponApplied ? `• Cupom: ${coupon.trim().toUpperCase()}` : ''}
     setPixPayload('')
     setPixQrUrl('')
     setCopied(false)
+    setShowResaleValues(false)
     onClose()
   }
 
