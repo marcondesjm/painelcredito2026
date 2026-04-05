@@ -239,26 +239,11 @@ const AuthRevenda2 = () => {
               Gerador de Créditos
             </h1>
             <p className="text-sm text-white/50 mt-1">
-              {isLogin ? 'Faça login para acessar o gerador' : 'Crie sua conta para começar'}
+              Faça login para acessar o gerador
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            {!isLogin && (
-              <div className="space-y-2">
-                <Label htmlFor="fullName" className="text-white">Nome completo</Label>
-                <Input
-                  id="fullName"
-                  type="text"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  placeholder="Seu nome"
-                  required={!isLogin}
-                  className="bg-white/5 border-white/10 text-white placeholder:text-white/30"
-                />
-              </div>
-            )}
-
             <div className="space-y-2">
               <Label htmlFor="email" className="text-white">Email</Label>
               <Input
@@ -303,19 +288,9 @@ const AuthRevenda2 = () => {
               disabled={isSubmitting}
             >
               {isSubmitting && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
-              {isLogin ? 'Entrar' : 'Criar Conta'}
+              Entrar
             </Button>
           </form>
-
-          <div className="mt-4 text-center">
-            <button
-              type="button"
-              onClick={() => setIsLogin(!isLogin)}
-              className="text-sm text-white/50 hover:text-white transition-colors"
-            >
-              {isLogin ? 'Não tem conta? Criar conta' : 'Já tem conta? Entrar'}
-            </button>
-          </div>
         </CardContent>
       </Card>
     </div>
