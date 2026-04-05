@@ -225,8 +225,6 @@ const DynamicLandingPageInner = () => {
       available: 999,
       sales: 0,
       checkout_link: '',
-      badge: '',
-      bonus_credits: 0,
     };
     setSelectedTier(virtualTier);
     setCheckoutModalOpen(true);
