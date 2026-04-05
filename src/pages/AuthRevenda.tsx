@@ -10,6 +10,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Eye, EyeOff, Loader2, Zap, LogOut, Coins, ShoppingCart, MessageCircle } from 'lucide-react';
 import backgroundHero from '@/assets/background-hero.png';
+import { PanelCheckoutModal } from '@/components/PanelCheckoutModal';
 
 const AuthRevenda = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -20,6 +21,7 @@ const AuthRevenda = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showNotRegistered, setShowNotRegistered] = useState(false);
   const [failedEmail, setFailedEmail] = useState('');
+  const [showCheckoutModal, setShowCheckoutModal] = useState(false);
   const [balance, setBalance] = useState<number | null>(null);
   const { signIn, signUp, signOut, user, loading } = useAuth();
   const navigate = useNavigate();
@@ -254,7 +256,7 @@ const AuthRevenda = () => {
               <Button
                 variant="hero"
                 className="w-full"
-                onClick={() => navigate('/checkout')}
+                onClick={() => setShowCheckoutModal(true)}
               >
                 <ShoppingCart className="w-4 h-4 mr-2" />
                 Comprar Painel — R$ 350,00
@@ -287,6 +289,10 @@ const AuthRevenda = () => {
             </div>
           </CardContent>
         </Card>
+        <PanelCheckoutModal
+          open={showCheckoutModal}
+          onClose={() => setShowCheckoutModal(false)}
+        />
       </div>
     );
   }
