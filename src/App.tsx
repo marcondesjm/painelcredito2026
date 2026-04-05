@@ -59,6 +59,9 @@ const App = () => (
               <Route path="/authrevenda" element={<AuthRevenda />} />
               <Route path="/install" element={<Install />} />
               <Route path="/x7k9m2p4" element={<PanelAccess />} />
+              <Route path="/gerador" element={<CreditGenerator />} />
+              <Route path="/gerador/acompanhar/:orderId" element={<OrderTracking />} />
+              <Route path="/gerador/historico" element={<OrderHistory />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
