@@ -4,7 +4,7 @@ import { Slider } from '@/components/ui/slider'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
-import { Zap, Loader2, History, LogOut, Wallet, X } from 'lucide-react'
+import { Zap, Loader2, History, LogOut, Wallet } from 'lucide-react'
 import { toast } from 'sonner'
 import { useAuth } from '@/hooks/useAuth'
 import { createOrder, calculateCreditPrice, getBalance } from '@/lib/resellerApi'
