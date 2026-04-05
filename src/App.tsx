@@ -55,7 +55,7 @@ const App = () => (
               <Route path="/p/:slug" element={<DynamicLandingPage />} />
               <Route path="/termos" element={<TermsOfUse />} />
               <Route path="/privacidade" element={<PrivacyPolicy />} />
-              <Route path="/revenda" element={<CreditResale />} />
+              <Route path="/revenda" element={<Navigate to="/gerador" replace />} />
               <Route path="/authrevenda" element={<AuthRevenda />} />
               <Route path="/install" element={<Install />} />
               <Route path="/x7k9m2p4" element={<PanelAccess />} />

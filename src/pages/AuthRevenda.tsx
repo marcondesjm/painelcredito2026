@@ -125,7 +125,7 @@ const AuthRevenda = () => {
               <Button
                 variant="hero"
                 className="w-full"
-                onClick={() => navigate(redirectTo || '/revenda')}
+                onClick={() => navigate(redirectTo || '/gerador')}
               >
                 <Zap className="w-4 h-4 mr-2" />
                 Acessar Gerador de Créditos
