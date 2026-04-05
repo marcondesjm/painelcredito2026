@@ -30,9 +30,40 @@ const AuthRevenda = () => {
     const isOAuthReturn = params.get('oauth') === '1';
 
     if (!loading && user && isOAuthReturn) {
-      navigate(redirectTo || '/gerador');
+      // Check if this user was just auto-created (new user with no prior account)
+      const validateUser = async () => {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('created_at')
+          .eq('user_id', user.id)
+          .maybeSingle();
+
+        if (profile) {
+          const createdAt = new Date(profile.created_at);
+          const now = new Date();
+          const diffSeconds = (now.getTime() - createdAt.getTime()) / 1000;
+
+          // If profile was created less than 30 seconds ago, it's a new user
+          if (diffSeconds < 30) {
+            // Sign out the new user
+            await signOut();
+            toast.error('Email não cadastrado na plataforma. Redirecionando para o suporte...');
+            
+            const message = encodeURIComponent(
+              `Olá! Tentei acessar o Gerador de Créditos com o email ${user.email} mas não tenho conta cadastrada. Gostaria de enviar meu comprovante de pagamento para ativar meu acesso.`
+            );
+            setTimeout(() => {
+              window.open(`https://wa.me/5548996029392?text=${message}`, '_blank');
+            }, 1500);
+            return;
+          }
+        }
+
+        navigate(redirectTo || '/gerador');
+      };
+      validateUser();
     }
-  }, [user, loading, navigate, redirectTo]);
+  }, [user, loading, navigate, redirectTo, signOut]);
 
   useEffect(() => {
     if (user && !isLogout) {
