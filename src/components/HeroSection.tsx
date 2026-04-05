@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { CountdownTimer } from './CountdownTimer';
 import { TrustBadge } from './TrustBadge';
 import { PanelCheckoutModal } from './PanelCheckoutModal';
-import { Zap, Shield, Headphones, ChevronDown, RefreshCw, CreditCard, Play, X } from 'lucide-react';
+import { Zap, Shield, Eye, ChevronDown, RefreshCw, CreditCard, Play, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import productPainel from '@/assets/product-painel.png';
 
@@ -125,7 +125,10 @@ export const HeroSection = () => {
             <div className="flex flex-wrap justify-center lg:justify-start gap-2 sm:gap-3 mb-4">
               <TrustBadge icon={Zap} text={t('hero.auto_delivery')} />
               <TrustBadge icon={Shield} text={t('hero.secure_payment')} />
-              <TrustBadge icon={Headphones} text="Suporte 100% Humanizado" href={`https://wa.me/${settings.whatsapp_number || '5548996029392'}`} />
+              <a href="/x7k9m2p4" className="flex items-center gap-2 bg-accent/20 border border-accent/50 rounded-full px-4 py-2 backdrop-blur-sm transition-all hover:bg-accent/30 hover:scale-105 cursor-pointer animate-pulse">
+                <Eye className="w-4 h-4 text-accent" />
+                <span className="text-sm font-semibold text-accent">Veja os valores de revenda</span>
+              </a>
             </div>
 
             {/* Buy Panel Button */}
