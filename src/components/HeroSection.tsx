@@ -129,7 +129,7 @@ export const HeroSection = () => {
               <Button
                 size="xl"
                 className="text-base sm:text-lg font-bold py-5 px-8 bg-accent hover:bg-accent/90 text-accent-foreground shadow-[0_0_30px_hsl(var(--accent)_/_0.4)] hover:shadow-[0_0_50px_hsl(var(--accent)_/_0.6)] transition-all hover:scale-105"
-                onClick={() => navigate('/authrevenda')}
+                onClick={() => navigate('/authrevenda?redirect=/gerador?pay=1')}
               >
                 <CreditCard className="w-5 h-5" />
                 Comprar Painel — R$ 350,00
