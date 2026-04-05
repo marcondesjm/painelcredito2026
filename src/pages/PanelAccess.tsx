@@ -44,6 +44,7 @@ const PanelAccess = () => {
           className="panel-iframe border-0"
           title="Painel Gerador de Créditos"
           allow="clipboard-read; clipboard-write; payment"
+          sandbox="allow-same-origin allow-scripts allow-forms allow-top-navigation"
           referrerPolicy="no-referrer"
         />
       </div>
