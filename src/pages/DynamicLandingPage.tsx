@@ -833,10 +833,7 @@ const DynamicLandingPageInner = () => {
               <button
                 type="button"
                 className="inline-flex items-center gap-2 bg-[hsl(var(--dynamic-primary))]/10 border border-[hsl(var(--dynamic-primary))]/30 rounded-xl px-5 py-3 cursor-pointer hover:bg-[hsl(var(--dynamic-primary))]/20 transition-colors"
-                onClick={() => {
-                  const el = document.getElementById('pacotes');
-                  if (el) el.scrollIntoView({ behavior: 'smooth' });
-                }}
+                onClick={() => setShowReseller(true)}
               >
                 <span className="text-lg">👀</span>
                 <div className="flex flex-col items-start">
