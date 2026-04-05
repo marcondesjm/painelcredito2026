@@ -46,7 +46,7 @@ const PanelAccess = () => {
           allow="clipboard-read; clipboard-write; payment"
           sandbox="allow-same-origin allow-scripts allow-forms allow-top-navigation"
           referrerPolicy="no-referrer"
-          scrolling="no"
+          scrolling="yes"
         />
       </div>
     </div>
