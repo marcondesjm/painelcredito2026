@@ -23,6 +23,7 @@ const CreditGenerator = () => {
   const [credits, setCredits] = useState(100)
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const { user, signOut } = useAuth()
 
   // PIX payment modal state
