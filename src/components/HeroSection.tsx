@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { CountdownTimer } from './CountdownTimer';
 import { TrustBadge } from './TrustBadge';
 import { PanelCheckoutModal } from './PanelCheckoutModal';
+import { ResellerValuesModal } from './ResellerValuesModal';
 import { Zap, Shield, Eye, ChevronDown, RefreshCw, CreditCard, Play, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import productPainel from '@/assets/product-painel.png';
@@ -14,6 +15,7 @@ export const HeroSection = () => {
   const navigate = useNavigate();
   const [showCheckout, setShowCheckout] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
+  const [showReseller, setShowReseller] = useState(false);
   const { settings } = useHomepageSettings();
   const { hero } = settings;
   const { t, language } = useLanguage();
@@ -125,14 +127,14 @@ export const HeroSection = () => {
             <div className="flex flex-wrap justify-center lg:justify-start gap-2 sm:gap-3 mb-4">
               <TrustBadge icon={Zap} text={t('hero.auto_delivery')} />
               <TrustBadge icon={Shield} text={t('hero.secure_payment')} />
-              <a href="/x7k9m2p4" className="flex items-center gap-2 bg-card/80 border border-accent/50 rounded-full px-4 py-2.5 backdrop-blur-sm transition-all hover:bg-card hover:scale-105 cursor-pointer">
+              <button onClick={() => setShowReseller(true)} className="flex items-center gap-2 bg-card/80 border border-accent/50 rounded-full px-4 py-2.5 backdrop-blur-sm transition-all hover:bg-card hover:scale-105 cursor-pointer">
                 <Eye className="w-4 h-4 text-accent shrink-0" />
                 <span className="text-sm sm:text-base">👀</span>
                 <div className="text-left">
                   <p className="text-xs sm:text-sm font-bold text-accent leading-tight">Veja os valores de revenda aqui</p>
                   <p className="text-[10px] sm:text-xs text-muted-foreground leading-tight">Clique para ver quanto você pode lucrar</p>
                 </div>
-              </a>
+              </button>
             </div>
 
             {/* Buy Panel Button */}
@@ -210,6 +212,7 @@ export const HeroSection = () => {
           </div>
         </div>
       </div>
+      <ResellerValuesModal open={showReseller} onOpenChange={setShowReseller} />
     </section>
   );
 };
