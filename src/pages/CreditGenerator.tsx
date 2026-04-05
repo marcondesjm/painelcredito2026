@@ -193,22 +193,23 @@ const CreditGenerator = () => {
       </div>
 
       {/* Modal com painel externo embed */}
-      <Dialog open={showBalanceModal} onOpenChange={setShowBalanceModal}>
-        <DialogContent className="max-w-[95vw] w-[900px] h-[85vh] p-0 bg-[#0a0a1a] border-white/10 overflow-hidden">
-          <div className="flex items-center justify-between px-4 py-3 border-b border-white/10">
-            <h3 className="text-white font-bold text-sm">Adicionar Saldo</h3>
-            <button onClick={() => setShowBalanceModal(false)} className="text-white/40 hover:text-white">
-              <X className="w-5 h-5" />
-            </button>
+      {showBalanceModal && (
+        <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/80 backdrop-blur-sm">
+          <div className="relative w-full max-w-[95vw] md:max-w-[900px] h-[92vh] mt-[4vh] rounded-xl overflow-hidden border border-white/10 bg-[#0a0a1a] flex flex-col">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-white/10 shrink-0">
+              <h3 className="text-white font-bold text-sm">Adicionar Saldo</h3>
+              <button onClick={() => setShowBalanceModal(false)} className="text-white/40 hover:text-white transition-colors">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <iframe
+              src="https://www.painelcreditoslovable.com/"
+              className="w-full flex-1 border-0"
+              allow="clipboard-write"
+            />
           </div>
-          <iframe
-            src="https://www.painelcreditoslovable.com/"
-            className="w-full flex-1 border-0"
-            style={{ height: 'calc(85vh - 52px)' }}
-            allow="clipboard-write"
-          />
-        </DialogContent>
-      </Dialog>
+        </div>
+      )}
     </div>
   )
 }
