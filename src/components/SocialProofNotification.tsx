@@ -63,8 +63,10 @@ export const SocialProofNotification = ({
         const credits = cr[Math.floor(Math.random() * cr.length)];
         const mins = Math.floor(Math.random() * 10) + 1;
         const time = language === 'en' ? `${mins} min ago` : `há ${mins} min`;
+        // ~30% chance of showing a panel sale instead of credits
+        const isPanelSale = Math.random() < 0.3;
 
-        setNotification({ name: customer.name, city: customer.city, state: customer.state, credits, time, product: customer.product });
+        setNotification({ name: customer.name, city: customer.city, state: customer.state, credits, time, product: isPanelSale ? 'painel' : customer.product });
         setIsVisible(true);
 
         hideTimer = setTimeout(() => {
@@ -86,9 +88,11 @@ export const SocialProofNotification = ({
 
   if (!isVisible) return null;
 
-  const purchaseText = language === 'en'
-    ? `purchased ${notification.product === 'creditos' ? `${notification.credits} credits` : (productName || 'the Generator')}`
-    : `adquiriu ${notification.product === 'creditos' ? `${notification.credits} créditos` : (productName || 'o Gerador')}`;
+  const purchaseText = notification.product === 'painel'
+    ? (language === 'en' ? 'purchased the Resale Panel — R$ 350' : 'adquiriu o Painel de Revenda — R$ 350')
+    : language === 'en'
+      ? `purchased ${notification.product === 'creditos' ? `${notification.credits} credits` : (productName || 'the Generator')}`
+      : `adquiriu ${notification.product === 'creditos' ? `${notification.credits} créditos` : (productName || 'o Gerador')}`;
 
   return (
     <div className="fixed bottom-16 sm:bottom-4 left-2 sm:left-4 z-40 animate-in slide-in-from-left-full duration-500 max-w-[calc(100vw-1rem)] sm:max-w-sm">
