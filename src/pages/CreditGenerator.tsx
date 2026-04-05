@@ -57,6 +57,13 @@ const CreditGenerator = () => {
     fetchSettings()
   }, [])
 
+  // Auto-open payment modal if ?pay=1
+  useEffect(() => {
+    if (searchParams.get('pay') === '1') {
+      setShowPaymentModal(true)
+    }
+  }, [searchParams])
+
   // Timer for PIX expiration
   useEffect(() => {
     if (pixGenerated) {
