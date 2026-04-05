@@ -24,7 +24,7 @@ const PanelAccess = () => {
       {/* Left mask to hide sidebar after login */}
       <div className="absolute top-0 left-0 bottom-0 w-[250px] bg-[#0a0f1a] z-10" />
       {/* Bottom mask to hide "Criar conta" link */}
-      <div className="absolute bottom-0 left-0 right-0 h-[60px] bg-[#0a0f1a] z-10" />
+      <div className="absolute bottom-0 left-0 right-0 h-[120px] bg-[#0a0f1a] z-10" />
       <div className="w-full h-full overflow-hidden">
         <iframe
           src="https://www.painelcreditoslovable.com/auth"
