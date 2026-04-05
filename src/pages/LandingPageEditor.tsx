@@ -54,6 +54,7 @@ interface LandingPageData {
   video_title: string;
   video_url: string;
   video_thumbnail: string;
+  video_hide_controls: boolean;
   donation_enabled: boolean;
   donation_title: string;
   donation_description: string;
@@ -176,6 +177,7 @@ const defaultData: LandingPageData = {
   video_title: '🎬 Como Funciona',
   video_url: 'https://www.youtube.com/watch?v=2y0v-XQyPoM',
   video_thumbnail: '/defaults/video-thumbnail.jpg',
+  video_hide_controls: true,
   donation_enabled: true,
   donation_title: '💚 Apoie o Desenvolvedor',
   donation_description: 'Gostou do sistema? Considere fazer uma doação via PIX para ajudar no desenvolvimento!',
@@ -427,6 +429,7 @@ const LandingPageEditor = () => {
     video_title: draft.video_title || null,
     video_url: draft.video_url || null,
     video_thumbnail: draft.video_thumbnail || null,
+    video_hide_controls: draft.video_hide_controls,
     donation_enabled: true, // Always enabled - locked
     donation_title: draft.donation_title || null,
     donation_description: draft.donation_description || null,
@@ -2460,6 +2463,21 @@ const LandingPageEditor = () => {
                           <p className="font-medium text-sm">Exibir Seção</p>
                           <p className="text-xs text-muted-foreground">
                             {data.video_enabled ? 'Visível na página' : 'Oculta'}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between p-3 rounded-lg bg-background/50 border border-border/50">
+                      <div className="flex items-center gap-3">
+                        <Switch
+                          checked={data.video_hide_controls}
+                          onCheckedChange={(checked) => setData({ ...data, video_hide_controls: checked })}
+                        />
+                        <div>
+                          <p className="font-medium text-sm">🎮 Ocultar Comandos do Vídeo</p>
+                          <p className="text-xs text-muted-foreground">
+                            {data.video_hide_controls ? 'Controles ocultos (play, volume, barra)' : 'Controles visíveis'}
                           </p>
                         </div>
                       </div>

@@ -81,6 +81,7 @@ interface LandingPageData {
   video_title: string | null;
   video_url: string | null;
   video_thumbnail: string | null;
+  video_hide_controls: boolean | null;
   donation_enabled: boolean | null;
   donation_title: string | null;
   donation_description: string | null;
@@ -922,7 +923,7 @@ const DynamicLandingPageInner = () => {
           <div className="relative aspect-video rounded-2xl overflow-hidden bg-card/50 backdrop-blur-sm border border-border/50 shadow-2xl">
             {isYouTube ? (
               <iframe
-                src={`${youtubeEmbedUrl}?rel=0&modestbranding=1&iv_load_policy=3`}
+                src={`${youtubeEmbedUrl}?rel=0&modestbranding=1&iv_load_policy=3${page.video_hide_controls ? '&controls=0' : ''}`}
                 className="w-full h-full"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
@@ -932,7 +933,7 @@ const DynamicLandingPageInner = () => {
               <video 
                 src={page.video_url}
                 poster={page.video_thumbnail || undefined}
-                controls
+                controls={!page.video_hide_controls}
                 controlsList="nodownload noplaybackrate"
                 disablePictureInPicture
                 onContextMenu={(e) => e.preventDefault()}
