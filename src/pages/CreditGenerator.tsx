@@ -16,7 +16,7 @@ function fmtR(n: number) { return n.toLocaleString('pt-BR', { minimumFractionDig
 const CreditGenerator = () => {
   const [credits, setCredits] = useState(100)
   const [loading, setLoading] = useState(false)
-  
+  const [showBalanceModal, setShowBalanceModal] = useState(false)
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const { user, signOut } = useAuth()
