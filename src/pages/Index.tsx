@@ -104,6 +104,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen relative overflow-x-hidden flex flex-col">
+      <TopInfoBanner />
       <TrackingScripts />
       {/* Fixed background */}
       {showMaintenanceSection ? (
