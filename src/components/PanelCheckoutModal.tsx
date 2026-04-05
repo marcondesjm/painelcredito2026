@@ -256,8 +256,8 @@ ${couponApplied ? `• Cupom: ${coupon.trim().toUpperCase()}` : ''}
                 <div className="border-t border-border pt-3 flex justify-between items-center">
                   <span className="font-bold text-sm">Valor a Pagar:</span>
                   <div className="text-right">
-                    <span className="text-xs sm:text-sm text-muted-foreground line-through mr-2">R$ {fmtR(ORIGINAL_PRICE)}</span>
-                    <span className="text-lg sm:text-xl font-black text-accent">R$ {fmtR(PANEL_PRICE)}</span>
+                    <span className="text-xs sm:text-sm text-muted-foreground line-through mr-2">R$ {fmtR(activeOriginalPrice)}</span>
+                    <span className="text-lg sm:text-xl font-black text-accent">R$ {fmtR(activePrice)}</span>
                   </div>
                 </div>
               </div>
