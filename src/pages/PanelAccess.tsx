@@ -25,6 +25,21 @@ const PanelAccess = () => {
           height: calc(100% + 140px);
           margin-top: -60px;
           margin-left: 0;
+          overflow: hidden;
+        }
+        @media (min-width: 768px) {
+          .panel-iframe {
+            width: calc(100% + 44px);
+            height: calc(100% + 150px);
+            margin-top: -70px;
+            margin-left: -44px;
+          }
+        }
+      `}</style>
+          width: 100%;
+          height: calc(100% + 140px);
+          margin-top: -60px;
+          margin-left: 0;
         }
         @media (min-width: 768px) {
           .panel-iframe {
