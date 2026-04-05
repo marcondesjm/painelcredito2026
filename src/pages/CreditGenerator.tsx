@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Slider } from '@/components/ui/slider'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Zap, Loader2, History, Wallet } from 'lucide-react'
+import { Zap, Loader2, History, LogOut } from 'lucide-react'
 import { toast } from 'sonner'
 import { useAuth } from '@/hooks/useAuth'
 import { createOrder, calculateCreditPrice } from '@/lib/resellerApi'
@@ -16,7 +16,7 @@ const CreditGenerator = () => {
   const [credits, setCredits] = useState(100)
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
-  const { user } = useAuth()
+  const { user, signOut } = useAuth()
 
   const price = useMemo(() => calculateCreditPrice(credits), [credits])
   const ratePer100 = useMemo(() => (price / credits) * 100, [price, credits])
@@ -61,6 +61,9 @@ const CreditGenerator = () => {
           <div className="flex gap-2">
             <Button variant="ghost" size="sm" onClick={() => navigate('/gerador/historico')} className="text-white/70 hover:text-white">
               <History className="w-4 h-4 mr-1" /> Histórico
+            </Button>
+            <Button variant="ghost" size="sm" onClick={async () => { await signOut(); navigate('/authrevenda'); }} className="text-white/70 hover:text-red-400">
+              <LogOut className="w-4 h-4 mr-1" /> Sair
             </Button>
           </div>
         </div>
