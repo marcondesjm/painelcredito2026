@@ -7,8 +7,8 @@ import { toast } from 'sonner'
 import { generatePixQRCode } from '@/lib/pix'
 import { supabase } from '@/integrations/supabase/client'
 
-const PIX_KEY = '+5548996029392'
-const PIX_NAME = 'Marcondes Jorge Machado'
+const DEFAULT_PIX_KEY = '+5548996029392'
+const DEFAULT_PIX_NAME = 'Marcondes Jorge Machado'
 const PANEL_PRICE = 199
 const ORIGINAL_PRICE = 680
 
@@ -50,6 +50,8 @@ export const PanelCheckoutModal = ({ open, onClose }: PanelCheckoutModalProps) =
   const [copied, setCopied] = useState(false)
   const [pixTimer, setPixTimer] = useState(600)
   const [adminWhatsapp, setAdminWhatsapp] = useState('5548996029392')
+  const [pixKey, setPixKey] = useState(DEFAULT_PIX_KEY)
+  const [pixName, setPixName] = useState(DEFAULT_PIX_NAME)
 
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
@@ -58,8 +60,14 @@ export const PanelCheckoutModal = ({ open, onClose }: PanelCheckoutModalProps) =
       const { data } = await supabase
         .from('app_settings')
         .select('key, value')
-        .eq('key', 'whatsapp_number')
-      if (data?.[0]?.value) setAdminWhatsapp(data[0].value)
+        .in('key', ['whatsapp_number', 'pix_key', 'pix_name'])
+      if (data) {
+        for (const item of data) {
+          if (item.key === 'whatsapp_number' && item.value) setAdminWhatsapp(item.value)
+          if (item.key === 'pix_key' && item.value) setPixKey(item.value)
+          if (item.key === 'pix_name' && item.value) setPixName(item.value)
+        }
+      }
     }
     fetchSettings()
   }, [])
@@ -117,8 +125,8 @@ export const PanelCheckoutModal = ({ open, onClose }: PanelCheckoutModalProps) =
     }
 
     const { payload, qrCodeUrl } = generatePixQRCode({
-      pixKey: PIX_KEY,
-      merchantName: PIX_NAME,
+      pixKey: pixKey,
+      merchantName: pixName,
       amount: finalPrice,
       txId: 'PAINEL',
       description: 'Painel Gerador',
