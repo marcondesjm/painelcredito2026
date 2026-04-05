@@ -63,8 +63,10 @@ export const SocialProofNotification = ({
         const credits = cr[Math.floor(Math.random() * cr.length)];
         const mins = Math.floor(Math.random() * 10) + 1;
         const time = language === 'en' ? `${mins} min ago` : `há ${mins} min`;
+        // ~30% chance of showing a panel sale instead of credits
+        const isPanelSale = Math.random() < 0.3;
 
-        setNotification({ name: customer.name, city: customer.city, state: customer.state, credits, time, product: customer.product });
+        setNotification({ name: customer.name, city: customer.city, state: customer.state, credits, time, product: isPanelSale ? 'painel' : customer.product });
         setIsVisible(true);
 
         hideTimer = setTimeout(() => {
