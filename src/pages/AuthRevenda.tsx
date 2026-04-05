@@ -85,16 +85,29 @@ const AuthRevenda = () => {
 
     try {
       if (isLogin) {
-        const { error } = await signIn(email, password);
-        if (error) {
-          if (error.message.includes('Invalid login credentials')) {
-            toast.error('Email ou senha incorretos');
-          } else {
-            toast.error(error.message);
-          }
+        // Authenticate against the external platform first
+        const proxyUrl = `https://${import.meta.env.VITE_SUPABASE_PROJECT_ID}.supabase.co/functions/v1/auth-proxy`;
+        const res = await fetch(proxyUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        });
+        const data = await res.json();
+
+        if (!res.ok) {
+          toast.error(data.error || 'Email ou senha incorretos');
         } else {
-          toast.success('Login realizado com sucesso!');
-          navigate(redirectTo || '/gerador');
+          // Set the session locally using the tokens from auth-proxy
+          const { error: sessionError } = await supabase.auth.setSession({
+            access_token: data.session.access_token,
+            refresh_token: data.session.refresh_token,
+          });
+          if (sessionError) {
+            toast.error('Erro ao estabelecer sessão');
+          } else {
+            toast.success('Login realizado com sucesso!');
+            navigate(redirectTo || '/gerador');
+          }
         }
       } else {
         const { error } = await signUp(email, password, fullName);
