@@ -1760,9 +1760,14 @@ const LandingPageEditor = () => {
                         folder="hero"
                         aspectRatio="aspect-video"
                       />
-                      <p className="text-xs text-muted-foreground">
-                        Medida recomendada: <span className="font-medium text-primary">1920x1080px</span>
-                      </p>
+                      <div className="flex items-center justify-between">
+                        <p className="text-xs text-muted-foreground">
+                          Medida recomendada: <span className="font-medium text-primary">1920x1080px</span>
+                        </p>
+                        <a href="/defaults/hero.png" download="hero-1920x1080.png" className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline">
+                          <Download className="w-3 h-3" /> Baixar original
+                        </a>
+                      </div>
                     </div>
                     <div className="space-y-2">
                       <ImageUpload
@@ -1773,9 +1778,14 @@ const LandingPageEditor = () => {
                         aspectRatio="aspect-video"
                         placeholder="Imagem do laptop/mockup exibido na seção principal"
                       />
-                      <p className="text-xs text-muted-foreground">
-                        Imagem do laptop com dashboard na seção Hero. Medida recomendada: <span className="font-medium text-primary">1920x1080px</span>
-                      </p>
+                      <div className="flex items-center justify-between">
+                        <p className="text-xs text-muted-foreground">
+                          Imagem do laptop com dashboard na seção Hero. Medida recomendada: <span className="font-medium text-primary">1920x1080px</span>
+                        </p>
+                        <a href="/defaults/product.png" download="product-1920x1080.png" className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline">
+                          <Download className="w-3 h-3" /> Baixar original
+                        </a>
+                      </div>
                     </div>
                     <div className="space-y-2">
                       <ImageUpload
