@@ -300,6 +300,7 @@ export type Database = {
           updated_at: string
           user_id: string
           video_enabled: boolean | null
+          video_hide_controls: boolean | null
           video_thumbnail: string | null
           video_title: string | null
           video_url: string | null
@@ -393,6 +394,7 @@ export type Database = {
           updated_at?: string
           user_id: string
           video_enabled?: boolean | null
+          video_hide_controls?: boolean | null
           video_thumbnail?: string | null
           video_title?: string | null
           video_url?: string | null
@@ -486,6 +488,7 @@ export type Database = {
           updated_at?: string
           user_id?: string
           video_enabled?: boolean | null
+          video_hide_controls?: boolean | null
           video_thumbnail?: string | null
           video_title?: string | null
           video_url?: string | null
