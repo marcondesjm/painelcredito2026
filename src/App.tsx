@@ -20,7 +20,7 @@ import DynamicLandingPage from "./pages/DynamicLandingPage";
 import TermsOfUse from "./pages/TermsOfUse";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Install from "./pages/Install";
-import CreditResale from "./pages/CreditResale";
+
 import AuthRevenda from "./pages/AuthRevenda";
 import PanelAccess from "./pages/PanelAccess";
 import CreditGenerator from "./pages/CreditGenerator";

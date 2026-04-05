@@ -33,7 +33,34 @@ const AuthRevenda = () => {
       navigate(redirectTo || '/gerador');
     }
   }, [user, loading, navigate, redirectTo]);
-...
+
+  useEffect(() => {
+    if (user && !isLogout) {
+      const fetchBalance = async () => {
+        const { data } = await supabase
+          .from('user_balances')
+          .select('balance')
+          .eq('user_id', user.id)
+          .maybeSingle();
+        setBalance(data?.balance ?? 0);
+      };
+      fetchBalance();
+    }
+  }, [user, isLogout]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      if (isLogin) {
+        const { error } = await signIn(email, password);
+        if (error) {
+          if (error.message.includes('Invalid login credentials')) {
+            toast.error('Email ou senha incorretos');
+          } else {
+            toast.error(error.message);
+          }
         } else {
           toast.success('Login realizado com sucesso!');
           navigate(redirectTo || '/gerador');
@@ -83,7 +110,6 @@ const AuthRevenda = () => {
     );
   }
 
-  // Logged in view
   if (user && !isLogout) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center p-4 relative overflow-hidden">
@@ -110,7 +136,6 @@ const AuthRevenda = () => {
               </p>
             </div>
 
-            {/* Credit Balance */}
             <div className="bg-background/50 border border-border rounded-lg p-4 mb-6 text-center">
               <div className="flex items-center justify-center gap-2 mb-1">
                 <Coins className="w-5 h-5 text-primary" />
@@ -146,7 +171,6 @@ const AuthRevenda = () => {
     );
   }
 
-  // Login form
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4 relative overflow-hidden">
       <div
@@ -260,7 +284,6 @@ const AuthRevenda = () => {
               {isLogin ? 'Entrar' : 'Criar Conta'}
             </Button>
           </form>
-
         </CardContent>
       </Card>
     </div>
