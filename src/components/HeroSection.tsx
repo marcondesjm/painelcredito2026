@@ -206,7 +206,7 @@ export const HeroSection = () => {
           </div>
         </div>
       </div>
-      <ResellerValuesModal open={showReseller} onOpenChange={setShowReseller} />
+      
     </section>
   );
 };

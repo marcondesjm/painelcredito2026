@@ -929,7 +929,7 @@ const DynamicLandingPageInner = () => {
           </div>
         </div>
       </div>
-      <ResellerValuesModal open={showReseller} onOpenChange={setShowReseller} />
+      
     </section>
   );
 
