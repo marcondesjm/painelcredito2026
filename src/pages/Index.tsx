@@ -43,7 +43,7 @@ const fallbackTiers: PricingTier[] = [
     name: 'Pacote Básico',
     credits: 5000,
     price_original: 600,
-    price_current: 349.99,
+    price_current: 199,
     available: 30,
     sales: 243,
     checkout_link: '',
