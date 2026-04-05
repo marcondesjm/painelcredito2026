@@ -20,7 +20,7 @@ const AuthRevenda = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showNotRegistered, setShowNotRegistered] = useState(false);
-  const [failedEmail, setFailedEmail] = '';
+  const [failedEmail, setFailedEmail] = useState('');
   const [showCheckoutModal, setShowCheckoutModal] = useState(false);
   const [balance, setBalance] = useState<number | null>(null);
   const { signIn, signUp, signOut, user, loading } = useAuth();
