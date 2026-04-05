@@ -311,7 +311,7 @@ const defaultData: LandingPageData = {
   checkout_product_subtitle: 'Acesso Completo',
   checkout_product_description: 'Acesso vitalício • Sem mensalidades',
   checkout_badge_text: 'OFERTA LIMITADA',
-  checkout_benefits: ['Acesso Vitalício ao Painel', 'Gerador de Créditos Ilimitado', 'Suporte Premium 24/7', 'Atualizações Gratuitas', 'Comunidade Exclusiva'],
+  checkout_benefits: ['Acesso ao Painel', 'Gerador de Créditos Ilimitado', 'Suporte Premium 24/7', 'Atualizações Gratuitas', 'Comunidade Exclusiva'],
   checkout_enabled: true,
   nav_buttons: [
     { id: 'painel_gerador', label: 'Painel Gerador', enabled: true, action: 'scroll', target: '#checkout' },

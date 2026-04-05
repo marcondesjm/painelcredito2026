@@ -186,7 +186,7 @@ const defaultSettings: HomepageSettings = {
     product_description: 'Acesso vitalício • Sem mensalidades',
     badge_text: 'Oferta Limitada',
     benefits: [
-      'Acesso Vitalício ao Painel',
+      'Acesso ao Painel',
       'Gerador de Créditos Ilimitado',
       'Suporte Premium 24/7',
       'Atualizações Gratuitas',

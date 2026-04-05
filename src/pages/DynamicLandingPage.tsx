@@ -1528,7 +1528,7 @@ const DynamicLandingPageInner = () => {
     'donation': renderDonationSection,
     'checkout': () => {
       if (!page.checkout_enabled) return null;
-      const benefits = (page.checkout_benefits as string[]) || ['Acesso Vitalício ao Painel', 'Gerador de Créditos Ilimitado', 'Suporte Premium 24/7', 'Atualizações Gratuitas', 'Comunidade Exclusiva'];
+      const benefits = (page.checkout_benefits as string[]) || ['Acesso ao Painel', 'Gerador de Créditos Ilimitado', 'Suporte Premium 24/7', 'Atualizações Gratuitas', 'Comunidade Exclusiva'];
       const tiers = (page.pricing_tiers as PricingTier[]) || [];
       const mainTier = tiers[0] || { id: 'default', name: 'Painel Gerador', credits: 5000, price_original: 150, price_current: 99.99, available: 30, sales: 243, checkout_link: '' };
       const extraTiers = tiers.slice(1);
