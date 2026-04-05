@@ -8,7 +8,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { lovable } from '@/integrations/lovable/index';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Eye, EyeOff, Loader2, Zap, LogOut, Coins } from 'lucide-react';
+import { Eye, EyeOff, Loader2, Zap, LogOut, Coins, ShoppingCart, MessageCircle } from 'lucide-react';
 import backgroundHero from '@/assets/background-hero.png';
 
 const AuthRevenda = () => {
