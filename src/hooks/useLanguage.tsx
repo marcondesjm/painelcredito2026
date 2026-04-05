@@ -203,6 +203,7 @@ const translations: Record<Language, Record<string, string>> = {
     'hero.auto_delivery': 'Auto Delivery',
     'hero.secure_payment': 'Secure Payment',
     'hero.support_available': 'Support Available',
+    'hero.see_plans': 'See plans below',
     // Features
     'features.section_title': 'What is the',
     'features.section_title_highlight': 'Panel',
