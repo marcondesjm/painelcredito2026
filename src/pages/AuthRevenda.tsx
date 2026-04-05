@@ -70,6 +70,9 @@ const AuthRevenda = () => {
   const handleGoogleSignIn = async () => {
     const { error } = await lovable.auth.signInWithOAuth("google", {
       redirect_uri: window.location.origin + '/authrevenda?oauth=1',
+      extraParams: {
+        prompt: "login",
+      },
     });
     if (error) {
       toast.error('Erro ao entrar com Google');
