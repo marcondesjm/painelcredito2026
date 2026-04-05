@@ -33,7 +33,7 @@ interface PanelCheckoutModalProps {
 
 export const PanelCheckoutModal = ({ open, onClose }: PanelCheckoutModalProps) => {
   const [step, setStep] = useState<1 | 2 | 3>(1)
-
+  const [showResaleValues, setShowResaleValues] = useState(false)
   // Step 3 form
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
