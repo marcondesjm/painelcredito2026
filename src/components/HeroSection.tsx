@@ -36,10 +36,9 @@ export const HeroSection = () => {
            {/* Product Image */}
            <div className="hidden lg:flex items-center justify-center">
              <img 
-               src={hero.image || ''} 
+               src={hero.image || productPainel} 
                alt="Painel de Créditos" 
                className="w-full max-w-lg rounded-2xl shadow-2xl shadow-primary/20 border border-white/10"
-               style={{ display: hero.image ? 'block' : 'none' }}
              />
            </div>
 
