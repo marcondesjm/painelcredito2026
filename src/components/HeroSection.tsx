@@ -179,15 +179,15 @@ export const HeroSection = () => {
             <div className="flex flex-col items-center lg:items-start gap-2 mb-4">
               <button
                 type="button"
-                className="inline-flex items-center gap-2 bg-primary/10 border border-primary/30 rounded-xl px-5 py-3 cursor-pointer hover:bg-primary/20 transition-colors"
+                className="inline-flex items-center gap-3 bg-accent/10 border border-accent/30 rounded-xl px-5 py-3 cursor-pointer hover:bg-accent/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
                 onClick={() => setShowReseller(true)}
               >
-                <span className="text-lg">👀</span>
+                <span className="text-xl">👀</span>
                 <div className="flex flex-col items-start">
-                  <span className="text-sm sm:text-base font-bold text-primary">
+                  <span className="text-sm sm:text-base font-bold text-accent">
                     👁️ Veja os valores de revenda aqui
                   </span>
-                  <span className="text-xs text-primary/70">
+                  <span className="text-xs text-accent/60">
                     Clique para ver quanto você pode lucrar
                   </span>
                 </div>
