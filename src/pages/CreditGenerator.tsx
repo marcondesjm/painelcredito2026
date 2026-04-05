@@ -308,17 +308,6 @@ ${confirmReceipt ? '📎 *Comprovante:* Será enviado em seguida' : '📎 *Compr
             {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Zap className="w-5 h-5" />}
             {loading ? 'Criando pedido...' : `Gerar ${fmt(credits)} Créditos`}
           </Button>
-
-          {/* Payment R$350 Button */}
-          <Button
-            size="xl"
-            variant="outline"
-            className="w-full text-lg font-bold py-6 border-accent/50 text-accent hover:bg-accent/10 transition-all"
-            onClick={handleOpenPayment}
-          >
-            <CreditCard className="w-5 h-5" />
-            Pagar Acesso — R$ {fmtR(GENERATOR_PRICE)}
-          </Button>
         </div>
       </div>
 
