@@ -24,6 +24,7 @@ import coderCharacter from '@/assets/coder-character.png';
 import { useHomepageSettings } from '@/hooks/useHomepageSettings';
 import { TrackingScripts } from '@/components/TrackingScripts';
 import { ToolProgressBar } from '@/components/ToolProgressBar';
+import { TopInfoBanner } from '@/components/TopInfoBanner';
 
 // Fallback tiers when database is loading or empty
 const fallbackTiers: PricingTier[] = [
@@ -103,6 +104,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen relative overflow-x-hidden flex flex-col">
+      <TopInfoBanner />
       <TrackingScripts />
       {/* Fixed background */}
       {showMaintenanceSection ? (
