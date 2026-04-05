@@ -40,7 +40,7 @@ const translations: Record<Language, Record<string, string>> = {
     'hero.auto_delivery': 'Entrega Automática',
     'hero.secure_payment': 'Pagamento Seguro',
     'hero.support_available': 'Suporte Disponível',
-    'hero.see_plans': 'Veja os planos abaixo',
+    'hero.see_plans': 'Pacotes de Créditos Avulsos Abaixo!',
     // Features
     'features.section_title': 'O que é o',
     'features.section_title_highlight': 'Painel',
