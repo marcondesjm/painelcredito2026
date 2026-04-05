@@ -60,8 +60,14 @@ export const PanelCheckoutModal = ({ open, onClose }: PanelCheckoutModalProps) =
       const { data } = await supabase
         .from('app_settings')
         .select('key, value')
-        .eq('key', 'whatsapp_number')
-      if (data?.[0]?.value) setAdminWhatsapp(data[0].value)
+        .in('key', ['whatsapp_number', 'pix_key', 'pix_name'])
+      if (data) {
+        for (const item of data) {
+          if (item.key === 'whatsapp_number' && item.value) setAdminWhatsapp(item.value)
+          if (item.key === 'pix_key' && item.value) setPixKey(item.value)
+          if (item.key === 'pix_name' && item.value) setPixName(item.value)
+        }
+      }
     }
     fetchSettings()
   }, [])
