@@ -26,6 +26,7 @@ import { WhatsAppButton } from '@/components/WhatsAppButton';
 import { PricingTiersSection, PricingTier } from '@/components/PricingTiersSection';
 import { CheckoutModal } from '@/components/CheckoutModal';
 import { RechargeInfoSection } from '@/components/RechargeInfoSection';
+import { PanelCheckoutModal } from '@/components/PanelCheckoutModal';
 import { APP_VERSION, LAST_UPDATE } from '@/config/version';
 import { TopInfoBanner } from '@/components/TopInfoBanner';
 import backgroundHero from '@/assets/background-hero.png';
