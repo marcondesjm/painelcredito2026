@@ -304,7 +304,7 @@ ${couponApplied ? `• Cupom: ${coupon.trim().toUpperCase()}` : ''}
 
               <div className="rounded-lg border border-primary/30 bg-primary/5 p-3 text-center">
                 <p className="text-xs text-muted-foreground">
-                  📲 Após o pagamento, envie o <span className="font-bold text-foreground">comprovante para o suporte</span> via WhatsApp para que sua conta seja criada e o acesso liberado.
+                  📲 Após o pagamento, envie o <span className="font-bold text-foreground">comprovante para o suporte</span> via WhatsApp para que possamos criar o seu painel de revenda e sua conta.
                 </p>
               </div>
 
