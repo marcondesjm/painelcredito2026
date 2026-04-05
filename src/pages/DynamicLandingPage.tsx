@@ -771,7 +771,7 @@ const DynamicLandingPageInner = () => {
                   backgroundColor: `hsl(${primaryHsl})`,
                   boxShadow: `0 0 20px hsl(${primaryHsl} / 0.4)`
                 }}
-                onClick={() => handleCtaClick(page.hero_cta_link, navigate)}
+                onClick={() => openHeroCheckout()}
               >
                 {page.hero_cta_text || 'Comprar Agora'}
               </Button>
