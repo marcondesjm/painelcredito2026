@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { createPortal } from 'react-dom'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -215,10 +216,10 @@ ${couponApplied ? `• Cupom: ${coupon.trim().toUpperCase()}` : ''}
 
   const stepLabels = ['Pacote', 'Entrega', 'Dados']
 
-  return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4" style={{ isolation: 'isolate' }}>
+  const modalContent = (
+    <div className="fixed inset-0 z-[99999] flex items-end justify-center p-0 sm:items-center sm:p-4" style={{ isolation: 'isolate' }}>
       <div className="absolute inset-0 bg-black" aria-hidden="true" />
-      <div className="relative z-10 w-full max-w-md max-h-[90vh] overflow-y-auto rounded-2xl border border-border bg-card text-card-foreground shadow-2xl">
+      <div className="relative z-10 w-full h-[100dvh] sm:h-auto sm:max-h-[90vh] sm:max-w-md overflow-y-auto rounded-none sm:rounded-2xl border-0 sm:border border-border bg-card text-card-foreground shadow-2xl">
         {/* Header with tabs */}
         <div className="sticky top-0 z-10 bg-card border-b border-border px-4 pt-4 pb-3">
           <div className="flex items-center justify-between mb-4">
@@ -529,4 +530,6 @@ ${couponApplied ? `• Cupom: ${coupon.trim().toUpperCase()}` : ''}
       </div>
     </div>
   )
+
+  return createPortal(modalContent, document.body)
 }
