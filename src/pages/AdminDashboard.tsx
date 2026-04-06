@@ -64,6 +64,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { HomepageEditor } from '@/components/HomepageEditor';
 import { CustomersTab } from '@/components/CustomersTab';
 import logoPainel from '@/assets/logo-dashboard.png';
+import { IpWhitelistTab } from '@/components/IpWhitelistTab';
 
 interface UserProfile {
   id: string;
