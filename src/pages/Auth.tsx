@@ -37,12 +37,14 @@ const Auth = () => {
       if (isLogin) {
         const { error } = await signIn(email, password);
         if (error) {
+          logLoginAttempt({ email, status: 'failed', failure_reason: error.message });
           if (error.message.includes('Invalid login credentials')) {
             toast.error('Email ou senha incorretos');
           } else {
             toast.error(error.message);
           }
         } else {
+          logLoginAttempt({ email, status: 'success' });
           toast.success('Login realizado com sucesso!');
           navigate('/dashboard');
         }
