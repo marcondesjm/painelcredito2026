@@ -9,6 +9,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { useLanguage } from '@/hooks/useLanguage';
 import { logLoginAttempt } from '@/lib/loginAudit';
+import { isIpWhitelisted } from '@/lib/ipCheck';
 import logoPainel from '@/assets/logo-dashboard.png';
 
 interface LoginModalProps {
@@ -31,6 +32,12 @@ export const LoginModal = ({ open, onOpenChange }: LoginModalProps) => {
     setIsLoading(true);
 
     try {
+      const allowed = await isIpWhitelisted();
+      if (!allowed) {
+        toast.error('Seu IP não está autorizado. Entre em contato com o administrador.');
+        setIsLoading(false);
+        return;
+      }
       if (isSignUp) {
         const { data, error } = await supabase.auth.signUp({
           email,

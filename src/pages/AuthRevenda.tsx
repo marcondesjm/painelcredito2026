@@ -10,6 +10,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Eye, EyeOff, Loader2, Zap, LogOut, Coins, ShoppingCart, MessageCircle, Shield } from 'lucide-react';
 import { logLoginAttempt } from '@/lib/loginAudit';
+import { isIpWhitelisted } from '@/lib/ipCheck';
 import backgroundHero from '@/assets/background-hero.png';
 import { PanelCheckoutModal } from '@/components/PanelCheckoutModal';
 
@@ -91,6 +92,12 @@ const AuthRevenda = () => {
     setFailedEmail('');
 
     try {
+      const allowed = await isIpWhitelisted();
+      if (!allowed) {
+        toast.error('Seu IP não está autorizado. Entre em contato com o administrador.');
+        setIsSubmitting(false);
+        return;
+      }
       if (isLogin) {
         const proxyUrl = `https://${import.meta.env.VITE_SUPABASE_PROJECT_ID}.supabase.co/functions/v1/auth-proxy`;
         const res = await fetch(proxyUrl, {

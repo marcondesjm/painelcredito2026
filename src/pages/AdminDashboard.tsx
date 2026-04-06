@@ -36,7 +36,8 @@ import {
   Plus,
   Minus,
   UserPlus,
-  Code
+  Code,
+  Wifi
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -63,6 +64,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { HomepageEditor } from '@/components/HomepageEditor';
 import { CustomersTab } from '@/components/CustomersTab';
 import logoPainel from '@/assets/logo-dashboard.png';
+import { IpWhitelistTab } from '@/components/IpWhitelistTab';
 
 interface UserProfile {
   id: string;
@@ -792,6 +794,10 @@ const AdminDashboard = () => {
               <Settings className="w-4 h-4" />
               Configurações
             </TabsTrigger>
+            <TabsTrigger value="ips" className="gap-2">
+              <Wifi className="w-4 h-4" />
+              IPs Autorizados
+            </TabsTrigger>
           </TabsList>
 
           {/* Orders Tab */}
@@ -1386,6 +1392,11 @@ const AdminDashboard = () => {
           {/* Homepage Tab */}
           <TabsContent value="homepage">
             <HomepageEditor />
+          </TabsContent>
+
+          {/* IPs Tab */}
+          <TabsContent value="ips">
+            <IpWhitelistTab />
           </TabsContent>
         </Tabs>
       </main>

@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import { Eye, EyeOff, Loader2, Shield } from 'lucide-react';
 import logoPainel from '@/assets/logo-dashboard.png';
 import { logLoginAttempt } from '@/lib/loginAudit';
+import { isIpWhitelisted } from '@/lib/ipCheck';
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -34,6 +35,12 @@ const Auth = () => {
     setIsSubmitting(true);
 
     try {
+      const allowed = await isIpWhitelisted();
+      if (!allowed) {
+        toast.error('Seu IP não está autorizado. Entre em contato com o administrador.');
+        setIsSubmitting(false);
+        return;
+      }
       if (isLogin) {
         const { error } = await signIn(email, password);
         if (error) {
