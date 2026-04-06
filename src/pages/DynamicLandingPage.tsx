@@ -14,6 +14,7 @@ const handleCtaClick = (link: string | null, navigate: ReturnType<typeof useNavi
 };
 import { supabase } from '@/integrations/supabase/client';
 import { generatePixPayload, generatePixQRCodeUrl } from '@/lib/pix';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
