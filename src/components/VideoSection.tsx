@@ -34,6 +34,7 @@ export const VideoSection = () => {
               loop
               onContextMenu={(e) => e.preventDefault()}
             />
+            <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-[24%] bg-background" />
             {!isPlaying && (
               <div className="absolute inset-0 bg-background/50 flex items-center justify-center cursor-pointer" onClick={handlePlay}>
                 <button

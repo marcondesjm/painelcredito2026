@@ -60,10 +60,11 @@ export const RechargeInfoSection = () => {
           >
             <button
               onClick={() => setVideoOpen(false)}
-              className="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-background/80 border border-border/50 flex items-center justify-center hover:bg-background transition-colors"
+              className="absolute top-3 right-3 z-20 w-8 h-8 rounded-full bg-background/80 border border-border/50 flex items-center justify-center hover:bg-background transition-colors"
             >
               <X className="w-4 h-4 text-foreground" />
             </button>
+            <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-[24%] bg-background" />
             <video
               src="/videos/0403.mp4"
               className="absolute left-0 w-full"
