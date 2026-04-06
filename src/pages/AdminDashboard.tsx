@@ -793,6 +793,10 @@ const AdminDashboard = () => {
               <Settings className="w-4 h-4" />
               Configurações
             </TabsTrigger>
+            <TabsTrigger value="ips" className="gap-2">
+              <Wifi className="w-4 h-4" />
+              IPs Autorizados
+            </TabsTrigger>
           </TabsList>
 
           {/* Orders Tab */}
