@@ -132,7 +132,7 @@ const Index = () => {
       <div className="flex-1">
         <Header />
         {showMaintenanceSection && (
-          <section className="w-full flex items-center justify-center pt-20 sm:pt-24 pb-12 sm:pb-20 md:min-h-[60vh] px-4 sm:px-6">
+          <section className="w-full flex items-center justify-center pt-8 sm:pt-12 md:pt-24 pb-12 sm:pb-20 md:min-h-[60vh] px-4 sm:px-6">
             <div className="text-center w-full max-w-[90%] sm:max-w-2xl md:max-w-3xl lg:max-w-4xl mx-auto">
               <div style={{ opacity: (bgText.opacity ?? 100) / 100 }}>
                 <p
@@ -183,7 +183,7 @@ const Index = () => {
         )}
         {vis.hero && <HeroSection />}
         {vis.pricing && (
-          <div id="pacotes" className={!vis.hero && !showMaintenanceSection ? 'pt-20 sm:pt-24' : ''}>
+          <div id="pacotes" className={!vis.hero && !showMaintenanceSection ? 'pt-8 sm:pt-12 md:pt-24' : ''}>
             <PricingTiersSection 
               tiers={tiers} 
               customPackageOptions={settings.custom_package_options}
