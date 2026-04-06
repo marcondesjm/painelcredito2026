@@ -1392,6 +1392,11 @@ const AdminDashboard = () => {
           <TabsContent value="homepage">
             <HomepageEditor />
           </TabsContent>
+
+          {/* IPs Tab */}
+          <TabsContent value="ips">
+            <IpWhitelistTab />
+          </TabsContent>
         </Tabs>
       </main>
 
