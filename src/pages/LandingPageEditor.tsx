@@ -1139,21 +1139,15 @@ const LandingPageEditor = () => {
                     <div id="tour-slug" className="space-y-2">
                       <div className="flex items-center justify-between">
                         <Label htmlFor="slug" className="text-sm">URL Amigável</Label>
-                        {!isEditing && (
-                          <Button variant="outline" size="sm" onClick={generateSlug} className="h-7 text-xs">
-                            <Sparkles className="w-3 h-3 mr-1" />
-                            Gerar
-                          </Button>
-                        )}
-                        {isEditing && (
-                          <span className="text-xs text-muted-foreground flex items-center gap-1">🔒 Protegido</span>
-                        )}
+                        <Button variant="outline" size="sm" onClick={generateSlug} className="h-7 text-xs">
+                          <Sparkles className="w-3 h-3 mr-1" />
+                          Gerar
+                        </Button>
                       </div>
                       <Input
                         id="slug"
                         value={data.slug}
                         onChange={(e) => {
-                          if (isEditing) return;
                           const value = e.target.value
                             .toLowerCase()
                             .normalize('NFD')
@@ -1163,9 +1157,7 @@ const LandingPageEditor = () => {
                           setData({ ...data, slug: value });
                         }}
                         placeholder="minha-pagina"
-                        readOnly={isEditing}
-                        disabled={isEditing}
-                        className={isEditing ? "bg-background/50 opacity-60 cursor-not-allowed" : "bg-background/50"}
+                        className="bg-background/50"
                       />
                       {data.slug && (
                         <div className="flex items-center gap-2 p-2 rounded-md bg-primary/10 border border-primary/20">
