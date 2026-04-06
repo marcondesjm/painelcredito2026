@@ -505,4 +505,5 @@ ${couponApplied ? `• Cupom: ${coupon.trim().toUpperCase()}` : ''}
       </div>
       </div>
     </div>
+  )
 }
