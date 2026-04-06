@@ -37,7 +37,9 @@ const Auth = () => {
     try {
       const allowed = await isIpWhitelisted();
       if (!allowed) {
-        toast.error('Seu IP não está autorizado. Entre em contato com o administrador.');
+        const { getUserIp } = await import('@/lib/ipCheck');
+        const ip = await getUserIp();
+        toast.error(`Seu IP (${ip}) não está autorizado. Entre em contato com o administrador.`);
         setIsSubmitting(false);
         return;
       }
