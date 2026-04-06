@@ -77,6 +77,8 @@ function Table({ headers, rows }: { headers: string[]; rows: string[][] }) {
 
 const ApiDocs = () => {
   const navigate = useNavigate()
+  const [showKey, setShowKey] = useState(false)
+  const maskedKey = API_KEY.slice(0, 14) + '••••••••••••••••••••••••'
 
   return (
     <div className="min-h-screen bg-[#0a0a1a] text-white">
