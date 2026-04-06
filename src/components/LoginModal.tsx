@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 import { useLanguage } from '@/hooks/useLanguage';
 import logoPainel from '@/assets/logo-dashboard.png';
 
@@ -22,7 +22,6 @@ export const LoginModal = ({ open, onOpenChange }: LoginModalProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
-  const { toast } = useToast();
   const { t } = useLanguage();
   const navigate = useNavigate();
 
@@ -44,18 +43,15 @@ export const LoginModal = ({ open, onOpenChange }: LoginModalProps) => {
         });
         if (error) throw error;
         
-        // If user is auto-confirmed, redirect to dashboard
         if (data.user && data.session) {
-          toast({
-            title: "Conta criada!",
-            description: "Bem-vindo ao painel!",
+          toast.success('Conta criada!', {
+            description: 'Bem-vindo ao painel!',
           });
           onOpenChange(false);
           navigate('/dashboard');
         } else {
-          toast({
-            title: "Conta criada!",
-            description: "Verifique seu email para confirmar a conta.",
+          toast.success('Conta criada!', {
+            description: 'Verifique seu email para confirmar a conta.',
           });
           setIsSignUp(false);
         }
@@ -66,19 +62,16 @@ export const LoginModal = ({ open, onOpenChange }: LoginModalProps) => {
         });
         if (error) throw error;
         
-        // Check if user is admin
         const { data: roleData } = await supabase.rpc('has_role', {
           _user_id: data.user.id,
           _role: 'admin'
         });
         
-        toast({
-          title: "Login realizado!",
-          description: "Bem-vindo de volta.",
+        toast.success('Login realizado!', {
+          description: 'Bem-vindo de volta.',
         });
         onOpenChange(false);
         
-        // Redirect admin to admin dashboard, regular users to dashboard
         if (roleData === true) {
           navigate('/dashboard/admin');
         } else {
@@ -86,22 +79,19 @@ export const LoginModal = ({ open, onOpenChange }: LoginModalProps) => {
         }
       }
     } catch (error: any) {
-      let errorMessage = error.message || "Ocorreu um erro. Tente novamente.";
+      let errorMessage = error.message || 'Ocorreu um erro. Tente novamente.';
       
-      // Handle common error messages with better Portuguese translations
-      if (error.message?.includes("User already registered")) {
-        errorMessage = "Este email já está cadastrado. Faça login em vez de criar conta.";
-        setIsSignUp(false); // Switch to login mode
-      } else if (error.message?.includes("Invalid login credentials")) {
-        errorMessage = "Email ou senha incorretos. Verifique seus dados.";
-      } else if (error.message?.includes("Email not confirmed")) {
-        errorMessage = "Email não confirmado. Verifique sua caixa de entrada.";
+      if (error.message?.includes('User already registered')) {
+        errorMessage = 'Este email já está cadastrado. Faça login em vez de criar conta.';
+        setIsSignUp(false);
+      } else if (error.message?.includes('Invalid login credentials')) {
+        errorMessage = 'Email ou senha incorretos. Verifique seus dados.';
+      } else if (error.message?.includes('Email not confirmed')) {
+        errorMessage = 'Email não confirmado. Verifique sua caixa de entrada.';
       }
       
-      toast({
-        title: "Erro",
+      toast.error('Erro', {
         description: errorMessage,
-        variant: "destructive",
       });
     } finally {
       setIsLoading(false);
