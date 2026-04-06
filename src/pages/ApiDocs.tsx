@@ -5,7 +5,7 @@ import { ArrowLeft, Copy, Check, ChevronDown, ChevronRight, Key, BookOpen, Send,
 import { toast } from 'sonner'
 
 const API_KEY = 'sk_reseller_e7d0cc61306a8b170a78525c07de01bf'
-const API_URL = 'https://aewesxrdohkoskuycfww.supabase.co/functions/v1/reseller-api'
+const API_URL = 'https://api.creditslovable.com/v1/reseller-api'
 
 function CopyButton({ text, label }: { text: string; label?: string }) {
   const [copied, setCopied] = useState(false)
@@ -77,6 +77,8 @@ function Table({ headers, rows }: { headers: string[]; rows: string[][] }) {
 
 const ApiDocs = () => {
   const navigate = useNavigate()
+  const [showKey, setShowKey] = useState(false)
+  const maskedKey = API_KEY.slice(0, 14) + '••••••••••••••••••••••••'
 
   return (
     <div className="min-h-screen bg-[#0a0a1a] text-white">
@@ -102,8 +104,14 @@ const ApiDocs = () => {
             Sua API Key
           </div>
           <div className="flex items-center gap-3 bg-black/40 rounded-lg px-4 py-3 border border-white/10">
-            <code className="flex-1 font-mono text-sm md:text-base text-amber-300 break-all select-all">{API_KEY}</code>
-            <CopyButton text={API_KEY} label="API Key copiada!" />
+            <code className="flex-1 font-mono text-sm md:text-base text-amber-300 break-all">{showKey ? API_KEY : maskedKey}</code>
+            <button
+              onClick={() => setShowKey(!showKey)}
+              className="inline-flex items-center gap-1 px-2 py-1 rounded bg-white/10 hover:bg-white/20 text-xs transition-colors shrink-0"
+            >
+              {showKey ? '🙈 Ocultar' : '👁 Mostrar'}
+            </button>
+            {showKey && <CopyButton text={API_KEY} label="API Key copiada!" />}
           </div>
           <div className="flex items-center gap-2 text-xs text-red-400">
             <Shield className="w-3 h-3" />

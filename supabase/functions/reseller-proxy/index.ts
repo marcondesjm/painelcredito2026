@@ -3,7 +3,7 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
-const RESELLER_API_URL = 'https://aewesxrdohkoskuycfww.supabase.co/functions/v1/reseller-api'
+const RESELLER_API_URL = Deno.env.get('RESELLER_API_URL') || ''
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
