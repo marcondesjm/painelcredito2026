@@ -1139,15 +1139,10 @@ const LandingPageEditor = () => {
                     <div id="tour-slug" className="space-y-2">
                       <div className="flex items-center justify-between">
                         <Label htmlFor="slug" className="text-sm">URL Amigável</Label>
-                        {!isEditing && (
-                          <Button variant="outline" size="sm" onClick={generateSlug} className="h-7 text-xs">
-                            <Sparkles className="w-3 h-3 mr-1" />
-                            Gerar
-                          </Button>
-                        )}
-                        {isEditing && (
-                          <span className="text-xs text-muted-foreground flex items-center gap-1">🔒 Protegido</span>
-                        )}
+                        <Button variant="outline" size="sm" onClick={generateSlug} className="h-7 text-xs">
+                          <Sparkles className="w-3 h-3 mr-1" />
+                          Gerar
+                        </Button>
                       </div>
                       <Input
                         id="slug"
