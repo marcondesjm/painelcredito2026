@@ -685,14 +685,39 @@ const DynamicLandingPageInner = () => {
     return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
   };
 
-  // Copy to clipboard function
+  // Copy to clipboard function with fallback
   const copyToClipboard = async (text: string, e?: React.MouseEvent) => {
     e?.stopPropagation();
     try {
-      await navigator.clipboard.writeText(text);
-      return true;
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+        return true;
+      }
+      // Fallback for non-secure contexts or older browsers
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.left = '-9999px';
+      document.body.appendChild(textarea);
+      textarea.select();
+      const ok = document.execCommand('copy');
+      document.body.removeChild(textarea);
+      return ok;
     } catch {
-      return false;
+      // Last resort fallback
+      try {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.left = '-9999px';
+        document.body.appendChild(textarea);
+        textarea.select();
+        const ok = document.execCommand('copy');
+        document.body.removeChild(textarea);
+        return ok;
+      } catch {
+        return false;
+      }
     }
   };
   const renderHeroSection = () => (
