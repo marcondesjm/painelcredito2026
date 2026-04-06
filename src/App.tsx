@@ -26,6 +26,7 @@ import PanelAccess from "./pages/PanelAccess";
 import CreditGenerator from "./pages/CreditGenerator";
 import OrderTracking from "./pages/OrderTracking";
 import OrderHistory from "./pages/OrderHistory";
+import ApiDocs from "./pages/ApiDocs";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -62,6 +63,7 @@ const App = () => (
               <Route path="/gerador" element={<CreditGenerator />} />
               <Route path="/gerador/acompanhar/:orderId" element={<OrderTracking />} />
               <Route path="/gerador/historico" element={<OrderHistory />} />
+              <Route path="/gerador/api" element={<ApiDocs />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
