@@ -2542,7 +2542,63 @@ const LandingPageEditor = () => {
                 </Card>
               </TabsContent>
 
-              {/* Tab Doação - Locked/removed */}
+              {/* Tab Doação */}
+              <TabsContent value="doacao">
+                <Card className="bg-card/50">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-lg">Seção de Doação / PIX</CardTitle>
+                    <CardDescription>Configure os dados PIX para receber doações</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <Label>Ativar seção de doação</Label>
+                      <input
+                        type="checkbox"
+                        checked={data.donation_enabled}
+                        onChange={(e) => setData({ ...data, donation_enabled: e.target.checked })}
+                        className="w-4 h-4 accent-primary"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Título</Label>
+                      <Input
+                        value={data.donation_title}
+                        onChange={(e) => setData({ ...data, donation_title: e.target.value })}
+                        placeholder="💚 Apoie o Desenvolvedor"
+                        className="bg-background/50"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Descrição</Label>
+                      <Input
+                        value={data.donation_description}
+                        onChange={(e) => setData({ ...data, donation_description: e.target.value })}
+                        placeholder="Gostou do sistema? Considere fazer uma doação via PIX..."
+                        className="bg-background/50"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Chave PIX</Label>
+                      <Input
+                        value={data.donation_pix_key}
+                        onChange={(e) => setData({ ...data, donation_pix_key: e.target.value })}
+                        placeholder="CPF, CNPJ, email, telefone ou chave aleatória"
+                        className="bg-background/50"
+                      />
+                      <p className="text-xs text-muted-foreground">O QR Code será gerado automaticamente a partir desta chave</p>
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Nome do Beneficiário</Label>
+                      <Input
+                        value={data.donation_pix_name}
+                        onChange={(e) => setData({ ...data, donation_pix_name: e.target.value })}
+                        placeholder="Nome completo do titular"
+                        className="bg-background/50"
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
 
               {/* Tab Compra Segura */}
               <TabsContent value="compra-segura">
