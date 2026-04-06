@@ -137,7 +137,7 @@ export const HeroSection = () => {
                 onClick={() => setShowCheckout(true)}
               >
                 <CreditCard className="w-5 h-5" />
-                Comprar Painel — R$ 199,00
+                Comprar Painel — R$ 69,90
               </Button>
               <button
                 type="button"

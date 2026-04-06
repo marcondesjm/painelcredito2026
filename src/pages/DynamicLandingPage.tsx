@@ -807,7 +807,7 @@ const DynamicLandingPageInner = () => {
                 onClick={() => openHeroCheckout()}
               >
                 <CreditCard className="w-5 h-5" />
-                Comprar Painel — R$ {(page.price_current || 199).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                Comprar Painel — R$ {(page.price_current || 69.90).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
               </Button>
               {page.video_url && (
                 <button

@@ -179,7 +179,7 @@ const AuthRevenda2 = () => {
                 O email <span className="font-semibold text-white">{failedEmail}</span> não possui conta no painel.
               </p>
               <p className="text-sm text-white/50 mt-1">
-                Para ter acesso ao Gerador de Créditos, adquira o Painel por <span className="font-bold text-primary text-lg">R$ 199,00</span>
+                Para ter acesso ao Gerador de Créditos, adquira o Painel por <span className="font-bold text-primary text-lg">R$ 69,90</span>
               </p>
             </div>
 
@@ -189,7 +189,7 @@ const AuthRevenda2 = () => {
                 onClick={() => setShowCheckoutModal(true)}
               >
                 <ShoppingCart className="w-4 h-4 mr-2" />
-                Comprar Painel — R$ 199,00
+                Comprar Painel — R$ 69,90
               </Button>
 
               <Button
