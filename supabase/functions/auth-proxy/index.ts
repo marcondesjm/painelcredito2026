@@ -3,8 +3,8 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
-const EXTERNAL_SUPABASE_URL = 'https://aewesxrdohkoskuycfww.supabase.co'
-const EXTERNAL_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFld2VzeHJkb2hrb3NrdXljZnd3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1NTgwMzAsImV4cCI6MjA5MDEzNDAzMH0.Aize-fcNvoXi_mqj8zQld_yyEZpdVRc2TSNugxn78KQ'
+const EXTERNAL_SUPABASE_URL = Deno.env.get('EXTERNAL_SUPABASE_URL') || ''
+const EXTERNAL_ANON_KEY = Deno.env.get('EXTERNAL_SUPABASE_ANON_KEY') || ''
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 

@@ -104,8 +104,14 @@ const ApiDocs = () => {
             Sua API Key
           </div>
           <div className="flex items-center gap-3 bg-black/40 rounded-lg px-4 py-3 border border-white/10">
-            <code className="flex-1 font-mono text-sm md:text-base text-amber-300 break-all select-all">{API_KEY}</code>
-            <CopyButton text={API_KEY} label="API Key copiada!" />
+            <code className="flex-1 font-mono text-sm md:text-base text-amber-300 break-all">{showKey ? API_KEY : maskedKey}</code>
+            <button
+              onClick={() => setShowKey(!showKey)}
+              className="inline-flex items-center gap-1 px-2 py-1 rounded bg-white/10 hover:bg-white/20 text-xs transition-colors shrink-0"
+            >
+              {showKey ? '🙈 Ocultar' : '👁 Mostrar'}
+            </button>
+            {showKey && <CopyButton text={API_KEY} label="API Key copiada!" />}
           </div>
           <div className="flex items-center gap-2 text-xs text-red-400">
             <Shield className="w-3 h-3" />
