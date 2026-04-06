@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import { Eye, EyeOff, Loader2, Shield } from 'lucide-react';
 import logoPainel from '@/assets/logo-dashboard.png';
 import { logLoginAttempt } from '@/lib/loginAudit';
+import { isIpWhitelisted } from '@/lib/ipCheck';
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
