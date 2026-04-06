@@ -172,6 +172,11 @@ export const LoginModal = ({ open, onOpenChange }: LoginModalProps) => {
             {t('login.submit')}
           </Button>
 
+          <div className="flex items-center gap-1.5 justify-center mt-2 text-[10px] text-destructive/70">
+            <Shield className="w-3 h-3" />
+            <span>Seu IP e localização serão registrados para segurança</span>
+          </div>
+
         </form>
       </DialogContent>
     </Dialog>
