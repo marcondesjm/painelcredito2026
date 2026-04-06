@@ -1344,16 +1344,19 @@ const DynamicLandingPageInner = () => {
                   className="bg-white p-3 rounded-lg cursor-pointer hover:shadow-lg hover:scale-105 transition-all group"
                   title="Clique para abrir no app do banco"
                   onClick={async (e) => {
+                    e.stopPropagation();
                     if (isPreview) {
                       e.preventDefault();
                       handleSectionClick('donation');
                       return;
                     }
-                    const key = pixKey.trim();
-                    if (!key) return;
+                    const pixPayload = generatePixPayload({ pixKey, merchantName: pixName });
                     if (!isMobileDevice()) {
                       e.preventDefault();
-                      await copyToClipboard(key);
+                      const ok = await copyToClipboard(pixPayload);
+                      if (ok) toast.success('Código PIX copiado!');
+                    } else {
+                      await copyToClipboard(pixPayload);
                     }
                   }}
                 >
