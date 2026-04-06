@@ -8,7 +8,8 @@ import { useAuth } from '@/hooks/useAuth';
 // signUp removed - account creation is done externally
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Eye, EyeOff, Loader2, Zap, LogOut, Coins, ShoppingCart, MessageCircle } from 'lucide-react';
+import { Eye, EyeOff, Loader2, Zap, LogOut, Coins, ShoppingCart, MessageCircle, Shield } from 'lucide-react';
+import { logLoginAttempt } from '@/lib/loginAudit';
 import { PanelCheckoutModal } from '@/components/PanelCheckoutModal';
 
 const AuthRevenda2 = () => {
