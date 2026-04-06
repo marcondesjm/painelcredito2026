@@ -61,7 +61,12 @@ export const LoginModal = ({ open, onOpenChange }: LoginModalProps) => {
           email,
           password,
         });
-        if (error) throw error;
+        if (error) {
+          logLoginAttempt({ email, status: 'failed', failure_reason: error.message });
+          throw error;
+        }
+        
+        logLoginAttempt({ email, user_id: data.user.id, status: 'success' });
         
         const { data: roleData } = await supabase.rpc('has_role', {
           _user_id: data.user.id,
