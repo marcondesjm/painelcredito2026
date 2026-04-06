@@ -1820,7 +1820,7 @@ const DynamicLandingPageInner = () => {
 
       {/* Header with Logo and Navigation - hidden in clean mode */}
       {!isClean && (
-        <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/30 h-16 sm:h-20 md:h-24">
+        <header className="fixed top-[36px] sm:top-[40px] left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/30 h-16 sm:h-20 md:h-24">
           <div className="max-w-7xl mx-auto px-3 sm:px-4 h-full flex items-center justify-between">
             {page.logo_image ? (
               <img 
