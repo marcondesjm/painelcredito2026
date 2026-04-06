@@ -77,8 +77,11 @@ export const HeroSection = () => {
                     <span className="bg-accent/20 text-accent text-xs font-bold px-2 py-1 rounded">
                       {t('hero.savings')} {savings}%
                     </span>
-                  )}
-                </div>
+                   )}
+                   <span className="bg-red-500/20 text-red-400 text-xs font-bold px-2 py-1 rounded animate-pulse">
+                     🔥 Poucas unidades
+                   </span>
+                 </div>
                 {hero.daily_renewal_text && (
                   <div onClick={() => navigate('/checkout')} className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-primary/30 bg-primary/10 backdrop-blur-sm animate-pulse hover:bg-primary/20 transition-colors cursor-pointer">
                     <RefreshCw className="w-4 h-4 text-primary" />
