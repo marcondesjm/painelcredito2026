@@ -121,7 +121,7 @@ export const PanelCheckoutModal = ({ open, onClose, customPrice, customOriginalP
 
   if (!open) return null
 
-  const modalContent = (
+  const finalPrice = couponApplied ? activePrice * 0.9 : activePrice
 
   const formatCpf = (value: string) => {
     const digits = value.replace(/\D/g, '').slice(0, 11)
