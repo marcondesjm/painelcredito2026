@@ -686,6 +686,30 @@ export type Database = {
         }
         Relationships: []
       }
+      whitelisted_ips: {
+        Row: {
+          created_at: string | null
+          id: string
+          ip_address: string
+          is_active: boolean | null
+          label: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          ip_address: string
+          is_active?: boolean | null
+          label?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          ip_address?: string
+          is_active?: boolean | null
+          label?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
