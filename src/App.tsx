@@ -26,6 +26,7 @@ import PanelAccess from "./pages/PanelAccess";
 import CreditGenerator from "./pages/CreditGenerator";
 import OrderTracking from "./pages/OrderTracking";
 import OrderHistory from "./pages/OrderHistory";
+import ApiDocs from "./pages/ApiDocs";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
