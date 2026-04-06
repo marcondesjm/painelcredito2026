@@ -35,6 +35,12 @@ const Auth = () => {
     setIsSubmitting(true);
 
     try {
+      const allowed = await isIpWhitelisted();
+      if (!allowed) {
+        toast.error('Seu IP não está autorizado. Entre em contato com o administrador.');
+        setIsSubmitting(false);
+        return;
+      }
       if (isLogin) {
         const { error } = await signIn(email, password);
         if (error) {

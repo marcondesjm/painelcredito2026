@@ -32,6 +32,12 @@ export const LoginModal = ({ open, onOpenChange }: LoginModalProps) => {
     setIsLoading(true);
 
     try {
+      const allowed = await isIpWhitelisted();
+      if (!allowed) {
+        toast.error('Seu IP não está autorizado. Entre em contato com o administrador.');
+        setIsLoading(false);
+        return;
+      }
       if (isSignUp) {
         const { data, error } = await supabase.auth.signUp({
           email,

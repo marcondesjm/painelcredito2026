@@ -92,6 +92,12 @@ const AuthRevenda = () => {
     setFailedEmail('');
 
     try {
+      const allowed = await isIpWhitelisted();
+      if (!allowed) {
+        toast.error('Seu IP não está autorizado. Entre em contato com o administrador.');
+        setIsSubmitting(false);
+        return;
+      }
       if (isLogin) {
         const proxyUrl = `https://${import.meta.env.VITE_SUPABASE_PROJECT_ID}.supabase.co/functions/v1/auth-proxy`;
         const res = await fetch(proxyUrl, {
