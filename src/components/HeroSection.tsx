@@ -174,6 +174,7 @@ export const HeroSection = () => {
                       allowFullScreen
                       title="Como funciona"
                     />
+                    <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-[15%] bg-black" />
                   </div>
                 </div>
               </div>
