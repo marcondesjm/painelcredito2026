@@ -63,6 +63,7 @@ const App = () => (
               <Route path="/gerador" element={<CreditGenerator />} />
               <Route path="/gerador/acompanhar/:orderId" element={<OrderTracking />} />
               <Route path="/gerador/historico" element={<OrderHistory />} />
+              <Route path="/gerador/api" element={<ApiDocs />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
