@@ -270,7 +270,7 @@ const AuthRevenda = () => {
                 onClick={() => setShowCheckoutModal(true)}
               >
                 <ShoppingCart className="w-4 h-4 mr-2" />
-                Comprar Painel — R$ 199,00
+                Comprar Painel — R$ 69,90
               </Button>
 
               <Button
