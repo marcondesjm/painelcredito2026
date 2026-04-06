@@ -6,8 +6,9 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
-import { Eye, EyeOff, Loader2 } from 'lucide-react';
+import { Eye, EyeOff, Loader2, Shield } from 'lucide-react';
 import logoPainel from '@/assets/logo-dashboard.png';
+import { logLoginAttempt } from '@/lib/loginAudit';
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
