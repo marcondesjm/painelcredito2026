@@ -530,4 +530,6 @@ ${couponApplied ? `• Cupom: ${coupon.trim().toUpperCase()}` : ''}
       </div>
     </div>
   )
+
+  return createPortal(modalContent, document.body)
 }
