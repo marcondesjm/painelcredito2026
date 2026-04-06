@@ -94,6 +94,30 @@ export const PanelCheckoutModal = ({ open, onClose, customPrice, customOriginalP
     }
   }, [pixGenerated])
 
+  useEffect(() => {
+    if (!open) return
+
+    const originalBodyOverflow = document.body.style.overflow
+    const originalBodyTouchAction = document.body.style.touchAction
+    const originalBodyOverscroll = document.body.style.overscrollBehavior
+    const originalHtmlOverflow = document.documentElement.style.overflow
+    const originalHtmlOverscroll = document.documentElement.style.overscrollBehavior
+
+    document.body.style.overflow = 'hidden'
+    document.body.style.touchAction = 'none'
+    document.body.style.overscrollBehavior = 'none'
+    document.documentElement.style.overflow = 'hidden'
+    document.documentElement.style.overscrollBehavior = 'none'
+
+    return () => {
+      document.body.style.overflow = originalBodyOverflow
+      document.body.style.touchAction = originalBodyTouchAction
+      document.body.style.overscrollBehavior = originalBodyOverscroll
+      document.documentElement.style.overflow = originalHtmlOverflow
+      document.documentElement.style.overscrollBehavior = originalHtmlOverscroll
+    }
+  }, [open])
+
   if (!open) return null
 
   const finalPrice = couponApplied ? activePrice * 0.9 : activePrice
