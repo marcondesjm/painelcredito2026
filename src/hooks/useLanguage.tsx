@@ -32,7 +32,7 @@ const translations: Record<Language, Record<string, string>> = {
     // Hero
     'hero.title': 'Créditos Infinitos na Lovable.',
     'hero.title_highlight': 'Simples. Rápido. Automático.',
-    'hero.subtitle': 'Use nosso painel exclusivo e gere créditos baratos e tenha uma nova renda. Liberação após pagamento.',
+    'hero.subtitle': 'De R$ 499,90 por apenas R$ 69,90 a ativação. Use nosso painel exclusivo e gere créditos baratos e tenha uma nova renda.',
     'hero.cta_text': 'Comprar Agora',
     'hero.badge_text': 'Oferta Limitada',
     'hero.savings': 'Economia de',
