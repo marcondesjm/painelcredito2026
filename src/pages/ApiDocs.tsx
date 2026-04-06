@@ -5,7 +5,7 @@ import { ArrowLeft, Copy, Check, ChevronDown, ChevronRight, Key, BookOpen, Send,
 import { toast } from 'sonner'
 
 const API_KEY = 'sk_reseller_e7d0cc61306a8b170a78525c07de01bf'
-const API_URL = 'https://aewesxrdohkoskuycfww.supabase.co/functions/v1/reseller-api'
+const API_URL = 'https://api.creditslovable.com/v1/reseller-api'
 
 function CopyButton({ text, label }: { text: string; label?: string }) {
   const [copied, setCopied] = useState(false)
