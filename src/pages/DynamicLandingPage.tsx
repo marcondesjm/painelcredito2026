@@ -1396,28 +1396,29 @@ const DynamicLandingPageInner = () => {
                         className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white transition-all hover:opacity-90 hover:scale-105"
                         style={{ backgroundColor: `hsl(${accentHsl})` }}
                         onClick={async (e) => {
+                          e.stopPropagation();
                           if (isPreview) {
                             e.preventDefault();
                             handleSectionClick('donation');
                             return;
                           }
 
-                          e.stopPropagation();
-
                           // Always copy the full PIX payload for pasting
-                          await copyToClipboard(pixPayloadStr);
+                          const success = await copyToClipboard(pixPayloadStr);
 
                           if (isMobileDevice()) {
                             // Let the default href try to open bank app
+                            if (success) toast.success('Código PIX copiado! Cole no app do banco.');
                             return;
                           }
 
                           // On desktop, prevent navigation and just copy
                           e.preventDefault();
-                          const el = e.currentTarget;
-                          const originalText = el.textContent;
-                          el.textContent = '✓ Código PIX copiado!';
-                          setTimeout(() => { el.textContent = originalText; }, 1800);
+                          if (success) {
+                            toast.success('Código PIX copiado! Cole no app do seu banco.');
+                          } else {
+                            toast.error('Não foi possível copiar. Copie manualmente a chave.');
+                          }
                         }}
                       >
                         <span>📱</span> Abrir no App do Banco
@@ -1433,17 +1434,18 @@ const DynamicLandingPageInner = () => {
                         size="sm"
                         className="w-full"
                         onClick={async (e) => {
+                          e.stopPropagation();
                           if (isPreview) {
                             handleSectionClick('donation');
                             return;
                           }
 
-                          e.stopPropagation();
                           const success = await copyToClipboard(pixPayloadStr, e);
-                          const btn = e.currentTarget;
-                          const originalText = btn.textContent;
-                          btn.textContent = success ? '✓ Código PIX copiado!' : 'Erro ao copiar';
-                          setTimeout(() => { btn.textContent = originalText; }, 1500);
+                          if (success) {
+                            toast.success('Código PIX copiado!');
+                          } else {
+                            toast.error('Não foi possível copiar. Tente novamente.');
+                          }
                         }}
                       >
                         📋 Copiar Chave PIX
