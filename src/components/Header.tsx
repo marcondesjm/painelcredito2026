@@ -62,7 +62,7 @@ export const Header = () => {
 
   return (
     <>
-      <header className="fixed top-14 sm:top-8 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/30 h-16 sm:h-18 md:h-20">
+      <header className="relative mt-14 sm:mt-8 md:mt-0 md:fixed md:top-8 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/30 h-16 sm:h-18 md:h-20">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 h-full flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center h-full py-2 gap-2">
