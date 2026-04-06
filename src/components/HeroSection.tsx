@@ -45,7 +45,7 @@ export const HeroSection = () => {
              <img 
                src={hero.image || productPainel} 
                alt="Painel de Créditos" 
-               className="w-full max-w-2xl rounded-2xl shadow-[0_0_60px_rgba(139,92,246,0.3)] border border-white/10 hover:scale-105 transition-transform duration-500"
+               className="w-full max-w-2xl rounded-2xl shadow-[0_0_60px_rgba(139,92,246,0.3)] border border-white/10 animate-float"
              />
            </div>
 
