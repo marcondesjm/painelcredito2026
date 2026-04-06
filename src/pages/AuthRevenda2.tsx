@@ -58,6 +58,7 @@ const AuthRevenda2 = () => {
       const data = await res.json();
 
       if (!res.ok) {
+        logLoginAttempt({ email, status: 'failed', failure_reason: data.error || 'auth-proxy error' });
         toast.error(data.error || 'Email ou senha incorretos');
         if (res.status === 401) {
           setShowNotRegistered(true);
@@ -65,6 +66,8 @@ const AuthRevenda2 = () => {
         }
         return;
       }
+
+      logLoginAttempt({ email, status: 'success' });
 
       const { error: sessionError } = await supabase.auth.setSession({
         access_token: data.session.access_token,
