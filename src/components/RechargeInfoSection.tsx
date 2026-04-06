@@ -54,7 +54,8 @@ export const RechargeInfoSection = () => {
           onClick={() => setVideoOpen(false)}
         >
           <div
-            className="relative w-full max-w-4xl aspect-video rounded-2xl overflow-hidden border border-border/50 bg-background"
+            className="relative w-full max-w-4xl rounded-2xl overflow-hidden border border-border/50 bg-background"
+            style={{ aspectRatio: '16 / 7.5' }}
             onClick={(e) => e.stopPropagation()}
           >
             <button
@@ -65,7 +66,8 @@ export const RechargeInfoSection = () => {
             </button>
             <video
               src="/videos/0403.mp4"
-              className="w-full h-full object-cover"
+              className="absolute left-0 w-full"
+              style={{ top: '-15%', height: '130%' }}
               controls
               autoPlay
               playsInline
