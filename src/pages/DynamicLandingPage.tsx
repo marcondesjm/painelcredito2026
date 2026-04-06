@@ -1357,72 +1357,74 @@ const DynamicLandingPageInner = () => {
                 </p>
                 
                 {/* Button to open in bank app */}
-                <a
-                  href={generatePixLink(page.donation_pix_key || '')}
-                  className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white transition-all hover:opacity-90 hover:scale-105"
-                  style={{ backgroundColor: `hsl(${accentHsl})` }}
-                  onClick={async (e) => {
-                    if (isPreview) {
-                      e.preventDefault();
-                      handleSectionClick('donation');
-                      return;
-                    }
+                {(() => {
+                  const donationKey = (page.donation_pix_key || '48996029392').trim();
+                  const donationName = page.donation_pix_name || 'Marcondes Jorge Machado';
+                  const pixPayloadStr = generatePixPayload({ pixKey: donationKey, merchantName: donationName });
+                  const pixUri = `https://nubank.com.br/cobrar/pix/copia-e-cola?code=${encodeURIComponent(pixPayloadStr)}`;
+                  
+                  return (
+                    <>
+                      <a
+                        href={`pix:${donationKey}`}
+                        className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white transition-all hover:opacity-90 hover:scale-105"
+                        style={{ backgroundColor: `hsl(${accentHsl})` }}
+                        onClick={async (e) => {
+                          if (isPreview) {
+                            e.preventDefault();
+                            handleSectionClick('donation');
+                            return;
+                          }
 
-                    e.preventDefault();
-                    e.stopPropagation();
+                          e.stopPropagation();
 
-                    const key = (page.donation_pix_key || '').trim();
-                    if (!key) return;
+                          // Always copy the full PIX payload for pasting
+                          await copyToClipboard(pixPayloadStr);
 
-                    // On desktop browsers, custom URI schemes usually won't open bank apps.
-                    // In that case, we copy the key so the user can paste it in the bank app.
-                    if (!isMobileDevice()) {
-                      const success = await copyToClipboard(key);
-                      const el = e.currentTarget;
-                      const originalText = el.textContent;
-                      el.textContent = success ? '✓ Chave copiada (abra seu app)' : 'Erro ao copiar';
-                      setTimeout(() => {
-                        el.textContent = originalText;
-                      }, 1800);
-                      return;
-                    }
+                          if (isMobileDevice()) {
+                            // Let the default href try to open bank app
+                            return;
+                          }
 
-                    const uri = generatePixLink(key);
-                    if (!uri) return;
+                          // On desktop, prevent navigation and just copy
+                          e.preventDefault();
+                          const el = e.currentTarget;
+                          const originalText = el.textContent;
+                          el.textContent = '✓ Código PIX copiado!';
+                          setTimeout(() => { el.textContent = originalText; }, 1800);
+                        }}
+                      >
+                        <span>📱</span> Abrir no App do Banco
+                      </a>
 
-                    // Best-effort: try to open bank app and also copy the key as fallback
-                    window.location.href = uri;
-                    await copyToClipboard(key);
-                  }}
-                >
-                  <span>📱</span> Abrir no App do Banco
-                </a>
+                      <p className="text-xs text-muted-foreground">
+                        Dica: esse botão costuma funcionar apenas no celular. Se não abrir, use "Copiar Chave PIX".
+                      </p>
 
-                <p className="text-xs text-muted-foreground">
-                  Dica: esse botão costuma funcionar apenas no celular. Se não abrir, use “Copiar Chave PIX”.
-                </p>
+                      {/* Copy PIX payload button */}
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="w-full"
+                        onClick={async (e) => {
+                          if (isPreview) {
+                            handleSectionClick('donation');
+                            return;
+                          }
 
-                {/* Copy button */}
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="w-full"
-                  onClick={async (e) => {
-                    if (isPreview) {
-                      handleSectionClick('donation');
-                      return;
-                    }
-
-                    e.stopPropagation();
-                    const success = await copyToClipboard(page.donation_pix_key || '48996029392', e);
-                    const btn = e.currentTarget;
-                    const originalText = btn.textContent;
-                    btn.textContent = success ? '✓ Copiado!' : 'Erro ao copiar';
-                    setTimeout(() => { btn.textContent = originalText; }, 1500);
-                  }}
-                >
-                  📋 Copiar Chave PIX
-                </Button>
+                          e.stopPropagation();
+                          const success = await copyToClipboard(pixPayloadStr, e);
+                          const btn = e.currentTarget;
+                          const originalText = btn.textContent;
+                          btn.textContent = success ? '✓ Código PIX copiado!' : 'Erro ao copiar';
+                          setTimeout(() => { btn.textContent = originalText; }, 1500);
+                        }}
+                      >
+                        📋 Copiar Chave PIX
+                      </Button>
+                    </>
+                  );
+                })()}
               </div>
             </div>
           </div>
