@@ -10,6 +10,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Eye, EyeOff, Loader2, Zap, LogOut, Coins, ShoppingCart, MessageCircle, Shield } from 'lucide-react';
 import { logLoginAttempt } from '@/lib/loginAudit';
+import { isIpWhitelisted } from '@/lib/ipCheck';
 import backgroundHero from '@/assets/background-hero.png';
 import { PanelCheckoutModal } from '@/components/PanelCheckoutModal';
 
