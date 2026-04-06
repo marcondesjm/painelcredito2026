@@ -253,6 +253,13 @@ ${couponApplied ? `• Cupom: ${coupon.trim().toUpperCase()}` : ''}
                   <span className="flex items-center gap-2"><Zap className="w-4 h-4 text-primary" /> Gerador Ilimitado:</span>
                   <span className="font-bold">✓ Incluído</span>
                 </div>
+                <div className="flex justify-between text-sm">
+                  <span className="flex items-center gap-2">🎁 Landing Page de Brinde:</span>
+                  <span className="font-bold">✓ Incluído</span>
+                </div>
+                <p className="text-[10px] text-muted-foreground pl-6">
+                  Página pronta para você revender seus créditos
+                </p>
                 <div className="border-t border-border pt-3 flex justify-between items-center">
                   <span className="font-bold text-sm">Valor a Pagar:</span>
                   <div className="text-right">
