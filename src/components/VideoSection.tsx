@@ -20,11 +20,12 @@ export const VideoSection = () => {
       <div className="max-w-4xl mx-auto">
         
         <div className="relative rounded-xl sm:rounded-2xl overflow-hidden border border-border/50 bg-card/30 backdrop-blur-sm group">
-          <div className="relative w-full aspect-video">
+          <div className="relative w-full aspect-video overflow-hidden">
             <video
               ref={videoRef}
               src="/videos/0403.mp4"
               className="w-full h-full object-cover"
+              style={{ objectPosition: 'center 65%' }}
               controls={isPlaying && !hideControls}
               controlsList="nodownload noplaybackrate"
               disablePictureInPicture
