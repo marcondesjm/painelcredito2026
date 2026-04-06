@@ -144,6 +144,11 @@ const Auth = () => {
               {isSubmitting && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
               Entrar
             </Button>
+
+            <div className="flex items-center gap-1.5 justify-center mt-2 text-[10px] text-destructive/70">
+              <Shield className="w-3 h-3" />
+              <span>Seu IP e localização serão registrados para segurança</span>
+            </div>
           </form>
           
         </CardContent>
