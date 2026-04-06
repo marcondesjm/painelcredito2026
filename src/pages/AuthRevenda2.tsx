@@ -8,7 +8,8 @@ import { useAuth } from '@/hooks/useAuth';
 // signUp removed - account creation is done externally
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Eye, EyeOff, Loader2, Zap, LogOut, Coins, ShoppingCart, MessageCircle } from 'lucide-react';
+import { Eye, EyeOff, Loader2, Zap, LogOut, Coins, ShoppingCart, MessageCircle, Shield } from 'lucide-react';
+import { logLoginAttempt } from '@/lib/loginAudit';
 import { PanelCheckoutModal } from '@/components/PanelCheckoutModal';
 
 const AuthRevenda2 = () => {
@@ -57,6 +58,7 @@ const AuthRevenda2 = () => {
       const data = await res.json();
 
       if (!res.ok) {
+        logLoginAttempt({ email, status: 'failed', failure_reason: data.error || 'auth-proxy error' });
         toast.error(data.error || 'Email ou senha incorretos');
         if (res.status === 401) {
           setShowNotRegistered(true);
@@ -64,6 +66,8 @@ const AuthRevenda2 = () => {
         }
         return;
       }
+
+      logLoginAttempt({ email, status: 'success' });
 
       const { error: sessionError } = await supabase.auth.setSession({
         access_token: data.session.access_token,
@@ -291,6 +295,11 @@ const AuthRevenda2 = () => {
               {isSubmitting && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
               Entrar
             </Button>
+
+            <div className="flex items-center gap-1.5 justify-center mt-2 text-[10px] text-red-400/70">
+              <Shield className="w-3 h-3" />
+              <span>Seu IP e localização serão registrados para segurança</span>
+            </div>
           </form>
         </CardContent>
       </Card>

@@ -498,6 +498,60 @@ export type Database = {
         }
         Relationships: []
       }
+      login_audit_log: {
+        Row: {
+          city: string | null
+          country: string | null
+          created_at: string
+          email: string
+          failure_reason: string | null
+          id: string
+          ip_address: string | null
+          isp: string | null
+          latitude: number | null
+          longitude: number | null
+          referer: string | null
+          region: string | null
+          status: string
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          city?: string | null
+          country?: string | null
+          created_at?: string
+          email: string
+          failure_reason?: string | null
+          id?: string
+          ip_address?: string | null
+          isp?: string | null
+          latitude?: number | null
+          longitude?: number | null
+          referer?: string | null
+          region?: string | null
+          status?: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          city?: string | null
+          country?: string | null
+          created_at?: string
+          email?: string
+          failure_reason?: string | null
+          id?: string
+          ip_address?: string | null
+          isp?: string | null
+          latitude?: number | null
+          longitude?: number | null
+          referer?: string | null
+          region?: string | null
+          status?: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       orders: {
         Row: {
           coupon_code: string | null

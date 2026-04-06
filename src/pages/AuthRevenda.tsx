@@ -8,7 +8,8 @@ import { useAuth } from '@/hooks/useAuth';
 import { lovable } from '@/integrations/lovable/index';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Eye, EyeOff, Loader2, Zap, LogOut, Coins, ShoppingCart, MessageCircle } from 'lucide-react';
+import { Eye, EyeOff, Loader2, Zap, LogOut, Coins, ShoppingCart, MessageCircle, Shield } from 'lucide-react';
+import { logLoginAttempt } from '@/lib/loginAudit';
 import backgroundHero from '@/assets/background-hero.png';
 import { PanelCheckoutModal } from '@/components/PanelCheckoutModal';
 
@@ -101,6 +102,7 @@ const AuthRevenda = () => {
         const data = await res.json();
 
         if (!res.ok) {
+          logLoginAttempt({ email, status: 'failed', failure_reason: data.error || 'auth-proxy error' });
           toast.error(data.error || 'Email ou senha incorretos');
 
           if (res.status === 401) {
@@ -110,6 +112,8 @@ const AuthRevenda = () => {
 
           return;
         }
+
+        logLoginAttempt({ email, status: 'success' });
 
         const { error: sessionError } = await supabase.auth.setSession({
           access_token: data.session.access_token,
@@ -392,6 +396,11 @@ const AuthRevenda = () => {
               {isSubmitting && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
               {isLogin ? 'Entrar' : 'Criar Conta'}
             </Button>
+
+            <div className="flex items-center gap-1.5 justify-center mt-2 text-[10px] text-destructive/70">
+              <Shield className="w-3 h-3" />
+              <span>Seu IP e localização serão registrados para segurança</span>
+            </div>
           </form>
         </CardContent>
       </Card>

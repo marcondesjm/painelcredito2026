@@ -4,10 +4,11 @@ import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Eye, EyeOff, Loader2 } from 'lucide-react';
+import { Eye, EyeOff, Loader2, Shield } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { useLanguage } from '@/hooks/useLanguage';
+import { logLoginAttempt } from '@/lib/loginAudit';
 import logoPainel from '@/assets/logo-dashboard.png';
 
 interface LoginModalProps {
@@ -60,7 +61,12 @@ export const LoginModal = ({ open, onOpenChange }: LoginModalProps) => {
           email,
           password,
         });
-        if (error) throw error;
+        if (error) {
+          logLoginAttempt({ email, status: 'failed', failure_reason: error.message });
+          throw error;
+        }
+        
+        logLoginAttempt({ email, user_id: data.user.id, status: 'success' });
         
         const { data: roleData } = await supabase.rpc('has_role', {
           _user_id: data.user.id,
@@ -165,6 +171,11 @@ export const LoginModal = ({ open, onOpenChange }: LoginModalProps) => {
             {isLoading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
             {t('login.submit')}
           </Button>
+
+          <div className="flex items-center gap-1.5 justify-center mt-2 text-[10px] text-destructive/70">
+            <Shield className="w-3 h-3" />
+            <span>Seu IP e localização serão registrados para segurança</span>
+          </div>
 
         </form>
       </DialogContent>

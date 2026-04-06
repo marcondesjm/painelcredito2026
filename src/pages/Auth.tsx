@@ -6,8 +6,9 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
-import { Eye, EyeOff, Loader2 } from 'lucide-react';
+import { Eye, EyeOff, Loader2, Shield } from 'lucide-react';
 import logoPainel from '@/assets/logo-dashboard.png';
+import { logLoginAttempt } from '@/lib/loginAudit';
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -36,12 +37,14 @@ const Auth = () => {
       if (isLogin) {
         const { error } = await signIn(email, password);
         if (error) {
+          logLoginAttempt({ email, status: 'failed', failure_reason: error.message });
           if (error.message.includes('Invalid login credentials')) {
             toast.error('Email ou senha incorretos');
           } else {
             toast.error(error.message);
           }
         } else {
+          logLoginAttempt({ email, status: 'success' });
           toast.success('Login realizado com sucesso!');
           navigate('/dashboard');
         }
@@ -141,6 +144,11 @@ const Auth = () => {
               {isSubmitting && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
               Entrar
             </Button>
+
+            <div className="flex items-center gap-1.5 justify-center mt-2 text-[10px] text-destructive/70">
+              <Shield className="w-3 h-3" />
+              <span>Seu IP e localização serão registrados para segurança</span>
+            </div>
           </form>
           
         </CardContent>
